@@ -1,0 +1,8 @@
+{
+  "name": "qbc-server",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "repository": "git@github.com:seanye24/qbc-server.git",
+  "author": "Sean Ye <seanye24@gmail.com>",
+  "license": "MIT"
+}
