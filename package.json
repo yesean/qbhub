@@ -12,7 +12,9 @@
     "lint": "eslint ./src --ext .ts,.tsx"
   },
   "dependencies": {
+    "@types/cors": "^2.8.10",
     "compromise": "^13.10.6",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "pg": "^8.6.0"
   },
