@@ -20,6 +20,7 @@ export const queryTossups = async (
     difficulties.length > 0
       ? `tournaments.difficulty in (${difficulties.join(', ')})`
       : true;
+
   const query = `
     select tournaments.name as tournament_name, tournaments.difficulty as tournament_difficulty, text, answer, formatted_text, formatted_answer from tossups
     inner join tournaments on tossups.tournament_id = tournaments.id
