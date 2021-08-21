@@ -2,15 +2,12 @@ import { Center } from '@chakra-ui/react';
 
 import TossupReader from '../TossupReader';
 
-type BodyProps = {
-  text: string;
-  answer: string;
-};
+type BodyProps = {};
 
-const Body: React.FC<BodyProps> = ({ text, answer }) => {
+const Body: React.FC<BodyProps> = () => {
   return (
     <Center flexGrow={1} p={4}>
-      <TossupReader text={text} answer={answer} />
+      <TossupReader />
     </Center>
   );
 };

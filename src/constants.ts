@@ -1,4 +1,4 @@
-import { Category, Difficulty } from './types';
+import { Category, Difficulty, Tossup } from './types';
 
 export const CATEGORIES = [
   { label: 'Science', value: Category.Science },
@@ -27,4 +27,18 @@ export const DIFFICULTIES = [
   { label: 'Regular College', value: Difficulty['Regular College'] },
   { label: 'Hard College', value: Difficulty['Hard College'] },
   { label: 'Open', value: Difficulty.Open },
+];
+
+export const blankTossup: Tossup = {
+  text: '',
+  answer: '',
+  category: Category.Science,
+  difficulty: Difficulty['Easy College'],
+  tournament: '',
+};
+
+export const defaultCategories = [Category.Science, Category.Literature];
+export const defaultDifficulties = [
+  Difficulty['Easy College'],
+  Difficulty['Regular College'],
 ];

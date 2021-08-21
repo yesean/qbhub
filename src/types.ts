@@ -23,3 +23,11 @@ export enum Difficulty {
   'Hard College',
   'Open',
 }
+
+export type Tossup = {
+  text: string;
+  answer: string;
+  category: Category;
+  difficulty: Difficulty;
+  tournament: string;
+};

@@ -1,9 +1,16 @@
 import { Heading } from '@chakra-ui/react';
+import { Category, Difficulty } from '../../../types';
 
-const Info: React.FC = () => {
+type InfoProps = {
+  category: Category;
+  difficulty: Difficulty;
+  tournament: string;
+};
+
+const Info: React.FC<InfoProps> = ({ category, difficulty, tournament }) => {
   return (
     <Heading pl={4} size="sm" mb={4}>
-      Science / 2019 Chicago Open / Open
+      {`${Category[category]} / ${tournament} / ${Difficulty[difficulty]}`}
     </Heading>
   );
 };

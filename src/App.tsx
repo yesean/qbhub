@@ -1,37 +1,43 @@
-import { useState } from 'react';
-import { Button, Flex } from '@chakra-ui/react';
+import { useCallback, useMemo, useState } from 'react';
+import { Flex } from '@chakra-ui/react';
 
 import Header from './components/Header';
 import Body from './components/Body';
 import SettingsModal from './components/SettingsModal';
-import { Category, Difficulty } from './types';
+import { Category, Difficulty, Tossup } from './types';
 import { fetchTossup } from './services/tossupService';
+import {
+  blankTossup,
+  defaultCategories,
+  defaultDifficulties,
+} from './constants';
+import { TossupContext, TossupContextType } from './services/TossupContext';
 
 const App: React.FC = () => {
-  const [text, setText] = useState('');
-  const [answer, setAnswer] = useState('');
+  const [tossup, setTossup] = useState<Tossup>(blankTossup);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-  const [categoriesSelected, setCategoriesSelected] = useState<Category[]>([
-    Category.Science,
-    Category.Literature,
-  ]);
+  const [categoriesSelected, setCategoriesSelected] = useState<Category[]>(
+    defaultCategories
+  );
   const [difficultiesSelected, setDifficultiesSelected] = useState<
     Difficulty[]
-  >([Difficulty['Easy College'], Difficulty['Regular College']]);
+  >(defaultDifficulties);
 
-  const refreshTossup = () => {
-    fetchTossup(categoriesSelected, difficultiesSelected).then((tossups) => {
-      setText(tossups[0].text);
-      setAnswer(tossups[0].answer);
-    });
-  };
+  const refreshTossup = useCallback(async () => {
+    const tu = await fetchTossup(categoriesSelected, difficultiesSelected);
+    setTossup(tu);
+  }, [categoriesSelected, difficultiesSelected]);
+
+  const tossupContext = useMemo<TossupContextType>(
+    () => ({ tossup, refreshTossup }),
+    [tossup, refreshTossup]
+  );
 
   return (
-    <>
+    <TossupContext.Provider value={tossupContext}>
       <Flex direction="column" h="100vh">
         <Header onClickSettingsIcon={() => setIsSettingsModalOpen(true)} />
-        <Body text={text} answer={answer} />
-        <Button onClick={refreshTossup}>Fetch</Button>
+        <Body />
       </Flex>
       <SettingsModal
         isOpen={isSettingsModalOpen}
@@ -41,7 +47,7 @@ const App: React.FC = () => {
         difficultiesSelected={difficultiesSelected}
         setDifficultiesSelected={setDifficultiesSelected}
       />
-    </>
+    </TossupContext.Provider>
   );
 };
 
