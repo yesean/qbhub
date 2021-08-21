@@ -6,12 +6,17 @@ import Answer from './Answer';
 import UserInput from './UserInput';
 import Score from './Score';
 
-const TossupReader: React.FC = () => {
+type TossupReaderProps = {
+  text: string;
+  answer: string;
+};
+
+const TossupReader: React.FC<TossupReaderProps> = ({ text, answer }) => {
   return (
     <Flex direction="column">
       <Info />
-      <Answer />
-      <Question />
+      <Answer answer={answer} />
+      <Question text={text} />
       <UserInput />
       <Score />
     </Flex>

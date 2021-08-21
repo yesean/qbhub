@@ -1,4 +1,4 @@
-export enum Categories {
+export enum Category {
   Mythology = 14,
   Literature = 15,
   Trash = 16,
@@ -12,7 +12,7 @@ export enum Categories {
   'Current Events' = 26,
 }
 
-export enum Difficulties {
+export enum Difficulty {
   'Middle School' = 1,
   'Easy High School',
   'Regular High School',

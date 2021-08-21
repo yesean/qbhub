@@ -11,15 +11,15 @@ import {
 import Select, { OptionsType } from 'react-select';
 
 import { CATEGORIES, DIFFICULTIES } from '../../constants';
-import { Categories, Difficulties } from '../../types';
+import { Category, Difficulty } from '../../types';
 
 type SettingsModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  categoriesSelected: Categories[];
-  setCategoriesSelected: React.Dispatch<React.SetStateAction<Categories[]>>;
-  difficultiesSelected: Difficulties[];
-  setDifficultiesSelected: React.Dispatch<React.SetStateAction<Difficulties[]>>;
+  categoriesSelected: Category[];
+  setCategoriesSelected: React.Dispatch<React.SetStateAction<Category[]>>;
+  difficultiesSelected: Difficulty[];
+  setDifficultiesSelected: React.Dispatch<React.SetStateAction<Difficulty[]>>;
 };
 
 const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -32,19 +32,19 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 }) => {
   const categoriesInSelect = categoriesSelected.map((c) => ({
     value: c,
-    label: Categories[c],
+    label: Category[c],
   }));
   const onCategoriesChange = (
-    values: OptionsType<{ label: string; value: Categories }>
+    values: OptionsType<{ label: string; value: Category }>
   ) => {
     setCategoriesSelected(values.map((v) => v.value));
   };
   const difficultiesInSelect = difficultiesSelected.map((d) => ({
     value: d,
-    label: Difficulties[d],
+    label: Difficulty[d],
   }));
   const onDifficultiesChange = (
-    values: OptionsType<{ label: string; value: Difficulties }>
+    values: OptionsType<{ label: string; value: Difficulty }>
   ) => {
     setDifficultiesSelected(values.map((v) => v.value));
   };

@@ -1,6 +1,10 @@
 import { Container, Text } from '@chakra-ui/react';
 
-const Answer: React.FC = () => {
+type AnswerProps = {
+  answer: string;
+};
+
+const Answer: React.FC<AnswerProps> = ({ answer }) => {
   return (
     <Container
       maxW="container.md"
@@ -11,9 +15,7 @@ const Answer: React.FC = () => {
       borderRadius="md"
     >
       <Text pl={2} pr={2}>
-        {
-          'ANSWER: UV/Vis spec [or ultraviolet–visible spectroscopy] <Science - Chemistry>'
-        }
+        {answer}
       </Text>
     </Container>
   );
