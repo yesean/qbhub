@@ -8,6 +8,7 @@ module.exports = {
     'prettier',
   ],
   rules: {
+    'arrow-body-style': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
   },
