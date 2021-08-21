@@ -4,9 +4,17 @@ import { Flex } from '@chakra-ui/react';
 import Header from './components/Header';
 import Body from './components/Body';
 import SettingsModal from './components/SettingsModal';
+import { Categories, Difficulties } from './types';
 
 const App: React.FC = () => {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [categoriesSelected, setCategoriesSelected] = useState<Categories[]>([
+    Categories.Science,
+    Categories.Literature,
+  ]);
+  const [difficultiesSelected, setDifficultiesSelected] = useState<
+    Difficulties[]
+  >([Difficulties['Easy College'], Difficulties['Regular College']]);
 
   return (
     <>
@@ -17,6 +25,10 @@ const App: React.FC = () => {
       <SettingsModal
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
+        categoriesSelected={categoriesSelected}
+        setCategoriesSelected={setCategoriesSelected}
+        difficultiesSelected={difficultiesSelected}
+        setDifficultiesSelected={setDifficultiesSelected}
       />
     </>
   );

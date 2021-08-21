@@ -8,16 +8,47 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
-import Select from 'react-select';
+import Select, { OptionsType } from 'react-select';
 
 import { CATEGORIES, DIFFICULTIES } from '../../constants';
+import { Categories, Difficulties } from '../../types';
 
 type SettingsModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  categoriesSelected: Categories[];
+  setCategoriesSelected: React.Dispatch<React.SetStateAction<Categories[]>>;
+  difficultiesSelected: Difficulties[];
+  setDifficultiesSelected: React.Dispatch<React.SetStateAction<Difficulties[]>>;
 };
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({
+  isOpen,
+  onClose,
+  categoriesSelected,
+  setCategoriesSelected,
+  difficultiesSelected,
+  setDifficultiesSelected,
+}) => {
+  const categoriesInSelect = categoriesSelected.map((c) => ({
+    value: c,
+    label: Categories[c],
+  }));
+  const onCategoriesChange = (
+    values: OptionsType<{ label: string; value: Categories }>
+  ) => {
+    setCategoriesSelected(values.map((v) => v.value));
+  };
+  const difficultiesInSelect = difficultiesSelected.map((d) => ({
+    value: d,
+    label: Difficulties[d],
+  }));
+  const onDifficultiesChange = (
+    values: OptionsType<{ label: string; value: Difficulties }>
+  ) => {
+    setDifficultiesSelected(values.map((v) => v.value));
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -25,10 +56,22 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
         <ModalHeader>Settings</ModalHeader>
         <ModalBody>
           <Box mb={4}>
-            <Select isMulti name="categories" options={CATEGORIES} />
+            <Select
+              isMulti
+              name="categories"
+              options={CATEGORIES}
+              value={categoriesInSelect}
+              onChange={onCategoriesChange}
+            />
           </Box>
           <Box>
-            <Select isMulti name="difficulties" options={DIFFICULTIES} />
+            <Select
+              isMulti
+              name="difficulties"
+              options={DIFFICULTIES}
+              value={difficultiesInSelect}
+              onChange={onDifficultiesChange}
+            />
           </Box>
         </ModalBody>
         <ModalFooter>
