@@ -1,7 +1,12 @@
-import { Input } from '@chakra-ui/react';
+import { Button, Flex, Input } from '@chakra-ui/react';
 
 const UserInput: React.FC = () => {
-  return <Input placeholder="Answer:" mb={8} />;
+  return (
+    <Flex>
+      <Input placeholder="Answer:" mb={8} mr={4} />
+      <Button colorScheme="green">Buzz</Button>
+    </Flex>
+  );
 };
 
 export default UserInput;
