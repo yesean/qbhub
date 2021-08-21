@@ -1,17 +1,17 @@
 import { Categories, Difficulties } from './types';
 
 export const CATEGORIES = [
-  { label: 'Mythology', value: Categories.Mythology },
-  { label: 'Literature', value: Categories.Literature },
-  { label: 'Trash', value: Categories.Trash },
   { label: 'Science', value: Categories.Science },
+  { label: 'Literature', value: Categories.Literature },
   { label: 'History', value: Categories.History },
-  { label: 'Religion', value: Categories.Religion },
-  { label: 'Geography', value: Categories.Geography },
   { label: 'Fine Arts', value: Categories.FineArts },
-  { label: 'Social Science', value: Categories.SocialScience },
   { label: 'Philosophy', value: Categories.Philosophy },
+  { label: 'Social Science', value: Categories.SocialScience },
+  { label: 'Geography', value: Categories.Geography },
+  { label: 'Mythology', value: Categories.Mythology },
+  { label: 'Religion', value: Categories.Religion },
   { label: 'Current Events', value: Categories.CurrentEvents },
+  { label: 'Trash', value: Categories.Trash },
 ];
 
 export const DIFFICULTIES = [
