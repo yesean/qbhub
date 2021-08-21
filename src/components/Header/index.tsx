@@ -10,7 +10,7 @@ const Header: React.FC<HeaderProps> = ({ onClickSettingsIcon }) => {
     <Box bg="gray.100" pr={2}>
       <Flex justify="space-between" align="center">
         <Heading d="inline" p={2}>
-          qbc
+          QBHub
         </Heading>
         <IconButton
           aria-label="Open settings"
