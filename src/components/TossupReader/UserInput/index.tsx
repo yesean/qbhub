@@ -8,7 +8,7 @@ const UserInput: React.FC = () => {
 
   return (
     <Flex>
-      <Input placeholder="Answer:" mb={8} mr={4} />
+      <Input placeholder="Answer:" mb={8} mr={4} isDisabled />
       <Button colorScheme="green" onClick={refreshTossup}>
         Next
       </Button>
