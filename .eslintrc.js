@@ -9,6 +9,7 @@ module.exports = {
   ],
   rules: {
     'arrow-body-style': 'off',
+    'import/prefer-default-export': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
   },
