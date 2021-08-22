@@ -24,6 +24,7 @@ const App: React.FC = () => {
   >(defaultDifficulties);
 
   const refreshTossup = useCallback(async () => {
+    setTossup(blankTossup);
     const tu = await fetchTossup(categoriesSelected, difficultiesSelected);
     setTossup(tu);
   }, [categoriesSelected, difficultiesSelected]);
