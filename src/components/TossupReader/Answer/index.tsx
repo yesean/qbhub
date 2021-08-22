@@ -14,7 +14,7 @@ const Answer: React.FC<AnswerProps> = ({ answer }) => {
       p={4}
       borderRadius="md"
     >
-      <Text pl={2} pr={2}>
+      <Text>
         <b>ANSWER:</b> {answer}
       </Text>
     </Container>

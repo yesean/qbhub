@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
-import { Container, Text } from '@chakra-ui/react';
+import { useContext, useEffect, useState } from 'react';
+import { Center, CircularProgress, Container, Text } from '@chakra-ui/react';
+import { Mode, ModeContext } from '../../../services/ModeContext';
 
 type QuestionProps = {
   text: string;
 };
 
 const Question: React.FC<QuestionProps> = ({ text }) => {
+  const { mode } = useContext(ModeContext);
   const [visibleIndex, setVisibleIndex] = useState(0);
   const [incrementIds, setIncrementIds] = useState<NodeJS.Timeout[]>([]);
   const [words, setWords] = useState<string[]>([]);
@@ -36,17 +38,48 @@ const Question: React.FC<QuestionProps> = ({ text }) => {
   };
 
   useEffect(() => {
-    if (text === '') {
-      setVisibleIndex(0);
+    const revealWords = () => {
       incrementIds.forEach(window.clearTimeout);
-      setIncrementIds([]);
+      setIncrementIds((ids) => (ids.length > 0 ? [] : ids));
+      setWords(text.split(' '));
+      setVisibleIndex(words.length);
+    };
+    if (mode === Mode.revealed) {
+      revealWords();
+    }
+  }, [incrementIds, mode, words.length, text]);
+
+  useEffect(() => {
+    const pauseWords = () => {
+      incrementIds.forEach(window.clearTimeout);
+      setIncrementIds((ids) => (ids.length > 0 ? [] : ids));
+    };
+    if (mode === Mode.answering) {
+      pauseWords();
+    }
+  }, [incrementIds, mode, words.length, text]);
+
+  useEffect(() => {
+    if (text === '') {
+      incrementIds.forEach(window.clearTimeout);
+      setIncrementIds((ids) => (ids.length > 0 ? [] : ids));
+      setVisibleIndex(0);
     }
   }, [text, incrementIds]);
 
   useEffect(() => {
-    const id = setTimeout(() => setVisibleIndex((i) => i + 1), 250);
+    const id = setTimeout(
+      () =>
+        setVisibleIndex((i) =>
+          i < words.length && mode === Mode.reading ? i + 1 : i
+        ),
+      250
+    );
+
     setIncrementIds((ids) => [...ids, id]);
-  }, [visibleIndex, words.length]);
+  }, [visibleIndex, words.length, mode]);
+
+  const shouldShowCircularProgress = mode === Mode.fetchingTossup;
 
   return (
     <Container
@@ -57,8 +90,17 @@ const Question: React.FC<QuestionProps> = ({ text }) => {
       p={4}
       borderRadius="md"
     >
+      {shouldShowCircularProgress && (
+        <Center>
+          <CircularProgress isIndeterminate color="cyan.100" />
+        </Center>
+      )}
       {words.map((w, i) => (
-        <Text d="inline" visibility={computeVisibility(i)}>{`${w} `}</Text>
+        <Text
+          key={`${w}${i}`}
+          d="inline"
+          visibility={computeVisibility(i)}
+        >{`${w} `}</Text>
       ))}
     </Container>
   );

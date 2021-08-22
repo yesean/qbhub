@@ -12,8 +12,10 @@ import {
   defaultDifficulties,
 } from './constants';
 import { TossupContext, TossupContextType } from './services/TossupContext';
+import { Mode, ModeContext, ModeContextType } from './services/ModeContext';
 
 const App: React.FC = () => {
+  const [mode, setMode] = useState<Mode>(Mode.start);
   const [tossup, setTossup] = useState<Tossup>(blankTossup);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [categoriesSelected, setCategoriesSelected] = useState<Category[]>(
@@ -24,9 +26,11 @@ const App: React.FC = () => {
   >(defaultDifficulties);
 
   const refreshTossup = useCallback(async () => {
+    setMode(Mode.fetchingTossup);
     setTossup(blankTossup);
     const tu = await fetchTossup(categoriesSelected, difficultiesSelected);
     setTossup(tu);
+    setMode(Mode.reading);
   }, [categoriesSelected, difficultiesSelected]);
 
   const tossupContext = useMemo<TossupContextType>(
@@ -34,21 +38,32 @@ const App: React.FC = () => {
     [tossup, refreshTossup]
   );
 
+  const setModeContext = useCallback((m: Mode) => {
+    setMode(m);
+  }, []);
+
+  const modeContext = useMemo<ModeContextType>(
+    () => ({ mode, setMode: setModeContext }),
+    [mode, setModeContext]
+  );
+
   return (
-    <TossupContext.Provider value={tossupContext}>
-      <Flex direction="column" h="100vh">
-        <Header onClickSettingsIcon={() => setIsSettingsModalOpen(true)} />
-        <Body />
-      </Flex>
-      <SettingsModal
-        isOpen={isSettingsModalOpen}
-        onClose={() => setIsSettingsModalOpen(false)}
-        categoriesSelected={categoriesSelected}
-        setCategoriesSelected={setCategoriesSelected}
-        difficultiesSelected={difficultiesSelected}
-        setDifficultiesSelected={setDifficultiesSelected}
-      />
-    </TossupContext.Provider>
+    <ModeContext.Provider value={modeContext}>
+      <TossupContext.Provider value={tossupContext}>
+        <Flex direction="column" h="100vh">
+          <Header onClickSettingsIcon={() => setIsSettingsModalOpen(true)} />
+          <Body />
+        </Flex>
+        <SettingsModal
+          isOpen={isSettingsModalOpen}
+          onClose={() => setIsSettingsModalOpen(false)}
+          categoriesSelected={categoriesSelected}
+          setCategoriesSelected={setCategoriesSelected}
+          difficultiesSelected={difficultiesSelected}
+          setDifficultiesSelected={setDifficultiesSelected}
+        />
+      </TossupContext.Provider>
+    </ModeContext.Provider>
   );
 };
 
