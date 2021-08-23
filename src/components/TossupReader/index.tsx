@@ -2,8 +2,9 @@ import { useContext } from 'react';
 import { Center, Container, Flex } from '@chakra-ui/react';
 
 import Info from './Info';
-import Question from './Question';
 import Answer from './Answer';
+import Progress from './Progress';
+import Question from './Question';
 import UserInput from './UserInput';
 import Score from './Score';
 import { TossupContext } from '../../services/TossupContext';
@@ -19,8 +20,8 @@ const TossupReader: React.FC<TossupReaderProps> = () => {
 
   const shouldShowInfo = mode !== Mode.start && mode !== Mode.fetchingTossup;
   const shouldShowAnswer = mode === Mode.revealed;
+  const shouldShowProgress = mode === Mode.answering;
   const shouldShowQuestion = mode !== Mode.start;
-  const shouldShowUserInput = mode !== Mode.fetchingTossup;
   const shouldShowScore = mode !== Mode.start;
 
   return (
@@ -35,11 +36,10 @@ const TossupReader: React.FC<TossupReaderProps> = () => {
         )}
         {shouldShowAnswer && <Answer answer={answer} />}
         {shouldShowQuestion && <Question text={text} />}
-        {shouldShowUserInput && (
-          <Center>
-            <UserInput />
-          </Center>
-        )}
+        {shouldShowProgress && <Progress />}
+        <Center>
+          <UserInput />
+        </Center>
         {shouldShowScore && <Score />}
       </Flex>
     </Container>

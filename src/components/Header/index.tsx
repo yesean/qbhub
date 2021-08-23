@@ -7,7 +7,7 @@ type HeaderProps = {
 
 const Header: React.FC<HeaderProps> = ({ onClickSettingsIcon }) => {
   return (
-    <Box bg="gray.100" pr={2}>
+    <Box pr={2}>
       <Flex justify="space-between" align="center">
         <Heading d="inline" p={2}>
           QBHub
@@ -17,6 +17,7 @@ const Header: React.FC<HeaderProps> = ({ onClickSettingsIcon }) => {
           icon={<SettingsIcon boxSize={6} />}
           size="lg"
           onClick={onClickSettingsIcon}
+          bg="white"
         />
       </Flex>
     </Box>
