@@ -6,23 +6,24 @@ import { Mode, ModeContext } from '../../../services/ModeContext';
 const TimerProgress: React.FC = () => {
   const { mode, setMode } = useContext(ModeContext);
   const [progress, setProgress] = useState(100);
-  const [decrementIds, setDecrementIds] = useState<NodeJS.Timeout[]>([]);
 
   useEffect(() => {
     if (mode === Mode.answering) {
       const id = setTimeout(() => {
         setProgress((p) => (p > 0 ? p - 0.05 : 0));
       }, 5);
-      setDecrementIds((ids) => [...ids, id]);
+      return () => {
+        window.clearTimeout(id);
+      };
     }
+    return () => {};
   }, [mode, progress]);
 
   useEffect(() => {
     if (progress === 0) {
-      decrementIds.forEach(window.clearTimeout);
-      setMode(Mode.revealed);
+      setMode(Mode.submitting);
     }
-  }, [progress, setMode, decrementIds]);
+  }, [progress, setMode]);
 
   return (
     <Progress

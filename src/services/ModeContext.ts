@@ -5,6 +5,7 @@ export enum Mode {
   fetchingTossup,
   reading,
   answering,
+  submitting,
   revealed,
 }
 

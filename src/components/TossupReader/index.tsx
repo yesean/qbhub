@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { Center, Container, Flex } from '@chakra-ui/react';
 
 import Info from './Info';
@@ -9,14 +9,17 @@ import UserInput from './UserInput';
 import Score from './Score';
 import { TossupContext } from '../../services/TossupContext';
 import { Mode, ModeContext } from '../../services/ModeContext';
+import { TossupResultContext } from '../../services/TossupResultContext';
+import { TossupResult } from '../../types';
 
 type TossupReaderProps = {};
 
 const TossupReader: React.FC<TossupReaderProps> = () => {
   const { mode } = useContext(ModeContext);
   const {
-    tossup: { text, answer, category, difficulty, tournament },
+    tossup: { text, formattedAnswer, category, difficulty, tournament },
   } = useContext(TossupContext);
+  const [tossupResult, setTossupResult] = useState<TossupResult | null>(null);
 
   const shouldShowInfo = mode !== Mode.start && mode !== Mode.fetchingTossup;
   const shouldShowAnswer = mode === Mode.revealed;
@@ -24,25 +27,35 @@ const TossupReader: React.FC<TossupReaderProps> = () => {
   const shouldShowQuestion = mode !== Mode.start;
   const shouldShowScore = mode !== Mode.start;
 
+  const tossupResultContext = useMemo(
+    () => ({
+      result: tossupResult,
+      setResult: setTossupResult,
+    }),
+    [tossupResult]
+  );
+
   return (
-    <Container maxW="3xl">
-      <Flex direction="column" w="100%">
-        {shouldShowInfo && (
-          <Info
-            category={category}
-            difficulty={difficulty}
-            tournament={tournament}
-          />
-        )}
-        {shouldShowAnswer && <Answer answer={answer} />}
-        {shouldShowQuestion && <Question text={text} />}
-        {shouldShowProgress && <Progress />}
-        <Center>
-          <UserInput />
-        </Center>
-        {shouldShowScore && <Score />}
-      </Flex>
-    </Container>
+    <TossupResultContext.Provider value={tossupResultContext}>
+      <Container maxW="3xl">
+        <Flex direction="column" w="100%">
+          {shouldShowInfo && (
+            <Info
+              category={category}
+              difficulty={difficulty}
+              tournament={tournament}
+            />
+          )}
+          {shouldShowAnswer && <Answer answer={formattedAnswer} />}
+          {shouldShowQuestion && <Question text={text} />}
+          {shouldShowProgress && <Progress />}
+          <Center>
+            <UserInput />
+          </Center>
+          {shouldShowScore && <Score />}
+        </Flex>
+      </Container>
+    </TossupResultContext.Provider>
   );
 };
 

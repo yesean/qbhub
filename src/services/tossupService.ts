@@ -23,7 +23,9 @@ export const fetchTossup = async (
     const tossup = tossups[0];
     return {
       text: tossup.text,
+      formattedText: tossup.formatted_text,
       answer: tossup.answer,
+      formattedAnswer: tossup.formatted_answer,
       category: tossup.category,
       difficulty: tossup.difficulty,
       tournament: tossup.tournament,

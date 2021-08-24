@@ -1,4 +1,5 @@
 import { Container, Text } from '@chakra-ui/react';
+import { parseHTMLString } from '../../../services/utils';
 
 type AnswerProps = {
   answer: string;
@@ -15,7 +16,7 @@ const Answer: React.FC<AnswerProps> = ({ answer }) => {
       borderRadius="md"
     >
       <Text>
-        <b>ANSWER:</b> {answer}
+        <b>ANSWER:</b> {parseHTMLString(answer)}
       </Text>
     </Container>
   );

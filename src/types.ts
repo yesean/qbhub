@@ -26,8 +26,22 @@ export enum Difficulty {
 
 export type Tossup = {
   text: string;
+  formattedText: string;
   answer: string;
+  formattedAnswer: string;
   category: Category;
   difficulty: Difficulty;
   tournament: string;
+};
+
+export enum TossupResultScore {
+  neg = -5,
+  get = 10,
+  power = 15,
+}
+
+export type TossupResult = {
+  submittedAnswer: string;
+  isCorrect: boolean;
+  score: TossupResultScore;
 };

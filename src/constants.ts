@@ -31,7 +31,9 @@ export const DIFFICULTIES = [
 
 export const blankTossup: Tossup = {
   text: '',
+  formattedText: '',
   answer: '',
+  formattedAnswer: '',
   category: Category.Science,
   difficulty: Difficulty['Easy College'],
   tournament: '',

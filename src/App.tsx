@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Flex } from '@chakra-ui/react';
+// import ReactHtmlParser from 'react-html-parser';
 
 import Header from './components/Header';
 import Body from './components/Body';
@@ -13,6 +14,7 @@ import {
 } from './constants';
 import { TossupContext, TossupContextType } from './services/TossupContext';
 import { Mode, ModeContext, ModeContextType } from './services/ModeContext';
+import logger from './services/logger';
 
 const App: React.FC = () => {
   const [mode, setMode] = useState<Mode>(Mode.start);
@@ -29,6 +31,7 @@ const App: React.FC = () => {
     setMode(Mode.fetchingTossup);
     setTossup(blankTossup);
     const tu = await fetchTossup(categoriesSelected, difficultiesSelected);
+    logger.info(tu);
     setTossup(tu);
     setMode(Mode.reading);
   }, [categoriesSelected, difficultiesSelected]);

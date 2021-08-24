@@ -7,11 +7,12 @@ type QuestionProps = {
 };
 
 const Question: React.FC<QuestionProps> = ({ text }) => {
-  const { mode } = useContext(ModeContext);
+  const { mode, setMode } = useContext(ModeContext);
   const [visibleIndex, setVisibleIndex] = useState(0);
   const [incrementIds, setIncrementIds] = useState<NodeJS.Timeout[]>([]);
   const [words, setWords] = useState<string[]>([]);
 
+  // scramble letters of unread words
   useEffect(() => {
     const getRand = (n: number) => Math.floor(Math.random() * n);
 
@@ -37,6 +38,7 @@ const Question: React.FC<QuestionProps> = ({ text }) => {
     return index < visibleIndex ? 'visible' : 'hidden';
   };
 
+  // reveal rest of tossup
   useEffect(() => {
     const revealWords = () => {
       incrementIds.forEach(window.clearTimeout);
@@ -49,6 +51,7 @@ const Question: React.FC<QuestionProps> = ({ text }) => {
     }
   }, [incrementIds, mode, words.length, text]);
 
+  // pause reading when answering
   useEffect(() => {
     const pauseWords = () => {
       incrementIds.forEach(window.clearTimeout);
@@ -59,25 +62,33 @@ const Question: React.FC<QuestionProps> = ({ text }) => {
     }
   }, [incrementIds, mode, words.length, text]);
 
+  // reset state when fetching new tossup
   useEffect(() => {
-    if (text === '') {
+    if (mode === Mode.fetchingTossup) {
       incrementIds.forEach(window.clearTimeout);
       setIncrementIds((ids) => (ids.length > 0 ? [] : ids));
       setVisibleIndex(0);
     }
-  }, [text, incrementIds]);
+  }, [mode, incrementIds]);
 
+  // read tossup at 1word/250ms
   useEffect(() => {
-    const id = setTimeout(
-      () =>
-        setVisibleIndex((i) =>
-          i < words.length && mode === Mode.reading ? i + 1 : i
-        ),
-      250
-    );
-
-    setIncrementIds((ids) => [...ids, id]);
-  }, [visibleIndex, words.length, mode]);
+    if (mode === Mode.reading) {
+      const textWords = text.split(' ');
+      if (visibleIndex < textWords.length) {
+        const id = setTimeout(
+          () =>
+            setVisibleIndex((i) =>
+              i < words.length && mode === Mode.reading ? i + 1 : i
+            ),
+          250
+        );
+        setIncrementIds((ids) => [...ids, id]);
+      } else {
+        setMode(Mode.answering);
+      }
+    }
+  }, [visibleIndex, words.length, mode, setMode, text]);
 
   const shouldShowCircularProgress = mode === Mode.fetchingTossup;
 
@@ -97,6 +108,7 @@ const Question: React.FC<QuestionProps> = ({ text }) => {
       )}
       {words.map((w, i) => (
         <Text
+          /* eslint react/no-array-index-key: "off" */
           key={`${w}${i}`}
           d="inline"
           visibility={computeVisibility(i)}

@@ -1,3 +1,4 @@
+import { useContext, useEffect, useState } from 'react';
 import {
   Stat,
   StatArrow,
@@ -5,22 +6,40 @@ import {
   StatLabel,
   StatNumber,
 } from '@chakra-ui/react';
-import { useContext } from 'react';
+
 import { Mode, ModeContext } from '../../../services/ModeContext';
+import { TossupResultScore } from '../../../types';
+import { TossupResultContext } from '../../../services/TossupResultContext';
 
 const Score: React.FC = () => {
   const { mode } = useContext(ModeContext);
+  const { result } = useContext(TossupResultContext);
+  const [score, setScore] = useState({
+    shouldShow: false,
+    score: 0,
+    delta: TossupResultScore.neg,
+  });
 
-  const shouldShowScoreDelta = mode === Mode.revealed;
+  useEffect(() => {
+    setScore((s) => ({ ...s, shouldShow: mode === Mode.revealed }));
+
+    if (mode === Mode.revealed && result !== null) {
+      setScore((s) => ({
+        ...s,
+        delta: result.score,
+        score: s.score + result.score,
+      }));
+    }
+  }, [mode, result]);
 
   return (
     <Stat>
       <StatLabel textAlign="center">Score</StatLabel>
-      <StatNumber textAlign="center">0</StatNumber>
-      {shouldShowScoreDelta && (
+      <StatNumber textAlign="center">{score.score}</StatNumber>
+      {score.shouldShow && (
         <StatHelpText textAlign="center">
-          <StatArrow type="increase" />
-          15
+          <StatArrow type={score.delta > 0 ? 'increase' : 'decrease'} />
+          {Math.abs(score.delta)}
         </StatHelpText>
       )}
     </Stat>
