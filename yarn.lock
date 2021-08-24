@@ -2439,6 +2439,20 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/dompurify@^2.2.3":
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/@types/dompurify/-/dompurify-2.2.3.tgz#6e89677a07902ac1b6821c345f34bd85da239b08"
+  integrity sha512-CLtc2mZK8+axmrz1JqtpklO/Kvn38arGc8o1l3UVopZaXXuer9ONdZwJ/9f226GrhRLtUmLr9WrvZsRSNpS8og==
+  dependencies:
+    "@types/trusted-types" "*"
+
+"@types/domutils@*":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@types/domutils/-/domutils-1.7.4.tgz#bb5f1807673e295782614b0a383b4dc1ecd2af97"
+  integrity sha512-w542nRQ0vpXQjLYP52LKqrugQtUq580dEDiDIyZ6IBmV8a3LXjGVNxfj/jUQxS0kDsbZAWsSxQOcTfVX3HRdwg==
+  dependencies:
+    domhandler "^2.4.0"
+
 "@types/eslint@^7.2.6":
   version "7.28.0"
   resolved "https://registry.yarnpkg.com/@types/eslint/-/eslint-7.28.0.tgz#7e41f2481d301c68e14f483fe10b017753ce8d5a"
@@ -2476,6 +2490,15 @@
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/@types/html-minifier-terser/-/html-minifier-terser-5.1.2.tgz#693b316ad323ea97eed6b38ed1a3cc02b1672b57"
   integrity sha512-h4lTMgMJctJybDp8CQrxTUiiYmedihHWkjnF/8Pxseu2S6Nlfcy8kwboQ8yejh456rP2yWoEVm1sS/FVsfM48w==
+
+"@types/htmlparser2@*":
+  version "3.10.3"
+  resolved "https://registry.yarnpkg.com/@types/htmlparser2/-/htmlparser2-3.10.3.tgz#9ee664e1620cbac4c9c724ed0373a2b832dbdece"
+  integrity sha512-XA74aD+acytofnZic9n83Rxy/IZ259299bYPx5SEyx7uymPi79lRyKDkhJlsuCaPHB7rEoTEhRN4Vm2G5WmHHg==
+  dependencies:
+    "@types/domutils" "*"
+    "@types/node" "*"
+    domhandler "^2.4.0"
 
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0", "@types/istanbul-lib-coverage@^2.0.1":
   version "2.0.3"
@@ -2576,6 +2599,14 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-html-parser@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@types/react-html-parser/-/react-html-parser-2.0.2.tgz#9b7e1b99657967e614aebf3f87d78a3fd0a1602c"
+  integrity sha512-avS2QzBMCUTGO2+gi3rWG6WreuU8zhf4b5CbS11itYlvLbwt5wmxBqQN4/f2z/JR/6Kvdt8ohAxhztb8XQHdPQ==
+  dependencies:
+    "@types/htmlparser2" "*"
+    "@types/react" "*"
+
 "@types/react-select@^4.0.17":
   version "4.0.17"
   resolved "https://registry.yarnpkg.com/@types/react-select/-/react-select-4.0.17.tgz#2e5ab4042c09c988bfc2711550329b0c3c9f8513"
@@ -2624,6 +2655,11 @@
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.1.tgz#20f18294f797f2209b5f65c8e3b5c8e8261d127c"
   integrity sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==
 
+"@types/string-similarity@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@types/string-similarity/-/string-similarity-4.0.0.tgz#8cc03d5d1baad2b74530fe6c7d849d5768d391ad"
+  integrity sha512-dMS4S07fbtY1AILG/RhuwmptmzK1Ql8scmAebOTJ/8iBtK/KI17NwGwKzu1uipjj8Kk+3mfPxum56kKZE93mzQ==
+
 "@types/tapable@^1", "@types/tapable@^1.0.5":
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.8.tgz#b94a4391c85666c7b73299fd3ad79d4faa435310"
@@ -2640,6 +2676,11 @@
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/@types/tinycolor2/-/tinycolor2-1.4.2.tgz#721ca5c5d1a2988b4a886e35c2ffc5735b6afbdf"
   integrity sha512-PeHg/AtdW6aaIO2a+98Xj7rWY4KC1E6yOy7AFknJQ7VXUGNrMlyxDFxJo7HqLtjQms/ZhhQX52mLVW/EX3JGOw==
+
+"@types/trusted-types@*":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@types/trusted-types/-/trusted-types-2.0.2.tgz#fc25ad9943bcac11cceb8168db4f275e0e72e756"
+  integrity sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==
 
 "@types/uglify-js@*":
   version "3.13.1"
@@ -5002,7 +5043,7 @@ domain-browser@^1.1.1:
   resolved "https://registry.yarnpkg.com/domain-browser/-/domain-browser-1.2.0.tgz#3d31f50191a6749dd1375a7f522e823d42e54eda"
   integrity sha512-jnjyiM6eRyZl2H+W8Q/zLMA481hzi0eszAaBUzIVnmYVDBbnLxVNnfu1HgEBvCbL+71FrxMl3E6lpKH7Ge3OXA==
 
-domelementtype@1:
+domelementtype@1, domelementtype@^1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/domelementtype/-/domelementtype-1.3.1.tgz#d048c44b37b0d10a7f2a3d5fee3f4333d790481f"
   integrity sha512-BSKB+TSpMpFI/HOxCNr1O8aMOTZ8hT3pM3GQ0w/mWRmkhEDSFJkkyzz4XQsBV44BChwGkrDfMyjVD0eA2aFV3w==
@@ -5019,6 +5060,13 @@ domexception@^2.0.1:
   dependencies:
     webidl-conversions "^5.0.0"
 
+domhandler@^2.3.0, domhandler@^2.4.0:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/domhandler/-/domhandler-2.4.2.tgz#8805097e933d65e85546f726d60f5eb88b44f803"
+  integrity sha512-JiK04h0Ht5u/80fdLMCEmV4zkNh2BcoMFBmZ/91WtYZ8qVXSKjiw7fXMgFPnHcSZgOo3XdinHvmnDUeMf5R4wA==
+  dependencies:
+    domelementtype "1"
+
 domhandler@^4.0.0, domhandler@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/domhandler/-/domhandler-4.2.0.tgz#f9768a5f034be60a89a27c2e4d0f74eba0d8b059"
@@ -5026,7 +5074,12 @@ domhandler@^4.0.0, domhandler@^4.2.0:
   dependencies:
     domelementtype "^2.2.0"
 
-domutils@^1.7.0:
+dompurify@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-2.3.1.tgz#a47059ca21fd1212d3c8f71fdea6943b8bfbdf6a"
+  integrity sha512-xGWt+NHAQS+4tpgbOAI08yxW0Pr256Gu/FNE2frZVTbgrBUn8M7tz7/ktS/LZ2MHeGqz6topj0/xY+y8R5FBFw==
+
+domutils@^1.5.1, domutils@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/domutils/-/domutils-1.7.0.tgz#56ea341e834e06e6748af7a1cb25da67ea9f8c2a"
   integrity sha512-Lgd2XcJ/NjEw+7tFvfKxOzCYKZsdct5lczQ2ZaQY8Djz7pfAD3Gbp8ySJWtreII/vDlMVmxwa6pHmdxIYgttDg==
@@ -5168,6 +5221,11 @@ enquirer@^2.3.5:
   integrity sha512-yjNnPr315/FjS4zIsUxYguYUPP2e1NK4d7E7ZOLiyYCcbFBiTMyID+2wvm2w6+pZ/odMA7cRkjhsPbltwBOrLg==
   dependencies:
     ansi-colors "^4.1.1"
+
+entities@^1.1.1:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/entities/-/entities-1.1.2.tgz#bdfa735299664dfafd34529ed4f8522a275fea56"
+  integrity sha512-f2LZMYl1Fzu7YSBKg+RoROelpOaNrcGmE9AZubeDfrCEia483oW4MI4VyFd5VNHIgQ/7qm1I0wUHK1eJnn2y2w==
 
 entities@^2.0.0:
   version "2.2.0"
@@ -6438,6 +6496,18 @@ html-webpack-plugin@4.5.0:
     pretty-error "^2.1.1"
     tapable "^1.1.3"
     util.promisify "1.0.0"
+
+htmlparser2@^3.9.0:
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/htmlparser2/-/htmlparser2-3.10.1.tgz#bd679dc3f59897b6a34bb10749c855bb53a9392f"
+  integrity sha512-IgieNijUMbkDovyoKObU1DUhm1iwNYE/fuifEoEHfd1oZKZDaONBSkal7Y01shxsM49R4XaMdGez3WnF9UfiCQ==
+  dependencies:
+    domelementtype "^1.3.1"
+    domhandler "^2.3.0"
+    domutils "^1.5.1"
+    entities "^1.1.1"
+    inherits "^2.0.1"
+    readable-stream "^3.1.1"
 
 htmlparser2@^6.1.0:
   version "6.1.0"
@@ -9998,6 +10068,13 @@ react-focus-lock@2.5.0:
     use-callback-ref "^1.2.1"
     use-sidecar "^1.0.1"
 
+react-html-parser@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-html-parser/-/react-html-parser-2.0.2.tgz#6dbe1ddd2cebc1b34ca15215158021db5fc5685e"
+  integrity sha512-XeerLwCVjTs3njZcgCOeDUqLgNIt/t+6Jgi5/qPsO/krUWl76kWKXMeVs2LhY2gwM6X378DkhLjur0zUQdpz0g==
+  dependencies:
+    htmlparser2 "^3.9.0"
+
 react-input-autosize@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-input-autosize/-/react-input-autosize-3.0.0.tgz#6b5898c790d4478d69420b55441fcc31d5c50a85"
@@ -10194,7 +10271,7 @@ read-pkg@^5.2.0:
     string_decoder "~1.1.1"
     util-deprecate "~1.0.1"
 
-readable-stream@^3.0.6, readable-stream@^3.6.0:
+readable-stream@^3.0.6, readable-stream@^3.1.1, readable-stream@^3.6.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.6.0.tgz#337bbda3adc0706bd3e024426a286d4b4b2c9198"
   integrity sha512-BViHy7LKeTz4oNnkcLJ+lVSL6vpiFeX6/d3oSH8zCW7UxP2onchk+vTGB143xuFjHS3deTgkKoXXymXqymiIdA==
@@ -11133,6 +11210,11 @@ string-natural-compare@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/string-natural-compare/-/string-natural-compare-3.0.1.tgz#7a42d58474454963759e8e8b7ae63d71c1e7fdf4"
   integrity sha512-n3sPwynL1nwKi3WJ6AIsClwBMa0zTi54fn2oLU6ndfTSIO05xaznjSf15PcBZU6FNWbmN5Q6cxT4V5hGvB4taw==
+
+string-similarity@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/string-similarity/-/string-similarity-4.0.4.tgz#42d01ab0b34660ea8a018da8f56a3309bb8b2a5b"
+  integrity sha512-/q/8Q4Bl4ZKAPjj8WerIBJWALKkaPRfrvhfF8k/B23i4nzrlRj2/go1m90In7nG/3XDSbOo0+pu6RvCTM9RGMQ==
 
 string-width@^3.0.0, string-width@^3.1.0:
   version "3.1.0"
