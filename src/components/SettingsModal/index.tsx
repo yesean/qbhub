@@ -10,7 +10,12 @@ import {
 } from '@chakra-ui/react';
 import Select, { OptionsType } from 'react-select';
 
-import { CATEGORIES, DIFFICULTIES } from '../../constants';
+import {
+  CATEGORIES,
+  DIFFICULTIES,
+  setInitialCategories,
+  setInitialDifficulties,
+} from '../../constants';
 import { Category, Difficulty } from '../../types';
 
 type SettingsModalProps = {
@@ -35,18 +40,22 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     label: Category[c],
   }));
   const onCategoriesChange = (
-    values: OptionsType<{ label: string; value: Category }>
+    options: OptionsType<{ label: string; value: Category }>
   ) => {
-    setCategoriesSelected(values.map((v) => v.value));
+    const values = options.map((o) => o.value);
+    setCategoriesSelected(values);
+    setInitialCategories(values);
   };
   const difficultiesInSelect = difficultiesSelected.map((d) => ({
     value: d,
     label: Difficulty[d],
   }));
   const onDifficultiesChange = (
-    values: OptionsType<{ label: string; value: Difficulty }>
+    options: OptionsType<{ label: string; value: Difficulty }>
   ) => {
-    setDifficultiesSelected(values.map((v) => v.value));
+    const values = options.map((o) => o.value);
+    setDifficultiesSelected(values);
+    setInitialDifficulties(values);
   };
 
   return (

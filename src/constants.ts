@@ -39,8 +39,38 @@ export const blankTossup: Tossup = {
   tournament: '',
 };
 
-export const defaultCategories = [Category.Science, Category.Literature];
-export const defaultDifficulties = [
-  Difficulty['Easy College'],
-  Difficulty['Regular College'],
-];
+const CATEGORIES_LS_KEY = 'categories';
+const DIFFICULTIES_LS_KEY = 'difficulties';
+
+export const setInitialCategories = (categories: Category[]) => {
+  window.localStorage.setItem(CATEGORIES_LS_KEY, JSON.stringify(categories));
+};
+
+export const getInitialCategories = () => {
+  const defaultCategories = [Category.Science, Category.Literature];
+  const categories = window.localStorage.getItem(CATEGORIES_LS_KEY);
+  if (categories === null) {
+    setInitialCategories(defaultCategories);
+    return defaultCategories;
+  }
+  return JSON.parse(categories);
+};
+
+export const setInitialDifficulties = (difficulties: Difficulty[]) => {
+  window.localStorage.setItem(
+    DIFFICULTIES_LS_KEY,
+    JSON.stringify(difficulties)
+  );
+};
+export const getInitialDifficulties = () => {
+  const defaultDifficulties = [
+    Difficulty['Easy College'],
+    Difficulty['Regular College'],
+  ];
+  const difficulties = window.localStorage.getItem(DIFFICULTIES_LS_KEY);
+  if (difficulties === null) {
+    setInitialDifficulties(defaultDifficulties);
+    return defaultDifficulties;
+  }
+  return JSON.parse(difficulties);
+};

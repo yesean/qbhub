@@ -8,8 +8,8 @@ import { Category, Difficulty, Tossup } from './types';
 import { fetchTossup } from './services/tossupService';
 import {
   blankTossup,
-  defaultCategories,
-  defaultDifficulties,
+  getInitialCategories,
+  getInitialDifficulties,
 } from './constants';
 import { TossupContext, TossupContextType } from './services/TossupContext';
 import { Mode, ModeContext, ModeContextType } from './services/ModeContext';
@@ -20,11 +20,11 @@ const App: React.FC = () => {
   const [tossup, setTossup] = useState<Tossup>(blankTossup);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [categoriesSelected, setCategoriesSelected] = useState<Category[]>(
-    defaultCategories
+    getInitialCategories()
   );
   const [difficultiesSelected, setDifficultiesSelected] = useState<
     Difficulty[]
-  >(defaultDifficulties);
+  >(getInitialDifficulties());
 
   const refreshTossup = useCallback(async () => {
     setMode(Mode.fetchingTossup);
