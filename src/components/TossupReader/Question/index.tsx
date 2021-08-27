@@ -117,8 +117,7 @@ const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
   // read tossup at 1word/250ms
   useEffect(() => {
     if (mode === Mode.reading) {
-      const textWords = text.split(' ');
-      if (visibleIndex < textWords.length) {
+      if (visibleIndex < words.length - 1) {
         const id = setTimeout(
           () =>
             setVisibleIndex((i) =>
@@ -134,10 +133,10 @@ const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
   }, [visibleIndex, words.length, mode, setMode, text]);
 
   const getWord = (word: Word, index: number) =>
-    index < visibleIndex ? word.original : word.shuffled;
+    index <= visibleIndex ? word.original : word.shuffled;
 
   const computeVisibility = (index: number): 'visible' | 'hidden' => {
-    return index < visibleIndex ? 'visible' : 'hidden';
+    return index <= visibleIndex ? 'visible' : 'hidden';
   };
 
   const shouldShowCircularProgress = mode === Mode.fetchingTossup;
@@ -171,7 +170,7 @@ const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
           >
             {`${getWord(w, i)} `}
           </Text>
-          {i + 1 === buzz?.index && (
+          {i === buzz?.index && (
             <Container
               color="cyan.500"
               m={0}
