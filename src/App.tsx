@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Flex } from '@chakra-ui/react';
-// import ReactHtmlParser from 'react-html-parser';
 
 import Header from './components/Header';
 import Body from './components/Body';

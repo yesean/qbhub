@@ -1,49 +1,92 @@
-import { useContext, useEffect, useState } from 'react';
+import { Fragment, useContext, useEffect, useMemo, useState } from 'react';
 import { Center, CircularProgress, Container, Text } from '@chakra-ui/react';
+import { BellIcon } from '@chakra-ui/icons';
+
 import { Mode, ModeContext } from '../../../services/ModeContext';
+import { getTagEnclosedText, shuffleString } from '../../../services/utils';
+import { TossupBuzzContext } from '../../../services/TossupBuzzContext';
+import logger from '../../../services/logger';
 
 type QuestionProps = {
   text: string;
+  formattedText: string;
 };
 
-const Question: React.FC<QuestionProps> = ({ text }) => {
-  const { mode, setMode } = useContext(ModeContext);
+type Word = {
+  original: string;
+  shuffled: string;
+  isInPower: boolean;
+};
+
+type PowerWordsCount = {
+  [word: string]: number;
+};
+
+const getWords = (text: string) =>
+  text.split(' ').map((w) => ({
+    original: w,
+    shuffled: shuffleString(w),
+  }));
+
+const getPowerWordsCount = (formattedText: string) =>
+  (
+    getTagEnclosedText('strong', formattedText) ||
+    getTagEnclosedText('b', formattedText) ||
+    ''
+  )
+    .replaceAll('<em>', '')
+    .replaceAll('</em>', '')
+    .replaceAll('<i>', '')
+    .replaceAll('</i>', '')
+    .split(' ')
+    .reduce<PowerWordsCount>((acc, w) => {
+      const wCount = w in acc ? acc[w] + 1 : 1;
+      return {
+        ...acc,
+        [w]: wCount,
+      };
+    }, {});
+
+const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
   const [visibleIndex, setVisibleIndex] = useState(0);
   const [incrementIds, setIncrementIds] = useState<NodeJS.Timeout[]>([]);
-  const [words, setWords] = useState<string[]>([]);
+  const { mode, setMode } = useContext(ModeContext);
+  const { buzz, setBuzz } = useContext(TossupBuzzContext);
 
-  // scramble letters of unread words
-  useEffect(() => {
-    const getRand = (n: number) => Math.floor(Math.random() * n);
-
-    const shuffleString = (s: string) => {
-      const chars = s.split('');
-      const shuffled = [];
-      while (shuffled.length < s.length) {
-        const randomIndex = getRand(chars.length);
-        const [removedChar] = chars.splice(randomIndex, 1);
-        shuffled.push(removedChar);
+  const words: Word[] = useMemo(() => {
+    const powerWordsCount = getPowerWordsCount(formattedText);
+    if (text !== '' && formattedText !== '')
+      logger.info('powerWordsCount: ', powerWordsCount);
+    return getWords(text).map((w) => {
+      if (w.original in powerWordsCount && powerWordsCount[w.original] > 0) {
+        powerWordsCount[w.original] -= 1;
+        return { ...w, isInPower: true };
       }
-      return shuffled.join('');
-    };
 
-    const textWords = text.split(' ');
-    const textWordsScrambled = textWords.map((w, i) =>
-      i > visibleIndex ? shuffleString(w) : w
-    );
-    setWords(textWordsScrambled);
-  }, [text, visibleIndex]);
+      return { ...w, isInPower: false };
+    });
+  }, [text, formattedText]);
 
-  const computeVisibility = (index: number): 'visible' | 'hidden' => {
-    return index < visibleIndex ? 'visible' : 'hidden';
-  };
+  // set buzz on user buzz
+  useEffect(() => {
+    const word = words[visibleIndex];
+    if (mode === Mode.answering) {
+      setBuzz({
+        readText: words
+          .slice(0, visibleIndex)
+          .map((w) => w.original)
+          .join(' '),
+        isInPower: word.isInPower,
+        index: visibleIndex,
+      });
+    }
+  }, [mode, setBuzz, visibleIndex, words]);
 
   // reveal rest of tossup
   useEffect(() => {
     const revealWords = () => {
       incrementIds.forEach(window.clearTimeout);
       setIncrementIds((ids) => (ids.length > 0 ? [] : ids));
-      setWords(text.split(' '));
       setVisibleIndex(words.length);
     };
     if (mode === Mode.revealed) {
@@ -90,6 +133,13 @@ const Question: React.FC<QuestionProps> = ({ text }) => {
     }
   }, [visibleIndex, words.length, mode, setMode, text]);
 
+  const getWord = (word: Word, index: number) =>
+    index < visibleIndex ? word.original : word.shuffled;
+
+  const computeVisibility = (index: number): 'visible' | 'hidden' => {
+    return index < visibleIndex ? 'visible' : 'hidden';
+  };
+
   const shouldShowCircularProgress = mode === Mode.fetchingTossup;
 
   return (
@@ -99,6 +149,9 @@ const Question: React.FC<QuestionProps> = ({ text }) => {
       w="100%"
       mb={4}
       p={4}
+      d="flex"
+      flexWrap="wrap"
+      justifyContent={shouldShowCircularProgress ? 'center' : 'start'}
       borderRadius="md"
     >
       {shouldShowCircularProgress && (
@@ -107,12 +160,32 @@ const Question: React.FC<QuestionProps> = ({ text }) => {
         </Center>
       )}
       {words.map((w, i) => (
-        <Text
-          /* eslint react/no-array-index-key: "off" */
-          key={`${w}${i}`}
-          d="inline"
-          visibility={computeVisibility(i)}
-        >{`${w} `}</Text>
+        <Fragment key={`${w}${i}`}>
+          <Text
+            /* eslint react/no-array-index-key: "off" */
+            d="inline-flex"
+            alignItems="center"
+            whiteSpace="pre"
+            visibility={computeVisibility(i)}
+            fontWeight={w.isInPower ? 'bold' : 'normal'}
+          >
+            {`${getWord(w, i)} `}
+          </Text>
+          {i + 1 === buzz?.index && (
+            <Container
+              color="cyan.500"
+              m={0}
+              p={0}
+              w="auto"
+              d="inline-flex"
+              alignItems="center"
+              whiteSpace="pre"
+            >
+              <BellIcon w={4} h={4} />
+              <Text d="inline"> </Text>
+            </Container>
+          )}
+        </Fragment>
       ))}
     </Container>
   );

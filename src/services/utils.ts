@@ -1,6 +1,7 @@
 import ss from 'string-similarity';
 import DOMPurify from 'dompurify';
 import ReactHTMLParser from 'react-html-parser';
+import logger from './logger';
 
 export const getAnswers = (answer: string): string[] => {
   const getCaptureGroups = (matches: IterableIterator<RegExpMatchArray>) => {
@@ -36,6 +37,7 @@ export const getAnswers = (answer: string): string[] => {
 export const checkAnswer = (answer: string, correctAnswers: string[]) => {
   const minRating = 0.6;
   const ratings = ss.findBestMatch(answer, correctAnswers);
+  logger.info('answer ratings: ', ratings);
   return ratings.bestMatch.rating > minRating;
 };
 
@@ -48,4 +50,26 @@ export const addShortcut = (key: string, callback: () => void) => {
   };
   window.addEventListener('keydown', listener);
   return () => window.removeEventListener('keydown', listener);
+};
+
+export const getTagEnclosedText = (tag: string, text: string) => {
+  const regex = new RegExp(`.*<${tag}>(.*)</${tag}>.*`);
+  return text.match(regex)?.[1];
+};
+
+export const checkIfTagEnclosed = (tag: string, text: string, word: string) => {
+  return getTagEnclosedText(tag, text)?.includes(word);
+};
+
+export const getRand = (n: number) => Math.floor(Math.random() * n);
+
+export const shuffleString = (s: string) => {
+  const chars = s.split('');
+  const shuffled = [];
+  while (shuffled.length < s.length) {
+    const randomIndex = getRand(chars.length);
+    const [removedChar] = chars.splice(randomIndex, 1);
+    shuffled.push(removedChar);
+  }
+  return shuffled.join('');
 };

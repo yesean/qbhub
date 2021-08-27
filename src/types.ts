@@ -45,3 +45,9 @@ export type TossupResult = {
   isCorrect: boolean;
   score: TossupResultScore;
 };
+
+export type TossupBuzz = {
+  isInPower: boolean;
+  readText: string;
+  index: number;
+};

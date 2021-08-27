@@ -7,9 +7,11 @@ import { TossupResultContext } from '../../../services/TossupResultContext';
 import { addShortcut, checkAnswer, getAnswers } from '../../../services/utils';
 import { TossupResultScore } from '../../../types';
 import logger from '../../../services/logger';
+import { TossupBuzzContext } from '../../../services/TossupBuzzContext';
 
 const UserInput: React.FC = () => {
   const { mode, setMode } = useContext(ModeContext);
+  const { buzz, setBuzz } = useContext(TossupBuzzContext);
   const {
     tossup: { answer },
     refreshTossup,
@@ -17,19 +19,6 @@ const UserInput: React.FC = () => {
   const { result, setResult } = useContext(TossupResultContext);
   const [inputValue, setInputValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-
-  // set button text depending on mode
-  let buttonText = '';
-  if (mode === Mode.start) buttonText = 'Start';
-  else if (mode === Mode.fetchingTossup) buttonText = '...';
-  else if (mode === Mode.reading) buttonText = 'Buzz';
-  else if (mode === Mode.answering) buttonText = 'Submit';
-  else if (mode === Mode.revealed) buttonText = 'Next';
-
-  // set input border depending on user correctness
-  let inputBorderColor;
-  if (result !== null)
-    inputBorderColor = result.isCorrect ? 'green.400' : 'red.400';
 
   // focus input when user is answering, blur otherwise
   useEffect(() => {
@@ -51,14 +40,20 @@ const UserInput: React.FC = () => {
 
   // process a user's answer when submitting
   useEffect(() => {
-    if (mode === Mode.submitting) {
+    if (buzz !== null && mode === Mode.submitting) {
+      logger.info('buzz: ', buzz);
       const submittedAnswer = inputValue.trim().toLowerCase();
       const answers = getAnswers(answer);
-      logger.info(`answers: ${answers}`);
+      logger.info('answers: ', answers);
       const isAnswerCorrect = checkAnswer(submittedAnswer, answers);
-      const score = isAnswerCorrect
-        ? TossupResultScore.get
-        : TossupResultScore.neg;
+      let score;
+      if (isAnswerCorrect) {
+        score = buzz.isInPower
+          ? TossupResultScore.power
+          : TossupResultScore.get;
+      } else {
+        score = TossupResultScore.neg;
+      }
       setResult({
         isCorrect: isAnswerCorrect,
         score,
@@ -66,13 +61,14 @@ const UserInput: React.FC = () => {
       });
       setMode(Mode.revealed);
     }
-  }, [mode, setMode, inputValue, answer, setResult]);
+  }, [mode, setMode, inputValue, answer, setResult, buzz, setBuzz]);
 
   // get new tossup
   const nextTossup = useCallback(() => {
     setResult(null);
+    setBuzz(null);
     refreshTossup();
-  }, [refreshTossup, setResult]);
+  }, [refreshTossup, setResult, setBuzz]);
 
   // prompt user for answer
   const promptUser = useCallback(() => {
@@ -100,6 +96,19 @@ const UserInput: React.FC = () => {
     if (mode === Mode.answering) submitAnswer();
     if (mode === Mode.revealed) nextTossup();
   };
+
+  // set button text depending on mode
+  let buttonText = '';
+  if (mode === Mode.start) buttonText = 'Start';
+  else if (mode === Mode.fetchingTossup) buttonText = '...';
+  else if (mode === Mode.reading) buttonText = 'Buzz';
+  else if (mode === Mode.answering) buttonText = 'Submit';
+  else if (mode === Mode.revealed) buttonText = 'Next';
+
+  // set input border depending on user correctness
+  let inputBorderColor;
+  if (mode === Mode.revealed && result !== null)
+    inputBorderColor = result.isCorrect ? 'green.400' : 'red.400';
 
   // only show start button at start
   const shouldShowInput = mode !== Mode.start;
