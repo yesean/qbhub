@@ -101,6 +101,7 @@ export type Tossup = {
   formattedText: string;
   formattedAnswer: string;
   category: Category;
+  subcategory: Subcategory;
   difficulty: Difficulty;
   tournament: string;
 };

@@ -15,14 +15,18 @@ import {
   DIFFICULTIES,
   setInitialCategories,
   setInitialDifficulties,
+  setInitialSubcategories,
+  SUBCATEGORIES,
 } from '../../constants';
-import { Category, Difficulty } from '../../types';
+import { Category, Difficulty, Subcategory } from '../../types';
 
 type SettingsModalProps = {
   isOpen: boolean;
   onClose: () => void;
   categoriesSelected: Category[];
   setCategoriesSelected: React.Dispatch<React.SetStateAction<Category[]>>;
+  subcategoriesSelected: Subcategory[];
+  setSubcategoriesSelected: React.Dispatch<React.SetStateAction<Subcategory[]>>;
   difficultiesSelected: Difficulty[];
   setDifficultiesSelected: React.Dispatch<React.SetStateAction<Difficulty[]>>;
 };
@@ -32,6 +36,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   onClose,
   categoriesSelected,
   setCategoriesSelected,
+  subcategoriesSelected,
+  setSubcategoriesSelected,
   difficultiesSelected,
   setDifficultiesSelected,
 }) => {
@@ -45,6 +51,17 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     const values = options.map((o) => o.value);
     setCategoriesSelected(values);
     setInitialCategories(values);
+  };
+  const subcategoriesInSelect = subcategoriesSelected.map((c) => ({
+    value: c,
+    label: Subcategory[c],
+  }));
+  const onSubcategoriesChange = (
+    options: OptionsType<{ label: string; value: Subcategory }>
+  ) => {
+    const values = options.map((o) => o.value);
+    setSubcategoriesSelected(values);
+    setInitialSubcategories(values);
   };
   const difficultiesInSelect = difficultiesSelected.map((d) => ({
     value: d,
@@ -71,6 +88,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               options={CATEGORIES}
               value={categoriesInSelect}
               onChange={onCategoriesChange}
+            />
+          </Box>
+          <Box mb={4}>
+            <Select
+              isMulti
+              name="subcategories"
+              options={SUBCATEGORIES}
+              value={subcategoriesInSelect}
+              onChange={onSubcategoriesChange}
             />
           </Box>
           <Box>

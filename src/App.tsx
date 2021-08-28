@@ -4,12 +4,13 @@ import { Flex } from '@chakra-ui/react';
 import Header from './components/Header';
 import Body from './components/Body';
 import SettingsModal from './components/SettingsModal';
-import { Category, Difficulty, Tossup } from './types';
+import { Category, Difficulty, Subcategory, Tossup } from './types';
 import { fetchTossup } from './services/tossupService';
 import {
   blankTossup,
   getInitialCategories,
   getInitialDifficulties,
+  getInitialSubcategories,
 } from './constants';
 import { TossupContext, TossupContextType } from './services/TossupContext';
 import { Mode, ModeContext, ModeContextType } from './services/ModeContext';
@@ -22,6 +23,9 @@ const App: React.FC = () => {
   const [categoriesSelected, setCategoriesSelected] = useState<Category[]>(
     getInitialCategories()
   );
+  const [subcategoriesSelected, setSubcategoriesSelected] = useState<
+    Subcategory[]
+  >(getInitialSubcategories());
   const [difficultiesSelected, setDifficultiesSelected] = useState<
     Difficulty[]
   >(getInitialDifficulties());
@@ -29,11 +33,15 @@ const App: React.FC = () => {
   const refreshTossup = useCallback(async () => {
     setMode(Mode.fetchingTossup);
     setTossup(blankTossup);
-    const tu = await fetchTossup(categoriesSelected, difficultiesSelected);
+    const tu = await fetchTossup(
+      categoriesSelected,
+      subcategoriesSelected,
+      difficultiesSelected
+    );
     logger.info(tu);
     setTossup(tu);
     setMode(Mode.reading);
-  }, [categoriesSelected, difficultiesSelected]);
+  }, [categoriesSelected, subcategoriesSelected, difficultiesSelected]);
 
   const tossupContext = useMemo<TossupContextType>(
     () => ({ tossup, refreshTossup }),
@@ -61,6 +69,8 @@ const App: React.FC = () => {
           onClose={() => setIsSettingsModalOpen(false)}
           categoriesSelected={categoriesSelected}
           setCategoriesSelected={setCategoriesSelected}
+          subcategoriesSelected={subcategoriesSelected}
+          setSubcategoriesSelected={setSubcategoriesSelected}
           difficultiesSelected={difficultiesSelected}
           setDifficultiesSelected={setDifficultiesSelected}
         />
