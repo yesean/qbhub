@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  FormLabel,
   Modal,
   ModalBody,
   ModalContent,
@@ -82,6 +83,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         <ModalHeader>Settings</ModalHeader>
         <ModalBody>
           <Box mb={4}>
+            <FormLabel>Category</FormLabel>
             <Select
               isMulti
               name="categories"
@@ -91,15 +93,21 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             />
           </Box>
           <Box mb={4}>
+            <FormLabel>Subcategory</FormLabel>
             <Select
               isMulti
               name="subcategories"
-              options={SUBCATEGORIES}
+              options={SUBCATEGORIES.filter(
+                (sc) =>
+                  categoriesInSelect.length === 0 ||
+                  categoriesInSelect.some((c) => c.value === sc.category)
+              )}
               value={subcategoriesInSelect}
               onChange={onSubcategoriesChange}
             />
           </Box>
           <Box>
+            <FormLabel>Difficulty</FormLabel>
             <Select
               isMulti
               name="difficulties"
