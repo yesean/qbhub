@@ -8,7 +8,8 @@ export const getAnswers = (answer: string): string[] => {
     return Array.from(matches).map((e) => e[1]);
   };
 
-  const normalizedAnswer = answer.trim().toLowerCase();
+  const answerWithoutMetadata = answer.replaceAll(/&lt;.*&gt;/g, '');
+  const normalizedAnswer = answerWithoutMetadata.trim().toLowerCase();
   const firstAnswerRegex = /(^\w(?:\w|\s|'|"|-)+)(?:\[|$|\()/g;
   const boldedRegex = /<strong>(?:<u>)?((?:\w|\s|'|"|-)*)(?:<\/u>)?<\/strong>/g;
   const acceptRegex = /(?:\[|(?:;\s))accept\s((?:\w|\s|'|"|-)+)(?:]|;|,)/g;
