@@ -3,7 +3,7 @@ import { Center, CircularProgress, Container, Text } from '@chakra-ui/react';
 import { BellIcon } from '@chakra-ui/icons';
 
 import { Mode, ModeContext } from '../../../services/ModeContext';
-import { getTagEnclosedText, shuffleString } from '../../../services/utils';
+import { getTextBetweenTags, shuffleString } from '../../../services/utils';
 import { TossupBuzzContext } from '../../../services/TossupBuzzContext';
 import logger from '../../../services/logger';
 
@@ -28,16 +28,15 @@ const getWords = (text: string) =>
     shuffled: shuffleString(w),
   }));
 
-const getPowerWordsCount = (formattedText: string) =>
-  (
-    getTagEnclosedText('strong', formattedText) ||
-    getTagEnclosedText('b', formattedText) ||
-    ''
-  )
-    .replaceAll('<em>', '')
-    .replaceAll('</em>', '')
-    .replaceAll('<i>', '')
-    .replaceAll('</i>', '')
+const getPowerWordsCount = (formattedText: string) => {
+  const boldText =
+    getTextBetweenTags('strong', formattedText).join(' ') ||
+    getTextBetweenTags('b', formattedText).join(' ') ||
+    '';
+  if (boldText) logger.info('boldText: ', boldText);
+
+  return boldText
+    .replaceAll(/<em>|<\/em>|<i>|<\/i>/g, '')
     .split(' ')
     .reduce<PowerWordsCount>((acc, w) => {
       const wCount = w in acc ? acc[w] + 1 : 1;
@@ -46,6 +45,7 @@ const getPowerWordsCount = (formattedText: string) =>
         [w]: wCount,
       };
     }, {});
+};
 
 const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
   const [visibleIndex, setVisibleIndex] = useState(0);

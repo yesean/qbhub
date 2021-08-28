@@ -15,6 +15,7 @@ import {
 import { TossupContext, TossupContextType } from './services/TossupContext';
 import { Mode, ModeContext, ModeContextType } from './services/ModeContext';
 import logger from './services/logger';
+import { cleanTossupText } from './services/utils';
 
 const App: React.FC = () => {
   const [mode, setMode] = useState<Mode>(Mode.start);
@@ -39,7 +40,12 @@ const App: React.FC = () => {
       difficultiesSelected
     );
     logger.info(tu);
-    setTossup(tu);
+    const cleanedTu = {
+      ...tu,
+      text: cleanTossupText(tu.text),
+      formattedText: cleanTossupText(tu.formattedText),
+    };
+    setTossup(cleanedTu);
     setMode(Mode.reading);
   }, [categoriesSelected, subcategoriesSelected, difficultiesSelected]);
 
