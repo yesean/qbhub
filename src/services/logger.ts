@@ -1,6 +1,8 @@
+/* eslint-disable no-console */
+
+const shouldLog = true;
+const nullLogger = (..._: any[]) => {};
 export default {
-  /* eslint no-console: "off" */
-  info: console.log,
-  /* eslint no-console: "off" */
+  info: shouldLog ? console.log : nullLogger,
   error: console.error,
 };
