@@ -3,6 +3,7 @@ import { Center, Container, Flex } from '@chakra-ui/react';
 
 import Info from './Info';
 import Answer from './Answer';
+import Result from './Result';
 import Progress from './Progress';
 import Question from './Question';
 import UserInput from './UserInput';
@@ -23,6 +24,7 @@ const TossupReader: React.FC<TossupReaderProps> = () => {
       formattedText,
       formattedAnswer,
       category,
+      subcategory,
       difficulty,
       tournament,
     },
@@ -60,6 +62,7 @@ const TossupReader: React.FC<TossupReaderProps> = () => {
             {shouldShowInfo && (
               <Info
                 category={category}
+                subcategory={subcategory}
                 difficulty={difficulty}
                 tournament={tournament}
               />
@@ -68,6 +71,7 @@ const TossupReader: React.FC<TossupReaderProps> = () => {
             {shouldShowQuestion && (
               <Question text={text} formattedText={formattedText} />
             )}
+            <Result />
             {shouldShowProgress && <Progress />}
             <Center>
               <UserInput />

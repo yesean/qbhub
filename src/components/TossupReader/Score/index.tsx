@@ -32,10 +32,17 @@ const Score: React.FC = () => {
     }
   }, [mode, result]);
 
+  const scoreDisplay =
+    mode === Mode.revealed
+      ? `${score.score - score.delta} → ${score.score}`
+      : score.score;
+
   return (
     <Stat>
-      <StatLabel textAlign="center">Score</StatLabel>
-      <StatNumber textAlign="center">{score.score}</StatNumber>
+      <StatLabel fontSize="xl" textAlign="center">
+        Score
+      </StatLabel>
+      <StatNumber textAlign="center">{scoreDisplay}</StatNumber>
       {score.shouldShow && (
         <StatHelpText textAlign="center">
           <StatArrow type={score.delta > 0 ? 'increase' : 'decrease'} />
