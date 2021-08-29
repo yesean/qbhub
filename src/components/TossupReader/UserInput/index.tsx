@@ -13,7 +13,7 @@ const UserInput: React.FC = () => {
   const { mode, setMode } = useContext(ModeContext);
   const { buzz, setBuzz } = useContext(TossupBuzzContext);
   const {
-    tossup: { answer },
+    tossup: { formattedAnswer },
     refreshTossup,
   } = useContext(TossupContext);
   const { result, setResult } = useContext(TossupResultContext);
@@ -43,7 +43,7 @@ const UserInput: React.FC = () => {
     if (buzz !== null && mode === Mode.submitting) {
       logger.info('buzz: ', buzz);
       const submittedAnswer = inputValue.trim().toLowerCase();
-      const answers = getAnswers(answer);
+      const answers = getAnswers(formattedAnswer);
       logger.info('answers: ', answers);
       const isAnswerCorrect = checkAnswer(submittedAnswer, answers);
       let score;
@@ -61,7 +61,7 @@ const UserInput: React.FC = () => {
       });
       setMode(Mode.revealed);
     }
-  }, [mode, setMode, inputValue, answer, setResult, buzz, setBuzz]);
+  }, [mode, setMode, inputValue, formattedAnswer, setResult, buzz, setBuzz]);
 
   // get new tossup
   const nextTossup = useCallback(() => {

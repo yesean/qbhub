@@ -5,7 +5,6 @@ import { BellIcon } from '@chakra-ui/icons';
 import { Mode, ModeContext } from '../../../services/ModeContext';
 import { getTextBetweenTags, shuffleString } from '../../../services/utils';
 import { TossupBuzzContext } from '../../../services/TossupBuzzContext';
-import logger from '../../../services/logger';
 
 type QuestionProps = {
   text: string;
@@ -33,7 +32,6 @@ const getPowerWordsCount = (formattedText: string) => {
     getTextBetweenTags('strong', formattedText).join(' ') ||
     getTextBetweenTags('b', formattedText).join(' ') ||
     '';
-  if (boldText) logger.info('boldText: ', boldText);
 
   return boldText
     .replaceAll(/<em>|<\/em>|<i>|<\/i>/g, '')
@@ -55,8 +53,6 @@ const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
 
   const words: Word[] = useMemo(() => {
     const powerWordsCount = getPowerWordsCount(formattedText);
-    if (text !== '' && formattedText !== '')
-      logger.info('powerWordsCount: ', powerWordsCount);
     return getWords(text).map((w) => {
       if (w.original in powerWordsCount && powerWordsCount[w.original] > 0) {
         powerWordsCount[w.original] -= 1;
