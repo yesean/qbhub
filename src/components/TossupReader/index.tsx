@@ -10,8 +10,7 @@ import UserInput from './UserInput';
 import Score from './Score';
 import { TossupContext } from '../../services/TossupContext';
 import { Mode, ModeContext } from '../../services/ModeContext';
-import { TossupResultContext } from '../../services/TossupResultContext';
-import { TossupBuzz, TossupResult } from '../../types';
+import { TossupBuzz } from '../../types';
 import { TossupBuzzContext } from '../../services/TossupBuzzContext';
 
 type TossupReaderProps = {};
@@ -29,7 +28,6 @@ const TossupReader: React.FC<TossupReaderProps> = () => {
       tournament,
     },
   } = useContext(TossupContext);
-  const [tossupResult, setTossupResult] = useState<TossupResult | null>(null);
   const [tossupBuzz, setTossupBuzz] = useState<TossupBuzz | null>(null);
 
   const shouldShowInfo = mode !== Mode.start && mode !== Mode.fetchingTossup;
@@ -37,14 +35,6 @@ const TossupReader: React.FC<TossupReaderProps> = () => {
   const shouldShowProgress = mode === Mode.answering;
   const shouldShowQuestion = mode !== Mode.start;
   const shouldShowScore = mode !== Mode.start;
-
-  const tossupResultContext = useMemo(
-    () => ({
-      result: tossupResult,
-      setResult: setTossupResult,
-    }),
-    [tossupResult]
-  );
 
   const tossupBuzzContext = useMemo(
     () => ({
@@ -56,30 +46,28 @@ const TossupReader: React.FC<TossupReaderProps> = () => {
 
   return (
     <TossupBuzzContext.Provider value={tossupBuzzContext}>
-      <TossupResultContext.Provider value={tossupResultContext}>
-        <Container maxW="3xl">
-          <Flex direction="column" w="100%">
-            {shouldShowInfo && (
-              <Info
-                category={category}
-                subcategory={subcategory}
-                difficulty={difficulty}
-                tournament={tournament}
-              />
-            )}
-            {shouldShowAnswer && <Answer answer={formattedAnswer} />}
-            {shouldShowQuestion && (
-              <Question text={text} formattedText={formattedText} />
-            )}
-            <Result />
-            {shouldShowProgress && <Progress />}
-            <Center>
-              <UserInput />
-            </Center>
-            {shouldShowScore && <Score />}
-          </Flex>
-        </Container>
-      </TossupResultContext.Provider>
+      <Container maxW="3xl">
+        <Flex direction="column" w="100%">
+          {shouldShowInfo && (
+            <Info
+              category={category}
+              subcategory={subcategory}
+              difficulty={difficulty}
+              tournament={tournament}
+            />
+          )}
+          {shouldShowAnswer && <Answer answer={formattedAnswer} />}
+          {shouldShowQuestion && (
+            <Question text={text} formattedText={formattedText} />
+          )}
+          <Result />
+          {shouldShowProgress && <Progress />}
+          <Center>
+            <UserInput />
+          </Center>
+          {shouldShowScore && <Score />}
+        </Flex>
+      </Container>
     </TossupBuzzContext.Provider>
   );
 };

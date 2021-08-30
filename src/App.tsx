@@ -4,7 +4,14 @@ import { Flex } from '@chakra-ui/react';
 import Header from './components/Header';
 import Body from './components/Body';
 import SettingsModal from './components/SettingsModal';
-import { Category, Difficulty, Subcategory, Tossup } from './types';
+import TossupHistoryModal from './components/TossupHistoryModal';
+import {
+  Category,
+  Difficulty,
+  Subcategory,
+  Tossup,
+  TossupResult,
+} from './types';
 import { fetchTossup } from './services/tossupService';
 import {
   blankTossup,
@@ -12,15 +19,19 @@ import {
   getInitialDifficulties,
   getInitialSubcategories,
 } from './constants';
-import { TossupContext, TossupContextType } from './services/TossupContext';
 import { Mode, ModeContext, ModeContextType } from './services/ModeContext';
+import { TossupContext, TossupContextType } from './services/TossupContext';
+import { TossupResultContext } from './services/TossupResultContext';
 import logger from './services/logger';
 import { cleanTossupText } from './services/utils';
 
 const App: React.FC = () => {
   const [mode, setMode] = useState<Mode>(Mode.start);
   const [tossup, setTossup] = useState<Tossup>(blankTossup);
+  const [tossupResult, setTossupResult] = useState<TossupResult | null>(null);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isTossupHistoryModalOpen, setIsTossupHistoryModalOpen] =
+    useState(false);
   const [categoriesSelected, setCategoriesSelected] = useState<Category[]>(
     getInitialCategories()
   );
@@ -49,11 +60,6 @@ const App: React.FC = () => {
     setMode(Mode.reading);
   }, [categoriesSelected, subcategoriesSelected, difficultiesSelected]);
 
-  const tossupContext = useMemo<TossupContextType>(
-    () => ({ tossup, refreshTossup }),
-    [tossup, refreshTossup]
-  );
-
   const setModeContext = useCallback((m: Mode) => {
     setMode(m);
   }, []);
@@ -63,23 +69,45 @@ const App: React.FC = () => {
     [mode, setModeContext]
   );
 
+  const tossupContext = useMemo<TossupContextType>(
+    () => ({ tossup, refreshTossup }),
+    [tossup, refreshTossup]
+  );
+
+  const tossupResultContext = useMemo(
+    () => ({
+      result: tossupResult,
+      setResult: setTossupResult,
+    }),
+    [tossupResult]
+  );
+
   return (
     <ModeContext.Provider value={modeContext}>
       <TossupContext.Provider value={tossupContext}>
-        <Flex direction="column" h="100vh">
-          <Header onClickSettingsIcon={() => setIsSettingsModalOpen(true)} />
-          <Body />
-        </Flex>
-        <SettingsModal
-          isOpen={isSettingsModalOpen}
-          onClose={() => setIsSettingsModalOpen(false)}
-          categoriesSelected={categoriesSelected}
-          setCategoriesSelected={setCategoriesSelected}
-          subcategoriesSelected={subcategoriesSelected}
-          setSubcategoriesSelected={setSubcategoriesSelected}
-          difficultiesSelected={difficultiesSelected}
-          setDifficultiesSelected={setDifficultiesSelected}
-        />
+        <TossupResultContext.Provider value={tossupResultContext}>
+          <Flex direction="column" h="100vh">
+            <Header
+              onClickHistoryIcon={() => setIsTossupHistoryModalOpen(true)}
+              onClickSettingsIcon={() => setIsSettingsModalOpen(true)}
+            />
+            <Body />
+          </Flex>
+          <TossupHistoryModal
+            isOpen={isTossupHistoryModalOpen}
+            onClose={() => setIsTossupHistoryModalOpen(false)}
+          />
+          <SettingsModal
+            isOpen={isSettingsModalOpen}
+            onClose={() => setIsSettingsModalOpen(false)}
+            categoriesSelected={categoriesSelected}
+            setCategoriesSelected={setCategoriesSelected}
+            subcategoriesSelected={subcategoriesSelected}
+            setSubcategoriesSelected={setSubcategoriesSelected}
+            difficultiesSelected={difficultiesSelected}
+            setDifficultiesSelected={setDifficultiesSelected}
+          />
+        </TossupResultContext.Provider>
       </TossupContext.Provider>
     </ModeContext.Provider>
   );

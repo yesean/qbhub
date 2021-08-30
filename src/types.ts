@@ -112,14 +112,16 @@ export enum TossupResultScore {
   power = 15,
 }
 
-export type TossupResult = {
-  submittedAnswer: string;
-  isCorrect: boolean;
-  score: TossupResultScore;
-};
-
 export type TossupBuzz = {
   isInPower: boolean;
   readText: string;
   index: number;
+  textWithBuzz: JSX.Element[];
+};
+
+export type TossupResult = {
+  submittedAnswer: string;
+  isCorrect: boolean;
+  score: TossupResultScore;
+  buzz: TossupBuzz;
 };

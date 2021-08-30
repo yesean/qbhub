@@ -45,6 +45,51 @@ const getPowerWordsCount = (formattedText: string) => {
     }, {});
 };
 
+const getWord = (word: Word, index: number, visibleIndex: number) =>
+  index <= visibleIndex ? word.original : word.shuffled;
+
+const computeVisibility = (
+  index: number,
+  visibleIndex: number
+): 'visible' | 'hidden' => {
+  return index <= visibleIndex ? 'visible' : 'hidden';
+};
+
+const renderQuestion = (
+  words: Word[],
+  visibleIndex: number,
+  buzzIndex: number
+) =>
+  words.map((w, i) => (
+    <Fragment key={`${w}${i}`}>
+      <Text
+        /* eslint react/no-array-index-key: "off" */
+        d="inline-flex"
+        alignItems="center"
+        whiteSpace="pre"
+        visibility={computeVisibility(i, visibleIndex)}
+        fontWeight={w.isInPower ? 'bold' : 'normal'}
+      >
+        {`${getWord(w, i, visibleIndex)} `}
+      </Text>
+      {i === buzzIndex && (
+        <Container
+          color="cyan.500"
+          m={0}
+          p={0}
+          w="auto"
+          d="inline-flex"
+          alignItems="center"
+          whiteSpace="pre"
+          verticalAlign="bottom"
+        >
+          <BellIcon w={4} h={4} />
+          <Text d="inline"> </Text>
+        </Container>
+      )}
+    </Fragment>
+  ));
+
 const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
   const [visibleIndex, setVisibleIndex] = useState(0);
   const [incrementIds, setIncrementIds] = useState<NodeJS.Timeout[]>([]);
@@ -74,6 +119,7 @@ const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
           .join(' '),
         isInPower: word.isInPower,
         index: visibleIndex,
+        textWithBuzz: renderQuestion(words, words.length - 1, visibleIndex),
       });
     }
   }, [mode, setBuzz, visibleIndex, words]);
@@ -128,13 +174,6 @@ const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
     }
   }, [visibleIndex, words.length, mode, setMode, text]);
 
-  const getWord = (word: Word, index: number) =>
-    index <= visibleIndex ? word.original : word.shuffled;
-
-  const computeVisibility = (index: number): 'visible' | 'hidden' => {
-    return index <= visibleIndex ? 'visible' : 'hidden';
-  };
-
   const shouldShowCircularProgress = mode === Mode.fetchingTossup;
 
   return (
@@ -154,34 +193,7 @@ const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
           <CircularProgress isIndeterminate color="cyan.100" />
         </Center>
       )}
-      {words.map((w, i) => (
-        <Fragment key={`${w}${i}`}>
-          <Text
-            /* eslint react/no-array-index-key: "off" */
-            d="inline-flex"
-            alignItems="center"
-            whiteSpace="pre"
-            visibility={computeVisibility(i)}
-            fontWeight={w.isInPower ? 'bold' : 'normal'}
-          >
-            {`${getWord(w, i)} `}
-          </Text>
-          {i === buzz?.index && (
-            <Container
-              color="cyan.500"
-              m={0}
-              p={0}
-              w="auto"
-              d="inline-flex"
-              alignItems="center"
-              whiteSpace="pre"
-            >
-              <BellIcon w={4} h={4} />
-              <Text d="inline"> </Text>
-            </Container>
-          )}
-        </Fragment>
-      ))}
+      {renderQuestion(words, visibleIndex, buzz?.index || -1)}
     </Container>
   );
 };

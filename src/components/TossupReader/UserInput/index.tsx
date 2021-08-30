@@ -58,6 +58,7 @@ const UserInput: React.FC = () => {
         isCorrect: isAnswerCorrect,
         score,
         submittedAnswer,
+        buzz,
       });
       setMode(Mode.revealed);
     }
