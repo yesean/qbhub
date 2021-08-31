@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import {
   Box,
   Button,
@@ -8,6 +9,10 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Slider,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderTrack,
 } from '@chakra-ui/react';
 import Select, { OptionsType } from 'react-select';
 
@@ -20,29 +25,26 @@ import {
   SUBCATEGORIES,
   SUBCATEGORY_MAP,
 } from '../../constants';
+import { TossupSettingsContext } from '../../services/TossupSettingsContext';
 import { Category, Difficulty, Subcategory } from '../../types';
 
 type SettingsModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  categoriesSelected: Category[];
-  setCategoriesSelected: React.Dispatch<React.SetStateAction<Category[]>>;
-  subcategoriesSelected: Subcategory[];
-  setSubcategoriesSelected: React.Dispatch<React.SetStateAction<Subcategory[]>>;
-  difficultiesSelected: Difficulty[];
-  setDifficultiesSelected: React.Dispatch<React.SetStateAction<Difficulty[]>>;
 };
 
-const SettingsModal: React.FC<SettingsModalProps> = ({
-  isOpen,
-  onClose,
-  categoriesSelected,
-  setCategoriesSelected,
-  subcategoriesSelected,
-  setSubcategoriesSelected,
-  difficultiesSelected,
-  setDifficultiesSelected,
-}) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
+  const {
+    readingSpeed,
+    setReadingSpeed,
+    categoriesSelected,
+    setCategoriesSelected,
+    subcategoriesSelected,
+    setSubcategoriesSelected,
+    difficultiesSelected,
+    setDifficultiesSelected,
+  } = useContext(TossupSettingsContext);
+
   const categoriesInSelect = categoriesSelected.map((c) => ({
     value: c,
     label: Category[c],
@@ -86,6 +88,23 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
       <ModalContent m={4}>
         <ModalHeader>Settings</ModalHeader>
         <ModalBody>
+          <Box mb={4}>
+            <FormLabel>Reading Speed</FormLabel>
+            <Slider
+              aria-label="tossup reading speed"
+              colorScheme="cyan"
+              min={0}
+              max={650}
+              step={50}
+              defaultValue={readingSpeed}
+              onChangeEnd={setReadingSpeed}
+            >
+              <SliderTrack>
+                <SliderFilledTrack />
+              </SliderTrack>
+              <SliderThumb />
+            </Slider>
+          </Box>
           <Box mb={4}>
             <FormLabel>Category</FormLabel>
             <Select

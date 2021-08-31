@@ -24,6 +24,10 @@ import { TossupContext, TossupContextType } from './services/TossupContext';
 import { TossupResultContext } from './services/TossupResultContext';
 import { cleanTossupText } from './services/utils';
 import logger from './services/logger';
+import {
+  TossupSettingsContext,
+  TossupSettingsContextType,
+} from './services/TossupSettingsContext';
 
 const NUM_TOSSUPS = 10;
 const MIN_NUM_TOSSUPS = 5;
@@ -36,6 +40,7 @@ const App: React.FC = () => {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isTossupHistoryModalOpen, setIsTossupHistoryModalOpen] =
     useState(false);
+  const [readingSpeed, setReadingSpeed] = useState(250);
   const [categoriesSelected, setCategoriesSelected] = useState<Category[]>(
     getInitialCategories()
   );
@@ -120,6 +125,28 @@ const App: React.FC = () => {
     [mode]
   );
 
+  const tossupSettingsContext = useMemo<TossupSettingsContextType>(
+    () => ({
+      readingSpeed,
+      setReadingSpeed,
+      categoriesSelected,
+      setCategoriesSelected,
+      subcategoriesSelected,
+      setSubcategoriesSelected,
+      difficultiesSelected,
+      setDifficultiesSelected,
+    }),
+    [
+      readingSpeed,
+      categoriesSelected,
+      setCategoriesSelected,
+      subcategoriesSelected,
+      setSubcategoriesSelected,
+      difficultiesSelected,
+      setDifficultiesSelected,
+    ]
+  );
+
   const tossupContext = useMemo<TossupContextType>(
     () => ({ tossup: activeTossup }),
     [activeTossup]
@@ -135,31 +162,27 @@ const App: React.FC = () => {
 
   return (
     <ModeContext.Provider value={modeContext}>
-      <TossupContext.Provider value={tossupContext}>
-        <TossupResultContext.Provider value={tossupResultContext}>
-          <Flex direction="column" h="100vh">
-            <Header
-              onClickHistoryIcon={() => setIsTossupHistoryModalOpen(true)}
-              onClickSettingsIcon={() => setIsSettingsModalOpen(true)}
+      <TossupSettingsContext.Provider value={tossupSettingsContext}>
+        <TossupContext.Provider value={tossupContext}>
+          <TossupResultContext.Provider value={tossupResultContext}>
+            <Flex direction="column" h="100vh">
+              <Header
+                onClickHistoryIcon={() => setIsTossupHistoryModalOpen(true)}
+                onClickSettingsIcon={() => setIsSettingsModalOpen(true)}
+              />
+              <Body />
+            </Flex>
+            <TossupHistoryModal
+              isOpen={isTossupHistoryModalOpen}
+              onClose={() => setIsTossupHistoryModalOpen(false)}
             />
-            <Body />
-          </Flex>
-          <TossupHistoryModal
-            isOpen={isTossupHistoryModalOpen}
-            onClose={() => setIsTossupHistoryModalOpen(false)}
-          />
-          <SettingsModal
-            isOpen={isSettingsModalOpen}
-            onClose={() => setIsSettingsModalOpen(false)}
-            categoriesSelected={categoriesSelected}
-            setCategoriesSelected={setCategoriesSelected}
-            subcategoriesSelected={subcategoriesSelected}
-            setSubcategoriesSelected={setSubcategoriesSelected}
-            difficultiesSelected={difficultiesSelected}
-            setDifficultiesSelected={setDifficultiesSelected}
-          />
-        </TossupResultContext.Provider>
-      </TossupContext.Provider>
+            <SettingsModal
+              isOpen={isSettingsModalOpen}
+              onClose={() => setIsSettingsModalOpen(false)}
+            />
+          </TossupResultContext.Provider>
+        </TossupContext.Provider>
+      </TossupSettingsContext.Provider>
     </ModeContext.Provider>
   );
 };

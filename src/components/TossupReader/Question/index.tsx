@@ -6,6 +6,7 @@ import { Mode, ModeContext } from '../../../services/ModeContext';
 import { getTextBetweenTags, shuffleString } from '../../../services/utils';
 import { TossupBuzzContext } from '../../../services/TossupBuzzContext';
 import logger from '../../../services/logger';
+import { TossupSettingsContext } from '../../../services/TossupSettingsContext';
 
 type QuestionProps = {
   text: string;
@@ -96,6 +97,7 @@ const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
   const [incrementId, setIncrementId] = useState<NodeJS.Timeout | null>(null);
   const { mode, setMode } = useContext(ModeContext);
   const { buzz, setBuzz } = useContext(TossupBuzzContext);
+  const { readingSpeed } = useContext(TossupSettingsContext);
 
   const words: Word[] = useMemo(() => {
     const powerWordsCount = getPowerWordsCount(formattedText);
@@ -162,19 +164,28 @@ const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
     if (mode === Mode.reading) {
       if (visibleIndex < words.length - 1) {
         if (incrementId === null) {
+          logger.info('reading speed: ', 700 - readingSpeed, ' ms/word');
           const id = setTimeout(() => {
             setVisibleIndex((i) =>
               i < words.length && mode === Mode.reading ? i + 1 : i
             );
             setIncrementId(null);
-          }, 250);
+          }, 700 - readingSpeed); // need to take complement since higher reading speed (ms / word) is slow
           setIncrementId(id);
         }
       } else {
         setMode(Mode.answering);
       }
     }
-  }, [visibleIndex, words.length, mode, setMode, text, incrementId]);
+  }, [
+    visibleIndex,
+    words.length,
+    mode,
+    setMode,
+    text,
+    incrementId,
+    readingSpeed,
+  ]);
 
   const shouldShowCircularProgress = mode === Mode.fetchingTossup;
 
