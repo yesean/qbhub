@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Flex } from '@chakra-ui/react';
 
 import Header from './components/Header';
@@ -22,12 +22,16 @@ import {
 import { Mode, ModeContext, ModeContextType } from './services/ModeContext';
 import { TossupContext, TossupContextType } from './services/TossupContext';
 import { TossupResultContext } from './services/TossupResultContext';
-import logger from './services/logger';
 import { cleanTossupText } from './services/utils';
+import logger from './services/logger';
+
+const NUM_TOSSUPS = 10;
+const MIN_NUM_TOSSUPS = 5;
 
 const App: React.FC = () => {
   const [mode, setMode] = useState<Mode>(Mode.start);
-  const [tossup, setTossup] = useState<Tossup>(blankTossup);
+  const [activeTossup, setActiveTossup] = useState<Tossup>(blankTossup);
+  const [tossups, setTossups] = useState<Tossup[]>([]);
   const [tossupResult, setTossupResult] = useState<TossupResult | null>(null);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isTossupHistoryModalOpen, setIsTossupHistoryModalOpen] =
@@ -42,36 +46,83 @@ const App: React.FC = () => {
     Difficulty[]
   >(getInitialDifficulties());
 
-  const refreshTossup = useCallback(async () => {
-    setMode(Mode.fetchingTossup);
-    setTossup(blankTossup);
-    const tu = await fetchTossup(
-      categoriesSelected,
-      subcategoriesSelected,
-      difficultiesSelected
+  // update cached tossups on category change
+  useEffect(() => {
+    setTossups((tus) =>
+      tus.filter((tu) => categoriesSelected.includes(tu.category))
     );
-    logger.info(tu);
-    const cleanedTu = {
-      ...tu,
-      text: cleanTossupText(tu.text),
-      formattedText: cleanTossupText(tu.formattedText),
-    };
-    setTossup(cleanedTu);
-    setMode(Mode.reading);
-  }, [categoriesSelected, subcategoriesSelected, difficultiesSelected]);
+  }, [categoriesSelected]);
 
-  const setModeContext = useCallback((m: Mode) => {
-    setMode(m);
-  }, []);
+  // update cached tossups on subcategory change
+  useEffect(() => {
+    setTossups((tus) =>
+      tus.filter((tu) => subcategoriesSelected.includes(tu.subcategory))
+    );
+  }, [subcategoriesSelected]);
+
+  // update cached tossups on difficulty change
+  useEffect(() => {
+    setTossups((tus) =>
+      tus.filter((tu) => difficultiesSelected.includes(tu.difficulty))
+    );
+  }, [difficultiesSelected]);
+
+  const fetchMoreTossups = useCallback(
+    async (limit: number) => {
+      const fetchedTus = await fetchTossup(
+        categoriesSelected,
+        subcategoriesSelected,
+        difficultiesSelected,
+        limit
+      );
+      const cleanedTus = fetchedTus.map((tu) => ({
+        ...tu,
+        text: cleanTossupText(tu.text),
+        formattedText: cleanTossupText(tu.formattedText),
+      }));
+      logger.info('cleaned tossups: ', cleanedTus);
+      setTossups((tus) =>
+        tus.length <= MIN_NUM_TOSSUPS ? [...tus, ...cleanedTus] : tus
+      );
+    },
+    [categoriesSelected, subcategoriesSelected, difficultiesSelected]
+  );
+
+  useEffect(() => {
+    const getNextTossup = () => {
+      if (mode === Mode.fetchingTossup) {
+        logger.info('getting next tossup');
+        logger.info('tossups: ', tossups);
+        if (tossups.length === 0) {
+          logger.info('no tossups :(');
+          logger.info('fetching more tossups');
+          return fetchMoreTossups(NUM_TOSSUPS);
+        }
+        if (tossups.length <= MIN_NUM_TOSSUPS) {
+          logger.info('need to get more tossups');
+          fetchMoreTossups(NUM_TOSSUPS - tossups.length);
+        }
+
+        const nextTossup = tossups.splice(0, 1)[0];
+        logger.info('setting activeTossup to', nextTossup);
+        setActiveTossup(nextTossup);
+        setTossups([...tossups]);
+        setMode(Mode.reading);
+      }
+      return () => {};
+    };
+
+    getNextTossup();
+  }, [fetchMoreTossups, tossups, mode]);
 
   const modeContext = useMemo<ModeContextType>(
-    () => ({ mode, setMode: setModeContext }),
-    [mode, setModeContext]
+    () => ({ mode, setMode }),
+    [mode]
   );
 
   const tossupContext = useMemo<TossupContextType>(
-    () => ({ tossup, refreshTossup }),
-    [tossup, refreshTossup]
+    () => ({ tossup: activeTossup }),
+    [activeTossup]
   );
 
   const tossupResultContext = useMemo(

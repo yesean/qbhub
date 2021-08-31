@@ -14,7 +14,6 @@ const UserInput: React.FC = () => {
   const { buzz, setBuzz } = useContext(TossupBuzzContext);
   const {
     tossup: { formattedAnswer },
-    refreshTossup,
   } = useContext(TossupContext);
   const { result, setResult } = useContext(TossupResultContext);
   const [inputValue, setInputValue] = useState('');
@@ -50,7 +49,7 @@ const UserInput: React.FC = () => {
       if (isAnswerCorrect) {
         score = buzz.isInPower
           ? TossupResultScore.power
-          : TossupResultScore.get;
+          : TossupResultScore.ten;
       } else {
         score = TossupResultScore.neg;
       }
@@ -66,10 +65,10 @@ const UserInput: React.FC = () => {
 
   // get new tossup
   const nextTossup = useCallback(() => {
+    setMode(Mode.fetchingTossup);
     setResult(null);
     setBuzz(null);
-    refreshTossup();
-  }, [refreshTossup, setResult, setBuzz]);
+  }, [setResult, setBuzz, setMode]);
 
   // prompt user for answer
   const promptUser = useCallback(() => {

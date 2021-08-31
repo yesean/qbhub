@@ -108,7 +108,7 @@ export type Tossup = {
 
 export enum TossupResultScore {
   neg = -5,
-  get = 10,
+  ten = 10,
   power = 15,
 }
 

@@ -5,6 +5,7 @@ import { BellIcon } from '@chakra-ui/icons';
 import { Mode, ModeContext } from '../../../services/ModeContext';
 import { getTextBetweenTags, shuffleString } from '../../../services/utils';
 import { TossupBuzzContext } from '../../../services/TossupBuzzContext';
+import logger from '../../../services/logger';
 
 type QuestionProps = {
   text: string;
@@ -132,6 +133,7 @@ const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
       setVisibleIndex(words.length);
     };
     if (mode === Mode.revealed) {
+      logger.info('revealing rest of tossup');
       revealWords();
     }
   }, [incrementIds, mode, words.length, text]);
@@ -143,6 +145,7 @@ const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
       setIncrementIds((ids) => (ids.length > 0 ? [] : ids));
     };
     if (mode === Mode.answering) {
+      logger.info('pausing reading for user answer');
       pauseWords();
     }
   }, [incrementIds, mode, words.length, text]);
@@ -150,8 +153,7 @@ const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
   // reset state when fetching new tossup
   useEffect(() => {
     if (mode === Mode.fetchingTossup) {
-      incrementIds.forEach(window.clearTimeout);
-      setIncrementIds((ids) => (ids.length > 0 ? [] : ids));
+      logger.info('resetting state for tossup fetch');
       setVisibleIndex(0);
     }
   }, [mode, incrementIds]);
@@ -188,12 +190,13 @@ const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
       justifyContent={shouldShowCircularProgress ? 'center' : 'start'}
       borderRadius="md"
     >
-      {shouldShowCircularProgress && (
+      {shouldShowCircularProgress ? (
         <Center>
           <CircularProgress isIndeterminate color="cyan.100" />
         </Center>
+      ) : (
+        renderQuestion(words, visibleIndex, buzz?.index || -1)
       )}
-      {renderQuestion(words, visibleIndex, buzz?.index || -1)}
     </Container>
   );
 };

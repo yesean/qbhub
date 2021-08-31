@@ -11,7 +11,7 @@ const Result: React.FC = () => {
 
   let text;
   if (result.score === TossupResultScore.power) text = '🎉  Power!  🥳';
-  else if (result.score === TossupResultScore.get) text = '😇  Ten!';
+  else if (result.score === TossupResultScore.ten) text = '😇  Ten!';
   else if (result.score === TossupResultScore.neg) text = '😩  Neg!';
 
   return (
