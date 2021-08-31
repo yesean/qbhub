@@ -18,6 +18,7 @@ import {
   setInitialDifficulties,
   setInitialSubcategories,
   SUBCATEGORIES,
+  SUBCATEGORY_MAP,
 } from '../../constants';
 import { Category, Difficulty, Subcategory } from '../../types';
 
@@ -51,6 +52,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   ) => {
     const values = options.map((o) => o.value);
     setCategoriesSelected(values);
+    setSubcategoriesSelected((scs) =>
+      scs.filter((sc) => values.includes(SUBCATEGORY_MAP[sc]))
+    );
     setInitialCategories(values);
   };
   const subcategoriesInSelect = subcategoriesSelected.map((c) => ({

@@ -357,6 +357,13 @@ export const SUBCATEGORIES = [
   },
 ];
 
+export const SUBCATEGORY_MAP = SUBCATEGORIES.reduce<
+  { [key in Subcategory]: Category }
+>(
+  (acc, sc) => ({ ...acc, [sc.value]: sc.category }),
+  {} as { [key in Subcategory]: Category }
+);
+
 export const DIFFICULTIES = [
   { label: 'Middle School', value: Difficulty['Middle School'] },
   { label: 'Easy High School', value: Difficulty['Easy High School'] },
