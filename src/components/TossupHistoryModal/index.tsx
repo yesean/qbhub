@@ -15,7 +15,7 @@ import {
   Td,
 } from '@chakra-ui/react';
 
-import { Tossup, TossupResult } from '../../types';
+import { Tossup, TossupResult, TossupResultScore } from '../../types';
 import { Mode, ModeContext } from '../../services/ModeContext';
 import { TossupContext } from '../../services/TossupContext';
 import { parseHTMLString } from '../../services/utils';
@@ -46,6 +46,20 @@ const TossupHistoryModal: React.FC<TossupHistoryModalProps> = ({
     }
   }, [mode, tossup, result]);
 
+  const powers = results.filter(
+    (r) => r.result.score === TossupResultScore.power
+  ).length;
+
+  const tens = results.filter(
+    (r) => r.result.score === TossupResultScore.ten
+  ).length;
+
+  const negs = results.filter(
+    (r) => r.result.score === TossupResultScore.neg
+  ).length;
+
+  const points = results.reduce((acc, r) => acc + r.result.score, 0);
+
   return (
     <Modal
       isOpen={isOpen}
@@ -57,8 +71,31 @@ const TossupHistoryModal: React.FC<TossupHistoryModalProps> = ({
       <ModalOverlay />
       <ModalContent m={4} maxH="max(75vh, 600px)">
         <ModalHeader>Tossup History</ModalHeader>
-        <ModalBody pt={0}>
-          <Table pos="relative" variant="simple">
+        <ModalBody pt={0} display="flex" flexDirection="column">
+          <Table variant="simple" mb={4}>
+            <Thead>
+              <Tr>
+                <Th>15</Th>
+                <Th>10</Th>
+                <Th>-5</Th>
+                <Th>Points</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              <Tr>
+                <Td>{powers}</Td>
+                <Td>{tens}</Td>
+                <Td>{negs}</Td>
+                <Td>{points}</Td>
+              </Tr>
+            </Tbody>
+          </Table>
+          <Table
+            variant="simple"
+            display="block"
+            pos="relative"
+            overflow="auto"
+          >
             <Thead pos="sticky" top={0} bg="white">
               <Tr>
                 <Th>Score</Th>
