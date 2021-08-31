@@ -93,7 +93,7 @@ const renderQuestion = (
 
 const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
   const [visibleIndex, setVisibleIndex] = useState(0);
-  const [incrementIds, setIncrementIds] = useState<NodeJS.Timeout[]>([]);
+  const [incrementId, setIncrementId] = useState<NodeJS.Timeout | null>(null);
   const { mode, setMode } = useContext(ModeContext);
   const { buzz, setBuzz } = useContext(TossupBuzzContext);
 
@@ -128,27 +128,26 @@ const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
   // reveal rest of tossup
   useEffect(() => {
     const revealWords = () => {
-      incrementIds.forEach(window.clearTimeout);
-      setIncrementIds((ids) => (ids.length > 0 ? [] : ids));
+      setIncrementId(null);
       setVisibleIndex(words.length);
     };
     if (mode === Mode.revealed) {
       logger.info('revealing rest of tossup');
       revealWords();
     }
-  }, [incrementIds, mode, words.length, text]);
+  }, [incrementId, mode, words.length, text]);
 
   // pause reading when answering
   useEffect(() => {
     const pauseWords = () => {
-      incrementIds.forEach(window.clearTimeout);
-      setIncrementIds((ids) => (ids.length > 0 ? [] : ids));
+      if (incrementId !== null) window.clearTimeout(incrementId);
+      setIncrementId(null);
     };
     if (mode === Mode.answering) {
       logger.info('pausing reading for user answer');
       pauseWords();
     }
-  }, [incrementIds, mode, words.length, text]);
+  }, [incrementId, mode, words.length, text]);
 
   // reset state when fetching new tossup
   useEffect(() => {
@@ -156,25 +155,26 @@ const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
       logger.info('resetting state for tossup fetch');
       setVisibleIndex(0);
     }
-  }, [mode, incrementIds]);
+  }, [mode, incrementId]);
 
   // read tossup at 1word/250ms
   useEffect(() => {
     if (mode === Mode.reading) {
       if (visibleIndex < words.length - 1) {
-        const id = setTimeout(
-          () =>
+        if (incrementId === null) {
+          const id = setTimeout(() => {
             setVisibleIndex((i) =>
               i < words.length && mode === Mode.reading ? i + 1 : i
-            ),
-          250
-        );
-        setIncrementIds((ids) => [...ids, id]);
+            );
+            setIncrementId(null);
+          }, 250);
+          setIncrementId(id);
+        }
       } else {
         setMode(Mode.answering);
       }
     }
-  }, [visibleIndex, words.length, mode, setMode, text]);
+  }, [visibleIndex, words.length, mode, setMode, text, incrementId]);
 
   const shouldShowCircularProgress = mode === Mode.fetchingTossup;
 
