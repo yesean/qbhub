@@ -19,14 +19,17 @@ import Select, { OptionsType } from 'react-select';
 import {
   CATEGORIES,
   DIFFICULTIES,
-  setInitialCategories,
-  setInitialDifficulties,
-  setInitialSubcategories,
   SUBCATEGORIES,
   SUBCATEGORY_MAP,
 } from '../../constants';
 import { TossupSettingsContext } from '../../services/TossupSettingsContext';
 import { Category, Difficulty, Subcategory } from '../../types';
+import {
+  setInitialCategories,
+  setInitialDifficulties,
+  setInitialReadingSpeed,
+  setInitialSubcategories,
+} from '../../services/utils';
 
 type SettingsModalProps = {
   isOpen: boolean;
@@ -45,17 +48,22 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
     setDifficultiesSelected,
   } = useContext(TossupSettingsContext);
 
+  const onReadingSpeedChange = (value: number) => {
+    setReadingSpeed(value);
+    setInitialReadingSpeed(value);
+  };
+
   const categoriesInSelect = categoriesSelected.map((c) => ({
     value: c,
     label: Category[c],
   }));
   const onCategoriesChange = (
-    options: OptionsType<{ label: string; value: Category }>
+    options: OptionsType<{ label: string; value: Category }>,
   ) => {
     const values = options.map((o) => o.value);
     setCategoriesSelected(values);
     setSubcategoriesSelected((scs) =>
-      scs.filter((sc) => values.includes(SUBCATEGORY_MAP[sc]))
+      scs.filter((sc) => values.includes(SUBCATEGORY_MAP[sc])),
     );
     setInitialCategories(values);
   };
@@ -64,7 +72,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
     label: Subcategory[c],
   }));
   const onSubcategoriesChange = (
-    options: OptionsType<{ label: string; value: Subcategory }>
+    options: OptionsType<{ label: string; value: Subcategory }>,
   ) => {
     const values = options.map((o) => o.value);
     setSubcategoriesSelected(values);
@@ -75,7 +83,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
     label: Difficulty[d],
   }));
   const onDifficultiesChange = (
-    options: OptionsType<{ label: string; value: Difficulty }>
+    options: OptionsType<{ label: string; value: Difficulty }>,
   ) => {
     const values = options.map((o) => o.value);
     setDifficultiesSelected(values);
@@ -94,10 +102,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
               aria-label="tossup reading speed"
               colorScheme="cyan"
               min={0}
-              max={650}
-              step={50}
+              max={100}
+              step={5}
               defaultValue={readingSpeed}
-              onChangeEnd={setReadingSpeed}
+              onChange={onReadingSpeedChange}
             >
               <SliderTrack>
                 <SliderFilledTrack />
@@ -123,7 +131,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
               options={SUBCATEGORIES.filter(
                 (sc) =>
                   categoriesInSelect.length === 0 ||
-                  categoriesInSelect.some((c) => c.value === sc.category)
+                  categoriesInSelect.some((c) => c.value === sc.category),
               )}
               value={subcategoriesInSelect}
               onChange={onSubcategoriesChange}

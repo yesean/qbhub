@@ -361,7 +361,7 @@ export const SUBCATEGORY_MAP = SUBCATEGORIES.reduce<
   { [key in Subcategory]: Category }
 >(
   (acc, sc) => ({ ...acc, [sc.value]: sc.category }),
-  {} as { [key in Subcategory]: Category }
+  {} as { [key in Subcategory]: Category },
 );
 
 export const DIFFICULTIES = [
@@ -390,56 +390,9 @@ export const blankTossup: Tossup = {
   tournament: '',
 };
 
-const CATEGORIES_LS_KEY = 'categories';
-const SUBCATEGORIES_LS_KEY = 'subcategories';
-const DIFFICULTIES_LS_KEY = 'difficulties';
+export const READING_SPEED_LS_KEY = 'reading_speed';
+export const CATEGORIES_LS_KEY = 'categories';
+export const SUBCATEGORIES_LS_KEY = 'subcategories';
+export const DIFFICULTIES_LS_KEY = 'difficulties';
 
-export const setInitialCategories = (categories: Category[]) => {
-  window.localStorage.setItem(CATEGORIES_LS_KEY, JSON.stringify(categories));
-};
-
-export const getInitialCategories = () => {
-  const defaultCategories = [Category.Science, Category.Literature];
-  const categories = window.localStorage.getItem(CATEGORIES_LS_KEY);
-  if (categories === null) {
-    setInitialCategories(defaultCategories);
-    return defaultCategories;
-  }
-  return JSON.parse(categories);
-};
-
-export const setInitialSubcategories = (subcategories: Subcategory[]) => {
-  window.localStorage.setItem(
-    SUBCATEGORIES_LS_KEY,
-    JSON.stringify(subcategories)
-  );
-};
-
-export const getInitialSubcategories = () => {
-  const defaultSubcategories = [Subcategory['Science Computer Science']];
-  const subcategories = window.localStorage.getItem(SUBCATEGORIES_LS_KEY);
-  if (subcategories === null) {
-    setInitialSubcategories(defaultSubcategories);
-    return defaultSubcategories;
-  }
-  return JSON.parse(subcategories);
-};
-
-export const setInitialDifficulties = (difficulties: Difficulty[]) => {
-  window.localStorage.setItem(
-    DIFFICULTIES_LS_KEY,
-    JSON.stringify(difficulties)
-  );
-};
-export const getInitialDifficulties = () => {
-  const defaultDifficulties = [
-    Difficulty['Easy College'],
-    Difficulty['Regular College'],
-  ];
-  const difficulties = window.localStorage.getItem(DIFFICULTIES_LS_KEY);
-  if (difficulties === null) {
-    setInitialDifficulties(defaultDifficulties);
-    return defaultDifficulties;
-  }
-  return JSON.parse(difficulties);
-};
+export const DEFAULT_READING_SPEED = 60;

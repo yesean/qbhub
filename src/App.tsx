@@ -13,16 +13,17 @@ import {
   TossupResult,
 } from './types';
 import { fetchTossup } from './services/tossupService';
-import {
-  blankTossup,
-  getInitialCategories,
-  getInitialDifficulties,
-  getInitialSubcategories,
-} from './constants';
+import { blankTossup } from './constants';
 import { Mode, ModeContext, ModeContextType } from './services/ModeContext';
 import { TossupContext, TossupContextType } from './services/TossupContext';
 import { TossupResultContext } from './services/TossupResultContext';
-import { cleanTossupText } from './services/utils';
+import {
+  cleanTossupText,
+  getInitialCategories,
+  getInitialDifficulties,
+  getInitialReadingSpeed,
+  getInitialSubcategories,
+} from './services/utils';
 import logger from './services/logger';
 import {
   TossupSettingsContext,
@@ -40,9 +41,9 @@ const App: React.FC = () => {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isTossupHistoryModalOpen, setIsTossupHistoryModalOpen] =
     useState(false);
-  const [readingSpeed, setReadingSpeed] = useState(250);
+  const [readingSpeed, setReadingSpeed] = useState(getInitialReadingSpeed());
   const [categoriesSelected, setCategoriesSelected] = useState<Category[]>(
-    getInitialCategories()
+    getInitialCategories(),
   );
   const [subcategoriesSelected, setSubcategoriesSelected] = useState<
     Subcategory[]
@@ -54,21 +55,21 @@ const App: React.FC = () => {
   // update cached tossups on category change
   useEffect(() => {
     setTossups((tus) =>
-      tus.filter((tu) => categoriesSelected.includes(tu.category))
+      tus.filter((tu) => categoriesSelected.includes(tu.category)),
     );
   }, [categoriesSelected]);
 
   // update cached tossups on subcategory change
   useEffect(() => {
     setTossups((tus) =>
-      tus.filter((tu) => subcategoriesSelected.includes(tu.subcategory))
+      tus.filter((tu) => subcategoriesSelected.includes(tu.subcategory)),
     );
   }, [subcategoriesSelected]);
 
   // update cached tossups on difficulty change
   useEffect(() => {
     setTossups((tus) =>
-      tus.filter((tu) => difficultiesSelected.includes(tu.difficulty))
+      tus.filter((tu) => difficultiesSelected.includes(tu.difficulty)),
     );
   }, [difficultiesSelected]);
 
@@ -78,7 +79,7 @@ const App: React.FC = () => {
         categoriesSelected,
         subcategoriesSelected,
         difficultiesSelected,
-        limit
+        limit,
       );
       const cleanedTus = fetchedTus.map((tu) => ({
         ...tu,
@@ -87,10 +88,10 @@ const App: React.FC = () => {
       }));
       logger.info('cleaned tossups: ', cleanedTus);
       setTossups((tus) =>
-        tus.length <= MIN_NUM_TOSSUPS ? [...tus, ...cleanedTus] : tus
+        tus.length <= MIN_NUM_TOSSUPS ? [...tus, ...cleanedTus] : tus,
       );
     },
-    [categoriesSelected, subcategoriesSelected, difficultiesSelected]
+    [categoriesSelected, subcategoriesSelected, difficultiesSelected],
   );
 
   useEffect(() => {
@@ -122,7 +123,7 @@ const App: React.FC = () => {
 
   const modeContext = useMemo<ModeContextType>(
     () => ({ mode, setMode }),
-    [mode]
+    [mode],
   );
 
   const tossupSettingsContext = useMemo<TossupSettingsContextType>(
@@ -144,12 +145,12 @@ const App: React.FC = () => {
       setSubcategoriesSelected,
       difficultiesSelected,
       setDifficultiesSelected,
-    ]
+    ],
   );
 
   const tossupContext = useMemo<TossupContextType>(
     () => ({ tossup: activeTossup }),
-    [activeTossup]
+    [activeTossup],
   );
 
   const tossupResultContext = useMemo(
@@ -157,7 +158,7 @@ const App: React.FC = () => {
       result: tossupResult,
       setResult: setTossupResult,
     }),
-    [tossupResult]
+    [tossupResult],
   );
 
   return (

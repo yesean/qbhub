@@ -3,7 +3,11 @@ import { Center, CircularProgress, Container, Text } from '@chakra-ui/react';
 import { BellIcon } from '@chakra-ui/icons';
 
 import { Mode, ModeContext } from '../../../services/ModeContext';
-import { getTextBetweenTags, shuffleString } from '../../../services/utils';
+import {
+  getReadingTimeoutDelay,
+  getTextBetweenTags,
+  shuffleString,
+} from '../../../services/utils';
 import { TossupBuzzContext } from '../../../services/TossupBuzzContext';
 import logger from '../../../services/logger';
 import { TossupSettingsContext } from '../../../services/TossupSettingsContext';
@@ -52,7 +56,7 @@ const getWord = (word: Word, index: number, visibleIndex: number) =>
 
 const computeVisibility = (
   index: number,
-  visibleIndex: number
+  visibleIndex: number,
 ): 'visible' | 'hidden' => {
   return index <= visibleIndex ? 'visible' : 'hidden';
 };
@@ -60,7 +64,7 @@ const computeVisibility = (
 const renderQuestion = (
   words: Word[],
   visibleIndex: number,
-  buzzIndex: number
+  buzzIndex: number,
 ) =>
   words.map((w, i) => (
     <Fragment key={`${w}${i}`}>
@@ -159,18 +163,22 @@ const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
     }
   }, [mode, incrementId]);
 
-  // read tossup at 1word/250ms
+  // read tossup
   useEffect(() => {
     if (mode === Mode.reading) {
       if (visibleIndex < words.length - 1) {
         if (incrementId === null) {
-          logger.info('reading speed: ', 700 - readingSpeed, ' ms/word');
+          logger.info(
+            'reading speed: ',
+            getReadingTimeoutDelay(readingSpeed),
+            ' ms/word',
+          );
           const id = setTimeout(() => {
             setVisibleIndex((i) =>
-              i < words.length && mode === Mode.reading ? i + 1 : i
+              i < words.length && mode === Mode.reading ? i + 1 : i,
             );
             setIncrementId(null);
-          }, 700 - readingSpeed); // need to take complement since higher reading speed (ms / word) is slow
+          }, getReadingTimeoutDelay(readingSpeed));
           setIncrementId(id);
         }
       } else {

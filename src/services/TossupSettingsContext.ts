@@ -1,4 +1,5 @@
 import { createContext } from 'react';
+import { DEFAULT_READING_SPEED } from '../constants';
 import { Category, Difficulty, Subcategory } from '../types';
 
 export type TossupSettingsContextType = {
@@ -13,7 +14,7 @@ export type TossupSettingsContextType = {
 };
 
 export const TossupSettingsContext = createContext<TossupSettingsContextType>({
-  readingSpeed: 250,
+  readingSpeed: DEFAULT_READING_SPEED,
   setReadingSpeed: () => {},
   categoriesSelected: [],
   setCategoriesSelected: () => {},
