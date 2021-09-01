@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "node -r dotenv/config dist/index.js",
+    "build:ui": "cd ../qbhub-frontend && yarn build && cp -r build ../qbhub-server",
     "watch:ts": "tsc --watch",
     "watch:dev": "nodemon -r dotenv/config dist/index.js",
     "watch:full": "concurrently \"yarn watch:ts\" \"yarn watch:dev\"",
