@@ -3,6 +3,7 @@ import path from 'path';
 import express from 'express';
 
 import tossupsRouter from './controllers/tossups';
+import { info } from './utils/logger';
 
 const app = express();
 app.use(express.json());
@@ -17,5 +18,5 @@ app.use('/api/tossups', tossupsRouter);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`App is running on PORT ${PORT}`);
+  info(`App is running on PORT ${PORT}`);
 });
