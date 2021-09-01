@@ -2,10 +2,10 @@ import { Client } from 'pg';
 import { Category, Difficulty, Subcategory } from './types';
 
 const client = new Client({
-  user: 'sean',
-  host: 'localhost',
-  database: 'quizbowl',
-  port: 5432,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+  port: Number(process.env.DB_PORT),
 });
 client.connect();
 
