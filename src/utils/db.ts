@@ -13,7 +13,7 @@ export const queryTossups = async (
   categories: Category[],
   subcategories: Subcategory[],
   difficulties: Difficulty[],
-  limit: number
+  limit: number,
 ) => {
   const categoriesQueryString =
     categories.length > 0

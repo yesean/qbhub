@@ -64,7 +64,7 @@ tossupsRouter.get('/', async (req: Request, res: Response) => {
       parsedCategories,
       parsedSubcategories,
       parsedDifficulties,
-      parsedLimit
+      parsedLimit,
     );
     const tossups = data.rows.map((tu: any) => ({
       ...tu,
