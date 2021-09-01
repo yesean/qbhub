@@ -131,16 +131,21 @@ export const setInitialDifficulties = (difficulties: Difficulty[]) => {
 };
 
 export const getInitialReadingSpeed = () => {
-  const speed = Number(window.localStorage.getItem(READING_SPEED_LS_KEY));
-  if (Number.isNaN(speed) || !checkReadingSpeedValid(speed)) {
+  const speed = window.localStorage.getItem(READING_SPEED_LS_KEY);
+  const parsedSpeed = Number(speed);
+  if (
+    speed === null ||
+    Number.isNaN(parsedSpeed) ||
+    !checkReadingSpeedValid(parsedSpeed)
+  ) {
     setInitialReadingSpeed(DEFAULT_READING_SPEED);
     return DEFAULT_READING_SPEED;
   }
-  return speed;
+  return parsedSpeed;
 };
 
 export const getInitialCategories = () => {
-  const defaultCategories = [Category.Science, Category.Literature];
+  const defaultCategories = [Category.Science];
   const categories = window.localStorage.getItem(CATEGORIES_LS_KEY);
   if (categories === null) {
     setInitialCategories(defaultCategories);
