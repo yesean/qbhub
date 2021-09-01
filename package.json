@@ -8,12 +8,16 @@
     "node": ">=8.10.0"
   },
   "scripts": {
-    "start": "concurrently \"tsc --watch\" \"nodemon dist/index.js\"",
+    "start": "node -r dotenv/config dist/index.js",
+    "watch:ts": "tsc --watch",
+    "watch:dev": "nodemon -r dotenv/config dist/index.js",
+    "watch:full": "concurrently \"yarn watch:ts\" \"yarn watch:dev\"",
     "lint": "eslint ./src --ext .ts,.tsx"
   },
   "dependencies": {
     "compromise": "^13.10.6",
     "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "pg": "^8.6.0"
   },
