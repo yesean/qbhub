@@ -8,10 +8,9 @@
     "node": ">=8.10.0"
   },
   "scripts": {
-    "start": "npm run start:server",
-    "start:server": "node -r dotenv/config dist/index.js",
-    "build:full": "npm run build:ui && npm run build:server",
-    "build:ui": "mkdir -p dist && cd ../qbhub-frontend && yarn build && cp -r build ../qbhub-server/dist && cd ../qbhub-server",
+    "start": "node -r dotenv/config dist/index.js",
+    "build": "rm -rf dist && mkdir -p dist && npm run build:server && npm run build:ui",
+    "build:ui": "cd ../qbhub-frontend && yarn build && cp -r build ../qbhub-server/dist && cd ../qbhub-server",
     "build:server": "tsc",
     "watch:ts": "tsc --watch",
     "watch:dev": "nodemon -r dotenv/config dist/index.js",
