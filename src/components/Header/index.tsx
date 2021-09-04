@@ -21,7 +21,6 @@ const Header: React.FC<HeaderProps> = ({
             aria-label="Tossup history"
             icon={<TimeIcon boxSize={6} />}
             size="lg"
-            bg="white"
             onClick={onClickHistoryIcon}
             mr={4}
           />
@@ -30,7 +29,6 @@ const Header: React.FC<HeaderProps> = ({
             icon={<SettingsIcon boxSize={6} />}
             size="lg"
             onClick={onClickSettingsIcon}
-            bg="white"
           />
         </Box>
       </Flex>
