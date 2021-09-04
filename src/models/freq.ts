@@ -15,13 +15,13 @@ export const getFreq = async (
     { column: 'normalized_answer', alias: 'answer' },
     { column: 'count(normalized_answer)', alias: 'count' },
   ];
-  const condition = getTossupCondition(
+  const condition = `${getTossupCondition(
     categories,
     subcategories,
     difficulties,
     text,
     answer,
-  );
+  )} and (normalized_answer <> '')`;
   const query = QueryBuilder.start()
     .select(columns)
     .from('tossups')
