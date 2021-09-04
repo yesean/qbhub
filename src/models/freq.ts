@@ -2,24 +2,18 @@ import { client, QueryBuilder } from '../utils/db';
 import { Category, Difficulty, Subcategory } from '../utils/types';
 import { getTossupCondition } from './utils';
 
-export const getTossups = async (
+export const getFreq = async (
   categories: Category[],
   subcategories: Subcategory[],
   difficulties: Difficulty[],
   text: string,
   answer: string,
   limit: number | null,
+  offset: number | null,
 ) => {
   const columns = [
-    { column: 'text', alias: 'text' },
-    { column: 'answer', alias: 'answer' },
-    { column: 'formatted_text', alias: 'formatted_text' },
-    { column: 'formatted_answer', alias: 'formatted_answer' },
-    { column: 'normalized_answer', alias: 'normalized_answer' },
-    { column: 'category_id', alias: 'category' },
-    { column: 'subcategory_id', alias: 'subcategory' },
-    { column: 'difficulty', alias: 'difficulty' },
-    { column: 'name', alias: 'tournament' },
+    { column: 'normalized_answer', alias: 'answer' },
+    { column: 'count(normalized_answer)', alias: 'count' },
   ];
   const condition = getTossupCondition(
     categories,
@@ -33,8 +27,13 @@ export const getTossups = async (
     .from('tossups')
     .innerJoin('tournaments', 'tossups.tournament_id = tournaments.id')
     .where(condition)
-    .random()
+    .groupBy('normalized_answer')
+    .orderBy([
+      { column: 'count(normalized_answer)', direction: 'desc' },
+      { column: 'normalized_answer', direction: 'asc' },
+    ])
     .limit(limit)
+    .offset(offset)
     .build();
 
   return client.query(query);

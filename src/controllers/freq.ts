@@ -1,26 +1,32 @@
 import { Request, Response } from 'express';
-import { getTossups } from '../models/tossups';
 import { error } from '../utils/logger';
-import { getTopAnswers } from '../utils/freq';
-import { parseTossupQueryString, ParsingError } from './utils';
+import { parseFreqQueryString, ParsingError } from './utils';
+import { getFreq } from '../models/freq';
 
 const freqRouter = require('express').Router();
 
 freqRouter.get('/', async (req: Request, res: Response) => {
   try {
-    const { categories, subcategories, difficulties, text, answer, limit } =
-      parseTossupQueryString(req.query);
-    const data = await getTossups(
+    const {
       categories,
       subcategories,
       difficulties,
       text,
       answer,
       limit,
+      offset,
+    } = parseFreqQueryString(req.query);
+    const data = await getFreq(
+      categories,
+      subcategories,
+      difficulties,
+      text,
+      answer,
+      limit,
+      offset,
     );
-    const tossups = data.rows;
-    const topAnswers = getTopAnswers(tossups);
-    res.json(topAnswers);
+    const answers = data.rows;
+    res.json(answers);
   } catch (e) {
     if (e instanceof ParsingError) res.status(400).send(e.message);
     else error(e);

@@ -46,11 +46,24 @@ export class QueryBuilder {
     return this._append(`where ${condition}`);
   }
 
+  groupBy(column: string) {
+    return this._append(`group by ${column}`);
+  }
+
+  orderBy(values: { column: string; direction: 'asc' | 'desc' }[]) {
+    const cmd = values.map((v) => `${v.column} ${v.direction}`).join(',');
+    return this._append(`order by ${cmd}`);
+  }
+
   random() {
     return this._append('order by random()');
   }
 
   limit(n: number | null) {
     return this._append(`limit ${n}`);
+  }
+
+  offset(n: number) {
+    return this._append(`offset ${n}`);
   }
 }

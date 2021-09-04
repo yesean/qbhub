@@ -58,3 +58,15 @@ export const parseTossupQueryString = (q: qs.ParsedQs) => {
     limit: rawLimit === null ? null : stringToNumber(rawLimit as string),
   };
 };
+
+export const parseFreqQueryString = (q: qs.ParsedQs) => {
+  const { offset: rawOffset = null } = q;
+
+  if (rawOffset !== null && (!isString(rawOffset) || !isNumeric(rawOffset)))
+    throw new ParsingError(fieldNumberMessage('offset'));
+
+  return {
+    ...parseTossupQueryString(q),
+    offset: rawOffset === null ? 0 : stringToNumber(rawOffset as string),
+  };
+};
