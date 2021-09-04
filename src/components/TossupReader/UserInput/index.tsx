@@ -128,7 +128,7 @@ const UserInput: React.FC = () => {
           borderWidth={mode === Mode.revealed ? 2 : undefined}
         />
       )}
-      <Button colorScheme="green" onClick={onButtonClick}>
+      <Button colorScheme="cyan" onClick={onButtonClick}>
         {buttonText}
       </Button>
     </Flex>
