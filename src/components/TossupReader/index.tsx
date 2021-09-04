@@ -41,12 +41,12 @@ const TossupReader: React.FC<TossupReaderProps> = () => {
       buzz: tossupBuzz,
       setBuzz: setTossupBuzz,
     }),
-    [tossupBuzz]
+    [tossupBuzz],
   );
 
   return (
     <TossupBuzzContext.Provider value={tossupBuzzContext}>
-      <Container maxW="3xl">
+      <Container maxW="3xl" maxH="100%">
         <Flex direction="column" w="100%">
           {shouldShowInfo && (
             <Info

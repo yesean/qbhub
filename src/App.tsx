@@ -29,6 +29,7 @@ import {
   TossupSettingsContext,
   TossupSettingsContextType,
 } from './services/TossupSettingsContext';
+import Footer from './components/Footer';
 
 const NUM_TOSSUPS = 10;
 const MIN_NUM_TOSSUPS = 5;
@@ -172,6 +173,7 @@ const App: React.FC = () => {
                 onClickSettingsIcon={() => setIsSettingsModalOpen(true)}
               />
               <Body />
+              <Footer />
             </Flex>
             <TossupHistoryModal
               isOpen={isTossupHistoryModalOpen}

@@ -6,7 +6,7 @@ type BodyProps = {};
 
 const Body: React.FC<BodyProps> = () => {
   return (
-    <Center flexGrow={1} p={4}>
+    <Center flexGrow={1} p={4} overflow="auto">
       <TossupReader />
     </Center>
   );
