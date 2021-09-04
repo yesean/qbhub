@@ -7,7 +7,7 @@ export const fetchTossup = async (
   categories: Category[],
   subcategories: Subcategory[],
   difficulties: Difficulty[],
-  limit: number
+  limit: number,
 ): Promise<Tossup[]> => {
   const categoriesQueryString = categories
     .map((c) => `categories[]=${c}`)
