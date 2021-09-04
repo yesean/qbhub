@@ -3,6 +3,7 @@ import path from 'path';
 import express from 'express';
 
 import tossupsRouter from './controllers/tossups';
+import freqRouter from './controllers/freq';
 import { info } from './utils/logger';
 
 const app = express();
@@ -15,6 +16,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/tossups', tossupsRouter);
+app.use('/api/freq', freqRouter);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

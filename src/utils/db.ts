@@ -1,7 +1,6 @@
 import { Client } from 'pg';
-import { Category, Difficulty, Subcategory } from './types';
 
-const client = new Client({
+export const client = new Client({
   user: process.env.PGUSER,
   host: process.env.PGHOST,
   database: process.env.PGDATABASE,
@@ -9,54 +8,49 @@ const client = new Client({
 });
 client.connect();
 
-export const queryTossups = async (
-  categories: Category[],
-  subcategories: Subcategory[],
-  difficulties: Difficulty[],
-  limit: number,
-) => {
-  const categoriesQueryString =
-    categories.length > 0
-      ? `tossups.category_id in (${categories.join(', ')})`
-      : false;
-  const subcategoriesQueryString =
-    subcategories.length > 0
-      ? `tossups.subcategory_id in (${subcategories.join(', ')})`
-      : true;
-  let combinedCategoryiesQueryString;
-  if (categories.length === 0 && subcategories.length === 0)
-    combinedCategoryiesQueryString = true;
-  else if (subcategories.length > 0)
-    combinedCategoryiesQueryString = subcategoriesQueryString;
-  else if (categories.length > 0)
-    combinedCategoryiesQueryString = categoriesQueryString;
+export class QueryBuilder {
+  static start() {
+    return new QueryBuilder('');
+  }
 
-  const difficultiesQueryString =
-    difficulties.length > 0
-      ? `tournaments.difficulty in (${difficulties.join(', ')})`
-      : true;
+  s: string;
 
-  const columns = [
-    { name: 'text', alias: 'text' },
-    { name: 'answer', alias: 'answer' },
-    { name: 'formatted_text', alias: 'formatted_text' },
-    { name: 'formatted_answer', alias: 'formatted_answer' },
-    { name: 'category_id', alias: 'category' },
-    { name: 'subcategory_id', alias: 'subcategory' },
-    { name: 'difficulty', alias: 'difficulty' },
-    { name: 'name', alias: 'tournament' },
-  ];
-  const columnsCommand = columns
-    .map((c) => `${c.name} as ${c.alias}`)
-    .join(',');
+  constructor(s: string) {
+    this.s = s;
+  }
 
-  const query = `
-    select ${columnsCommand} from tossups
-    inner join tournaments on tossups.tournament_id = tournaments.id
-    where (${combinedCategoryiesQueryString}) and ${difficultiesQueryString}
-    order by random()
-    limit ${limit};
-  `;
+  build() {
+    this.s = this.s.trim();
+    return this.s;
+  }
 
-  return client.query(query);
-};
+  _append(cmd: string) {
+    this.s = `${this.s}  ${cmd}`;
+    return this;
+  }
+
+  select(columns: { column: string; alias: string }[]) {
+    const colsCmd = columns.map((c) => `${c.column} as ${c.alias}`).join(',');
+    return this._append(`select ${colsCmd}`);
+  }
+
+  from(table: string) {
+    return this._append(`from ${table}`);
+  }
+
+  innerJoin(table: string, condition: string) {
+    return this._append(`inner join ${table} on ${condition}`);
+  }
+
+  where(condition: string) {
+    return this._append(`where ${condition}`);
+  }
+
+  random() {
+    return this._append('order by random()');
+  }
+
+  limit(n: number | null) {
+    return this._append(`limit ${n}`);
+  }
+}
