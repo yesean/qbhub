@@ -110,7 +110,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
               <SliderTrack>
                 <SliderFilledTrack />
               </SliderTrack>
-              <SliderThumb />
+              <SliderThumb bg="purple.200" />
             </Slider>
           </Box>
           <Box mb={4}>
