@@ -149,7 +149,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
           </Box>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="cyan" mr={3} onClick={onClose}>
+          <Button colorScheme="cyan" color="gray.50" mr={3} onClick={onClose}>
             Done
           </Button>
         </ModalFooter>

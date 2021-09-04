@@ -47,15 +47,15 @@ const TossupHistoryModal: React.FC<TossupHistoryModalProps> = ({
   }, [mode, tossup, result]);
 
   const powers = results.filter(
-    (r) => r.result.score === TossupResultScore.power
+    (r) => r.result.score === TossupResultScore.power,
   ).length;
 
   const tens = results.filter(
-    (r) => r.result.score === TossupResultScore.ten
+    (r) => r.result.score === TossupResultScore.ten,
   ).length;
 
   const negs = results.filter(
-    (r) => r.result.score === TossupResultScore.neg
+    (r) => r.result.score === TossupResultScore.neg,
   ).length;
 
   const points = results.reduce((acc, r) => acc + r.result.score, 0);
@@ -122,7 +122,7 @@ const TossupHistoryModal: React.FC<TossupHistoryModalProps> = ({
           </Table>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="cyan" mr={3} onClick={onClose}>
+          <Button colorScheme="cyan" color="gray.50" mr={3} onClick={onClose}>
             Done
           </Button>
         </ModalFooter>
