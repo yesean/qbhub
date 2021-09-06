@@ -567,7 +567,17 @@ color-name@~1.1.4:
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
 
-compromise@^13.10.6:
+compromise-ngrams@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/compromise-ngrams/-/compromise-ngrams-0.0.6.tgz#c0f4d7c5900f06bac4fcba89c8ade37b0458abe1"
+  integrity sha512-wK0ZkheHgnS4FHRuuS39saMQF+vjGYikURUuPfSP8LPETvPoQ6bDY8XRZu8H3fS2LZ3L0EyIEnH2Fks+bkF/Bg==
+
+compromise-sentences@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/compromise-sentences/-/compromise-sentences-0.3.0.tgz#61d34039323155bc20dad10f24340daaabf86e26"
+  integrity sha512-L6d5PXmmyPyWRMoJURYOM0yILhtV37zCOy9ZW8Xd6KgY+2qQBTwuokekaGL9MDpSH3/grRDL+AHKytYpGrTEmA==
+
+compromise@^13.11.3:
   version "13.11.3"
   resolved "https://registry.yarnpkg.com/compromise/-/compromise-13.11.3.tgz#3f6b687fbefdbd1ef674f263f6e5c06b29c324d9"
   integrity sha512-oKYButHtXcDyEe2et5XlniFWyFTpDOy3z7zB501EEgTN9xeZHIib1Xq4AOSJw6HCZmwGHh1nx3MGy/MbGHFtWQ==
