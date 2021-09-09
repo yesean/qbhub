@@ -14,8 +14,10 @@ const Answer: React.FC<AnswerProps> = ({ answer }) => {
       mb={4}
       p={4}
       borderRadius="md"
+      textOverflow="clip"
+      whiteSpace="nowrap"
     >
-      <Text>
+      <Text overflow="auto">
         <b>ANSWER:</b> {parseHTMLString(answer)}
       </Text>
     </Container>

@@ -208,6 +208,7 @@ const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
       flexWrap="wrap"
       justifyContent={shouldShowCircularProgress ? 'center' : 'start'}
       borderRadius="md"
+      overflow="auto"
     >
       {shouldShowCircularProgress ? (
         <Center>

@@ -1,5 +1,5 @@
 import { useContext, useMemo, useState } from 'react';
-import { Center, Container, Flex } from '@chakra-ui/react';
+import { Center, Flex } from '@chakra-ui/react';
 
 import Info from './Info';
 import Answer from './Answer';
@@ -46,28 +46,33 @@ const TossupReader: React.FC<TossupReaderProps> = () => {
 
   return (
     <TossupBuzzContext.Provider value={tossupBuzzContext}>
-      <Container maxW="3xl" maxH="100%">
-        <Flex direction="column" w="100%">
-          {shouldShowInfo && (
-            <Info
-              category={category}
-              subcategory={subcategory}
-              difficulty={difficulty}
-              tournament={tournament}
-            />
-          )}
-          {shouldShowAnswer && <Answer answer={formattedAnswer} />}
-          {shouldShowQuestion && (
-            <Question text={text} formattedText={formattedText} />
-          )}
-          <Result />
-          {shouldShowProgress && <Progress />}
-          <Center>
-            <UserInput />
-          </Center>
-          {shouldShowScore && <Score />}
-        </Flex>
-      </Container>
+      <Flex
+        direction="column"
+        w="100%"
+        maxH="100%"
+        maxW="3xl"
+        padding={4}
+        overflow="auto"
+      >
+        {shouldShowInfo && (
+          <Info
+            category={category}
+            subcategory={subcategory}
+            difficulty={difficulty}
+            tournament={tournament}
+          />
+        )}
+        {shouldShowAnswer && <Answer answer={formattedAnswer} />}
+        {shouldShowQuestion && (
+          <Question text={text} formattedText={formattedText} />
+        )}
+        <Result />
+        {shouldShowProgress && <Progress />}
+        <Center>
+          <UserInput />
+        </Center>
+        {shouldShowScore && <Score />}
+      </Flex>
     </TossupBuzzContext.Provider>
   );
 };
