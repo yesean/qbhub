@@ -1,25 +1,24 @@
-import { useContext, useEffect, useState } from 'react';
 import {
-  Modal,
-  ModalContent,
-  ModalOverlay,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Table,
-  Thead,
-  Tr,
-  Th,
   Tbody,
   Td,
+  Th,
+  Thead,
+  Tr,
 } from '@chakra-ui/react';
-
-import { Tossup, TossupResult, TossupResultScore } from '../../types';
+import { useContext, useEffect, useState } from 'react';
 import { Mode, ModeContext } from '../../services/ModeContext';
 import { TossupContext } from '../../services/TossupContext';
-import { parseHTMLString } from '../../services/utils';
 import { TossupResultContext } from '../../services/TossupResultContext';
+import { parseHTMLString } from '../../services/utils';
+import { Tossup, TossupResult, TossupResultScore } from '../../types';
 
 type TossupHistoryModalProps = {
   isOpen: boolean;
