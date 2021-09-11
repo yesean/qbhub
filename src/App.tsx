@@ -1,22 +1,21 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Flex } from '@chakra-ui/react';
-
-import Header from './components/Header';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Body from './components/Body';
+import Footer from './components/Footer';
+import HamburgerMenu from './components/HamburgerMenu';
+import Header from './components/Header';
 import SettingsModal from './components/SettingsModal';
 import TossupHistoryModal from './components/TossupHistoryModal';
-import {
-  Category,
-  Difficulty,
-  Subcategory,
-  Tossup,
-  TossupResult,
-} from './types';
-import { fetchTossup } from './services/tossupService';
 import { blankTossup } from './constants';
+import logger from './services/logger';
 import { Mode, ModeContext, ModeContextType } from './services/ModeContext';
 import { TossupContext, TossupContextType } from './services/TossupContext';
 import { TossupResultContext } from './services/TossupResultContext';
+import { fetchTossup } from './services/tossupService';
+import {
+  TossupSettingsContext,
+  TossupSettingsContextType,
+} from './services/TossupSettingsContext';
 import {
   cleanTossupText,
   getInitialCategories,
@@ -24,12 +23,13 @@ import {
   getInitialReadingSpeed,
   getInitialSubcategories,
 } from './services/utils';
-import logger from './services/logger';
 import {
-  TossupSettingsContext,
-  TossupSettingsContextType,
-} from './services/TossupSettingsContext';
-import Footer from './components/Footer';
+  Category,
+  Difficulty,
+  Subcategory,
+  Tossup,
+  TossupResult,
+} from './types';
 
 const NUM_TOSSUPS = 10;
 const MIN_NUM_TOSSUPS = 5;
@@ -42,6 +42,7 @@ const App: React.FC = () => {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isTossupHistoryModalOpen, setIsTossupHistoryModalOpen] =
     useState(false);
+  const [isHamburgerMenuOpen, setIsHamburgerMenuOpen] = useState(false);
   const [readingSpeed, setReadingSpeed] = useState(getInitialReadingSpeed());
   const [categoriesSelected, setCategoriesSelected] = useState<Category[]>(
     getInitialCategories(),
@@ -171,6 +172,7 @@ const App: React.FC = () => {
               <Header
                 onClickHistoryIcon={() => setIsTossupHistoryModalOpen(true)}
                 onClickSettingsIcon={() => setIsSettingsModalOpen(true)}
+                onClickMenuIcon={() => setIsHamburgerMenuOpen(true)}
               />
               <Body />
               <Footer />
@@ -182,6 +184,10 @@ const App: React.FC = () => {
             <SettingsModal
               isOpen={isSettingsModalOpen}
               onClose={() => setIsSettingsModalOpen(false)}
+            />
+            <HamburgerMenu
+              isOpen={isHamburgerMenuOpen}
+              onClose={() => setIsHamburgerMenuOpen(false)}
             />
           </TossupResultContext.Provider>
         </TossupContext.Provider>

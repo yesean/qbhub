@@ -106,6 +106,11 @@ export type Tossup = {
   tournament: string;
 };
 
+export type Freq = {
+  answer: string;
+  count: number;
+};
+
 export enum TossupResultScore {
   neg = -5,
   ten = 10,

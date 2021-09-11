@@ -1,17 +1,19 @@
-import { SettingsIcon, TimeIcon } from '@chakra-ui/icons';
+import { HamburgerIcon, SettingsIcon, TimeIcon } from '@chakra-ui/icons';
 import { Box, Flex, Heading, IconButton } from '@chakra-ui/react';
 
 type HeaderProps = {
-  onClickSettingsIcon: () => void;
   onClickHistoryIcon: () => void;
+  onClickSettingsIcon: () => void;
+  onClickMenuIcon: () => void;
 };
 
 const Header: React.FC<HeaderProps> = ({
-  onClickSettingsIcon,
   onClickHistoryIcon,
+  onClickSettingsIcon,
+  onClickMenuIcon,
 }) => {
   return (
-    <Box pl={4} pr={4}>
+    <Box pl={4} pr={4} mb={2}>
       <Flex justify="space-between" align="center">
         <Heading d="inline" p={2}>
           QBHub
@@ -29,6 +31,13 @@ const Header: React.FC<HeaderProps> = ({
             icon={<SettingsIcon boxSize={6} />}
             size="lg"
             onClick={onClickSettingsIcon}
+            mr={4}
+          />
+          <IconButton
+            aria-label="Open menu"
+            icon={<HamburgerIcon boxSize={6} />}
+            size="lg"
+            onClick={onClickMenuIcon}
           />
         </Box>
       </Flex>

@@ -11,6 +11,11 @@ import {
   SUBCATEGORIES_LS_KEY,
 } from '../constants';
 
+export const getQueryParamArray = (field: string, array: any[]) =>
+  array.map((e) => `${field}[]=${e}`).join('&');
+
+export const combineParams = (...array: any[]) => array.join('&');
+
 export const checkAnswer = (answer: string, correctAnswers: string[]) => {
   const minRating = 0.6;
   const ratings = ss.findBestMatch(answer, correctAnswers);
