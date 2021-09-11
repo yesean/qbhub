@@ -7,6 +7,7 @@ import {
   Table,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
@@ -19,7 +20,7 @@ import { Freq } from '../../types';
 const OFFSET = 20;
 const FreqList: React.FC = () => {
   const [offset, setOffset] = useState(0);
-  const [answers, setAnswers] = useState<Freq[]>([]);
+  const [answers, setAnswers] = useState<Freq[] | null>(null);
   const { categoriesSelected, subcategoriesSelected, difficultiesSelected } =
     useContext(TossupSettingsContext);
 
@@ -37,32 +38,27 @@ const FreqList: React.FC = () => {
     [categoriesSelected, subcategoriesSelected, difficultiesSelected],
   );
 
-  const onFetch = useCallback(async () => {
-    setOffset(0);
-    await fetch(0);
+  useEffect(() => {
+    const initialFetch = async () => {
+      setOffset(0);
+      await fetch(0);
+    };
+    initialFetch();
   }, [fetch]);
 
   const onBack = async () => {
-    setOffset((o) => {
-      setAnswers([]);
-      const newOffset = Math.max(o - OFFSET, 0);
-      fetch(newOffset);
-      return newOffset;
-    });
+    setAnswers(null);
+    const newOffset = Math.max(offset - OFFSET, 0);
+    fetch(newOffset);
+    setOffset(newOffset);
   };
 
   const onNext = async () => {
-    setOffset((o) => {
-      setAnswers([]);
-      const newOffset = Math.max(o + OFFSET, 0);
-      fetch(newOffset);
-      return newOffset;
-    });
+    setAnswers(null);
+    const newOffset = Math.max(offset + OFFSET, 0);
+    fetch(newOffset);
+    setOffset(newOffset);
   };
-
-  useEffect(() => {
-    onFetch();
-  }, [onFetch]);
 
   const renderCircularProgress = () => (
     <Center padding={4}>
@@ -70,26 +66,31 @@ const FreqList: React.FC = () => {
     </Center>
   );
 
-  const renderFreqTable = () => (
-    <Table variant="simple" mb={4} pos="relative">
-      <Thead pos="sticky" top="0" bg="white">
-        <Tr>
-          <Th fontSize="lg">Answer</Th>
-          <Th fontSize="lg" isNumeric>
-            Frequency
-          </Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        {answers.map((a) => (
+  const renderFreqTable = (ans: Freq[]) =>
+    ans.length === 0 ? (
+      <Text textAlign="center" fontSize="2xl">
+        No Tossups Left.
+      </Text>
+    ) : (
+      <Table variant="simple" mb={4} pos="relative">
+        <Thead pos="sticky" top="0" bg="white">
           <Tr>
-            <Td>{a.answer}</Td>
-            <Td isNumeric>{a.count}</Td>
+            <Th fontSize="lg">Answer</Th>
+            <Th fontSize="lg" isNumeric>
+              Frequency
+            </Th>
           </Tr>
-        ))}
-      </Tbody>
-    </Table>
-  );
+        </Thead>
+        <Tbody>
+          {ans.map((a) => (
+            <Tr>
+              <Td>{a.answer}</Td>
+              <Td isNumeric>{a.count}</Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+    );
 
   return (
     <Flex
@@ -99,7 +100,7 @@ const FreqList: React.FC = () => {
       maxH="min(750px, 100%)"
     >
       <Box w="100%" mb={4} overflow="auto">
-        {answers.length === 0 ? renderCircularProgress() : renderFreqTable()}
+        {answers === null ? renderCircularProgress() : renderFreqTable(answers)}
       </Box>
       <Flex justify="center">
         <Button
@@ -110,7 +111,11 @@ const FreqList: React.FC = () => {
         >
           Back
         </Button>
-        <Button colorScheme="cyan" onClick={onNext}>
+        <Button
+          colorScheme="cyan"
+          onClick={onNext}
+          disabled={answers === null || answers.length === 0}
+        >
           Next
         </Button>
       </Flex>
