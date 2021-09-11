@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
 
   return (
     <>
-      <Flex align="center" justify="center" mt={2} pt={1} pb={1} bg="cyan.100">
+      <Flex align="center" justify="center" mt={2} pt={1} pb={1}>
         <Text textAlign="center" fontWeight="bold" mr={4}>
           Created by{' '}
           <Link href="https://seancye.com" color="cyan.600" isExternal>
