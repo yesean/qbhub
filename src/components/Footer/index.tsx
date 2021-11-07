@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
       <Flex align="center" justify="center" mt={2} pt={1} pb={1}>
         <Text textAlign="center" fontWeight="bold" mr={4}>
           Created by{' '}
-          <Link href="https://seancye.com" color="cyan.600" isExternal>
+          <Link href="https://seanye.me" color="cyan.600" isExternal>
             Sean Ye
           </Link>
         </Text>
