@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 import { Heading } from '@chakra-ui/react';
 
-import { TossupResultContext } from '../../../services/TossupResultContext';
-import { TossupResultScore } from '../../../types';
+import { TossupResultContext } from '../../services/TossupResultContext';
+import { TossupResultScore } from '../../types';
 
 const Result: React.FC = () => {
   const { result } = useContext(TossupResultContext);

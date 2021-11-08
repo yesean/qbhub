@@ -1,13 +1,13 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Button, Flex, Input } from '@chakra-ui/react';
 
-import { TossupContext } from '../../../services/TossupContext';
-import { Mode, ModeContext } from '../../../services/ModeContext';
-import { TossupResultContext } from '../../../services/TossupResultContext';
-import { addShortcut, checkAnswer, getAnswers } from '../../../services/utils';
-import { TossupResultScore } from '../../../types';
-import logger from '../../../services/logger';
-import { TossupBuzzContext } from '../../../services/TossupBuzzContext';
+import { TossupContext } from '../../services/TossupContext';
+import { Mode, ModeContext } from '../../services/ModeContext';
+import { TossupResultContext } from '../../services/TossupResultContext';
+import { addShortcut, checkAnswer, getAnswers } from '../../services/utils';
+import { TossupResultScore } from '../../types';
+import logger from '../../services/logger';
+import { TossupBuzzContext } from '../../services/TossupBuzzContext';
 
 const UserInput: React.FC = () => {
   const { mode, setMode } = useContext(ModeContext);

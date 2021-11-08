@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { Progress } from '@chakra-ui/react';
 
-import { Mode, ModeContext } from '../../../services/ModeContext';
+import { Mode, ModeContext } from '../../services/ModeContext';
 
 const TimerProgress: React.FC = () => {
   const { mode, setMode } = useContext(ModeContext);

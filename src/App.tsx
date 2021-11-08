@@ -4,7 +4,7 @@ import Body from './components/Body';
 import Footer from './components/Footer';
 import HamburgerMenu from './components/HamburgerMenu';
 import Header from './components/Header';
-import SettingsModal from './components/SettingsModal';
+import SettingsModal from './Settings';
 import TossupHistoryModal from './components/TossupHistoryModal';
 import { blankTossup } from './constants';
 import logger from './services/logger';

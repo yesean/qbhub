@@ -7,9 +7,9 @@ import {
   StatNumber,
 } from '@chakra-ui/react';
 
-import { Mode, ModeContext } from '../../../services/ModeContext';
-import { TossupResultScore } from '../../../types';
-import { TossupResultContext } from '../../../services/TossupResultContext';
+import { Mode, ModeContext } from '../../services/ModeContext';
+import { TossupResultScore } from '../../types';
+import { TossupResultContext } from '../../services/TossupResultContext';
 
 const Score: React.FC = () => {
   const { mode } = useContext(ModeContext);

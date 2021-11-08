@@ -13,12 +13,12 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { fetchFreq } from '../../services/freqService';
-import { TossupSettingsContext } from '../../services/TossupSettingsContext';
-import { Freq } from '../../types';
+import { fetchFreq } from '../services/freqService';
+import { TossupSettingsContext } from '../services/TossupSettingsContext';
+import { Freq } from '../types';
 
 const OFFSET = 20;
-const FreqList: React.FC = () => {
+const FrequencyList: React.FC = () => {
   const [offset, setOffset] = useState(0);
   const [answers, setAnswers] = useState<Freq[] | null>(null);
   const { categoriesSelected, subcategoriesSelected, difficultiesSelected } =
@@ -123,4 +123,4 @@ const FreqList: React.FC = () => {
   );
 };
 
-export default FreqList;
+export default FrequencyList;

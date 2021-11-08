@@ -8,10 +8,10 @@ import Progress from './Progress';
 import Question from './Question';
 import UserInput from './UserInput';
 import Score from './Score';
-import { TossupContext } from '../../services/TossupContext';
-import { Mode, ModeContext } from '../../services/ModeContext';
-import { TossupBuzz } from '../../types';
-import { TossupBuzzContext } from '../../services/TossupBuzzContext';
+import { TossupContext } from '../services/TossupContext';
+import { Mode, ModeContext } from '../services/ModeContext';
+import { TossupBuzz } from '../types';
+import { TossupBuzzContext } from '../services/TossupBuzzContext';
 
 type TossupReaderProps = {};
 

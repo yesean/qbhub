@@ -21,15 +21,15 @@ import {
   DIFFICULTIES,
   SUBCATEGORIES,
   SUBCATEGORY_MAP,
-} from '../../constants';
-import { TossupSettingsContext } from '../../services/TossupSettingsContext';
-import { Category, Difficulty, Subcategory } from '../../types';
+} from '../constants';
+import { TossupSettingsContext } from '../services/TossupSettingsContext';
+import { Category, Difficulty, Subcategory } from '../types';
 import {
   setInitialCategories,
   setInitialDifficulties,
   setInitialReadingSpeed,
   setInitialSubcategories,
-} from '../../services/utils';
+} from '../services/utils';
 
 type SettingsModalProps = {
   isOpen: boolean;

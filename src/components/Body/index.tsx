@@ -1,7 +1,7 @@
 import { Center } from '@chakra-ui/react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import FreqList from '../FreqList';
-import TossupReader from '../TossupReader';
+import FreqList from '../../FrequencyList';
+import TossupReader from '../../TossupReader';
 
 const Body: React.FC = () => {
   return (
