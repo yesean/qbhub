@@ -14,6 +14,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
+    'no-param-reassign': 'off',
   },
   parserOptions: {
     project: './tsconfig.json',
