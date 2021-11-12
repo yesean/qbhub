@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { TossupResult } from '../types';
+import { TossupResult } from '../types/tossupReader';
 
 export type TossupResultContextType = {
   result: TossupResult | null;

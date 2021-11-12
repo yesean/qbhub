@@ -2,7 +2,7 @@ import ss from 'string-similarity';
 import DOMPurify from 'dompurify';
 import ReactHTMLParser from 'react-html-parser';
 import logger from './logger';
-import { Category, Difficulty, Subcategory } from '../types';
+import { Category, Difficulty, Subcategory } from '../types/questions';
 import {
   CATEGORIES_LS_KEY,
   DEFAULT_READING_SPEED,

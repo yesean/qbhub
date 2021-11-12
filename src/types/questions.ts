@@ -94,39 +94,3 @@ export enum Difficulty {
   'Hard College',
   'Open',
 }
-
-export type Tossup = {
-  text: string;
-  answer: string;
-  formattedText: string;
-  formattedAnswer: string;
-  category: Category;
-  subcategory: Subcategory;
-  difficulty: Difficulty;
-  tournament: string;
-};
-
-export type Freq = {
-  answer: string;
-  count: number;
-};
-
-export enum TossupResultScore {
-  neg = -5,
-  ten = 10,
-  power = 15,
-}
-
-export type TossupBuzz = {
-  isInPower: boolean;
-  readText: string;
-  index: number;
-  textWithBuzz: JSX.Element[];
-};
-
-export type TossupResult = {
-  submittedAnswer: string;
-  isCorrect: boolean;
-  score: TossupResultScore;
-  buzz: TossupBuzz;
-};

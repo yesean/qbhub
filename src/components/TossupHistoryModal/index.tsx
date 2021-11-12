@@ -18,7 +18,7 @@ import { Mode, ModeContext } from '../../services/ModeContext';
 import { TossupContext } from '../../services/TossupContext';
 import { TossupResultContext } from '../../services/TossupResultContext';
 import { parseHTMLString } from '../../services/utils';
-import { Tossup, TossupResult, TossupResultScore } from '../../types';
+import { Tossup, TossupResult, TossupScore } from '../../types/tossupReader';
 
 type TossupHistoryModalProps = {
   isOpen: boolean;
@@ -46,16 +46,12 @@ const TossupHistoryModal: React.FC<TossupHistoryModalProps> = ({
   }, [mode, tossup, result]);
 
   const powers = results.filter(
-    (r) => r.result.score === TossupResultScore.power,
+    (r) => r.result.score === TossupScore.power,
   ).length;
 
-  const tens = results.filter(
-    (r) => r.result.score === TossupResultScore.ten,
-  ).length;
+  const tens = results.filter((r) => r.result.score === TossupScore.ten).length;
 
-  const negs = results.filter(
-    (r) => r.result.score === TossupResultScore.neg,
-  ).length;
+  const negs = results.filter((r) => r.result.score === TossupScore.neg).length;
 
   const points = results.reduce((acc, r) => acc + r.result.score, 0);
 

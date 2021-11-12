@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 enum ReaderStatus {
   idle,
@@ -15,6 +15,11 @@ const initialState = {
   seenTossups: [],
 };
 
+export const fetchTossups = createAsyncThunk(
+  'tossupReader/fetchTossups',
+  async () => {},
+);
+
 const tossupReaderSlice = createSlice({
   name: 'tossupReader',
   initialState,
@@ -27,6 +32,7 @@ const tossupReaderSlice = createSlice({
         state.status = ReaderStatus.answering;
       }
     },
+    submitAnswer: (state, action) => {},
   },
 });
 

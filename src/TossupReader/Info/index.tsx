@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { Heading } from '@chakra-ui/react';
 
 import { Mode, ModeContext } from '../../services/ModeContext';
-import { Category, Difficulty, Subcategory } from '../../types';
+import { Category, Difficulty, Subcategory } from '../../types/questions';
 
 type InfoProps = {
   category: Category;

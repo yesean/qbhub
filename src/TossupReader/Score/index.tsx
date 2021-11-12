@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 
 import { Mode, ModeContext } from '../../services/ModeContext';
-import { TossupResultScore } from '../../types';
+import { TossupScore } from '../../types/tossupReader';
 import { TossupResultContext } from '../../services/TossupResultContext';
 
 const Score: React.FC = () => {
@@ -17,7 +17,7 @@ const Score: React.FC = () => {
   const [score, setScore] = useState({
     shouldShow: false,
     score: 0,
-    delta: TossupResultScore.neg,
+    delta: TossupScore.neg,
   });
 
   useEffect(() => {

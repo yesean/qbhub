@@ -1,4 +1,5 @@
-import { Category, Difficulty, Subcategory, Tossup } from './types';
+import { Category, Difficulty, Subcategory } from './types/questions';
+import { Tossup } from './types/tossupReader';
 
 export const CATEGORIES = [
   { label: 'Science', value: Category.Science },
@@ -357,9 +358,9 @@ export const SUBCATEGORIES = [
   },
 ];
 
-export const SUBCATEGORY_MAP = SUBCATEGORIES.reduce<
-  { [key in Subcategory]: Category }
->(
+export const SUBCATEGORY_MAP = SUBCATEGORIES.reduce<{
+  [key in Subcategory]: Category;
+}>(
   (acc, sc) => ({ ...acc, [sc.value]: sc.category }),
   {} as { [key in Subcategory]: Category },
 );

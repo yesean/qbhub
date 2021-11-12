@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
-import tossupReaderReducer from './TossupReader/tossupReaderSlice';
-import settingsReducer from './Settings/settingsSlice';
-import frequencyListReducer from './FrequencyList/frequencyListSlice';
+import tossupReaderReducer from '../TossupReader/tossupReaderSlice';
+import settingsReducer from '../Settings/settingsSlice';
+import frequencyListReducer from '../FrequencyList/frequencyListSlice';
 
 export const store = configureStore({
   reducer: {

@@ -5,7 +5,7 @@ import { TossupContext } from '../../services/TossupContext';
 import { Mode, ModeContext } from '../../services/ModeContext';
 import { TossupResultContext } from '../../services/TossupResultContext';
 import { addShortcut, checkAnswer, getAnswers } from '../../services/utils';
-import { TossupResultScore } from '../../types';
+import { TossupScore } from '../../types/tossupReader';
 import logger from '../../services/logger';
 import { TossupBuzzContext } from '../../services/TossupBuzzContext';
 
@@ -47,11 +47,9 @@ const UserInput: React.FC = () => {
       const isAnswerCorrect = checkAnswer(submittedAnswer, answers);
       let score;
       if (isAnswerCorrect) {
-        score = buzz.isInPower
-          ? TossupResultScore.power
-          : TossupResultScore.ten;
+        score = buzz.isInPower ? TossupScore.power : TossupScore.ten;
       } else {
-        score = TossupResultScore.neg;
+        score = TossupScore.neg;
       }
       setResult({
         isCorrect: isAnswerCorrect,

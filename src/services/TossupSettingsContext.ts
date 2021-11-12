@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 import { DEFAULT_READING_SPEED } from '../constants';
-import { Category, Difficulty, Subcategory } from '../types';
+import { Category, Difficulty, Subcategory } from '../types/questions';
 
 export type TossupSettingsContextType = {
   readingSpeed: number; // ms / word

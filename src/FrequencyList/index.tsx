@@ -15,7 +15,7 @@ import {
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { fetchFreq } from '../services/freqService';
 import { TossupSettingsContext } from '../services/TossupSettingsContext';
-import { Freq } from '../types';
+import { Freq } from '../types/frequencyList';
 
 const OFFSET = 20;
 const FrequencyList: React.FC = () => {

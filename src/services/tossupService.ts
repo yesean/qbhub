@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { Category, Difficulty, Subcategory, Tossup } from '../types';
+import { Category, Difficulty, Subcategory } from '../types/questions';
+import { Tossup } from '../types/tossupReader';
 
 const TOSSUP_ENDPOINT = `/api/tossups`;
 

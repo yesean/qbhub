@@ -10,7 +10,7 @@ import UserInput from './UserInput';
 import Score from './Score';
 import { TossupContext } from '../services/TossupContext';
 import { Mode, ModeContext } from '../services/ModeContext';
-import { TossupBuzz } from '../types';
+import { TossupBuzz } from '../types/tossupReader';
 import { TossupBuzzContext } from '../services/TossupBuzzContext';
 
 type TossupReaderProps = {};

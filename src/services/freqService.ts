@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { Category, Difficulty, Freq, Subcategory } from '../types';
+import { Category, Difficulty, Subcategory } from '../types/questions';
+import { Freq } from '../types/frequencyList';
 import { combineParams, getQueryParamArray } from './utils';
 
 const TOSSUP_ENDPOINT = `/api/freq`;

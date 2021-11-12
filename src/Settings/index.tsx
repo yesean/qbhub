@@ -23,7 +23,7 @@ import {
   SUBCATEGORY_MAP,
 } from '../constants';
 import { TossupSettingsContext } from '../services/TossupSettingsContext';
-import { Category, Difficulty, Subcategory } from '../types';
+import { Category, Difficulty, Subcategory } from '../types/questions';
 import {
   setInitialCategories,
   setInitialDifficulties,

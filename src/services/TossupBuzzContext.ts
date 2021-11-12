@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { TossupBuzz } from '../types';
+import { TossupBuzz } from '../types/tossupReader';
 
 export type TossupBuzzContextType = {
   buzz: TossupBuzz | null;

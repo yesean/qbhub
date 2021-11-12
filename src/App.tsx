@@ -23,13 +23,8 @@ import {
   getInitialReadingSpeed,
   getInitialSubcategories,
 } from './services/utils';
-import {
-  Category,
-  Difficulty,
-  Subcategory,
-  Tossup,
-  TossupResult,
-} from './types';
+import { Category, Difficulty, Subcategory } from './types/questions';
+import { Tossup, TossupResult } from './types/tossupReader';
 
 const NUM_TOSSUPS = 10;
 const MIN_NUM_TOSSUPS = 5;
