@@ -1,8 +1,6 @@
-import ss from 'string-similarity';
 import DOMPurify from 'dompurify';
 import ReactHTMLParser from 'react-html-parser';
-import logger from './logger';
-import { Category, Difficulty, Subcategory } from '../types/questions';
+import ss from 'string-similarity';
 import {
   CATEGORIES_LS_KEY,
   DEFAULT_READING_SPEED,
@@ -10,6 +8,8 @@ import {
   READING_SPEED_LS_KEY,
   SUBCATEGORIES_LS_KEY,
 } from '../constants';
+import { Category, Difficulty, Subcategory } from '../types/questions';
+import logger from '../utils/logger';
 
 export const getQueryParamArray = (field: string, array: any[]) =>
   array.map((e) => `${field}[]=${e}`).join('&');

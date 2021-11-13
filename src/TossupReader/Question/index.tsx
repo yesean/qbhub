@@ -1,16 +1,15 @@
-import { Fragment, useContext, useEffect, useMemo, useState } from 'react';
-import { Center, CircularProgress, Container, Text } from '@chakra-ui/react';
 import { BellIcon } from '@chakra-ui/icons';
-
+import { Center, CircularProgress, Container, Text } from '@chakra-ui/react';
+import { Fragment, useContext, useEffect, useMemo, useState } from 'react';
 import { Mode, ModeContext } from '../../services/ModeContext';
+import { TossupBuzzContext } from '../../services/TossupBuzzContext';
+import { TossupSettingsContext } from '../../services/TossupSettingsContext';
 import {
   getReadingTimeoutDelay,
   getTextBetweenTags,
   shuffleString,
 } from '../../services/utils';
-import { TossupBuzzContext } from '../../services/TossupBuzzContext';
-import logger from '../../services/logger';
-import { TossupSettingsContext } from '../../services/TossupSettingsContext';
+import logger from '../../utils/logger';
 
 type QuestionProps = {
   text: string;

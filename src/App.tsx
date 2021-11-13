@@ -4,10 +4,8 @@ import Body from './components/Body';
 import Footer from './components/Footer';
 import HamburgerMenu from './components/HamburgerMenu';
 import Header from './components/Header';
-import SettingsModal from './Settings';
 import TossupHistoryModal from './components/TossupHistoryModal';
 import { blankTossup } from './constants';
-import logger from './services/logger';
 import { Mode, ModeContext, ModeContextType } from './services/ModeContext';
 import { TossupContext, TossupContextType } from './services/TossupContext';
 import { TossupResultContext } from './services/TossupResultContext';
@@ -23,8 +21,10 @@ import {
   getInitialReadingSpeed,
   getInitialSubcategories,
 } from './services/utils';
+import SettingsModal from './Settings';
 import { Category, Difficulty, Subcategory } from './types/questions';
 import { Tossup, TossupResult } from './types/tossupReader';
+import logger from './utils/logger';
 
 const NUM_TOSSUPS = 10;
 const MIN_NUM_TOSSUPS = 5;

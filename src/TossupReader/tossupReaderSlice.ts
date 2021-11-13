@@ -25,14 +25,24 @@ const tossupReaderSlice = createSlice({
   initialState,
   reducers: {
     startNextTossup: (state) => {
-      state.currentTossup += 1;
+      if (
+        state.status === ReaderStatus.idle ||
+        state.status === ReaderStatus.answered
+      ) {
+        state.status = ReaderStatus.reading;
+        state.currentTossup += 1;
+      }
     },
     buzz: (state) => {
       if (state.status === ReaderStatus.reading) {
         state.status = ReaderStatus.answering;
       }
     },
-    submitAnswer: (state, action) => {},
+    submitAnswer: (state, action) => {
+      if (state.status === ReaderStatus.answering) {
+        state.status = ReaderStatus.answered;
+      }
+    },
   },
 });
 

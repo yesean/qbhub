@@ -1,13 +1,12 @@
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Button, Flex, Input } from '@chakra-ui/react';
-
-import { TossupContext } from '../../services/TossupContext';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Mode, ModeContext } from '../../services/ModeContext';
+import { TossupBuzzContext } from '../../services/TossupBuzzContext';
+import { TossupContext } from '../../services/TossupContext';
 import { TossupResultContext } from '../../services/TossupResultContext';
 import { addShortcut, checkAnswer, getAnswers } from '../../services/utils';
 import { TossupScore } from '../../types/tossupReader';
-import logger from '../../services/logger';
-import { TossupBuzzContext } from '../../services/TossupBuzzContext';
+import logger from '../../utils/logger';
 
 const UserInput: React.FC = () => {
   const { mode, setMode } = useContext(ModeContext);
@@ -84,7 +83,7 @@ const UserInput: React.FC = () => {
     if (mode === Mode.reading) return addShortcut(' ', promptUser);
     if (mode === Mode.answering) return addShortcut('Enter', submitAnswer);
     if (mode === Mode.revealed) return addShortcut('n', nextTossup);
-    return () => {};
+    return () => { };
   }, [mode, nextTossup, promptUser, submitAnswer]);
 
   // add button behavior in different modes
