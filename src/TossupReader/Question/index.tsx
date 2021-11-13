@@ -4,12 +4,10 @@ import { Fragment, useContext, useEffect, useMemo, useState } from 'react';
 import { Mode, ModeContext } from '../../services/ModeContext';
 import { TossupBuzzContext } from '../../services/TossupBuzzContext';
 import { TossupSettingsContext } from '../../services/TossupSettingsContext';
-import {
-  getReadingTimeoutDelay,
-  getTextBetweenTags,
-  shuffleString,
-} from '../../services/utils';
 import logger from '../../utils/logger';
+import { getTextBetweenTags } from '../../utils/questionReader';
+import { getReadingTimeoutDelay } from '../../utils/settings';
+import { shuffleString } from '../../utils/string';
 
 type QuestionProps = {
   text: string;

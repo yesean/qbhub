@@ -4,7 +4,7 @@ import {
   getInitialDifficulties,
   getInitialReadingSpeed,
   getInitialSubcategories,
-} from '../services/utils';
+} from '../utils/settings';
 
 const initialState = {
   readingSpeed: getInitialReadingSpeed(),

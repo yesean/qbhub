@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import {
   Box,
   Button,
@@ -14,8 +13,8 @@ import {
   SliderThumb,
   SliderTrack,
 } from '@chakra-ui/react';
+import { useContext } from 'react';
 import Select, { OptionsType } from 'react-select';
-
 import {
   CATEGORIES,
   DIFFICULTIES,
@@ -29,7 +28,7 @@ import {
   setInitialDifficulties,
   setInitialReadingSpeed,
   setInitialSubcategories,
-} from '../services/utils';
+} from '../utils/settings';
 
 type SettingsModalProps = {
   isOpen: boolean;

@@ -17,8 +17,8 @@ import { useContext, useEffect, useState } from 'react';
 import { Mode, ModeContext } from '../../services/ModeContext';
 import { TossupContext } from '../../services/TossupContext';
 import { TossupResultContext } from '../../services/TossupResultContext';
-import { parseHTMLString } from '../../services/utils';
 import { Tossup, TossupResult, TossupScore } from '../../types/tossupReader';
+import { parseHTMLString } from '../../utils/questionReader';
 
 type TossupHistoryModalProps = {
   isOpen: boolean;

@@ -4,9 +4,10 @@ import { Mode, ModeContext } from '../../services/ModeContext';
 import { TossupBuzzContext } from '../../services/TossupBuzzContext';
 import { TossupContext } from '../../services/TossupContext';
 import { TossupResultContext } from '../../services/TossupResultContext';
-import { addShortcut, checkAnswer, getAnswers } from '../../services/utils';
 import { TossupScore } from '../../types/tossupReader';
+import { addShortcut } from '../../utils/keyboard';
 import logger from '../../utils/logger';
+import { checkAnswer, getAnswers } from '../../utils/questionReader';
 
 const UserInput: React.FC = () => {
   const { mode, setMode } = useContext(ModeContext);
@@ -83,7 +84,7 @@ const UserInput: React.FC = () => {
     if (mode === Mode.reading) return addShortcut(' ', promptUser);
     if (mode === Mode.answering) return addShortcut('Enter', submitAnswer);
     if (mode === Mode.revealed) return addShortcut('n', nextTossup);
-    return () => { };
+    return () => {};
   }, [mode, nextTossup, promptUser, submitAnswer]);
 
   // add button behavior in different modes

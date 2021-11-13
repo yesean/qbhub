@@ -1,5 +1,5 @@
 import { Container, Text } from '@chakra-ui/react';
-import { parseHTMLString } from '../../services/utils';
+import { parseHTMLString } from '../../utils/questionReader';
 
 type AnswerProps = {
   answer: string;

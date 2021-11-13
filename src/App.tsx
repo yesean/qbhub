@@ -14,17 +14,17 @@ import {
   TossupSettingsContext,
   TossupSettingsContextType,
 } from './services/TossupSettingsContext';
-import {
-  cleanTossupText,
-  getInitialCategories,
-  getInitialDifficulties,
-  getInitialReadingSpeed,
-  getInitialSubcategories,
-} from './services/utils';
 import SettingsModal from './Settings';
 import { Category, Difficulty, Subcategory } from './types/questions';
 import { Tossup, TossupResult } from './types/tossupReader';
 import logger from './utils/logger';
+import {
+  getInitialCategories,
+  getInitialDifficulties,
+  getInitialReadingSpeed,
+  getInitialSubcategories,
+} from './utils/settings';
+import { cleanTossupText } from './utils/string';
 
 const NUM_TOSSUPS = 10;
 const MIN_NUM_TOSSUPS = 5;
