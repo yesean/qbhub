@@ -8,21 +8,26 @@ export const getTossupCondition = (
   difficulties: Difficulty[],
   text: string,
   answer: string,
+  ignoreEmptyNormalized = true,
 ) => {
-  let condition;
-  if (categories.length === 0 && subcategories.length === 0) condition = true;
-  else if (subcategories.length > 0)
-    condition = colInArr('tossups.subcategory_id', subcategories);
-  else if (categories.length > 0)
-    condition = colInArr('tossups.category_id', categories);
-  const diffCondition =
+  const cats =
+    categories.length === 0
+      ? true
+      : colInArr('tossups.category_id', categories);
+  const subcats =
+    subcategories.length === 0
+      ? true
+      : colInArr('tossups.subcategory_id', subcategories);
+  const diffs =
     difficulties.length > 0
       ? colInArr('tournaments.difficulty', difficulties)
       : true;
-  const textCondition = `tossups.text ilike '%${text}%'`;
-  const answerCondition = `tossups.answer ilike '%${answer}%'`;
+  const textCond = `tossups.text ilike '%${text}%'`;
+  const answerCond = `tossups.answer ilike '%${answer}%'`;
+  const normalized = ignoreEmptyNormalized
+    ? `tossups.normalized_answer <> ''`
+    : true;
 
-  condition = `${condition} and ${diffCondition} and ${textCondition} and ${answerCondition}`;
-
+  const condition = `(${cats} or ${subcats}) and ${diffs} and ${textCond} and ${answerCond} and ${normalized}`;
   return condition;
 };

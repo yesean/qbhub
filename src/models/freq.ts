@@ -15,23 +15,24 @@ export const getFreq = async (
     { column: 'normalized_answer', alias: 'answer' },
     { column: 'count(normalized_answer)', alias: 'count' },
   ];
-  const condition = `${getTossupCondition(
+  const columnOrder: { column: string; direction: 'asc' | 'desc' }[] = [
+    { column: 'count(normalized_answer)', direction: 'desc' },
+    { column: 'normalized_answer', direction: 'asc' },
+  ];
+  const condition = getTossupCondition(
     categories,
     subcategories,
     difficulties,
     text,
     answer,
-  )} and (normalized_answer <> '')`;
+  );
   const query = QueryBuilder.start()
     .select(columns)
     .from('tossups')
     .innerJoin('tournaments', 'tossups.tournament_id = tournaments.id')
     .where(condition)
     .groupBy('normalized_answer')
-    .orderBy([
-      { column: 'count(normalized_answer)', direction: 'desc' },
-      { column: 'normalized_answer', direction: 'asc' },
-    ])
+    .orderBy(columnOrder)
     .limit(limit)
     .offset(offset)
     .build();

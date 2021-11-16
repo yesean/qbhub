@@ -10,9 +10,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use(express.static(path.join(__dirname, 'build')));
 app.use('/api/tossups', tossupsRouter);
 app.use('/api/freq', freqRouter);
+app.use('*', express.static(path.join(__dirname, 'build')));
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

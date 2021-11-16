@@ -8,14 +8,12 @@
     "node": ">=8.10.0"
   },
   "scripts": {
+    "lint": "eslint ./src --ext .ts,.tsx",
+    "dev": "concurrently \"tsc --watch\" \"nodemon -r dotenv/config dist/index.js\"",
     "start": "node -r dotenv/config dist/index.js",
-    "build": "rm -rf dist && mkdir -p dist && npm run build:server && npm run build:ui",
     "build:ui": "cd ../qbhub-client && yarn build && cp -r build ../qbhub-server/dist && cd ../qbhub-server",
     "build:server": "tsc",
-    "watch:ts": "tsc --watch",
-    "watch:dev": "nodemon -r dotenv/config dist/index.js",
-    "watch:full": "concurrently \"yarn watch:ts\" \"yarn watch:dev\"",
-    "lint": "eslint ./src --ext .ts,.tsx"
+    "build": "rm -rf dist && mkdir -p dist && npm run build:server && npm run build:ui"
   },
   "dependencies": {
     "compromise": "^13.11.3",
