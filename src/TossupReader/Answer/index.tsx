@@ -1,11 +1,11 @@
 import { Container, Text } from '@chakra-ui/react';
+import { useSelector } from 'react-redux';
 import { parseHTMLString } from '../../utils/questionReader';
+import { selectCurrentTossup } from '../tossupReaderSlice';
 
-type AnswerProps = {
-  answer: string;
-};
+const Answer: React.FC = () => {
+  const { formattedAnswer } = useSelector(selectCurrentTossup);
 
-const Answer: React.FC<AnswerProps> = ({ answer }) => {
   return (
     <Container
       maxW="container.md"
@@ -16,7 +16,7 @@ const Answer: React.FC<AnswerProps> = ({ answer }) => {
       borderRadius="md"
     >
       <Text>
-        <b>ANSWER:</b> {parseHTMLString(answer)}
+        <b>ANSWER:</b> {parseHTMLString(formattedAnswer)}
       </Text>
     </Container>
   );

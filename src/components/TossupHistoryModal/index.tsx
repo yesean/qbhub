@@ -13,47 +13,25 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { useContext, useEffect, useState } from 'react';
-import { Mode, ModeContext } from '../../services/ModeContext';
-import { TossupContext } from '../../services/TossupContext';
-import { TossupResultContext } from '../../services/TossupResultContext';
-import { Tossup, TossupResult, TossupScore } from '../../types/tossupReader';
-import { parseHTMLString } from '../../utils/questionReader';
+import { useSelector } from 'react-redux';
+import { selectResults } from '../../TossupReader/tossupReaderSlice';
+import { TossupScore } from '../../types/tossupReader';
+import { parseHTMLString, renderQuestion } from '../../utils/questionReader';
 
 type TossupHistoryModalProps = {
   isOpen: boolean;
   onClose: () => void;
 };
-
-type Result = {
-  tossup: Tossup;
-  result: TossupResult;
-};
-
 const TossupHistoryModal: React.FC<TossupHistoryModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const [results, setResults] = useState<Result[]>([]);
-  const { mode } = useContext(ModeContext);
-  const { tossup } = useContext(TossupContext);
-  const { result } = useContext(TossupResultContext);
+  const results = useSelector(selectResults);
 
-  useEffect(() => {
-    if (mode === Mode.revealed && result !== null) {
-      setResults((r) => [{ tossup, result }, ...r]);
-    }
-  }, [mode, tossup, result]);
-
-  const powers = results.filter(
-    (r) => r.result.score === TossupScore.power,
-  ).length;
-
-  const tens = results.filter((r) => r.result.score === TossupScore.ten).length;
-
-  const negs = results.filter((r) => r.result.score === TossupScore.neg).length;
-
-  const points = results.reduce((acc, r) => acc + r.result.score, 0);
+  const powers = results.filter((r) => r.score === TossupScore.power).length;
+  const tens = results.filter((r) => r.score === TossupScore.ten).length;
+  const negs = results.filter((r) => r.score === TossupScore.neg).length;
+  const points = results.reduce((acc, r) => acc + r.score, 0);
 
   return (
     <Modal
@@ -104,12 +82,18 @@ const TossupHistoryModal: React.FC<TossupHistoryModalProps> = ({
               {results.map((r) => (
                 <Tr
                   key={r.tossup.formattedAnswer}
-                  backgroundColor={r.result.score > 0 ? 'green.200' : 'red.200'}
+                  backgroundColor={r.score > 0 ? 'green.200' : 'red.200'}
                 >
-                  <Td>{r.result.score}</Td>
-                  <Td>{r.result.submittedAnswer}</Td>
+                  <Td>{r.score}</Td>
+                  <Td>{r.submittedAnswer}</Td>
                   <Td>{parseHTMLString(r.tossup.formattedAnswer)}</Td>
-                  <Td>{r.result.buzz.textWithBuzz}</Td>
+                  <Td>
+                    {renderQuestion(
+                      r.buzz.textWithBuzz,
+                      r.buzz.index,
+                      r.buzz.textWithBuzz.length,
+                    )}
+                  </Td>
                   <Td>{r.tossup.tournament}</Td>
                 </Tr>
               ))}

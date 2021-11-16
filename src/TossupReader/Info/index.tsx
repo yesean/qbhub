@@ -1,33 +1,19 @@
-import { useContext } from 'react';
 import { Heading } from '@chakra-ui/react';
-
-import { Mode, ModeContext } from '../../services/ModeContext';
+import { useSelector } from 'react-redux';
 import { Category, Difficulty, Subcategory } from '../../types/questions';
+import { selectCurrentTossup } from '../tossupReaderSlice';
 
-type InfoProps = {
-  category: Category;
-  subcategory: Subcategory;
-  difficulty: Difficulty;
-  tournament: string;
-};
-
-const Info: React.FC<InfoProps> = ({
-  category,
-  subcategory,
-  difficulty,
-  tournament,
-}) => {
-  const { mode } = useContext(ModeContext);
+const Info: React.FC = () => {
+  const { tournament, category, subcategory, difficulty } =
+    useSelector(selectCurrentTossup);
 
   const info = subcategory
     ? `${tournament} / ${Difficulty[difficulty]} / ${Category[category]} / ${Subcategory[subcategory]}`
     : `${tournament} / ${Difficulty[difficulty]} / ${Category[category]}`;
 
-  const infoText = mode === Mode.start ? '' : info;
-
   return (
     <Heading pl={4} size="sm" mb={4}>
-      {infoText}
+      {info}
     </Heading>
   );
 };

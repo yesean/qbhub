@@ -17,14 +17,21 @@ export enum TossupScore {
   power = 15,
 }
 
-export type TossupBuzz = {
+export type TossupReaderWord = {
+  original: string;
+  shuffled: string;
   isInPower: boolean;
+};
+
+export type TossupBuzz = {
+  isPower: boolean;
   readText: string;
   index: number;
-  textWithBuzz: JSX.Element[];
+  textWithBuzz: TossupReaderWord[];
 };
 
 export type TossupResult = {
+  tossup: Tossup;
   isCorrect: boolean;
   submittedAnswer: string;
   score: TossupScore;

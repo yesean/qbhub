@@ -1,135 +1,158 @@
-import { Button, Flex, Input } from '@chakra-ui/react';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { Mode, ModeContext } from '../../services/ModeContext';
-import { TossupBuzzContext } from '../../services/TossupBuzzContext';
-import { TossupContext } from '../../services/TossupContext';
-import { TossupResultContext } from '../../services/TossupResultContext';
+import { Button, Center, Flex, Input } from '@chakra-ui/react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useAppDispatch } from '../../app/hooks';
 import { TossupScore } from '../../types/tossupReader';
 import { addShortcut } from '../../utils/keyboard';
 import logger from '../../utils/logger';
 import { checkAnswer, getAnswers } from '../../utils/questionReader';
+import {
+  buzz,
+  nextTossup,
+  ReaderStatus,
+  selectCurrentBuzz,
+  selectCurrentResult,
+  selectCurrentTossup,
+  selectStatus,
+  submitAnswer,
+} from '../tossupReaderSlice';
 
-const UserInput: React.FC = () => {
-  const { mode, setMode } = useContext(ModeContext);
-  const { buzz, setBuzz } = useContext(TossupBuzzContext);
-  const {
-    tossup: { formattedAnswer },
-  } = useContext(TossupContext);
-  const { result, setResult } = useContext(TossupResultContext);
+type UserInputProps = {
+  progress: number;
+};
+const UserInput: React.FC<UserInputProps> = ({ progress }) => {
   const [inputValue, setInputValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const status = useSelector(selectStatus);
+  const currentTossup = useSelector(selectCurrentTossup);
+  const currentResult = useSelector(selectCurrentResult);
+  const currentBuzz = useSelector(selectCurrentBuzz);
+  const dispatch = useAppDispatch();
 
   // focus input when user is answering, blur otherwise
   useEffect(() => {
     if (inputRef.current !== null) {
-      if (mode === Mode.answering) {
+      if (status === ReaderStatus.answering) {
         inputRef.current.focus();
       } else {
         inputRef.current.blur();
       }
     }
-  }, [mode]);
+  }, [status]);
 
   // reset input when fetching a new tossup
   useEffect(() => {
-    if (mode === Mode.fetchingTossup) {
+    if (status === ReaderStatus.reading) {
       setInputValue('');
     }
-  }, [mode]);
+  }, [status]);
 
   // process a user's answer when submitting
-  useEffect(() => {
-    if (buzz !== null && mode === Mode.submitting) {
-      logger.info('buzz: ', buzz);
+  const submit = useCallback(() => {
+    if (status === ReaderStatus.answering) {
       const submittedAnswer = inputValue.trim().toLowerCase();
-      const answers = getAnswers(formattedAnswer);
-      logger.info('answers: ', answers);
+      const answers = getAnswers(currentTossup.formattedAnswer);
       const isAnswerCorrect = checkAnswer(submittedAnswer, answers);
+
+      logger.info(`User submitted "${submittedAnswer}"`);
+      logger.info('Buzz:', currentBuzz);
+      logger.info('Processed answers:', answers);
+
       let score;
       if (isAnswerCorrect) {
-        score = buzz.isInPower ? TossupScore.power : TossupScore.ten;
+        score = currentBuzz.isPower ? TossupScore.power : TossupScore.ten;
       } else {
         score = TossupScore.neg;
       }
-      setResult({
+
+      const result = {
+        tossup: currentTossup,
         isCorrect: isAnswerCorrect,
         score,
         submittedAnswer,
-        buzz,
-      });
-      setMode(Mode.revealed);
+        buzz: currentBuzz,
+      };
+
+      dispatch(submitAnswer(result));
     }
-  }, [mode, setMode, inputValue, formattedAnswer, setResult, buzz, setBuzz]);
+  }, [currentBuzz, currentTossup, dispatch, inputValue, status]);
 
-  // get new tossup
-  const nextTossup = useCallback(() => {
-    setMode(Mode.fetchingTossup);
-    setResult(null);
-    setBuzz(null);
-  }, [setResult, setBuzz, setMode]);
-
-  // prompt user for answer
-  const promptUser = useCallback(() => {
-    setMode(Mode.answering);
-  }, [setMode]);
-
-  // submit user inputted answer
-  const submitAnswer = useCallback(() => {
-    setMode(Mode.submitting);
-  }, [setMode]);
+  useEffect(() => {
+    if (progress === 0) {
+      submit();
+    }
+  }, [progress, submit]);
 
   // add keyboard shortcuts
   useEffect(() => {
-    if (mode === Mode.start) return addShortcut('n', nextTossup);
-    if (mode === Mode.reading) return addShortcut(' ', promptUser);
-    if (mode === Mode.answering) return addShortcut('Enter', submitAnswer);
-    if (mode === Mode.revealed) return addShortcut('n', nextTossup);
+    if (status === ReaderStatus.idle)
+      return addShortcut('n', () => dispatch(nextTossup()));
+    if (status === ReaderStatus.reading)
+      return addShortcut(' ', () => dispatch(buzz()));
+    if (status === ReaderStatus.answering) return addShortcut('Enter', submit);
+    if (status === ReaderStatus.answered)
+      return addShortcut('n', () => dispatch(nextTossup()));
     return () => {};
-  }, [mode, nextTossup, promptUser, submitAnswer]);
+  }, [dispatch, status, submit]);
 
   // add button behavior in different modes
   const onButtonClick = () => {
-    if (mode === Mode.start) nextTossup();
-    if (mode === Mode.reading) promptUser();
-    if (mode === Mode.answering) submitAnswer();
-    if (mode === Mode.revealed) nextTossup();
+    if (status === ReaderStatus.idle) dispatch(nextTossup());
+    if (status === ReaderStatus.reading) dispatch(buzz());
+    if (status === ReaderStatus.answering) submit();
+    if (status === ReaderStatus.answered) dispatch(nextTossup());
   };
 
   // set button text depending on mode
-  let buttonText = '';
-  if (mode === Mode.start) buttonText = 'Start';
-  else if (mode === Mode.fetchingTossup) buttonText = '...';
-  else if (mode === Mode.reading) buttonText = 'Buzz';
-  else if (mode === Mode.answering) buttonText = 'Submit';
-  else if (mode === Mode.revealed) buttonText = 'Next';
+  let buttonText;
+  switch (status) {
+    case ReaderStatus.idle:
+      buttonText = 'Start';
+      break;
+    case ReaderStatus.fetching:
+      buttonText = '...';
+      break;
+    case ReaderStatus.reading:
+      buttonText = 'Buzz';
+      break;
+    case ReaderStatus.answering:
+      buttonText = 'Submit';
+      break;
+    case ReaderStatus.answered:
+      buttonText = 'Next';
+      break;
+    default:
+  }
 
   // set input border depending on user correctness
   let inputBorderColor;
-  if (mode === Mode.revealed && result !== null)
-    inputBorderColor = result.isCorrect ? 'green.400' : 'red.400';
+  if (status === ReaderStatus.answered)
+    inputBorderColor = currentResult.isCorrect ? 'green.400' : 'red.400';
 
   // only show start button at start
-  const shouldShowInput = mode !== Mode.start;
+  const shouldShowInput = status !== ReaderStatus.idle;
 
   return (
-    <Flex w="100%" justify="center">
-      {shouldShowInput && (
-        <Input
-          ref={inputRef}
-          value={inputValue}
-          onChange={(e) => setInputValue(e.currentTarget.value)}
-          placeholder="Answer:"
-          mb={8}
-          mr={4}
-          isDisabled={mode !== Mode.answering}
-          borderColor={inputBorderColor}
-          borderWidth={mode === Mode.revealed ? 2 : undefined}
-        />
-      )}
-      <Button colorScheme="cyan" color="gray.50" onClick={onButtonClick}>
-        {buttonText}
-      </Button>
-    </Flex>
+    <Center>
+      <Flex w="100%" justify="center">
+        {shouldShowInput && (
+          <Input
+            ref={inputRef}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.currentTarget.value)}
+            placeholder="Answer:"
+            mb={8}
+            mr={4}
+            isDisabled={status !== ReaderStatus.answering}
+            borderColor={inputBorderColor}
+            borderWidth={status === ReaderStatus.answered ? 2 : undefined}
+          />
+        )}
+        <Button colorScheme="cyan" color="gray.50" onClick={onButtonClick}>
+          {buttonText}
+        </Button>
+      </Flex>
+    </Center>
   );
 };
 

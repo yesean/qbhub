@@ -1,13 +1,10 @@
-import { useContext } from 'react';
 import { Heading } from '@chakra-ui/react';
-
-import { TossupResultContext } from '../../services/TossupResultContext';
+import { useSelector } from 'react-redux';
 import { TossupScore } from '../../types/tossupReader';
+import { selectCurrentResult } from '../tossupReaderSlice';
 
 const Result: React.FC = () => {
-  const { result } = useContext(TossupResultContext);
-
-  if (result === null) return null;
+  const result = useSelector(selectCurrentResult);
 
   let text;
   if (result.score === TossupScore.power) text = '🎉  Power!  🥳';

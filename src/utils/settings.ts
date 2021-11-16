@@ -54,7 +54,7 @@ export const getInitialCategories = () => {
     setInitialCategories(defaultCategories);
     return defaultCategories;
   }
-  return JSON.parse(categories);
+  return JSON.parse(categories) as Category[];
 };
 
 export const getInitialSubcategories = () => {
@@ -64,7 +64,7 @@ export const getInitialSubcategories = () => {
     setInitialSubcategories(defaultSubcategories);
     return defaultSubcategories;
   }
-  return JSON.parse(subcategories);
+  return JSON.parse(subcategories) as Subcategory[];
 };
 
 export const getInitialDifficulties = () => {
@@ -77,7 +77,7 @@ export const getInitialDifficulties = () => {
     setInitialDifficulties(defaultDifficulties);
     return defaultDifficulties;
   }
-  return JSON.parse(difficulties);
+  return JSON.parse(difficulties) as Difficulty[];
 };
 
 export const getReadingTimeoutDelay = (speed: number) => {

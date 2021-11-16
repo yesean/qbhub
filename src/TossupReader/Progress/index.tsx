@@ -1,29 +1,29 @@
-import { useContext, useEffect, useState } from 'react';
 import { Progress } from '@chakra-ui/react';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { ReaderStatus, selectStatus } from '../tossupReaderSlice';
 
-import { Mode, ModeContext } from '../../services/ModeContext';
-
-const TimerProgress: React.FC = () => {
-  const { mode, setMode } = useContext(ModeContext);
-  const [progress, setProgress] = useState(100);
+type TimerProgressProps = {
+  progress: number;
+  setProgress: React.Dispatch<React.SetStateAction<number>>;
+};
+const TimerProgress: React.FC<TimerProgressProps> = ({
+  progress,
+  setProgress,
+}) => {
+  const mode = useSelector(selectStatus);
 
   useEffect(() => {
-    if (mode === Mode.answering) {
+    if (mode === ReaderStatus.answering) {
       const id = setTimeout(() => {
-        setProgress((p) => (p > 0 ? p - 0.05 : 0));
+        setProgress((p) => (p > 0 ? p - 0.1 : 0));
       }, 5);
       return () => {
         window.clearTimeout(id);
       };
     }
     return () => {};
-  }, [mode, progress]);
-
-  useEffect(() => {
-    if (progress === 0) {
-      setMode(Mode.submitting);
-    }
-  }, [progress, setMode]);
+  }, [mode, progress, setProgress]);
 
   return (
     <Progress

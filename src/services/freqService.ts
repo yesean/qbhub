@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Freq } from '../types/frequencyList';
 import { Category, Difficulty, Subcategory } from '../types/questions';
-import { combineParams, getQueryParamArray } from '../utils/fetch';
+import { combineParams, createParamsFromArray } from '../utils/fetch';
 
 const TOSSUP_ENDPOINT = `/api/freq`;
 
@@ -12,25 +12,13 @@ export const fetchFreq = async (
   limit: number,
   offset: number,
 ): Promise<Freq[]> => {
-  const categoriesQueryString = getQueryParamArray('categories', categories);
-  const subcategoriesQueryString = getQueryParamArray(
-    'subcategories',
-    subcategories,
-  );
-  const difficultiesQueryString = getQueryParamArray(
-    'difficulties',
-    difficulties,
-  );
-  const limitQueryString = `limit=${limit}`;
-  const offsetQueryString = `offset=${offset}`;
   const params = combineParams(
-    categoriesQueryString,
-    subcategoriesQueryString,
-    difficultiesQueryString,
-    limitQueryString,
-    offsetQueryString,
+    createParamsFromArray('categories', categories),
+    createParamsFromArray('subcategories', subcategories),
+    createParamsFromArray('difficulties', difficulties),
+    `limit=${limit}`,
+    `offset=${offset}`,
   );
-
   try {
     const url = `${TOSSUP_ENDPOINT}?${params}`;
     const response = await axios.get(url);

@@ -1,24 +1,20 @@
-import { BellIcon } from '@chakra-ui/icons';
-import { Center, CircularProgress, Container, Text } from '@chakra-ui/react';
-import { Fragment, useContext, useEffect, useMemo, useState } from 'react';
-import { Mode, ModeContext } from '../../services/ModeContext';
-import { TossupBuzzContext } from '../../services/TossupBuzzContext';
-import { TossupSettingsContext } from '../../services/TossupSettingsContext';
+import { Center, CircularProgress, Container } from '@chakra-ui/react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectSettings } from '../../Settings/settingsSlice';
+import { TossupReaderWord } from '../../types/tossupReader';
 import logger from '../../utils/logger';
-import { getTextBetweenTags } from '../../utils/questionReader';
+import { getTextBetweenTags, renderQuestion } from '../../utils/questionReader';
 import { getReadingTimeoutDelay } from '../../utils/settings';
 import { shuffleString } from '../../utils/string';
-
-type QuestionProps = {
-  text: string;
-  formattedText: string;
-};
-
-type Word = {
-  original: string;
-  shuffled: string;
-  isInPower: boolean;
-};
+import {
+  buzz,
+  ReaderStatus,
+  selectCurrentBuzz,
+  selectCurrentTossup,
+  selectStatus,
+  setBuzz,
+} from '../tossupReaderSlice';
 
 type PowerWordsCount = {
   [word: string]: number;
@@ -48,59 +44,16 @@ const getPowerWordsCount = (formattedText: string) => {
     }, {});
 };
 
-const getWord = (word: Word, index: number, visibleIndex: number) =>
-  index <= visibleIndex ? word.original : word.shuffled;
-
-const computeVisibility = (
-  index: number,
-  visibleIndex: number,
-): 'visible' | 'hidden' => {
-  return index <= visibleIndex ? 'visible' : 'hidden';
-};
-
-const renderQuestion = (
-  words: Word[],
-  visibleIndex: number,
-  buzzIndex: number,
-) =>
-  words.map((w, i) => (
-    <Fragment key={`${w}${i}`}>
-      <Text
-        /* eslint react/no-array-index-key: "off" */
-        d="inline-flex"
-        alignItems="center"
-        whiteSpace="pre"
-        visibility={computeVisibility(i, visibleIndex)}
-        fontWeight={w.isInPower ? 'bold' : 'normal'}
-      >
-        {`${getWord(w, i, visibleIndex)} `}
-      </Text>
-      {i === buzzIndex && (
-        <Container
-          color="cyan.500"
-          m={0}
-          p={0}
-          w="auto"
-          d="inline-flex"
-          alignItems="center"
-          whiteSpace="pre"
-          verticalAlign="bottom"
-        >
-          <BellIcon w={4} h={4} />
-          <Text d="inline"> </Text>
-        </Container>
-      )}
-    </Fragment>
-  ));
-
-const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
+const Question: React.FC = () => {
   const [visibleIndex, setVisibleIndex] = useState(0);
   const [incrementId, setIncrementId] = useState<NodeJS.Timeout | null>(null);
-  const { mode, setMode } = useContext(ModeContext);
-  const { buzz, setBuzz } = useContext(TossupBuzzContext);
-  const { readingSpeed } = useContext(TossupSettingsContext);
+  const status = useSelector(selectStatus);
+  const { text, formattedText } = useSelector(selectCurrentTossup);
+  const settings = useSelector(selectSettings);
+  const currentBuzz = useSelector(selectCurrentBuzz);
+  const dispatch = useDispatch();
 
-  const words: Word[] = useMemo(() => {
+  const words: TossupReaderWord[] = useMemo(() => {
     const powerWordsCount = getPowerWordsCount(formattedText);
     return getWords(text).map((w) => {
       if (w.original in powerWordsCount && powerWordsCount[w.original] > 0) {
@@ -112,87 +65,109 @@ const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
     });
   }, [text, formattedText]);
 
-  // set buzz on user buzz
-  useEffect(() => {
-    const word = words[visibleIndex];
-    if (mode === Mode.answering) {
-      setBuzz({
-        readText: words
-          .slice(0, visibleIndex)
-          .map((w) => w.original)
-          .join(' '),
-        isInPower: word.isInPower,
-        index: visibleIndex,
-        textWithBuzz: renderQuestion(words, words.length - 1, visibleIndex),
-      });
-    }
-  }, [mode, setBuzz, visibleIndex, words]);
-
-  // reveal rest of tossup
-  useEffect(() => {
-    const revealWords = () => {
+  const pauseWords = useCallback(() => {
+    logger.info('Pausing tossup reading.');
+    if (incrementId !== null) {
+      window.clearTimeout(incrementId);
       setIncrementId(null);
-      setVisibleIndex(words.length);
-    };
-    if (mode === Mode.revealed) {
-      logger.info('revealing rest of tossup');
-      revealWords();
     }
-  }, [incrementId, mode, words.length, text]);
+  }, [incrementId]);
+
+  const revealWords = useCallback(() => {
+    logger.info('Revealing rest of tossup.');
+    setIncrementId(null);
+    setVisibleIndex(words.length);
+  }, [words.length]);
 
   // pause reading when answering
   useEffect(() => {
-    const pauseWords = () => {
-      if (incrementId !== null) window.clearTimeout(incrementId);
-      setIncrementId(null);
-    };
-    if (mode === Mode.answering) {
-      logger.info('pausing reading for user answer');
+    if (status === ReaderStatus.answering) {
       pauseWords();
     }
-  }, [incrementId, mode, words.length, text]);
+  }, [pauseWords, status]);
+
+  // reveal rest of tossup
+  useEffect(() => {
+    if (status === ReaderStatus.answered) {
+      revealWords();
+    }
+  }, [revealWords, status]);
 
   // reset state when fetching new tossup
   useEffect(() => {
-    if (mode === Mode.fetchingTossup) {
-      logger.info('resetting state for tossup fetch');
+    if (status === ReaderStatus.fetching) {
       setVisibleIndex(0);
     }
-  }, [mode, incrementId]);
+  }, [status, incrementId]);
 
   // read tossup
   useEffect(() => {
-    if (mode === Mode.reading) {
-      if (visibleIndex < words.length - 1) {
+    if (status === ReaderStatus.reading) {
+      if (visibleIndex < words.length) {
         if (incrementId === null) {
-          logger.info(
-            'reading speed: ',
-            getReadingTimeoutDelay(readingSpeed),
-            ' ms/word',
-          );
-          const id = setTimeout(() => {
-            setVisibleIndex((i) =>
-              i < words.length && mode === Mode.reading ? i + 1 : i,
-            );
+          const readingDelay = getReadingTimeoutDelay(settings.readingSpeed);
+          logger.info('Current reading speed:', readingDelay, 'ms/word');
+          const incrementVisibleIndex = () => {
+            setVisibleIndex(visibleIndex + 1);
             setIncrementId(null);
-          }, getReadingTimeoutDelay(readingSpeed));
+          };
+          const id = setTimeout(incrementVisibleIndex, readingDelay);
           setIncrementId(id);
+          const readText = words
+            .slice(0, visibleIndex + 1)
+            .map((w) => w.original)
+            .join(' ');
+          const lastWord = words[visibleIndex];
+          const newCurrentBuzz = {
+            readText,
+            isPower: lastWord.isInPower,
+            index: visibleIndex,
+            textWithBuzz: words,
+          };
+          dispatch(setBuzz(newCurrentBuzz));
         }
       } else {
-        setMode(Mode.answering);
+        dispatch(buzz());
       }
     }
   }, [
-    visibleIndex,
-    words.length,
-    mode,
-    setMode,
-    text,
+    dispatch,
     incrementId,
-    readingSpeed,
+    settings.readingSpeed,
+    status,
+    visibleIndex,
+    words,
   ]);
+  return (
+    <>
+      {renderQuestion(
+        words,
+        status === ReaderStatus.reading ? -1 : currentBuzz.index,
+        visibleIndex,
+      )}
+    </>
+  );
+};
 
-  const shouldShowCircularProgress = mode === Mode.fetchingTossup;
+const QuestionContainer: React.FC = () => {
+  const status = useSelector(selectStatus);
+
+  const shouldShowCircularProgress = status === ReaderStatus.fetching;
+  const shouldShowEmptyMsg = status === ReaderStatus.empty;
+
+  const render = () => {
+    if (shouldShowCircularProgress) {
+      return (
+        <Center>
+          <CircularProgress isIndeterminate color="cyan.100" />
+        </Center>
+      );
+    }
+    if (shouldShowEmptyMsg) {
+      return 'No tossups found. Try tweaking the search parameters.';
+    }
+    return <Question />;
+  };
 
   return (
     <Container
@@ -206,15 +181,9 @@ const Question: React.FC<QuestionProps> = ({ text, formattedText }) => {
       justifyContent={shouldShowCircularProgress ? 'center' : 'start'}
       borderRadius="md"
     >
-      {shouldShowCircularProgress ? (
-        <Center>
-          <CircularProgress isIndeterminate color="cyan.100" />
-        </Center>
-      ) : (
-        renderQuestion(words, visibleIndex, buzz?.index || -1)
-      )}
+      {render()}
     </Container>
   );
 };
 
-export default Question;
+export default QuestionContainer;

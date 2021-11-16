@@ -13,7 +13,7 @@ import {
   SliderThumb,
   SliderTrack,
 } from '@chakra-ui/react';
-import { useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Select, { OptionsType } from 'react-select';
 import {
   CATEGORIES,
@@ -21,7 +21,6 @@ import {
   SUBCATEGORIES,
   SUBCATEGORY_MAP,
 } from '../constants';
-import { TossupSettingsContext } from '../services/TossupSettingsContext';
 import { Category, Difficulty, Subcategory } from '../types/questions';
 import {
   setInitialCategories,
@@ -29,6 +28,13 @@ import {
   setInitialReadingSpeed,
   setInitialSubcategories,
 } from '../utils/settings';
+import {
+  selectSettings,
+  updateCategories,
+  updateDifficulties,
+  updateReadingSpeed,
+  updateSubcategories,
+} from './settingsSlice';
 
 type SettingsModalProps = {
   isOpen: boolean;
@@ -36,57 +42,62 @@ type SettingsModalProps = {
 };
 
 const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
-  const {
-    readingSpeed,
-    setReadingSpeed,
-    categoriesSelected,
-    setCategoriesSelected,
-    subcategoriesSelected,
-    setSubcategoriesSelected,
-    difficultiesSelected,
-    setDifficultiesSelected,
-  } = useContext(TossupSettingsContext);
+  const { readingSpeed, categories, subcategories, difficulties } =
+    useSelector(selectSettings);
+  const dispatch = useDispatch();
 
   const onReadingSpeedChange = (value: number) => {
-    setReadingSpeed(value);
+    dispatch(updateReadingSpeed(value));
     setInitialReadingSpeed(value);
   };
 
-  const categoriesInSelect = categoriesSelected.map((c) => ({
+  const categoriesInSelect = categories.map((c) => ({
     value: c,
     label: Category[c],
   }));
   const onCategoriesChange = (
     options: OptionsType<{ label: string; value: Category }>,
   ) => {
-    const values = options.map((o) => o.value);
-    setCategoriesSelected(values);
-    setSubcategoriesSelected((scs) =>
-      scs.filter((sc) => values.includes(SUBCATEGORY_MAP[sc])),
+    const newCategories = options.map((o) => o.value);
+    dispatch(updateCategories(newCategories));
+    setInitialCategories(newCategories);
+
+    const newSubcategories = subcategories.filter(
+      (sc) => !newCategories.includes(SUBCATEGORY_MAP[sc]),
     );
-    setInitialCategories(values);
+    dispatch(updateSubcategories(newSubcategories));
+    setInitialSubcategories(newSubcategories);
   };
-  const subcategoriesInSelect = subcategoriesSelected.map((c) => ({
+
+  const subcategoriesInSelect = subcategories.map((c) => ({
     value: c,
     label: Subcategory[c],
   }));
   const onSubcategoriesChange = (
     options: OptionsType<{ label: string; value: Subcategory }>,
   ) => {
-    const values = options.map((o) => o.value);
-    setSubcategoriesSelected(values);
-    setInitialSubcategories(values);
+    const newSubcategories = options.map((o) => o.value);
+    dispatch(updateSubcategories(newSubcategories));
+    setInitialSubcategories(newSubcategories);
+
+    const categoriesToExclude = new Set(
+      newSubcategories.map((sc) => SUBCATEGORY_MAP[sc]),
+    );
+    const newCategories = categories.filter((c) => !categoriesToExclude.has(c));
+    dispatch(updateCategories(newCategories));
+    setInitialCategories(newCategories);
   };
-  const difficultiesInSelect = difficultiesSelected.map((d) => ({
+
+  const difficultiesInSelect = difficulties.map((d) => ({
     value: d,
     label: Difficulty[d],
   }));
   const onDifficultiesChange = (
     options: OptionsType<{ label: string; value: Difficulty }>,
   ) => {
-    const values = options.map((o) => o.value);
-    setDifficultiesSelected(values);
-    setInitialDifficulties(values);
+    const newDifficulties = options.map((o) => o.value);
+    dispatch(updateDifficulties(newDifficulties));
+    setInitialDifficulties(newDifficulties);
   };
 
   return (
@@ -127,11 +138,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
             <Select
               isMulti
               name="subcategories"
-              options={SUBCATEGORIES.filter(
-                (sc) =>
-                  categoriesInSelect.length === 0 ||
-                  categoriesInSelect.some((c) => c.value === sc.category),
-              )}
+              options={SUBCATEGORIES}
               value={subcategoriesInSelect}
               onChange={onSubcategoriesChange}
             />

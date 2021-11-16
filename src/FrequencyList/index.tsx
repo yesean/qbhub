@@ -12,30 +12,31 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { fetchFreq } from '../services/freqService';
-import { TossupSettingsContext } from '../services/TossupSettingsContext';
+import { selectSettings } from '../Settings/settingsSlice';
 import { Freq } from '../types/frequencyList';
 
 const OFFSET = 20;
 const FrequencyList: React.FC = () => {
   const [offset, setOffset] = useState(0);
   const [answers, setAnswers] = useState<Freq[] | null>(null);
-  const { categoriesSelected, subcategoriesSelected, difficultiesSelected } =
-    useContext(TossupSettingsContext);
+  const { categories, subcategories, difficulties } =
+    useSelector(selectSettings);
 
   const fetch = useCallback(
     async (o: number) => {
       const freq = await fetchFreq(
-        categoriesSelected,
-        subcategoriesSelected,
-        difficultiesSelected,
+        categories,
+        subcategories,
+        difficulties,
         OFFSET,
         o,
       );
       setAnswers(freq);
     },
-    [categoriesSelected, subcategoriesSelected, difficultiesSelected],
+    [categories, difficulties, subcategories],
   );
 
   useEffect(() => {
@@ -83,7 +84,7 @@ const FrequencyList: React.FC = () => {
         </Thead>
         <Tbody>
           {ans.map((a) => (
-            <Tr>
+            <Tr key={`${a.answer}${a.count}`}>
               <Td>{a.answer}</Td>
               <Td isNumeric>{a.count}</Td>
             </Tr>

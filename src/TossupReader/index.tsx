@@ -1,79 +1,60 @@
-import { useContext, useMemo, useState } from 'react';
-import { Center, Flex } from '@chakra-ui/react';
-
-import Info from './Info';
+import { Flex } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import Answer from './Answer';
-import Result from './Result';
+import Info from './Info';
 import Progress from './Progress';
 import Question from './Question';
-import UserInput from './UserInput';
+import Result from './Result';
 import Score from './Score';
-import { TossupContext } from '../services/TossupContext';
-import { Mode, ModeContext } from '../services/ModeContext';
-import { TossupBuzz } from '../types/tossupReader';
-import { TossupBuzzContext } from '../services/TossupBuzzContext';
+import { ReaderStatus, selectStatus } from './tossupReaderSlice';
+import UserInput from './UserInput';
 
 type TossupReaderProps = {};
 
 const TossupReader: React.FC<TossupReaderProps> = () => {
-  const { mode } = useContext(ModeContext);
-  const {
-    tossup: {
-      text,
-      formattedText,
-      formattedAnswer,
-      category,
-      subcategory,
-      difficulty,
-      tournament,
-    },
-  } = useContext(TossupContext);
-  const [tossupBuzz, setTossupBuzz] = useState<TossupBuzz | null>(null);
+  const [progress, setProgress] = useState(100);
+  const status = useSelector(selectStatus);
 
-  const shouldShowInfo = mode !== Mode.start && mode !== Mode.fetchingTossup;
-  const shouldShowAnswer = mode === Mode.revealed;
-  const shouldShowProgress = mode === Mode.answering;
-  const shouldShowQuestion = mode !== Mode.start;
-  const shouldShowScore = mode !== Mode.start;
+  useEffect(() => {
+    if (status === ReaderStatus.answered) {
+      setProgress(100);
+    }
+  }, [status]);
 
-  const tossupBuzzContext = useMemo(
-    () => ({
-      buzz: tossupBuzz,
-      setBuzz: setTossupBuzz,
-    }),
-    [tossupBuzz],
-  );
+  const renderInfo = () =>
+    ![ReaderStatus.idle, ReaderStatus.fetching, ReaderStatus.empty].includes(
+      status,
+    ) && <Info />;
+  const renderAnswer = () => status === ReaderStatus.answered && <Answer />;
+  const renderQuestion = () => status !== ReaderStatus.idle && <Question />;
+  const renderResult = () => status === ReaderStatus.answered && <Result />;
+  const renderProgress = () =>
+    status === ReaderStatus.answering && (
+      <Progress progress={progress} setProgress={setProgress} />
+    );
+  const renderInput = () =>
+    status !== ReaderStatus.empty && <UserInput progress={progress} />;
+  const renderScore = () =>
+    ![ReaderStatus.idle, ReaderStatus.empty].includes(status) && <Score />;
 
   return (
-    <TossupBuzzContext.Provider value={tossupBuzzContext}>
-      <Flex
-        direction="column"
-        w="100%"
-        maxH="100%"
-        maxW="3xl"
-        padding={4}
-        overflow="auto"
-      >
-        {shouldShowInfo && (
-          <Info
-            category={category}
-            subcategory={subcategory}
-            difficulty={difficulty}
-            tournament={tournament}
-          />
-        )}
-        {shouldShowAnswer && <Answer answer={formattedAnswer} />}
-        {shouldShowQuestion && (
-          <Question text={text} formattedText={formattedText} />
-        )}
-        <Result />
-        {shouldShowProgress && <Progress />}
-        <Center>
-          <UserInput />
-        </Center>
-        {shouldShowScore && <Score />}
-      </Flex>
-    </TossupBuzzContext.Provider>
+    <Flex
+      direction="column"
+      w="100%"
+      maxH="100%"
+      maxW="3xl"
+      padding={4}
+      overflow="auto"
+    >
+      {renderInfo()}
+      {renderAnswer()}
+      {renderQuestion()}
+      {renderResult()}
+      {renderProgress()}
+      {renderInput()}
+      {renderScore()}
+    </Flex>
   );
 };
 

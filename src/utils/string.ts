@@ -15,6 +15,9 @@ export const shuffleString = (s: string) => {
   return shuffled.join('');
 };
 
+/**
+ * Adjust spacing for power marking
+ */
 export const cleanTossupText = (text: string) => {
   return removeExtraSpaces(
     text
