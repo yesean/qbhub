@@ -94,3 +94,11 @@ export enum Difficulty {
   'Hard College',
   'Open',
 }
+
+export type Tossup = {
+  categories: Category[];
+  subcategories: Subcategory[];
+  difficulties: Difficulty[];
+  text: string;
+  answer: string;
+};
