@@ -40,6 +40,6 @@ algorithm and scoring system are based on
 [`tf-idf`](https://en.wikipedia.org/wiki/Tf%E2%80%93idf). The exact procedure
 can be found [here](src/utils/clues.ts).
 
-## Usage
+## API Usage
 
 Coming soon...
