@@ -11,8 +11,7 @@ const FREQ_URL = `${API_URL}/freq`;
 
 export const combineParams = (...params: any[]) => params.join('&');
 export const createParamsFromArray = (field: string, values: any[]) =>
-  combineParams(values.map((val) => `${field}[]=${val}`));
-
+  combineParams(...values.map((val) => `${field}[]=${val}`));
 export const addParams = (url: string, params: string) => `${url}?${params}`;
 
 type FetchParams = {
