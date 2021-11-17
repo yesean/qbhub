@@ -1,5 +1,6 @@
 import { BellIcon } from '@chakra-ui/icons';
 import { Container, Text } from '@chakra-ui/react';
+import nlp from 'compromise';
 import DOMPurify from 'dompurify';
 import { Fragment } from 'react';
 import ReactHTMLParser from 'react-html-parser';
@@ -34,37 +35,62 @@ const getCaptureGroups = (s: string, r: RegExp) => {
   return Array.from(s.matchAll(r)).map((m) => m[1]);
 };
 
-export const getAnswers = (answer: string): string[] => {
-  const normalizedAnswer = answer
+const removeNonAlphaNum = (s: string) => s.replaceAll(/[^\w\d\s]/g, '');
+const removeTags = (s: string) => s.replaceAll(/<.*?>/g, '');
+const removeExtraSpaces = (s: string) => s.replaceAll(/\s\s+/g, ' ');
+
+const clean = (s: string) =>
+  s
+    .toLowerCase()
     .replaceAll(/&lt;.*&gt;/g, '') // remove metadata
     .replaceAll(/\(.*?\)/g, '') // remove parenthesized stuff
     .replaceAll(/<u>|<\/u>|<em>|<\/em>/g, '') // remove underline tags
-    .trim()
-    .toLowerCase();
+    .replaceAll(/-/g, ' ') // dashes to spaces
+    .trim();
 
-  const regexes = [
-    /(.*)/g, // entire answer
-    /(.*)\[/g, // first answer up to '['
-    /(?:\[|\s)accept\s(.*?)\s(?=or\s)/g, // 'accept' to 'or'
-    /(?:\[|\s)accept\s(.*?)\s(?=until\s)/g, // 'accept' to 'until'
-    /(?:\[|\s)accept\s(.*?)\s(?=before\s)/g, // 'accept' to 'before'
-    /(?:\[|\s)accept\s(.*?)(?:\,|\;|\])/g, // 'accept' to ',' | ';' | ']'
-    /(?:\s|\,|\;|\[)or\s(.*?)(?=or\s)/g, // 'or' to 'or'
-    /(?:\s|\,|\;|\[)or\s(.*?)(?=until\s)/g, // 'or' to 'until'
-    /(?:\s|\,|\;|\[)or\s(.*?)(?=before\s)/g, // 'or' to 'before'
-    /(?:\s|\,|\;|\[)or\s(.*?)(?:\,|\;|\])/g, // 'or' to ',' | ';' | ']'
+export const getAnswers = (answer: string): string[] => {
+  let normalizedAnswer = clean(answer);
+  const boldRegexes = [
     /<strong>(.*?)<\/strong>/g, // text between <strong> tags
     /<b>(.*?)<\/b>/g, // text between <b> tags
   ];
+  const boldAnswers = boldRegexes.flatMap((r) =>
+    getCaptureGroups(normalizedAnswer, r)
+      .map(removeNonAlphaNum)
+      .map((s) => s.trim())
+      .filter(Boolean),
+  );
 
-  const answers = regexes
-    .flatMap((r) => {
-      const matches = getCaptureGroups(normalizedAnswer, r);
-      return matches.map((m) => m.replaceAll(/<.*?>|\;/g, '').trim());
+  normalizedAnswer = removeTags(normalizedAnswer);
+  const answerRegexes = [
+    /(.*)\[/g, // first answer up to '['
+    /(?:\[|\s)accept\s(.*?)\s(?:or\s)/g, // 'accept' to 'or'
+    /(?:\[|\s)accept\s(.*?)\s(?:until\s)/g, // 'accept' to 'until'
+    /(?:\[|\s)accept\s(.*?)\s(?:before\s)/g, // 'accept' to 'before'
+    /(?:\[|\s)accept\s(.*?)(?:,|;|\])/g, // 'accept' to ',' | ';' | ']'
+    /(?:,|;|\[|\s)or\s(.*?)(?:or\s)/g, // 'or' to 'or'
+    /(?:,|;|\[|\s)or\s(.*?)(?:until\s)/g, // 'or' to 'until'
+    /(?:,|;|\[|\s)or\s(.*?)(?:before\s)/g, // 'or' to 'before'
+    /(?:,|;|\[|\s)or\s(.*?)(?:,|;|\])/g, // 'or' to ',' | ';' | ']'
+    /(.*)/g, // entire answer
+  ];
+  const answers = answerRegexes.flatMap(
+    (r) =>
+      getCaptureGroups(normalizedAnswer, r)
+        .map(removeNonAlphaNum)
+        .map(removeExtraSpaces)
+        .map((s) => s.trim())
+        .filter(Boolean), // remove empty strings
+  );
+  const allAnswers = [...boldAnswers, ...answers];
+  const lastNames = allAnswers
+    .flatMap((ans) => {
+      return nlp(ans).people().match('#LastName').text();
     })
     .filter(Boolean);
-
-  return Array.from(new Set(answers));
+  logger.info('Last names:', lastNames);
+  allAnswers.push(...lastNames);
+  return [...new Set(allAnswers)];
 };
 
 export const getWord = (
