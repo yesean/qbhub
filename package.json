@@ -13,7 +13,7 @@
     "start": "node -r dotenv/config dist/index.js",
     "build:ui": "cd ../qbhub-client && yarn build && cp -r build ../qbhub-server/dist && cd ../qbhub-server",
     "build:server": "tsc",
-    "build": "rm -rf dist && mkdir -p dist && npm run build:server && npm run build:ui"
+    "build": "rm -rf dist && mkdir -p dist && yarn build:server && yarn build:ui"
   },
   "dependencies": {
     "compromise": "^13.11.3",
