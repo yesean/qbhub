@@ -20,12 +20,14 @@ type TossupReaderState = {
   currentTossup: Tossup;
   currentResult: TossupResult;
   currentBuzz: TossupBuzz;
+  score: number;
 };
 
 const initialState: TossupReaderState = {
   status: ReaderStatus.idle,
   tossups: [],
   results: [],
+  score: 0,
   currentTossup: {} as Tossup,
   currentResult: {} as TossupResult,
   currentBuzz: { isPower: false, readText: '', index: 0, textWithBuzz: [] },
@@ -84,6 +86,7 @@ const tossupReaderSlice = createSlice({
         state.status = ReaderStatus.answered;
         state.currentResult = action.payload;
         state.results.unshift(action.payload);
+        state.score += action.payload.score;
       }
     },
     filterTossupsByCategory: (state, action: PayloadAction<Category[]>) => {
@@ -139,6 +142,7 @@ export const {
 
 export const selectStatus = (state: RootState) => state.tossupReader.status;
 export const selectResults = (state: RootState) => state.tossupReader.results;
+export const selectScore = (state: RootState) => state.tossupReader.score;
 export const selectCurrentBuzz = (state: RootState) =>
   state.tossupReader.currentBuzz;
 export const selectCurrentTossup = (state: RootState) =>

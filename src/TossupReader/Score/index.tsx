@@ -1,4 +1,3 @@
-import { useContext, useEffect, useState } from 'react';
 import {
   Stat,
   StatArrow,
@@ -6,36 +5,23 @@ import {
   StatLabel,
   StatNumber,
 } from '@chakra-ui/react';
-
-import { Mode, ModeContext } from '../../services/ModeContext';
-import { TossupScore } from '../../types/tossupReader';
-import { TossupResultContext } from '../../services/TossupResultContext';
+import { useSelector } from 'react-redux';
+import {
+  ReaderStatus,
+  selectCurrentResult,
+  selectScore,
+  selectStatus,
+} from '../tossupReaderSlice';
 
 const Score: React.FC = () => {
-  const { mode } = useContext(ModeContext);
-  const { result } = useContext(TossupResultContext);
-  const [score, setScore] = useState({
-    shouldShow: false,
-    score: 0,
-    delta: TossupScore.neg,
-  });
-
-  useEffect(() => {
-    setScore((s) => ({ ...s, shouldShow: mode === Mode.revealed }));
-
-    if (mode === Mode.revealed && result !== null) {
-      setScore((s) => ({
-        ...s,
-        delta: result.score,
-        score: s.score + result.score,
-      }));
-    }
-  }, [mode, result]);
+  const status = useSelector(selectStatus);
+  const score = useSelector(selectScore);
+  const result = useSelector(selectCurrentResult);
 
   const scoreDisplay =
-    mode === Mode.revealed
-      ? `${score.score - score.delta} → ${score.score}`
-      : score.score;
+    status === ReaderStatus.answered
+      ? `${score - result.score} → ${score}`
+      : score;
 
   return (
     <Stat>
@@ -43,10 +29,10 @@ const Score: React.FC = () => {
         Score
       </StatLabel>
       <StatNumber textAlign="center">{scoreDisplay}</StatNumber>
-      {score.shouldShow && (
+      {result.score && (
         <StatHelpText textAlign="center">
-          <StatArrow type={score.delta > 0 ? 'increase' : 'decrease'} />
-          {Math.abs(score.delta)}
+          <StatArrow type={result.score > 0 ? 'increase' : 'decrease'} />
+          {Math.abs(result.score)}
         </StatHelpText>
       )}
     </Stat>
