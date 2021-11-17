@@ -2,6 +2,7 @@ import { BellIcon } from '@chakra-ui/icons';
 import { Container, Text } from '@chakra-ui/react';
 import nlp from 'compromise';
 import DOMPurify from 'dompurify';
+import { toWords } from 'number-to-words';
 import { Fragment } from 'react';
 import ReactHTMLParser from 'react-html-parser';
 import ss from 'string-similarity';
@@ -35,9 +36,16 @@ const getCaptureGroups = (s: string, r: RegExp) => {
   return Array.from(s.matchAll(r)).map((m) => m[1]);
 };
 
+const isNumeric = (s: string) => /^-?\d+$/.test(s);
+
 const removeNonAlphaNum = (s: string) => s.replaceAll(/[^\w\d\s]/g, '');
 const removeTags = (s: string) => s.replaceAll(/<.*?>/g, '');
 const removeExtraSpaces = (s: string) => s.replaceAll(/\s\s+/g, ' ');
+export const convertNumberToWords = (s: string) =>
+  s
+    .split(' ')
+    .map((w) => (isNumeric(w) ? toWords(w) : w))
+    .join(' ');
 
 const clean = (s: string) =>
   s
@@ -82,15 +90,16 @@ export const getAnswers = (answer: string): string[] => {
         .map((s) => s.trim())
         .filter(Boolean), // remove empty strings
   );
-  const allAnswers = [...boldAnswers, ...answers];
+  const allAnswers = [...boldAnswers, ...answers].map((ans) =>
+    convertNumberToWords(ans),
+  );
   const lastNames = allAnswers
     .flatMap((ans) => {
       return nlp(ans).people().match('#LastName').text();
     })
     .filter(Boolean);
   logger.info('Last names:', lastNames);
-  allAnswers.push(...lastNames);
-  return [...new Set(allAnswers)];
+  return [...new Set([...allAnswers, ...lastNames])];
 };
 
 export const getWord = (

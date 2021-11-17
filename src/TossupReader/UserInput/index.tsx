@@ -5,7 +5,11 @@ import { useAppDispatch } from '../../app/hooks';
 import { TossupScore } from '../../types/tossupReader';
 import { addShortcut } from '../../utils/keyboard';
 import logger from '../../utils/logger';
-import { checkAnswer, getAnswers } from '../../utils/questionReader';
+import {
+  checkAnswer,
+  convertNumberToWords,
+  getAnswers,
+} from '../../utils/questionReader';
 import {
   buzz,
   nextTossup,
@@ -50,7 +54,9 @@ const UserInput: React.FC<UserInputProps> = ({ progress }) => {
   // process a user's answer when submitting
   const submit = useCallback(() => {
     if (status === ReaderStatus.answering) {
-      const submittedAnswer = inputValue.trim().toLowerCase();
+      const submittedAnswer = convertNumberToWords(
+        inputValue.trim().toLowerCase(),
+      );
       const answers = getAnswers(currentTossup.formattedAnswer);
       const isAnswerCorrect = checkAnswer(submittedAnswer, answers);
 
