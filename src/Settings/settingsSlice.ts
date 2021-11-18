@@ -1,4 +1,8 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSelector,
+  createSlice,
+} from '@reduxjs/toolkit';
 import type { RootState } from '../app/store';
 import {
   filterTossupsByCategory,
@@ -68,5 +72,15 @@ const settingsSlice = createSlice({
 export const { updateReadingSpeed } = settingsSlice.actions;
 
 export const selectSettings = (state: RootState) => state.settings;
-
+const selectCategories = (state: RootState) => state.settings.categories;
+const selectSubcategories = (state: RootState) => state.settings.subcategories;
+const selectDifficulties = (state: RootState) => state.settings.difficulties;
+export const selectQuestionSettings = createSelector(
+  [selectCategories, selectSubcategories, selectDifficulties],
+  (categories, subcategories, difficulties) => ({
+    categories,
+    subcategories,
+    difficulties,
+  }),
+);
 export default settingsSlice.reducer;
