@@ -12,67 +12,61 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { fetchFreq } from '../services/freqService';
-import { selectSettings } from '../Settings/settingsSlice';
-import { Freq } from '../types/frequencyList';
+import { useAppDispatch } from '../app/hooks';
+import { selectQuestionSettings } from '../Settings/settingsSlice';
+import {
+  FreqStatus,
+  initialFetchFreq,
+  nextFreq,
+  PAGE_SIZE,
+  prevFreq,
+  resetFreq,
+  selectFrequencyList,
+} from './frequencyListSlice';
 
-const OFFSET = 20;
 const FrequencyList: React.FC = () => {
-  const [offset, setOffset] = useState(0);
-  const [answers, setAnswers] = useState<Freq[] | null>(null);
-  const { categories, subcategories, difficulties } =
-    useSelector(selectSettings);
+  const { page, offset, status } = useSelector(selectFrequencyList);
+  const questionSettings = useSelector(selectQuestionSettings);
+  const dispatch = useAppDispatch();
 
-  const fetch = useCallback(
-    async (o: number) => {
-      const freq = await fetchFreq(
-        categories,
-        subcategories,
-        difficulties,
-        OFFSET,
-        o,
-      );
-      setAnswers(freq);
-    },
-    [categories, difficulties, subcategories],
-  );
-
+  // in initial state, fetch freq
   useEffect(() => {
-    const initialFetch = async () => {
-      setOffset(0);
-      await fetch(0);
-    };
-    initialFetch();
-  }, [fetch]);
+    if (status === FreqStatus.initial) {
+      dispatch(initialFetchFreq());
+    }
+  }, [dispatch, status]);
+
+  // if question settings change, reset freq to initial state
+  useEffect(() => {
+    dispatch(resetFreq());
+  }, [dispatch, questionSettings]);
 
   const onBack = async () => {
-    setAnswers(null);
-    const newOffset = Math.max(offset - OFFSET, 0);
-    fetch(newOffset);
-    setOffset(newOffset);
+    dispatch(prevFreq());
   };
 
   const onNext = async () => {
-    setAnswers(null);
-    const newOffset = Math.max(offset + OFFSET, 0);
-    fetch(newOffset);
-    setOffset(newOffset);
+    dispatch(nextFreq());
   };
 
-  const renderCircularProgress = () => (
-    <Center padding={4}>
-      <CircularProgress isIndeterminate color="cyan" />
-    </Center>
-  );
-
-  const renderFreqTable = (ans: Freq[]) =>
-    ans.length === 0 ? (
-      <Text textAlign="center" fontSize="2xl">
-        No Tossups Left.
-      </Text>
-    ) : (
+  const renderPage = () => {
+    if (status !== FreqStatus.idle) {
+      return (
+        <Center padding={4}>
+          <CircularProgress isIndeterminate color="cyan" />
+        </Center>
+      );
+    }
+    if (page.length === 0) {
+      return (
+        <Text textAlign="center" fontSize="2xl">
+          No Tossups Left.
+        </Text>
+      );
+    }
+    return (
       <Table variant="simple" mb={4} pos="relative">
         <Thead pos="sticky" top="0" bg="white">
           <Tr>
@@ -83,7 +77,7 @@ const FrequencyList: React.FC = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {ans.map((a) => (
+          {page.map((a) => (
             <Tr key={`${a.answer}${a.count}`}>
               <Td>{a.answer}</Td>
               <Td isNumeric>{a.count}</Td>
@@ -92,6 +86,12 @@ const FrequencyList: React.FC = () => {
         </Tbody>
       </Table>
     );
+  };
+
+  // disable back button on the first page, disable next on the last
+  const shouldDisableBack = status !== FreqStatus.idle || offset === 0;
+  const shouldDisableNext =
+    status !== FreqStatus.idle || page.length < PAGE_SIZE;
 
   return (
     <Flex
@@ -101,21 +101,21 @@ const FrequencyList: React.FC = () => {
       maxH="min(750px, 100%)"
     >
       <Box w="100%" mb={4} overflow="auto">
-        {answers === null ? renderCircularProgress() : renderFreqTable(answers)}
+        {renderPage()}
       </Box>
       <Flex justify="center">
         <Button
           colorScheme="cyan"
           onClick={onBack}
           mr={4}
-          disabled={offset === 0}
+          disabled={shouldDisableBack}
         >
           Back
         </Button>
         <Button
           colorScheme="cyan"
           onClick={onNext}
-          disabled={answers === null || answers.length === 0}
+          disabled={shouldDisableNext}
         >
           Next
         </Button>
