@@ -11,8 +11,8 @@ import {
   getAnswers,
 } from '../../utils/questionReader';
 import {
-  buzz,
-  nextTossup,
+  buzz as buzzAction,
+  nextTossup as nextTossupAction,
   ReaderStatus,
   selectCurrentBuzz,
   selectCurrentResult,
@@ -90,45 +90,30 @@ const UserInput: React.FC<UserInputProps> = ({ progress }) => {
   }, [progress, submit]);
 
   // add keyboard shortcuts
-  useEffect(() => {
-    if (status === ReaderStatus.idle)
-      return addShortcut('n', () => dispatch(nextTossup()));
-    if (status === ReaderStatus.reading)
-      return addShortcut(' ', () => dispatch(buzz()));
-    if (status === ReaderStatus.answering) return addShortcut('Enter', submit);
-    if (status === ReaderStatus.answered)
-      return addShortcut('n', () => dispatch(nextTossup()));
-    return () => {};
-  }, [dispatch, status, submit]);
+  const buzz = useCallback(() => dispatch(buzzAction()), [dispatch]);
+  const next = useCallback(() => dispatch(nextTossupAction()), [dispatch]);
+  useEffect(() => addShortcut('n', next), [next]);
+  useEffect(() => addShortcut(' ', buzz), [buzz]);
+  useEffect(() => addShortcut('Enter', submit), [submit]);
 
   // add button behavior in different modes
-  const onButtonClick = () => {
-    if (status === ReaderStatus.idle) dispatch(nextTossup());
-    if (status === ReaderStatus.reading) dispatch(buzz());
-    if (status === ReaderStatus.answering) submit();
-    if (status === ReaderStatus.answered) dispatch(nextTossup());
+  const statusBehavior: { [key in ReaderStatus]?: any } = {
+    [ReaderStatus.idle]: next,
+    [ReaderStatus.reading]: buzz,
+    [ReaderStatus.answering]: submit,
+    [ReaderStatus.answered]: next,
   };
+  const onButtonClick = () => statusBehavior[status]();
 
   // set button text depending on mode
-  let buttonText;
-  switch (status) {
-    case ReaderStatus.idle:
-      buttonText = 'Start';
-      break;
-    case ReaderStatus.fetching:
-      buttonText = '...';
-      break;
-    case ReaderStatus.reading:
-      buttonText = 'Buzz';
-      break;
-    case ReaderStatus.answering:
-      buttonText = 'Submit';
-      break;
-    case ReaderStatus.answered:
-      buttonText = 'Next';
-      break;
-    default:
-  }
+  const statusText: { [key in ReaderStatus]?: string } = {
+    [ReaderStatus.idle]: 'Start',
+    [ReaderStatus.fetching]: '...',
+    [ReaderStatus.reading]: 'Buzz',
+    [ReaderStatus.answering]: 'Submit',
+    [ReaderStatus.answered]: 'Next',
+  };
+  const buttonText = statusText[status];
 
   // set input border depending on user correctness
   let inputBorderColor;

@@ -12,9 +12,10 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../app/hooks';
+import { addShortcut } from '../utils/keyboard';
 import {
   fetchPages,
   FreqStatus,
@@ -34,6 +35,22 @@ const FrequencyList: React.FC = () => {
       dispatch(fetchPages(0));
     }
   }, [dispatch, status]);
+
+  const prev = useCallback(
+    () => status === FreqStatus.idle && offset !== 0 && dispatch(prevPage()),
+    [dispatch, status, offset],
+  );
+  const next = useCallback(
+    () =>
+      status === FreqStatus.idle &&
+      page.length === PAGE_SIZE &&
+      dispatch(nextPage()),
+    [dispatch, status, page],
+  );
+  useEffect(() => addShortcut('p', prev), [prev]);
+  useEffect(() => addShortcut('ArrowLeft', prev), [prev]);
+  useEffect(() => addShortcut('n', next), [next]);
+  useEffect(() => addShortcut('ArrowRight', next), [next]);
 
   const onBack = () => {
     dispatch(prevPage());
