@@ -46,8 +46,13 @@ export const parseTossupQueryString = (q: qs.ParsedQs) => {
   if (!isString(rawAnswer))
     throw new ParsingError(fieldStringMessage('answer'));
 
-  if (rawLimit !== null && (!isString(rawLimit) || !isNumeric(rawLimit)))
+  if (rawLimit === null && (!isString(rawLimit) || !isNumeric(rawLimit)))
     throw new ParsingError(fieldNumberMessage('limit'));
+
+  const numberLimit = stringToNumber(rawLimit as string);
+  if (numberLimit > 50) {
+    throw new ParsingError('`limit` field must less than or equal to 50.');
+  }
 
   return {
     categories: rawCategories.map(stringToNumber),
@@ -55,7 +60,7 @@ export const parseTossupQueryString = (q: qs.ParsedQs) => {
     difficulties: rawDifficulties.map(stringToNumber),
     text: rawText,
     answer: rawAnswer,
-    limit: rawLimit === null ? null : stringToNumber(rawLimit as string),
+    limit: numberLimit,
   };
 };
 
