@@ -9,13 +9,18 @@ import Header from './components/Header';
 import TossupHistoryModal from './components/TossupHistoryModal';
 import { reset } from './FrequencyList/frequencyListSlice';
 import SettingsModal from './Settings';
-import { selectQuestionSettings } from './Settings/settingsSlice';
+import {
+  close,
+  open,
+  selectQuestionSettings,
+  selectSettings,
+} from './Settings/settingsSlice';
 
 const App: React.FC = () => {
-  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isTossupHistoryModalOpen, setIsTossupHistoryModalOpen] =
     useState(false);
   const [isHamburgerMenuOpen, setIsHamburgerMenuOpen] = useState(false);
+  const { isOpen } = useSelector(selectSettings);
   const questionSettings = useSelector(selectQuestionSettings);
   const dispatch = useAppDispatch();
 
@@ -29,7 +34,7 @@ const App: React.FC = () => {
       <Flex direction="column" h="100vh">
         <Header
           onClickHistoryIcon={() => setIsTossupHistoryModalOpen(true)}
-          onClickSettingsIcon={() => setIsSettingsModalOpen(true)}
+          onClickSettingsIcon={() => dispatch(open())}
           onClickMenuIcon={() => setIsHamburgerMenuOpen(true)}
         />
         <Body />
@@ -39,10 +44,7 @@ const App: React.FC = () => {
         isOpen={isTossupHistoryModalOpen}
         onClose={() => setIsTossupHistoryModalOpen(false)}
       />
-      <SettingsModal
-        isOpen={isSettingsModalOpen}
-        onClose={() => setIsSettingsModalOpen(false)}
-      />
+      <SettingsModal isOpen={isOpen} onClose={() => dispatch(close())} />
       <HamburgerMenu
         isOpen={isHamburgerMenuOpen}
         onClose={() => setIsHamburgerMenuOpen(false)}

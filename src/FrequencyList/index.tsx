@@ -15,6 +15,7 @@ import {
 import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../app/hooks';
+import { selectSettings } from '../Settings/settingsSlice';
 import { addShortcut } from '../utils/keyboard';
 import {
   fetchPages,
@@ -27,6 +28,7 @@ import {
 
 const FrequencyList: React.FC = () => {
   const { page, offset, status } = useSelector(selectFrequencyList);
+  const { isOpen } = useSelector(selectSettings);
   const dispatch = useAppDispatch();
 
   // in initial state, fetch freq
@@ -47,10 +49,10 @@ const FrequencyList: React.FC = () => {
       dispatch(nextPage()),
     [dispatch, status, page],
   );
-  useEffect(() => addShortcut('p', prev), [prev]);
-  useEffect(() => addShortcut('ArrowLeft', prev), [prev]);
-  useEffect(() => addShortcut('n', next), [next]);
-  useEffect(() => addShortcut('ArrowRight', next), [next]);
+  useEffect(() => addShortcut('p', prev, [!isOpen]), [prev, isOpen]);
+  useEffect(() => addShortcut('ArrowLeft', prev, [!isOpen]), [prev, isOpen]);
+  useEffect(() => addShortcut('n', next, [!isOpen]), [next, isOpen]);
+  useEffect(() => addShortcut('ArrowRight', next, [!isOpen]), [next, isOpen]);
 
   const onBack = () => {
     dispatch(prevPage());

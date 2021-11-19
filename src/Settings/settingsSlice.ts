@@ -18,6 +18,7 @@ import {
 } from '../utils/settings';
 
 const initialState = {
+  isOpen: false,
   readingSpeed: getInitialReadingSpeed(),
   categories: getInitialCategories(),
   subcategories: getInitialSubcategories(),
@@ -52,6 +53,12 @@ const settingsSlice = createSlice({
   name: 'settings',
   initialState,
   reducers: {
+    open: (state) => {
+      state.isOpen = true;
+    },
+    close: (state) => {
+      state.isOpen = false;
+    },
     updateReadingSpeed: (state, action) => {
       state.readingSpeed = action.payload;
     },
@@ -69,7 +76,7 @@ const settingsSlice = createSlice({
       });
   },
 });
-export const { updateReadingSpeed } = settingsSlice.actions;
+export const { updateReadingSpeed, open, close } = settingsSlice.actions;
 
 export const selectSettings = (state: RootState) => state.settings;
 const selectCategories = (state: RootState) => state.settings.categories;

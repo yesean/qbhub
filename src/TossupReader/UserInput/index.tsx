@@ -2,6 +2,7 @@ import { Button, Center, Flex, Input } from '@chakra-ui/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../app/hooks';
+import { selectSettings } from '../../Settings/settingsSlice';
 import { TossupScore } from '../../types/tossupReader';
 import { addShortcut } from '../../utils/keyboard';
 import logger from '../../utils/logger';
@@ -31,6 +32,7 @@ const UserInput: React.FC<UserInputProps> = ({ progress }) => {
   const currentTossup = useSelector(selectCurrentTossup);
   const currentResult = useSelector(selectCurrentResult);
   const currentBuzz = useSelector(selectCurrentBuzz);
+  const { isOpen } = useSelector(selectSettings);
   const dispatch = useAppDispatch();
 
   // focus input when user is answering, blur otherwise
@@ -92,9 +94,9 @@ const UserInput: React.FC<UserInputProps> = ({ progress }) => {
   // add keyboard shortcuts
   const buzz = useCallback(() => dispatch(buzzAction()), [dispatch]);
   const next = useCallback(() => dispatch(nextTossupAction()), [dispatch]);
-  useEffect(() => addShortcut('n', next), [next]);
-  useEffect(() => addShortcut(' ', buzz), [buzz]);
-  useEffect(() => addShortcut('Enter', submit), [submit]);
+  useEffect(() => addShortcut('n', next, [!isOpen]), [next, isOpen]);
+  useEffect(() => addShortcut(' ', buzz, [!isOpen]), [buzz, isOpen]);
+  useEffect(() => addShortcut('Enter', submit, [!isOpen]), [submit, isOpen]);
 
   // add button behavior in different modes
   const statusBehavior: { [key in ReaderStatus]?: any } = {
