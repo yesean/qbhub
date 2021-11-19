@@ -51,7 +51,9 @@ export const parseTossupQueryString = (q: qs.ParsedQs) => {
 
   const numberLimit = stringToNumber(rawLimit as string);
   if (numberLimit > 50) {
-    throw new ParsingError('`limit` field must less than or equal to 50.');
+    throw new ParsingError(
+      'The query string field `limit` must less than or equal to 50.',
+    );
   }
 
   return {
