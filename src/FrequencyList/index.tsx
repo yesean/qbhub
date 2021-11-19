@@ -15,40 +15,32 @@ import {
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../app/hooks';
-import { selectQuestionSettings } from '../Settings/settingsSlice';
 import {
+  fetchPages,
   FreqStatus,
-  initialFetchFreq,
-  nextFreq,
+  nextPage,
   PAGE_SIZE,
-  prevFreq,
-  resetFreq,
+  prevPage,
   selectFrequencyList,
 } from './frequencyListSlice';
 
 const FrequencyList: React.FC = () => {
   const { page, offset, status } = useSelector(selectFrequencyList);
-  const questionSettings = useSelector(selectQuestionSettings);
   const dispatch = useAppDispatch();
 
   // in initial state, fetch freq
   useEffect(() => {
     if (status === FreqStatus.initial) {
-      dispatch(initialFetchFreq());
+      dispatch(fetchPages(0));
     }
   }, [dispatch, status]);
 
-  // if question settings change, reset freq to initial state
-  useEffect(() => {
-    dispatch(resetFreq());
-  }, [dispatch, questionSettings]);
-
-  const onBack = async () => {
-    dispatch(prevFreq());
+  const onBack = () => {
+    dispatch(prevPage());
   };
 
-  const onNext = async () => {
-    dispatch(nextFreq());
+  const onNext = () => {
+    dispatch(nextPage());
   };
 
   const renderPage = () => {
@@ -67,7 +59,16 @@ const FrequencyList: React.FC = () => {
       );
     }
     return (
-      <Table variant="simple" mb={4} pos="relative">
+      <Table
+        variant="simple"
+        mb={4}
+        pos="relative"
+        h="min(100vw - 56px - 48px, 600px)"
+        w="min(100vw - 32px, 500px)"
+        style={{ tableLayout: 'fixed' }}
+      >
+        <col style={{ width: '60%' }} />
+        <col style={{ width: '40%' }} />
         <Thead pos="sticky" top="0" bg="white">
           <Tr>
             <Th fontSize="lg">Answer</Th>
@@ -88,21 +89,14 @@ const FrequencyList: React.FC = () => {
     );
   };
 
-  // disable back button on the first page, disable next on the last
-  const shouldDisableBack = status !== FreqStatus.idle || offset === 0;
-  const shouldDisableNext =
-    status !== FreqStatus.idle || page.length < PAGE_SIZE;
-
-  return (
-    <Flex
-      direction="column"
-      justify="center"
-      maxW="min(600px, 100%)"
-      maxH="min(750px, 100%)"
-    >
-      <Box w="100%" mb={4} overflow="auto">
-        {renderPage()}
-      </Box>
+  const renderButtons = () => {
+    if (status !== FreqStatus.idle) {
+      return null;
+    }
+    // disable back button on the first page, disable next on the last
+    const shouldDisableBack = offset === 0;
+    const shouldDisableNext = page.length < PAGE_SIZE;
+    return (
       <Flex justify="center">
         <Button
           colorScheme="cyan"
@@ -120,6 +114,20 @@ const FrequencyList: React.FC = () => {
           Next
         </Button>
       </Flex>
+    );
+  };
+
+  return (
+    <Flex
+      direction="column"
+      justify="center"
+      maxW="min(600px, 100%)"
+      maxH="min(750px, 100%)"
+    >
+      <Box w="100%" mb={4} overflow="auto">
+        {renderPage()}
+      </Box>
+      {renderButtons()}
     </Flex>
   );
 };

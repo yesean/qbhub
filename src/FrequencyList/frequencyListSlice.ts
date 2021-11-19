@@ -34,8 +34,12 @@ const initialState: FrequencyListState = {
   offset: 0,
 };
 
-export const fetchFreq = createAsyncThunk<Freq[], number, { state: RootState }>(
-  'frequencyList/fetchFreq',
+export const fetchPages = createAsyncThunk<
+  Freq[],
+  number,
+  { state: RootState }
+>(
+  'frequencyList/fetchPages',
   async (offset, { getState }) => {
     const { settings } = getState();
     const fetchParams = { ...settings, limit: FETCH_LIMIT, offset };
@@ -52,27 +56,22 @@ export const fetchFreq = createAsyncThunk<Freq[], number, { state: RootState }>(
   },
 );
 
-// similar to fetchFreq, but sets the page post fetch
-export const initialFetchFreq = createAsyncThunk<
-  void,
-  undefined,
-  { state: RootState }
->('frequencyList/initialFetchFreq', async (_, { dispatch }) => {
-  await dispatch(fetchFreq(0)).unwrap();
-});
-
-export const nextFreq = createAsyncThunk<void, undefined, { state: RootState }>(
-  'frequencyList/nextFreq',
+export const nextPage = createAsyncThunk<void, undefined, { state: RootState }>(
+  'frequencyList/nextPage',
   async (_, { getState, dispatch }) => {
     const {
       frequencyList: { offset, results },
     } = getState();
     if (offset + PAGE_SIZE >= results.length) {
       // if on the last page, wait for fetch
-      await dispatch(fetchFreq(results.length)).unwrap();
+      await dispatch(fetchPages(results.length)).unwrap();
     } else if (offset + 3 * PAGE_SIZE >= results.length) {
       // if 3 pages from the last page, fetch more in the background
-      dispatch(fetchFreq(results.length)).unwrap();
+      logger.info('Starting to prefetch pages.');
+      dispatch(fetchPages(results.length))
+        .unwrap()
+        .then(() => logger.info('Finished prefetching pages.'))
+        .catch((e) => logger.info('Pages prefetch rejected:', e));
     }
   },
 );
@@ -81,11 +80,11 @@ const frequencyListSlice = createSlice({
   name: 'frequencyList',
   initialState,
   reducers: {
-    prevFreq: (state) => {
+    prevPage: (state) => {
       state.offset = Math.max(0, state.offset - PAGE_SIZE);
       state.page = state.results.slice(state.offset, state.offset + PAGE_SIZE);
     },
-    resetFreq: (state) => {
+    reset: (state) => {
       state.status = FreqStatus.initial;
       state.offset = 0;
       state.page = [];
@@ -94,43 +93,40 @@ const frequencyListSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchFreq.pending, (state) => {
+      .addCase(fetchPages.pending, (state) => {
         state.fetchStatus = FreqFetchStatus.active;
       })
-      .addCase(fetchFreq.fulfilled, (state, action) => {
+      .addCase(fetchPages.fulfilled, (state, action) => {
         state.results.push(...action.payload);
         state.page = state.results.slice(
           state.offset,
           state.offset + PAGE_SIZE,
         );
         state.fetchStatus = FreqFetchStatus.idle;
+        state.status = FreqStatus.idle;
       });
     builder
-      .addCase(nextFreq.pending, (state) => {
+      .addCase(nextPage.pending, (state) => {
         state.status = FreqStatus.loading;
       })
-      .addCase(nextFreq.fulfilled, (state) => {
+      .addCase(nextPage.fulfilled, (state) => {
         state.offset += PAGE_SIZE;
         state.page = state.results.slice(
           state.offset,
           state.offset + PAGE_SIZE,
         );
         state.status = FreqStatus.idle;
-      });
-    builder
-      .addCase(initialFetchFreq.pending, (state) => {
-        state.status = FreqStatus.loading;
       })
-      .addCase(initialFetchFreq.fulfilled, (state) => {
+      .addCase(nextPage.rejected, (state) => {
+        state.offset += PAGE_SIZE;
         state.page = state.results.slice(
           state.offset,
           state.offset + PAGE_SIZE,
         );
-        state.status = FreqStatus.idle;
       });
   },
 });
 export const selectFrequencyList = (state: RootState) => state.frequencyList;
-export const { prevFreq, resetFreq } = frequencyListSlice.actions;
+export const { prevPage, reset } = frequencyListSlice.actions;
 
 export default frequencyListSlice.reducer;
