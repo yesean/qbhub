@@ -2,18 +2,25 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { RootState } from '../app/store';
 import { Freq } from '../types/frequencyList';
 import * as fetchUtils from '../utils/fetch';
+import logger from '../utils/logger';
 
 export const PAGE_SIZE = 20;
 export const FETCH_LIMIT = 5 * PAGE_SIZE;
 
+export enum FreqFetchStatus {
+  idle,
+  active,
+}
+
 export enum FreqStatus {
   initial, // the initial state when results and page are empty
-  loading,
   idle,
+  loading,
 }
 
 type FrequencyListState = {
   status: FreqStatus;
+  fetchStatus: FreqFetchStatus;
   results: Freq[];
   page: Freq[];
   offset: number;
@@ -21,6 +28,7 @@ type FrequencyListState = {
 
 const initialState: FrequencyListState = {
   status: FreqStatus.initial,
+  fetchStatus: FreqFetchStatus.idle,
   results: [],
   page: [],
   offset: 0,
@@ -33,6 +41,14 @@ export const fetchFreq = createAsyncThunk<Freq[], number, { state: RootState }>(
     const fetchParams = { ...settings, limit: FETCH_LIMIT, offset };
     const freq = await fetchUtils.fetchFreq(fetchParams);
     return freq;
+  },
+  {
+    condition: (_, { getState }) => {
+      const {
+        frequencyList: { fetchStatus },
+      } = getState();
+      return fetchStatus === FreqFetchStatus.idle;
+    },
   },
 );
 
@@ -77,10 +93,18 @@ const frequencyListSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchFreq.fulfilled, (state, action) => {
-      state.results.push(...action.payload);
-      state.page = state.results.slice(state.offset, state.offset + PAGE_SIZE);
-    });
+    builder
+      .addCase(fetchFreq.pending, (state) => {
+        state.fetchStatus = FreqFetchStatus.active;
+      })
+      .addCase(fetchFreq.fulfilled, (state, action) => {
+        state.results.push(...action.payload);
+        state.page = state.results.slice(
+          state.offset,
+          state.offset + PAGE_SIZE,
+        );
+        state.fetchStatus = FreqFetchStatus.idle;
+      });
     builder
       .addCase(nextFreq.pending, (state) => {
         state.status = FreqStatus.loading;
