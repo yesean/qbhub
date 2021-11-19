@@ -67,8 +67,6 @@ const FrequencyList: React.FC = () => {
         w="min(100vw - 32px, 500px)"
         style={{ tableLayout: 'fixed' }}
       >
-        <col style={{ width: '60%' }} />
-        <col style={{ width: '40%' }} />
         <Thead pos="sticky" top="0" bg="white">
           <Tr>
             <Th fontSize="lg">Answer</Th>
@@ -100,6 +98,7 @@ const FrequencyList: React.FC = () => {
       <Flex justify="center">
         <Button
           colorScheme="cyan"
+          color="gray.50"
           onClick={onBack}
           mr={4}
           disabled={shouldDisableBack}
@@ -108,6 +107,7 @@ const FrequencyList: React.FC = () => {
         </Button>
         <Button
           colorScheme="cyan"
+          color="gray.50"
           onClick={onNext}
           disabled={shouldDisableNext}
         >
