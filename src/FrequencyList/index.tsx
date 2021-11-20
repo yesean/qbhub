@@ -1,20 +1,8 @@
-import {
-  Box,
-  Button,
-  Center,
-  CircularProgress,
-  Flex,
-  Table,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr,
-} from '@chakra-ui/react';
+import { Button, Center, CircularProgress, Flex, Text } from '@chakra-ui/react';
 import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../app/hooks';
+import { TwoColumnTable } from '../components/Table';
 import { selectSettings } from '../Settings/settingsSlice';
 import { addShortcut } from '../utils/keyboard';
 import {
@@ -25,6 +13,11 @@ import {
   prevPage,
   selectFrequencyList,
 } from './frequencyListSlice';
+
+const freqFields = [
+  { label: 'Answer', key: 'answer' },
+  { label: 'Frequency', key: 'frequency' },
+] as const;
 
 const FrequencyList: React.FC = () => {
   const { page, offset, status } = useSelector(selectFrequencyList);
@@ -64,11 +57,7 @@ const FrequencyList: React.FC = () => {
 
   const renderPage = () => {
     if (status !== FreqStatus.idle) {
-      return (
-        <Center padding={4}>
-          <CircularProgress isIndeterminate color="cyan" />
-        </Center>
-      );
+      return <CircularProgress isIndeterminate color="cyan" />;
     }
     if (page.length === 0) {
       return (
@@ -78,31 +67,12 @@ const FrequencyList: React.FC = () => {
       );
     }
     return (
-      <Table
-        variant="simple"
-        mb={4}
-        pos="relative"
-        h="min(100vw - 56px - 48px, 600px)"
-        w="min(100vw - 32px, 500px)"
-        style={{ tableLayout: 'fixed' }}
-      >
-        <Thead pos="sticky" top="0" bg="white">
-          <Tr>
-            <Th fontSize="lg">Answer</Th>
-            <Th fontSize="lg" isNumeric>
-              Frequency
-            </Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {page.map((a) => (
-            <Tr key={`${a.answer}${a.count}`}>
-              <Td>{a.answer}</Td>
-              <Td isNumeric>{a.count}</Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
+      <TwoColumnTable
+        data={page}
+        fields={freqFields}
+        width={600}
+        height={700}
+      />
     );
   };
 
@@ -138,14 +108,15 @@ const FrequencyList: React.FC = () => {
 
   return (
     <Flex
-      direction="column"
+      w="min(600px, 100%)"
+      h="min(700px, 100%)"
+      flexDir="column"
       justify="center"
-      maxW="min(600px, 100%)"
-      maxH="min(750px, 100%)"
+      align="center"
     >
-      <Box w="100%" mb={4} overflow="auto">
+      <Center mb={4} w="100%" h="100%" overflow="auto">
         {renderPage()}
-      </Box>
+      </Center>
       {renderButtons()}
     </Flex>
   );

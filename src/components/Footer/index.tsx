@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
 
   return (
     <>
-      <Flex align="center" justify="center" mt={2} pt={1} pb={1}>
+      <Flex align="center" justify="center" mt={2} p={3}>
         <Text textAlign="center" fontWeight="bold" mr={4}>
           Created by{' '}
           <Link href="https://seanye.me" color="cyan.600" isExternal>
@@ -28,7 +28,7 @@ const Footer: React.FC = () => {
         />
         <IconButton
           position="absolute"
-          right={4}
+          right={3}
           aria-label="keyboard shortcuts"
           onClick={() => setIsKeyboardShortcutsModalOpen(true)}
           icon={<InfoOutlineIcon />}

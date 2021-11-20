@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { selectResults } from '../../TossupReader/tossupReaderSlice';
-import { TossupScore } from '../../types/tossupReader';
+import { TossupScore } from '../../types/tossups';
 import { parseHTMLString, renderQuestion } from '../../utils/questionReader';
 
 type TossupHistoryModalProps = {

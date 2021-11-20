@@ -9,11 +9,16 @@ import {
 } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 
+const links = [
+  { name: 'Tossup Reader', href: '/reader' },
+  { name: 'Frequency List', href: '/freq' },
+  { name: 'Clues Generator', href: '/clues' },
+];
+
 type HamburgerMenuProps = {
   isOpen: boolean;
   onClose: () => void;
 };
-
 const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ isOpen, onClose }) => {
   return (
     <Drawer isOpen={isOpen} onClose={onClose} placement="right">
@@ -21,26 +26,18 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ isOpen, onClose }) => {
       <DrawerContent>
         <Flex direction="column" align="center" p={4}>
           <CloseButton size="lg" onClick={onClose} mb={4} />
-          <Link
-            as={RouterLink}
-            to="/reader"
-            p={4}
-            w="100%"
-            textAlign="center"
-            _hover={{ bg: 'cyan.100' }}
-          >
-            <Heading size="md">Tossup Reader</Heading>
-          </Link>
-          <Link
-            as={RouterLink}
-            to="/freq"
-            p={4}
-            w="100%"
-            textAlign="center"
-            _hover={{ bg: 'cyan.100' }}
-          >
-            <Heading size="md">Frequency List</Heading>
-          </Link>
+          {links.map(({ name, href }) => (
+            <Link
+              as={RouterLink}
+              to={href}
+              p={4}
+              w="100%"
+              textAlign="center"
+              _hover={{ bg: 'cyan.100' }}
+            >
+              <Heading size="md">{name}</Heading>
+            </Link>
+          ))}
         </Flex>
       </DrawerContent>
     </Drawer>

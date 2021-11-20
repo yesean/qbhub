@@ -1,5 +1,5 @@
 import { Category, Difficulty, Subcategory } from './types/questions';
-import { Tossup } from './types/tossupReader';
+import { Tossup } from './types/tossups';
 
 export const CATEGORIES = [
   { label: 'Current Events', value: Category['Current Events'] },

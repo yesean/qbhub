@@ -1,13 +1,13 @@
 import axios from 'axios';
-import { Freq } from '../types/frequencyList';
 import { Category, Difficulty, Subcategory } from '../types/questions';
-import { Tossup } from '../types/tossupReader';
+import { Tossup, Clue, Answer } from '../types/tossups';
 import logger from './logger';
 import { cleanTossupText } from './string';
 
 const API_URL = '/api';
 const TOSSUP_URL = `${API_URL}/tossups`;
 const FREQ_URL = `${API_URL}/freq`;
+const CLUES_URL = `${API_URL}/clues`;
 
 export const combineParams = (...params: any[]) => params.join('&');
 export const createParamsFromArray = (field: string, values: any[]) =>
@@ -18,6 +18,8 @@ type FetchParams = {
   categories?: Category[];
   subcategories?: Subcategory[];
   difficulties?: Difficulty[];
+  text?: string;
+  answer?: string;
   limit?: number;
   offset?: number;
 };
@@ -26,6 +28,8 @@ const createParams = ({
   categories = [],
   subcategories = [],
   difficulties = [],
+  text = '',
+  answer = '',
   limit = 10,
   offset = 0,
 }: FetchParams) =>
@@ -33,6 +37,8 @@ const createParams = ({
     createParamsFromArray('categories', categories),
     createParamsFromArray('subcategories', subcategories),
     createParamsFromArray('difficulties', difficulties),
+    `text=${text}`,
+    `answer=${answer}`,
     `limit=${limit}`,
     `offset=${offset}`,
   );
@@ -60,13 +66,39 @@ export const fetchTossups = async (params: FetchParams): Promise<Tossup[]> => {
   }
 };
 
-export const fetchFreq = async (params: FetchParams): Promise<Freq[]> => {
+export const fetchFreq = async (params: FetchParams): Promise<Answer[]> => {
   const url = addParams(FREQ_URL, createParams(params));
 
   try {
     logger.info('Fetching frequency list.');
     const { data } = await axios.get(url);
     logger.info('Received frequency list:', data);
+    return data;
+  } catch (err) {
+    return [];
+  }
+};
+
+export const fetchAnswers = async (params: FetchParams): Promise<Answer[]> => {
+  const url = addParams(FREQ_URL, createParams(params));
+
+  try {
+    logger.info('Fetching answers.');
+    const { data } = await axios.get(url);
+    logger.info('Received answers:', data);
+    return data;
+  } catch (err) {
+    return [];
+  }
+};
+
+export const fetchClues = async (params: FetchParams): Promise<Clue[]> => {
+  const url = addParams(CLUES_URL, createParams(params));
+
+  try {
+    logger.info('Fetching clues.');
+    const { data } = await axios.get(url);
+    logger.info('Received clues:', data);
     return data;
   } catch (err) {
     return [];

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../app/hooks';
 import { selectSettings } from '../../Settings/settingsSlice';
-import { TossupScore } from '../../types/tossupReader';
+import { TossupScore } from '../../types/tossups';
 import { addShortcut } from '../../utils/keyboard';
 import logger from '../../utils/logger';
 import {

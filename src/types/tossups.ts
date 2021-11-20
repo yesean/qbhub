@@ -37,3 +37,13 @@ export type TossupResult = {
   score: TossupScore;
   buzz: TossupBuzz;
 };
+
+export type Answer = {
+  answer: string;
+  frequency: string;
+};
+
+export type Clue = {
+  clue: string;
+  score: number;
+};

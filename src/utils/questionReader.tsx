@@ -6,7 +6,7 @@ import { toWords } from 'number-to-words';
 import { Fragment } from 'react';
 import ReactHTMLParser from 'react-html-parser';
 import ss from 'string-similarity';
-import { TossupReaderWord } from '../types/tossupReader';
+import { TossupReaderWord } from '../types/tossups';
 import logger from './logger';
 
 export const checkAnswer = (answer: string, correctAnswers: string[]) => {

@@ -2,7 +2,7 @@ import { Center, CircularProgress, Container } from '@chakra-ui/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectSettings } from '../../Settings/settingsSlice';
-import { TossupReaderWord } from '../../types/tossupReader';
+import { TossupReaderWord } from '../../types/tossups';
 import logger from '../../utils/logger';
 import { getTextBetweenTags, renderQuestion } from '../../utils/questionReader';
 import { getReadingTimeoutDelay } from '../../utils/settings';

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { RootState } from '../app/store';
-import { Freq } from '../types/frequencyList';
+import { Answer } from '../types/tossups';
 import * as fetchUtils from '../utils/fetch';
 import logger from '../utils/logger';
 
@@ -21,8 +21,8 @@ export enum FreqStatus {
 type FrequencyListState = {
   status: FreqStatus;
   fetchStatus: FreqFetchStatus;
-  results: Freq[];
-  page: Freq[];
+  results: Answer[];
+  page: Answer[];
   offset: number;
 };
 
@@ -35,7 +35,7 @@ const initialState: FrequencyListState = {
 };
 
 export const fetchPages = createAsyncThunk<
-  Freq[],
+  Answer[],
   number,
   { state: RootState }
 >(

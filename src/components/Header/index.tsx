@@ -13,11 +13,9 @@ const Header: React.FC<HeaderProps> = ({
   onClickMenuIcon,
 }) => {
   return (
-    <Box pl={4} pr={4} mb={2}>
+    <Box p={3} mb={2}>
       <Flex justify="space-between" align="center">
-        <Heading d="inline" p={2}>
-          QBHub
-        </Heading>
+        <Heading d="inline">QBHub</Heading>
         <Box>
           <IconButton
             aria-label="Tossup history"

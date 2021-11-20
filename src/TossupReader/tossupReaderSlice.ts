@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../app/store';
 import { Category, Difficulty, Subcategory } from '../types/questions';
-import { Tossup, TossupBuzz, TossupResult } from '../types/tossupReader';
+import { Tossup, TossupBuzz, TossupResult } from '../types/tossups';
 import * as fetchUtils from '../utils/fetch';
 
 export enum ReaderStatus {
