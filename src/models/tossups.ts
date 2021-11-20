@@ -1,6 +1,6 @@
 import { client, QueryBuilder } from '../utils/db';
 import { Category, Difficulty, Subcategory } from '../types/questions';
-import { getTossupCondition } from './utils';
+import { getQuestionCondition } from './utils';
 
 export const getTossups = async (
   categories: Category[],
@@ -28,7 +28,7 @@ export const getTossups = async (
     text,
     answer,
   };
-  const condition = getTossupCondition(tossup);
+  const condition = getQuestionCondition(tossup);
   const query = QueryBuilder.start()
     .select(columns)
     .from('tossups')

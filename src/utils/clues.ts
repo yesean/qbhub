@@ -161,7 +161,9 @@ const combineClues = (
     toRemove.forEach((idx) => removeClue(clues[idx], clueBagMap, corpusBag));
     clues = clues.filter((_, idx) => !toRemove.has(idx));
   }
-  return uniqueClues.sort((a, b) => (b[0] as number) - (a[0] as number));
+  return uniqueClues
+    .sort((a, b) => (b[0] as number) - (a[0] as number))
+    .map(([freq, clue]) => ({ clue, score: freq }));
 };
 
 export const getUniqueClues = (clues: Clue[]) => {

@@ -1,6 +1,6 @@
 import { client, QueryBuilder } from '../utils/db';
 import { Category, Difficulty, Subcategory } from '../types/questions';
-import { getTossupCondition } from './utils';
+import { getQuestionCondition } from './utils';
 
 export const getFreq = async (
   categories: Category[],
@@ -13,7 +13,7 @@ export const getFreq = async (
 ) => {
   const columns = [
     { column: 'normalized_answer', alias: 'answer' },
-    { column: 'count(normalized_answer)', alias: 'count' },
+    { column: 'count(normalized_answer)', alias: 'frequency' },
   ];
   const columnOrder: { column: string; direction: 'asc' | 'desc' }[] = [
     { column: 'count(normalized_answer)', direction: 'desc' },
@@ -26,7 +26,7 @@ export const getFreq = async (
     text,
     answer,
   };
-  const condition = getTossupCondition(tossup);
+  const condition = getQuestionCondition(tossup, { useNormalized: true });
   const query = QueryBuilder.start()
     .select(columns)
     .from('tossups')

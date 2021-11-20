@@ -2,9 +2,9 @@ import { Tossup } from '../types/questions';
 
 const colInArr = (col: string, arr: any[]) => `${col} in (${arr.join(',')})`;
 
-export const getTossupCondition = (
+export const getQuestionCondition = (
   tossup: Tossup,
-  { ignoreEmptyNormalized = true, useNormalized = false } = {},
+  { ignoreEmptyNormalized = true, useNormalized = false, exact = false } = {},
 ) => {
   const { categories, subcategories, difficulties, text, answer } = tossup;
   const cats =
@@ -25,9 +25,12 @@ export const getTossupCondition = (
       ? colInArr('tournaments.difficulty', difficulties)
       : true;
   const textCond = `tossups.text ilike '%${text}%'`;
-  const answerCond = `${
-    useNormalized ? 'tossups.normalized_answer' : 'tossups.answer'
-  } ilike '%${answer}%'`;
+  const answerSource = useNormalized
+    ? 'tossups.normalized_answer'
+    : 'tossups.answer';
+  const answerComp = exact ? '=' : 'ilike';
+  const answerQuery = exact ? answer : `%${answer}%`;
+  const answerCond = `${answerSource} ${answerComp} '${answerQuery}'`;
   const normalized = ignoreEmptyNormalized
     ? `tossups.normalized_answer <> ''`
     : true;

@@ -1,21 +1,22 @@
 import { MiniTossup } from 'clues';
 import { Request, Response } from 'express';
-import { getSentences, getUniqueClues } from '../utils/clues';
 import { getClues } from '../models/clues';
+import { getSentences, getUniqueClues } from '../utils/clues';
 import { error } from '../utils/logger';
-import { parseFreqQueryString, ParsingError } from './utils';
+import { parseTossupQueryString, ParsingError } from './utils';
 
 const cluesRouter = require('express').Router();
 
 cluesRouter.get('/', async (req: Request, res: Response) => {
   try {
-    const { categories, subcategories, difficulties, answer } =
-      parseFreqQueryString(req.query);
+    const { categories, subcategories, difficulties, answer, limit } =
+      parseTossupQueryString(req.query);
     const data = await getClues(
       categories,
       subcategories,
       difficulties,
       answer,
+      limit,
     );
     const answers = data.rows as MiniTossup[];
     const clues = getSentences(answers);

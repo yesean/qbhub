@@ -24,56 +24,63 @@ export class ParsingError extends Error {
 
 export const parseTossupQueryString = (q: qs.ParsedQs) => {
   const {
-    categories: rawCategories = [],
-    subcategories: rawSubcategories = [],
-    difficulties: rawDifficulties = [],
-    text: rawText = '',
-    answer: rawAnswer = '',
-    limit: rawLimit = null,
+    categories = [],
+    subcategories = [],
+    difficulties = [],
+    text = '',
+    answer = '',
+    limit,
   } = q;
 
-  if (!isStringArray(rawCategories) || !isNumericArray(rawCategories))
+  // verify categories is a number array
+  if (!isStringArray(categories) || !isNumericArray(categories))
     throw new ParsingError(fieldNumberArrayMessage('categories'));
 
-  if (!isStringArray(rawSubcategories) || !isNumericArray(rawSubcategories))
+  // verify subcategories is a number array
+  if (!isStringArray(subcategories) || !isNumericArray(subcategories))
     throw new ParsingError(fieldNumberArrayMessage('subcategories'));
 
-  if (!isStringArray(rawDifficulties) || !isStringArray(rawDifficulties))
+  // verify difficulties is a number array
+  if (!isStringArray(difficulties) || !isNumericArray(difficulties))
     throw new ParsingError(fieldNumberArrayMessage('difficulties'));
 
-  if (!isString(rawText)) throw new ParsingError(fieldStringMessage('text'));
+  // verify text is string
+  if (!isString(text)) throw new ParsingError(fieldStringMessage('text'));
 
-  if (!isString(rawAnswer))
-    throw new ParsingError(fieldStringMessage('answer'));
+  // verify answer is string
+  if (!isString(answer)) throw new ParsingError(fieldStringMessage('answer'));
 
-  if (rawLimit === null && (!isString(rawLimit) || !isNumeric(rawLimit)))
+  // verify limit exists and is number
+  if (limit === undefined || !isNumeric(limit))
     throw new ParsingError(fieldNumberMessage('limit'));
 
-  const numberLimit = stringToNumber(rawLimit as string);
-  if (numberLimit > 50) {
+  // verify limit is less than or equal to 100 (to reduce server load)
+  const parsedLimit = stringToNumber(limit as string);
+  if (parsedLimit > 100) {
     throw new ParsingError(
-      'The query string field `limit` must less than or equal to 50.',
+      'The query string field `limit` must less than or equal to 100.',
     );
   }
 
   return {
-    categories: rawCategories.map(stringToNumber),
-    subcategories: rawSubcategories.map(stringToNumber),
-    difficulties: rawDifficulties.map(stringToNumber),
-    text: rawText,
-    answer: rawAnswer,
-    limit: numberLimit,
+    categories: categories.map(stringToNumber),
+    subcategories: subcategories.map(stringToNumber),
+    difficulties: difficulties.map(stringToNumber),
+    text,
+    answer,
+    limit: parsedLimit,
   };
 };
 
 export const parseFreqQueryString = (q: qs.ParsedQs) => {
-  const { offset: rawOffset = null } = q;
+  const { offset } = q;
 
-  if (rawOffset !== null && (!isString(rawOffset) || !isNumeric(rawOffset)))
+  // verify offset exists and is number
+  if (offset === undefined || !isNumeric(offset))
     throw new ParsingError(fieldNumberMessage('offset'));
 
   return {
     ...parseTossupQueryString(q),
-    offset: rawOffset === null ? 0 : stringToNumber(rawOffset as string),
+    offset: stringToNumber(offset as string),
   };
 };

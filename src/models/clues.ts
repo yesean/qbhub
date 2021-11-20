@@ -1,12 +1,13 @@
 import { Category, Difficulty, Subcategory } from '../types/questions';
 import { client, QueryBuilder } from '../utils/db';
-import { getTossupCondition } from './utils';
+import { getQuestionCondition } from './utils';
 
 export const getClues = async (
   categories: Category[],
   subcategories: Subcategory[],
   difficulties: Difficulty[],
   answer: string,
+  limit: number,
 ) => {
   const columns = [
     { column: 'name', alias: 'tournament' },
@@ -20,12 +21,16 @@ export const getClues = async (
     text: '',
     answer,
   };
-  const condition = getTossupCondition(tossup, { useNormalized: true });
+  const condition = getQuestionCondition(tossup, {
+    useNormalized: true,
+    exact: true,
+  });
   const query = QueryBuilder.start()
     .select(columns)
     .from('tossups')
     .innerJoin('tournaments', 'tossups.tournament_id = tournaments.id')
     .where(condition)
+    .limit(limit)
     .build();
 
   return client.query(query);
