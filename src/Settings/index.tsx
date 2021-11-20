@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   FormLabel,
   Modal,
   ModalBody,
@@ -15,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import Select, { OptionsType } from 'react-select';
+import TealButton from '../components/TealButton';
 import {
   CATEGORIES,
   DIFFICULTIES,
@@ -155,9 +155,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
           </Box>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="cyan" color="gray.50" mr={3} onClick={onClose}>
+          <TealButton mr={3} onClick={onClose}>
             Done
-          </Button>
+          </TealButton>
         </ModalFooter>
       </ModalContent>
     </Modal>

@@ -1,6 +1,7 @@
-import { Button, CircularProgress, Flex, Input, Text } from '@chakra-ui/react';
+import { CircularProgress, Flex, Input, Text } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useAppSelector } from '../app/hooks';
+import TealButton from '../components/TealButton';
 import { selectQuestionSettings } from '../Settings/settingsSlice';
 import { Answer } from '../types/tossups';
 import { fetchAnswers } from '../utils/fetch';
@@ -53,7 +54,7 @@ const Search: React.FC = () => {
               placeholder="Search for an answerline!"
               mr={4}
             />
-            <Button onClick={submitSearch}>Search</Button>
+            <TealButton onClick={submitSearch}>Search</TealButton>
           </Flex>
         );
       case SearchStatus.fetching:

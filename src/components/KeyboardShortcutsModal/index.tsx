@@ -15,6 +15,7 @@ import {
   Kbd,
   Text,
 } from '@chakra-ui/react';
+import TealButton from '../TealButton';
 
 type KeyboardShortcutsModalProps = {
   isOpen: boolean;
@@ -63,9 +64,9 @@ const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({
           </Table>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="cyan" color="gray.50" mr={3} onClick={onClose}>
+          <TealButton mr={3} onClick={onClose}>
             Done
-          </Button>
+          </TealButton>
         </ModalFooter>
       </ModalContent>
     </Modal>

@@ -1,7 +1,8 @@
-import { Button, Center, Flex, Input } from '@chakra-ui/react';
+import { Center, Flex, Input } from '@chakra-ui/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../app/hooks';
+import TealButton from '../../components/TealButton';
 import { selectSettings } from '../../Settings/settingsSlice';
 import { TossupScore } from '../../types/tossups';
 import { addShortcut } from '../../utils/keyboard';
@@ -141,9 +142,7 @@ const UserInput: React.FC<UserInputProps> = ({ progress }) => {
             borderWidth={status === ReaderStatus.answered ? 2 : undefined}
           />
         )}
-        <Button colorScheme="cyan" color="gray.50" onClick={onButtonClick}>
-          {buttonText}
-        </Button>
+        <TealButton onClick={onButtonClick}>{buttonText}</TealButton>
       </Flex>
     </Center>
   );

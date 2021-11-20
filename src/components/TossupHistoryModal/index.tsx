@@ -1,5 +1,4 @@
 import {
-  Button,
   Modal,
   ModalBody,
   ModalContent,
@@ -17,6 +16,7 @@ import { useSelector } from 'react-redux';
 import { selectResults } from '../../TossupReader/tossupReaderSlice';
 import { TossupScore } from '../../types/tossups';
 import { parseHTMLString, renderQuestion } from '../../utils/questionReader';
+import TealButton from '../TealButton';
 
 type TossupHistoryModalProps = {
   isOpen: boolean;
@@ -101,9 +101,9 @@ const TossupHistoryModal: React.FC<TossupHistoryModalProps> = ({
           </Table>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="cyan" color="gray.50" mr={3} onClick={onClose}>
+          <TealButton mr={3} onClick={onClose}>
             Done
-          </Button>
+          </TealButton>
         </ModalFooter>
       </ModalContent>
     </Modal>
