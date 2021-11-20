@@ -14,10 +14,9 @@ app.use(express.static(path.join(__dirname, 'build')));
 app.use('/api/tossups', tossupsRouter);
 app.use('/api/freq', freqRouter);
 app.use('/api/clues', cluesRouter);
-app.get('/', (_, res) =>
+app.get('*', (_, res) =>
   res.sendFile(path.join(__dirname, 'build', 'index.html')),
 );
-app.get('*', (_, res) => res.redirect('/'));
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
