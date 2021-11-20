@@ -1,19 +1,18 @@
 import {
+  Kbd,
   Modal,
-  ModalContent,
-  ModalOverlay,
-  ModalHeader,
   ModalBody,
+  ModalContent,
   ModalFooter,
-  Button,
+  ModalHeader,
+  ModalOverlay,
   Table,
-  Thead,
-  Tr,
-  Th,
   Tbody,
   Td,
-  Kbd,
   Text,
+  Th,
+  Thead,
+  Tr,
 } from '@chakra-ui/react';
 import TealButton from '../TealButton';
 
