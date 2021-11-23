@@ -8,7 +8,7 @@ const nlpEx = nlp.extend(ngrams).extend(sentences);
 
 type RegexReplace = [RegExp | string, string];
 const punctuation = (includeSeparators: boolean = true): RegexReplace => [
-  includeSeparators ? /"'()?*.,/g : /"'()?*/g,
+  includeSeparators ? /["'()*.,?]/g : /["'()*?]/g,
   '',
 ];
 const hyphen: RegexReplace = [/-/g, ' '];
