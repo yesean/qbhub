@@ -2,7 +2,7 @@ import { Bag, Clue, ClueBagMap, PlainTossup } from 'clues';
 import nlp from 'compromise';
 import ngrams from 'compromise-ngrams';
 import sentences from 'compromise-sentences';
-import { each, random } from './array';
+import { each } from './array';
 
 const nlpEx = nlp.extend(ngrams).extend(sentences);
 
@@ -188,9 +188,10 @@ const combineClues = (
     );
     clues = clues.filter((_, idx) => !toRemove.has(idx));
   }
+  const roundToHundreths = (n: number) => Math.round(n * 100) / 100;
   return uniqueClues
     .sort((a, b) => b[1] - a[1])
-    .map(([clue, score]) => ({ clue, score }));
+    .map(([clue, score]) => ({ clue, score: roundToHundreths(score) }));
 };
 
 /**

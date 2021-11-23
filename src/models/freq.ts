@@ -2,7 +2,7 @@ import { client, QueryBuilder } from '../utils/db';
 import { Category, Difficulty, Subcategory } from '../types/questions';
 import { getQuestionCondition } from './utils';
 
-export const getFreq = async (
+export const getFreq = (
   categories: Category[],
   subcategories: Subcategory[],
   difficulties: Difficulty[],
