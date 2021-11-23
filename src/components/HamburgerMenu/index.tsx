@@ -12,7 +12,7 @@ import { Link as RouterLink } from 'react-router-dom';
 const links = [
   { name: 'Tossup Reader', href: '/reader' },
   { name: 'Frequency List', href: '/freq' },
-  { name: 'Clues Generator', href: '/clues' },
+  { name: 'Clues Generator', href: '/clues/search' },
 ];
 
 type HamburgerMenuProps = {

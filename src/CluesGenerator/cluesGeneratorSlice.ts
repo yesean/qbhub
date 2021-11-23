@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { RootState } from '../app/store';
-import { Clue } from '../types/tossups';
+import { Answer, Clue } from '../types/tossups';
 import * as fetchUtils from '../utils/fetch';
 
 const FETCH_LIMIT = 100;
@@ -14,13 +14,36 @@ export enum CluesGeneratorStatus {
 type CluesGeneratorSlice = {
   status: CluesGeneratorStatus;
   clues: Clue[];
+  answers: Answer[];
 };
 
 const initialState: CluesGeneratorSlice = {
   status: CluesGeneratorStatus.initial,
   clues: [],
+  answers: [],
 };
 
+export const fetchAnswers = createAsyncThunk<
+  Answer[],
+  string,
+  { state: RootState }
+>(
+  'cluesGenerator/fetchAnswers',
+  async (answer, { getState }) => {
+    const { settings } = getState();
+    const fetchParams = { ...settings, answer, limit: FETCH_LIMIT };
+    const answers = await fetchUtils.fetchAnswers(fetchParams);
+    return answers;
+  },
+  {
+    condition: (_, { getState }) => {
+      const {
+        cluesGenerator: { status },
+      } = getState();
+      return status !== CluesGeneratorStatus.loading;
+    },
+  },
+);
 export const fetchClues = createAsyncThunk<
   Clue[],
   string,
@@ -48,6 +71,14 @@ const cluesGeneratorSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    builder
+      .addCase(fetchAnswers.pending, (state) => {
+        state.status = CluesGeneratorStatus.loading;
+      })
+      .addCase(fetchAnswers.fulfilled, (state, action) => {
+        state.status = CluesGeneratorStatus.idle;
+        state.answers = action.payload;
+      });
     builder
       .addCase(fetchClues.pending, (state) => {
         state.status = CluesGeneratorStatus.loading;
