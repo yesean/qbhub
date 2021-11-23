@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
   return (
     <>
       <Flex align="center" justify="center" mt={2} p={3}>
-        <Text textAlign="center" fontWeight="bold" mr={4}>
+        <Text textAlign="center" fontWeight="bold" mr={2}>
           Created by{' '}
           <Link href="https://seanye.me" color="cyan.600" isExternal>
             Sean Ye
@@ -21,8 +21,13 @@ const Footer: React.FC = () => {
           aria-label="github link"
           bg="white"
           icon={
-            <Link href="https://github.com/seanye24/qbhub-frontend" isExternal>
-              <Icon w={6} h={6} as={AiFillGithub} />{' '}
+            <Link
+              href="https://github.com/seanye24/qbhub-frontend"
+              isExternal
+              w={6}
+              h={6}
+            >
+              <Icon w="100%" h="100%" as={AiFillGithub} />{' '}
             </Link>
           }
         />
