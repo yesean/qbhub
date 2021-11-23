@@ -6,6 +6,16 @@ import { each } from './array';
 
 const nlpEx = nlp.extend(ngrams).extend(sentences);
 
+type RegexReplace = [RegExp | string, string];
+const punctuation = (includeSeparators: boolean = true): RegexReplace => [
+  includeSeparators ? /"'()?*.,/g : /"'()?*/g,
+  '',
+];
+const hyphen: RegexReplace = [/-/g, ' '];
+const ftp: RegexReplace = ['for 10 points', ' '];
+const shrinkSpace: RegexReplace = [/\s\s+/g, ' '];
+const quotes: RegexReplace = [/"'/g, ''];
+
 /**
  * Normalizes a clues string. Removes non-alphanumeric characters. Fixes
  * whitespace issues. Converts all to lowercase.
@@ -13,10 +23,10 @@ const nlpEx = nlp.extend(ngrams).extend(sentences);
 export const normalize = (s: Clue) =>
   s
     .toLowerCase()
-    .replaceAll(/[-]/g, ' ')
-    .replaceAll(/["',()?*.]/g, '')
-    .replaceAll('for 10 points', '')
-    .replaceAll(/\s\s+/g, ' ')
+    .replaceAll(...punctuation(false))
+    .replaceAll(...hyphen)
+    .replaceAll(...ftp)
+    .replaceAll(...shrinkSpace)
     .trim();
 
 /**
@@ -27,7 +37,7 @@ export const getAllClues = (clues: PlainTossup[]): Clue[] =>
     new Set(
       clues
         .map(({ text }) =>
-          nlpEx(text)
+          nlpEx(text.replaceAll(...quotes))
             // .ngrams({ size: 5 })
             // .map((sen: any) => sen.normal),
             .sentences()
@@ -37,7 +47,9 @@ export const getAllClues = (clues: PlainTossup[]): Clue[] =>
         .flat()
         .map(normalize)
         .map((sen) => nlpEx(sen).clauses().out('array'))
-        .flat(),
+        .flat()
+        .map((s) => s.replaceAll(...punctuation()))
+        .sort((a, b) => b.length - a.length),
     ),
   );
 
@@ -119,7 +131,7 @@ const tfIdf = (
   const documentWeight = corpusBag[word] ?? 0;
 
   const tf = clueBag[word] ?? 0;
-  const idf = numClues / (1 + corpusWeight * documentWeight); // add one to avoid division by zero
+  const idf = Math.log(numClues / (1 + corpusWeight * documentWeight)); // add one to avoid division by zero
   return tf * idf;
 };
 
@@ -159,9 +171,9 @@ const combineClues = (
   clueBagMap: ClueBagMap,
   corpusBag: Bag,
 ) => {
-  const SCORE_THRESHOLD = 30;
   const uniqueClues: [string, number][] = [];
   while (clues.length > 0) {
+    const SCORE_THRESHOLD = 2.5 * (1 * Math.log(clues.length / (1 + 6)));
     const queryClue = clues[0];
 
     const toRemove = new Map([[0, 0]]);
@@ -173,7 +185,7 @@ const combineClues = (
         corpusBag,
         clues.length,
       );
-      if (clueScore >= SCORE_THRESHOLD) {
+      if (clueScore > SCORE_THRESHOLD) {
         toRemove.set(i, clueScore);
       }
     }
