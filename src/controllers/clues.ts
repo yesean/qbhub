@@ -1,7 +1,7 @@
-import { MiniTossup } from 'clues';
+import { PlainTossup } from 'clues';
 import { Request, Response } from 'express';
 import { getClues } from '../models/clues';
-import { getSentences, getUniqueClues } from '../utils/clues';
+import { getAllClues, getUniqueClues } from '../utils/clues';
 import { error } from '../utils/logger';
 import { parseTossupQueryString, ParsingError } from './utils';
 
@@ -18,8 +18,8 @@ cluesRouter.get('/', async (req: Request, res: Response) => {
       answer,
       limit,
     );
-    const answers = data.rows as MiniTossup[];
-    const clues = getSentences(answers);
+    const answers = data.rows as PlainTossup[];
+    const clues = getAllClues(answers);
     const uniqueClues = getUniqueClues(clues);
     res.json(uniqueClues);
   } catch (e) {
