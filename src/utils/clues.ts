@@ -8,13 +8,13 @@ const nlpEx = nlp.extend(ngrams).extend(sentences);
 
 type RegexReplace = [RegExp | string, string];
 const punctuation = (includeSeparators: boolean = true): RegexReplace => [
-  includeSeparators ? /["'()*.,?]/g : /["'()*?]/g,
+  includeSeparators ? /["'()/\\*.,?]/g : /["'()/\\*?]/g,
   '',
 ];
 const hyphen: RegexReplace = [/-/g, ' '];
 const ftp: RegexReplace = ['for 10 points', ' '];
 const shrinkSpace: RegexReplace = [/\s\s+/g, ' '];
-const quotes: RegexReplace = [/"'/g, ''];
+const quotes: RegexReplace = [/["'\u2018\u2019\u201C\u201D]/g, ''];
 
 /**
  * Normalizes a clues string. Removes non-alphanumeric characters. Fixes
