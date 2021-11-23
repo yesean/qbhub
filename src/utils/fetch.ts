@@ -9,7 +9,8 @@ const TOSSUP_URL = `${API_URL}/tossups`;
 const FREQ_URL = `${API_URL}/freq`;
 const CLUES_URL = `${API_URL}/clues`;
 
-export const combineParams = (...params: any[]) => params.join('&');
+export const combineParams = (...params: string[]) =>
+  params.filter(Boolean).join('&');
 export const createParamsFromArray = (field: string, values: any[]) =>
   combineParams(...values.map((val) => `${field}[]=${val}`));
 export const addParams = (url: string, params: string) => `${url}?${params}`;
@@ -37,8 +38,8 @@ const createParams = ({
     createParamsFromArray('categories', categories),
     createParamsFromArray('subcategories', subcategories),
     createParamsFromArray('difficulties', difficulties),
-    `text=${text}`,
-    `answer=${answer}`,
+    text.length ? `text=${text}` : '',
+    answer.length ? `answer=${answer}` : '',
     `limit=${limit}`,
     `offset=${offset}`,
   );
