@@ -1,32 +1,19 @@
-import { client, QueryBuilder } from '../utils/db';
-import { Category, Difficulty, Subcategory } from '../types/questions';
-import { getQuestionCondition } from './utils';
+import { QuestionFilters } from '../types/questions';
+import { client, QueryBuilder, getQuestionCondition } from '../utils/db';
 
-export const getFreq = (
-  categories: Category[],
-  subcategories: Subcategory[],
-  difficulties: Difficulty[],
-  text: string,
-  answer: string,
-  limit: number | null,
-  offset: number | null,
-) => {
-  const columns = [
-    { column: 'normalized_answer', alias: 'answer' },
-    { column: 'count(normalized_answer)', alias: 'frequency' },
-  ];
-  const columnOrder: { column: string; direction: 'asc' | 'desc' }[] = [
-    { column: 'count(normalized_answer)', direction: 'desc' },
-    { column: 'normalized_answer', direction: 'asc' },
-  ];
-  const tossup = {
-    categories,
-    subcategories,
-    difficulties,
-    text,
-    answer,
-  };
-  const condition = getQuestionCondition(tossup, { useNormalized: true });
+const columns = [
+  { column: 'normalized_answer', alias: 'answer' },
+  { column: 'count(normalized_answer)', alias: 'frequency' },
+];
+const columnOrder: { column: string; direction: 'asc' | 'desc' }[] = [
+  { column: 'count(normalized_answer)', direction: 'desc' },
+  { column: 'normalized_answer', direction: 'asc' },
+];
+
+export const getFreq = (questionFilters: QuestionFilters) => {
+  const condition = getQuestionCondition(questionFilters, {
+    useNormalizedAnswer: true,
+  });
   const query = QueryBuilder.start()
     .select(columns)
     .from('tossups')
@@ -34,8 +21,8 @@ export const getFreq = (
     .where(condition)
     .groupBy('normalized_answer')
     .orderBy(columnOrder)
-    .limit(limit)
-    .offset(offset)
+    .limit(questionFilters.limit)
+    .offset(questionFilters.offset)
     .build();
 
   return client.query(query);

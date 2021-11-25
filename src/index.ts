@@ -4,7 +4,7 @@ import path from 'path';
 import cluesRouter from './controllers/clues';
 import freqRouter from './controllers/freq';
 import tossupsRouter from './controllers/tossups';
-import { info } from './utils/logger';
+import logger from './utils/logger';
 
 const app = express();
 app.use(express.json());
@@ -20,5 +20,5 @@ app.get('*', (_, res) =>
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  info(`App is running on PORT ${PORT}.`);
+  logger.info(`App is running on PORT ${PORT}.`);
 });

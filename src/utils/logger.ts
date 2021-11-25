@@ -1,8 +1,20 @@
 /* eslint-disable no-console */
-export const info = (...params: any[]) => {
+
+/**
+ * Logger middleware for normal messages.
+ */
+const info = (...params: any[]) => {
   console.log('INFO:', ...params);
 };
 
-export const error = (...params: any[]) => {
-  console.error(...params);
+/**
+ * Logger middleware for critical messages.
+ */
+const error = (...params: any[]) => {
+  console.error('ERROR:', ...params);
+};
+
+export default {
+  info,
+  error,
 };

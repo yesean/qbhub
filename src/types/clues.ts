@@ -1,3 +1,4 @@
+// stripped down tossup, used in clue parsing
 export type PlainTossup = {
   text: string;
   answer: string;

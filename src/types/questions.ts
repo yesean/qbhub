@@ -1,3 +1,4 @@
+// question categories, using quizdb values
 export enum Category {
   Mythology = 14,
   Literature = 15,
@@ -12,6 +13,7 @@ export enum Category {
   CurrentEvents = 26,
 }
 
+// question subcategories, using quizdb values
 export enum Subcategory {
   'Literature European' = 1,
   'Fine Arts Visual' = 2,
@@ -83,6 +85,7 @@ export enum Subcategory {
   'Fine Arts Opera' = 77,
 }
 
+// question difficulties, using quizdb values
 export enum Difficulty {
   'Middle School' = 1,
   'Easy High School',
@@ -102,3 +105,28 @@ export type Tossup = {
   text: string;
   answer: string;
 };
+
+// bonuses are not on the main metadata object and are nested instead similar to
+// its database structure
+export type Bonus = {
+  categories: Category[];
+  subcategories: Subcategory[];
+  difficulties: Difficulty[];
+  leading: string;
+  parts: [BonusPart, BonusPart, BonusPart];
+};
+export type BonusPart = {
+  text: string;
+  answer: string;
+};
+
+// question specific parameters
+export type QuestionParameters = Tossup;
+
+// sql query specific parameters
+export type QueryParameters = {
+  offset: number;
+  limit: number;
+};
+
+export type QuestionFilters = QuestionParameters & QueryParameters;
