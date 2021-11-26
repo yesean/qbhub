@@ -1,5 +1,4 @@
 import { Category, Difficulty, Subcategory } from './types/questions';
-import { Tossup } from './types/tossups';
 
 export const CATEGORIES = [
   { label: 'Current Events', value: Category['Current Events'] },
@@ -111,17 +110,6 @@ export const DIFFICULTIES = [
   { label: 'Hard College', value: Difficulty['Hard College'] },
   { label: 'Open', value: Difficulty.Open },
 ];
-
-export const blankTossup: Tossup = {
-  text: '',
-  formattedText: '',
-  answer: '',
-  formattedAnswer: '',
-  category: Category.Science,
-  subcategory: Subcategory['Science Computer Science'],
-  difficulty: Difficulty['Easy College'],
-  tournament: '',
-};
 
 export const READING_SPEED_LS_KEY = 'reading_speed';
 export const CATEGORIES_LS_KEY = 'categories';

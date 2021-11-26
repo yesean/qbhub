@@ -3,9 +3,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../app/hooks';
 import TealButton from '../components/TealButton';
+import { useKeyboardShortcut } from '../hooks/keyboard';
 import { selectSettings } from '../Settings/settingsSlice';
 import { TossupScore } from '../types/tossups';
-import { addShortcut } from '../utils/keyboard';
 import logger from '../utils/logger';
 import {
   checkAnswer,
@@ -33,7 +33,7 @@ const UserInput: React.FC<UserInputProps> = ({ progress }) => {
   const currentTossup = useSelector(selectCurrentTossup);
   const currentResult = useSelector(selectCurrentResult);
   const currentBuzz = useSelector(selectCurrentBuzz);
-  const { isOpen } = useSelector(selectSettings);
+  const settings = useSelector(selectSettings);
   const dispatch = useAppDispatch();
 
   // focus input when user is answering, blur otherwise
@@ -95,9 +95,9 @@ const UserInput: React.FC<UserInputProps> = ({ progress }) => {
   // add keyboard shortcuts
   const buzz = useCallback(() => dispatch(buzzAction()), [dispatch]);
   const next = useCallback(() => dispatch(nextTossupAction()), [dispatch]);
-  useEffect(() => addShortcut('n', next, [!isOpen]), [next, isOpen]);
-  useEffect(() => addShortcut(' ', buzz, [!isOpen]), [buzz, isOpen]);
-  useEffect(() => addShortcut('Enter', submit, [!isOpen]), [submit, isOpen]);
+  useKeyboardShortcut('n', next, () => !settings.isOpen);
+  useKeyboardShortcut(' ', buzz, () => !settings.isOpen);
+  useKeyboardShortcut('Enter', submit, () => !settings.isOpen);
 
   // add button behavior in different modes
   const statusBehavior: { [key in ReaderStatus]?: any } = {

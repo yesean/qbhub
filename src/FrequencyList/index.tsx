@@ -3,8 +3,8 @@ import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../app/hooks';
 import { TwoColumnTable } from '../components/Table';
+import { useKeyboardShortcut } from '../hooks/keyboard';
 import { selectSettings } from '../Settings/settingsSlice';
-import { addShortcut } from '../utils/keyboard';
 import {
   fetchPages,
   FreqStatus,
@@ -21,7 +21,7 @@ const freqFields = [
 
 const FrequencyList: React.FC = () => {
   const { page, offset, status } = useSelector(selectFrequencyList);
-  const { isOpen } = useSelector(selectSettings);
+  const settings = useSelector(selectSettings);
   const dispatch = useAppDispatch();
 
   // in initial state, fetch freq
@@ -42,20 +42,13 @@ const FrequencyList: React.FC = () => {
       dispatch(nextPage()),
     [dispatch, status, page],
   );
-  useEffect(() => addShortcut('p', prev, [!isOpen]), [prev, isOpen]);
-  useEffect(() => addShortcut('ArrowLeft', prev, [!isOpen]), [prev, isOpen]);
-  useEffect(() => addShortcut('n', next, [!isOpen]), [next, isOpen]);
-  useEffect(() => addShortcut('ArrowRight', next, [!isOpen]), [next, isOpen]);
 
-  const onBack = () => {
-    dispatch(prevPage());
-  };
+  useKeyboardShortcut('p', prev, () => !settings.isOpen);
+  useKeyboardShortcut('n', next, () => !settings.isOpen);
+  useKeyboardShortcut('ArrowLeft', prev, () => !settings.isOpen);
+  useKeyboardShortcut('ArrowRight', next, () => !settings.isOpen);
 
-  const onNext = () => {
-    dispatch(nextPage());
-  };
-
-  const renderPage = () => {
+  const renderTable = () => {
     if (status !== FreqStatus.idle) {
       return <CircularProgress isIndeterminate color="cyan" />;
     }
@@ -88,7 +81,7 @@ const FrequencyList: React.FC = () => {
         <Button
           colorScheme="cyan"
           color="gray.50"
-          onClick={onBack}
+          onClick={prev}
           mr={4}
           disabled={shouldDisableBack}
         >
@@ -97,7 +90,7 @@ const FrequencyList: React.FC = () => {
         <Button
           colorScheme="cyan"
           color="gray.50"
-          onClick={onNext}
+          onClick={next}
           disabled={shouldDisableNext}
         >
           Next
@@ -115,7 +108,7 @@ const FrequencyList: React.FC = () => {
       align="center"
     >
       <Center mb={4} w="100%" h="100%" overflow="auto">
-        {renderPage()}
+        {renderTable()}
       </Center>
       {renderButtons()}
     </Flex>
