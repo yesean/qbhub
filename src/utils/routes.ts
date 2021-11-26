@@ -13,4 +13,7 @@ export const ROUTES = {
     searchResults: (answer: string) => `/clues/search/${answer}`,
     display: (answer: string) => `/clues/display/${answer}`,
   },
+  about: {
+    root: '/about',
+  },
 };

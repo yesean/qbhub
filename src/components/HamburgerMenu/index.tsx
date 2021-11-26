@@ -17,6 +17,7 @@ const links = [
   { name: 'Tossup Reader', href: ROUTES.reader.tossup },
   { name: 'Frequency List', href: ROUTES.freq.root },
   { name: 'Clues Generator', href: ROUTES.clues.search },
+  { name: 'About', href: ROUTES.about.root },
 ];
 
 const HamburgerMenu: React.FC = () => {

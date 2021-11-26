@@ -3,6 +3,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import CluesGenerator from '../../CluesGenerator';
 import FrequencyList from '../../FrequencyList';
 import TossupReader from '../../TossupReader';
+import About from '../../About';
 import { ROUTES } from '../../utils/routes';
 
 const Body: React.FC = () => {
@@ -17,6 +18,9 @@ const Body: React.FC = () => {
         </Route>
         <Route path={ROUTES.clues.root}>
           <CluesGenerator />
+        </Route>
+        <Route path={ROUTES.about.root}>
+          <About />
         </Route>
         <Route>
           <Redirect to={ROUTES.reader.tossup} />
