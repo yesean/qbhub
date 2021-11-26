@@ -60,7 +60,7 @@ export const fetchTossups = async (params: FetchParams): Promise<Tossup[]> => {
       difficulty: tu.difficulty,
       tournament: tu.tournament,
     }));
-    logger.info('Received tossups:', tossups);
+    logger.info('Received tossups.');
     return tossups;
   } catch (err) {
     return [];
@@ -73,7 +73,7 @@ export const fetchFreq = async (params: FetchParams): Promise<Answer[]> => {
   try {
     logger.info('Fetching frequency list.');
     const { data } = await axios.get(url);
-    logger.info('Received frequency list:', data);
+    logger.info('Received frequency list.');
     return data;
   } catch (err) {
     return [];
@@ -86,7 +86,7 @@ export const fetchAnswers = async (params: FetchParams): Promise<Answer[]> => {
   try {
     logger.info('Fetching answers.');
     const { data } = await axios.get(url);
-    logger.info('Received answers:', data);
+    logger.info('Received answers.');
     return data;
   } catch (err) {
     return [];
@@ -99,7 +99,7 @@ export const fetchClues = async (params: FetchParams): Promise<Clue[]> => {
   try {
     logger.info('Fetching clues.');
     const { data } = await axios.get(url);
-    logger.info('Received clues:', data);
+    logger.info('Received clues.');
     return data;
   } catch (err) {
     return [];

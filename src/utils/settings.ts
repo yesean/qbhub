@@ -6,7 +6,6 @@ import {
   SUBCATEGORIES_LS_KEY,
 } from '../constants';
 import { Category, Difficulty, Subcategory } from '../types/questions';
-import logger from './logger';
 
 const checkReadingSpeedValid = (speed: number) => {
   return speed >= 0 && speed <= 100 && speed % 5 === 0;
@@ -87,7 +86,6 @@ export const getReadingTimeoutDelay = (speed: number) => {
   const FASTEST_DELAY = 25;
   const DELAY_RANGE = SLOWEST_DELAY - FASTEST_DELAY;
   const scaledSpeed = 10 * Math.sqrt(speed); // skew speed towards faster end, common reading speed will probably in the faster end
-  logger.info('Current speed:', speed);
   // speed is a number between 0 - 100, however, a higher speed means a lower delay
   // we also don't want delay to be 0, which is too fast
   return SLOWEST_DELAY - DELAY_RANGE * (scaledSpeed / 100);
