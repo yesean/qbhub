@@ -5,6 +5,7 @@ export type Tossup = {
   answer: string;
   formattedText: string;
   formattedAnswer: string;
+  normalizedAnswer: string;
   category: Category;
   subcategory: Subcategory;
   difficulty: Difficulty;

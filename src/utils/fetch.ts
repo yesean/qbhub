@@ -55,6 +55,7 @@ export const fetchTossups = async (params: FetchParams): Promise<Tossup[]> => {
       answer: tu.answer,
       formattedText: cleanTossupText(tu.formatted_text),
       formattedAnswer: tu.formatted_answer,
+      normalizedAnswer: tu.normalized_answer,
       category: tu.category,
       subcategory: tu.subcategory,
       difficulty: tu.difficulty,
