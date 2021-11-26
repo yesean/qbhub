@@ -1,5 +1,6 @@
 import { Client } from 'pg';
-import { QuestionParameters } from '../types/questions';
+import { Column, Order, Parameter, QuestionFilterOptions } from '../types/db';
+import { QuestionFilters, QuestionParameters } from '../types/questions';
 
 // connect to postgresql database
 export const client = new Client({
@@ -10,72 +11,7 @@ export const client = new Client({
 });
 client.connect();
 
-/**
- * Helper class for building SQL queries.
- */
-export class QueryBuilder {
-  static start() {
-    return new QueryBuilder('');
-  }
-
-  text: string;
-
-  params: string[];
-
-  constructor(text: string) {
-    this.text = text;
-    this.params = [];
-  }
-
-  build() {
-    this.text = this.text.trim();
-    return this.text;
-  }
-
-  private append(cmd: string) {
-    this.text = `${this.text}  ${cmd}`;
-    return this;
-  }
-
-  select(columns: { column: string; alias: string }[]) {
-    const colsCmd = columns.map((c) => `${c.column} as ${c.alias}`).join(',');
-    return this.append(`select ${colsCmd}`);
-  }
-
-  from(table: string) {
-    return this.append(`from ${table}`);
-  }
-
-  innerJoin(table: string, condition: string) {
-    return this.append(`inner join ${table} on ${condition}`);
-  }
-
-  where(condition: string) {
-    return this.append(`where ${condition}`);
-  }
-
-  groupBy(column: string) {
-    return this.append(`group by ${column}`);
-  }
-
-  orderBy(values: { column: string; direction: 'asc' | 'desc' }[]) {
-    const cmd = values.map((v) => `${v.column} ${v.direction}`).join(',');
-    return this.append(`order by ${cmd}`);
-  }
-
-  random() {
-    return this.append('order by random()');
-  }
-
-  offset(n: number) {
-    return this.append(`offset ${n}`);
-  }
-
-  limit(n: number | null) {
-    return this.append(`limit ${n}`);
-  }
-}
-
+const fuzzy = (s: string) => `%${s}%`;
 const getList = (values: any[]) => `(${values.join(',')})`;
 const columnInList = (column: string, list: any[]) =>
   `${column} in ${getList(list)}`;
@@ -85,14 +21,17 @@ const columnInList = (column: string, list: any[]) =>
  */
 export const getQuestionCondition = (
   questionParameters: QuestionParameters,
-  {
-    ignoreEmptyNormalizedAnswer = true,
-    useNormalizedAnswer = false,
-    useExactAnswer = false,
-  } = {},
+  addArg: (arg: Parameter) => string,
+  options: QuestionFilterOptions,
 ) => {
   const { categories, subcategories, difficulties, text, answer } =
     questionParameters;
+
+  const {
+    useExactAnswer = false,
+    useNormalizedAnswer = false,
+    ignoreEmptyNormalizedAnswer = true,
+  } = options;
 
   /*
    * Category/Subcategory filtering falls into 4 cases.
@@ -107,12 +46,15 @@ export const getQuestionCondition = (
   if (categories.length === 0) {
     categoriesCondition = false;
   } else {
-    categoriesCondition = columnInList('category_id', categories);
+    categoriesCondition = columnInList('category_id', categories.map(addArg));
   }
   if (subcategories.length === 0) {
     subcategoriesCondition = false;
   } else {
-    subcategoriesCondition = columnInList('subcategory_id', subcategories);
+    subcategoriesCondition = columnInList(
+      'subcategory_id',
+      subcategories.map(addArg),
+    );
   }
   if (categories.length === 0 && subcategories.length === 0) {
     combinedCategoriesCondition = true;
@@ -124,15 +66,18 @@ export const getQuestionCondition = (
   if (difficulties.length === 0) {
     difficultiesCondition = true;
   } else {
-    difficultiesCondition = columnInList('difficulty', difficulties);
+    difficultiesCondition = columnInList(
+      'difficulty',
+      difficulties.map(addArg),
+    );
   }
 
-  const textCondition = `tossups.text ilike '%${text}%'`;
+  const textCondition = `tossups.text ILIKE ${addArg(fuzzy(text))}`;
 
   const source = useNormalizedAnswer ? 'normalized_answer' : 'answer';
-  const comparison = useExactAnswer ? '=' : 'ilike';
-  const pattern = useExactAnswer ? answer : `%${answer}%`;
-  const answerCondition = `${source} ${comparison} '${pattern}'`;
+  const comparison = useExactAnswer ? '=' : 'ILIKE';
+  const pattern = useExactAnswer ? answer : fuzzy(answer);
+  const answerCondition = `${source} ${comparison} ${addArg(pattern)}`;
 
   const ignoreEmptyNormalizedAnswerCondition = ignoreEmptyNormalizedAnswer
     ? "normalized_answer != ''"
@@ -147,3 +92,89 @@ export const getQuestionCondition = (
   ];
   return conditions.join(' and ');
 };
+/**
+ * Helper class for building SQL queries.
+ */
+export class QueryBuilder {
+  private commands: string[];
+
+  private parameters: Parameter[];
+
+  constructor() {
+    this.parameters = [];
+    this.commands = [];
+  }
+
+  /**
+   * Registers an argument and returns its identifier.
+   */
+  private register(arg: Parameter) {
+    this.parameters.push(arg);
+    return `$${this.parameters.length}`;
+  }
+
+  private addCommand(command: string) {
+    this.commands.push(command);
+    return this;
+  }
+
+  select(columns: Column[]) {
+    const command = columns
+      .map(({ name, alias }) => {
+        if (alias === undefined) return name;
+
+        return `${name} AS ${alias}`;
+      })
+      .join(',');
+    return this.addCommand(`SELECT ${command}`);
+  }
+
+  from(table: string) {
+    return this.addCommand(`FROM ${table}`);
+  }
+
+  innerJoin(table: string, foreign: string, primary: string) {
+    return this.addCommand(`INNER JOIN ${table} ON ${foreign} = ${primary}`);
+  }
+
+  questionFilter(
+    questionFilters: QuestionFilters,
+    options: QuestionFilterOptions = {},
+  ) {
+    const command = getQuestionCondition(
+      questionFilters,
+      this.register.bind(this),
+      options,
+    );
+    return this.addCommand(`WHERE ${command}`);
+  }
+
+  where(condition: string) {
+    return this.addCommand(`WHERE ${this.register(condition)}`);
+  }
+
+  groupBy(column: string) {
+    return this.addCommand(`GROUP BY ${column}`);
+  }
+
+  orderBy(values: Order) {
+    const command = values.map((v) => `${v.name} ${v.direction}`).join(',');
+    return this.addCommand(`ORDER BY ${command}`);
+  }
+
+  random() {
+    return this.addCommand('ORDER BY random()');
+  }
+
+  offset(n: number) {
+    return this.addCommand(`OFFSET ${this.register(n)}`);
+  }
+
+  limit(n: number | null) {
+    return this.addCommand(`LIMIT ${this.register(n)}`);
+  }
+
+  build(): [string, Parameter[]] {
+    return [this.commands.join('\n'), this.parameters];
+  }
+}

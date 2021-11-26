@@ -1,24 +1,29 @@
 import { QuestionFilters } from '../types/questions';
-import { client, QueryBuilder, getQuestionCondition } from '../utils/db';
+import { client, QueryBuilder } from '../utils/db';
+import logger from '../utils/logger';
 
 const columns = [
-  { column: 'name', alias: 'tournament' },
-  { column: 'text', alias: 'text' },
-  { column: 'normalized_answer', alias: 'answer' },
+  { name: 'name', alias: 'tournament' },
+  { name: 'text' },
+  { name: 'normalized_answer', alias: 'answer' },
 ];
 
 export const getClues = (questionFilters: QuestionFilters) => {
-  const condition = getQuestionCondition(questionFilters, {
-    useNormalizedAnswer: true,
-    useExactAnswer: true,
-  });
-  const query = QueryBuilder.start()
+  const [query, values] = new QueryBuilder()
     .select(columns)
     .from('tossups')
-    .innerJoin('tournaments', 'tossups.tournament_id = tournaments.id')
-    .where(condition)
+    .innerJoin('tournaments', 'tournament_id', 'tournaments.id')
+    .questionFilter(questionFilters, {
+      useNormalizedAnswer: true,
+      useExactAnswer: true,
+    })
     .limit(questionFilters.limit)
     .build();
 
-  return client.query(query);
+  logger.info(`Clues SQL Query:\n${query}`);
+  logger.info(
+    'Parameters:',
+    Object.entries(values).map((e) => [Number(e[0]) + 1, e[1]]),
+  );
+  return client.query(query, values);
 };

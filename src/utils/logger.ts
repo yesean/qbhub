@@ -4,7 +4,7 @@
  * Logger middleware for normal messages.
  */
 const info = (...params: any[]) => {
-  console.log('INFO:', ...params);
+  console.log('INFO:', ...params, '\n');
 };
 
 /**

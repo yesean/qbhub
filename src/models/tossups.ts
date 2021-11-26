@@ -1,29 +1,34 @@
 import { QuestionFilters } from '../types/questions';
-import { client, getQuestionCondition, QueryBuilder } from '../utils/db';
+import { client, QueryBuilder } from '../utils/db';
+import logger from '../utils/logger';
 
 const columns = [
-  { column: 'text', alias: 'text' },
-  { column: 'answer', alias: 'answer' },
-  { column: 'formatted_text', alias: 'formatted_text' },
-  { column: 'formatted_answer', alias: 'formatted_answer' },
-  { column: 'normalized_answer', alias: 'normalized_answer' },
-  { column: 'category_id', alias: 'category' },
-  { column: 'subcategory_id', alias: 'subcategory' },
-  { column: 'difficulty', alias: 'difficulty' },
-  { column: 'name', alias: 'tournament' },
-  { column: 'year', alias: 'year' },
+  { name: 'text' },
+  { name: 'answer' },
+  { name: 'formatted_text' },
+  { name: 'formatted_answer' },
+  { name: 'normalized_answer' },
+  { name: 'category_id', alias: 'category' },
+  { name: 'subcategory_id', alias: 'subcategory' },
+  { name: 'difficulty' },
+  { name: 'name', alias: 'tournament' },
+  { name: 'year' },
 ];
 
 export const getTossups = (questionFilters: QuestionFilters) => {
-  const condition = getQuestionCondition(questionFilters);
-  const query = QueryBuilder.start()
+  const [query, values] = new QueryBuilder()
     .select(columns)
     .from('tossups')
-    .innerJoin('tournaments', 'tossups.tournament_id = tournaments.id')
-    .where(condition)
+    .innerJoin('tournaments', 'tournament_id', 'tournaments.id')
+    .questionFilter(questionFilters)
     .random()
     .limit(questionFilters.limit)
     .build();
 
-  return client.query(query);
+  logger.info(`Tossups SQL Query:\n${query}`);
+  logger.info(
+    'Parameters:',
+    Object.entries(values).map((e) => [Number(e[0]) + 1, e[1]]),
+  );
+  return client.query(query, values);
 };
