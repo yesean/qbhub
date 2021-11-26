@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import cluesGeneatorReducer from '../CluesGenerator/cluesGeneratorSlice';
+import infoModalReducer from '../components/InfoModal/infoModalSlice';
 import frequencyListReducer from '../FrequencyList/frequencyListSlice';
 import settingsReducer from '../Settings/settingsSlice';
 import tossupReaderReducer from '../TossupReader/tossupReaderSlice';
@@ -10,6 +11,7 @@ export const store = configureStore({
     settings: settingsReducer,
     frequencyList: frequencyListReducer,
     cluesGenerator: cluesGeneatorReducer,
+    infoModal: infoModalReducer,
   },
 });
 

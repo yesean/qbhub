@@ -1,12 +1,14 @@
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 import { Flex, Icon, IconButton, Link, Text } from '@chakra-ui/react';
-import { useState } from 'react';
 import { AiFillGithub } from 'react-icons/ai';
-import KeyboardShortcutsModal from '../KeyboardShortcutsModal';
+import { useAppDispatch } from '../../app/hooks';
+import InfoModal from '../InfoModal';
+import { open } from '../InfoModal/infoModalSlice';
 
 const Footer: React.FC = () => {
-  const [isKeyboardShortcutsModalOpen, setIsKeyboardShortcutsModalOpen] =
-    useState(false);
+  const dispatch = useAppDispatch();
+
+  const openModal = () => dispatch(open());
 
   return (
     <>
@@ -35,14 +37,11 @@ const Footer: React.FC = () => {
           position="absolute"
           right={3}
           aria-label="keyboard shortcuts"
-          onClick={() => setIsKeyboardShortcutsModalOpen(true)}
+          onClick={openModal}
           icon={<InfoOutlineIcon />}
         />
       </Flex>
-      <KeyboardShortcutsModal
-        isOpen={isKeyboardShortcutsModalOpen}
-        onClose={() => setIsKeyboardShortcutsModalOpen(false)}
-      />
+      <InfoModal />
     </>
   );
 };

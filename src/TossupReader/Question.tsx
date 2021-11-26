@@ -106,7 +106,6 @@ const Question: React.FC = () => {
       if (visibleIndex < words.length) {
         if (incrementId === null) {
           const readingDelay = getReadingTimeoutDelay(settings.readingSpeed);
-          logger.info('Current reading speed:', readingDelay, 'ms/word');
           const incrementVisibleIndex = () => {
             setVisibleIndex(visibleIndex + 1);
             setIncrementId(null);
