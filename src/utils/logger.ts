@@ -1,10 +1,11 @@
 /* eslint-disable no-console */
 
 const shouldLog = process.env.NODE_ENV === 'development';
-const nullLogger = (..._: any[]) => {};
+
+const ignore = (..._: any[]) => {};
+const info = (...args: any[]) => console.log('INFO:', ...args);
+
 export default {
-  info: shouldLog
-    ? (...args: any[]) => console.log('INFO:', ...args)
-    : nullLogger,
+  info: shouldLog ? info : ignore,
   error: console.error,
 };
