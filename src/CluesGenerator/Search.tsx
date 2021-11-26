@@ -2,6 +2,7 @@ import { Flex, Input } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import TealButton from '../components/TealButton';
+import { ROUTES } from '../utils/routes';
 
 const Search: React.FC = () => {
   const [search, setSearch] = useState('');
@@ -12,7 +13,7 @@ const Search: React.FC = () => {
   };
 
   const submitSearch = async () => {
-    history.push(`/clues/search/${search}`);
+    history.push(ROUTES.cluesSearchResults(search));
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

@@ -1,23 +1,22 @@
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { ROUTES } from '../utils/routes';
 import Answers from './Answers';
 import Clues from './Clues';
 import Search from './Search';
 
 const CluesGenerator: React.FC = () => {
-  const { path } = useRouteMatch();
-
   return (
     <Switch>
-      <Route exact path={`${path}/search`}>
+      <Route exact path={ROUTES.cluesSearch}>
         <Search />
       </Route>
-      <Route exact path={`${path}/search/:answer`}>
+      <Route exact path={ROUTES.cluesSearchResults(':answer')}>
         <Answers />
       </Route>
-      <Route exact path={`${path}/display/:answer`}>
+      <Route exact path={ROUTES.cluesDisplay(':answer')}>
         <Clues />
       </Route>
-      <Redirect to={`${path}/search`} />
+      <Redirect to={ROUTES.cluesSearch} />
     </Switch>
   );
 };

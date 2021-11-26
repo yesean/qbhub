@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { useAppDispatch } from '../app/hooks';
 import { TwoColumnTable } from '../components/Table';
+import { ROUTES } from '../utils/routes';
 import {
   CluesGeneratorStatus,
   fetchAnswers,
@@ -25,7 +26,7 @@ const Answers: React.FC = () => {
   }, [dispatch, answerParam]);
 
   const createLink = (answer: string) => (
-    <Link as={RouterLink} to={`/clues/display/${answer}`}>
+    <Link as={RouterLink} to={ROUTES.cluesDisplay(answer)}>
       {answer}
     </Link>
   );

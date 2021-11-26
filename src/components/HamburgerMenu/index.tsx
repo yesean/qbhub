@@ -8,11 +8,12 @@ import {
   Link,
 } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
+import { ROUTES } from '../../utils/routes';
 
 const links = [
-  { name: 'Tossup Reader', href: '/reader' },
-  { name: 'Frequency List', href: '/freq' },
-  { name: 'Clues Generator', href: '/clues/search' },
+  { name: 'Tossup Reader', href: ROUTES.tossupReader },
+  { name: 'Frequency List', href: ROUTES.freq },
+  { name: 'Clues Generator', href: ROUTES.cluesSearch },
 ];
 
 type HamburgerMenuProps = {
