@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "eslint ./src --ext .ts,.tsx",
-    "dev": "concurrently \"tsc --watch\" \"nodemon -r dotenv/config dist/index.js\"",
+    "dev": "concurrently \"tsc --watch\" \"NODE_ENV=development nodemon -r dotenv/config dist/index.js\"",
     "start": "node -r dotenv/config dist/index.js",
     "build:ui": "cd ../qbhub-client && yarn build && cp -r build ../qbhub-server/dist && cd ../qbhub-server",
     "build:server": "tsc",
