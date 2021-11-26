@@ -1,7 +1,7 @@
 import { Container, Text } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
-import { parseHTMLString } from '../../utils/questionReader';
-import { selectCurrentTossup } from '../tossupReaderSlice';
+import { parseHTMLString } from '../utils/questionReader';
+import { selectCurrentTossup } from './tossupReaderSlice';
 
 const Answer: React.FC = () => {
   const { formattedAnswer } = useSelector(selectCurrentTossup);

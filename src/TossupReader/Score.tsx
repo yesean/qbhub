@@ -11,7 +11,7 @@ import {
   selectCurrentResult,
   selectScore,
   selectStatus,
-} from '../tossupReaderSlice';
+} from './tossupReaderSlice';
 
 const Score: React.FC = () => {
   const status = useSelector(selectStatus);

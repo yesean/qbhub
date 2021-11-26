@@ -1,12 +1,12 @@
 import { Center, CircularProgress, Container } from '@chakra-ui/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectSettings } from '../../Settings/settingsSlice';
-import { TossupReaderWord } from '../../types/tossups';
-import logger from '../../utils/logger';
-import { getTextBetweenTags, renderQuestion } from '../../utils/questionReader';
-import { getReadingTimeoutDelay } from '../../utils/settings';
-import { shuffleString } from '../../utils/string';
+import { selectSettings } from '../Settings/settingsSlice';
+import { TossupReaderWord } from '../types/tossups';
+import logger from '../utils/logger';
+import { getTextBetweenTags, renderQuestion } from '../utils/questionReader';
+import { getReadingTimeoutDelay } from '../utils/settings';
+import { shuffleString } from '../utils/string';
 import {
   buzz,
   ReaderStatus,
@@ -14,7 +14,7 @@ import {
   selectCurrentTossup,
   selectStatus,
   setBuzz,
-} from '../tossupReaderSlice';
+} from './tossupReaderSlice';
 
 type PowerWordsCount = {
   [word: string]: number;

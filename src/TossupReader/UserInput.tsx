@@ -1,17 +1,17 @@
 import { Center, Flex, Input } from '@chakra-ui/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useAppDispatch } from '../../app/hooks';
-import TealButton from '../../components/TealButton';
-import { selectSettings } from '../../Settings/settingsSlice';
-import { TossupScore } from '../../types/tossups';
-import { addShortcut } from '../../utils/keyboard';
-import logger from '../../utils/logger';
+import { useAppDispatch } from '../app/hooks';
+import TealButton from '../components/TealButton';
+import { selectSettings } from '../Settings/settingsSlice';
+import { TossupScore } from '../types/tossups';
+import { addShortcut } from '../utils/keyboard';
+import logger from '../utils/logger';
 import {
   checkAnswer,
   convertNumberToWords,
   getAnswers,
-} from '../../utils/questionReader';
+} from '../utils/questionReader';
 import {
   buzz as buzzAction,
   nextTossup as nextTossupAction,
@@ -21,7 +21,7 @@ import {
   selectCurrentTossup,
   selectStatus,
   submitAnswer,
-} from '../tossupReaderSlice';
+} from './tossupReaderSlice';
 
 type UserInputProps = {
   progress: number;

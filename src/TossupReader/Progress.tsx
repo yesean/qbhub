@@ -1,7 +1,7 @@
 import { Progress } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { ReaderStatus, selectStatus } from '../tossupReaderSlice';
+import { ReaderStatus, selectStatus } from './tossupReaderSlice';
 
 type TimerProgressProps = {
   progress: number;

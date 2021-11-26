@@ -1,7 +1,7 @@
 import { Heading } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
-import { Category, Difficulty, Subcategory } from '../../types/questions';
-import { selectCurrentTossup } from '../tossupReaderSlice';
+import { Category, Difficulty, Subcategory } from '../types/questions';
+import { selectCurrentTossup } from './tossupReaderSlice';
 
 const Info: React.FC = () => {
   const { tournament, category, subcategory, difficulty } =
