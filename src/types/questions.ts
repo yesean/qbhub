@@ -104,6 +104,7 @@ export type Tossup = {
   difficulties: Difficulty[];
   text: string;
   answer: string;
+  normalizedAnswer: string;
 };
 
 // bonuses are not on the main metadata object and are nested instead similar to
@@ -121,7 +122,13 @@ export type BonusPart = {
 };
 
 // question specific parameters
-export type QuestionParameters = Tossup;
+export type QuestionParameters = {
+  categories: Category[];
+  subcategories: Subcategory[];
+  difficulties: Difficulty[];
+  text: string;
+  answer: string;
+};
 
 // sql query specific parameters
 export type QueryParameters = {
