@@ -34,17 +34,15 @@ import {
   updateDifficulties,
   updateReadingSpeed,
   updateSubcategories,
+  close,
 } from './settingsSlice';
 
-type SettingsModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-};
-
-const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
-  const { readingSpeed, categories, subcategories, difficulties } =
+const SettingsModal: React.FC = () => {
+  const { readingSpeed, categories, subcategories, difficulties, isOpen } =
     useSelector(selectSettings);
   const dispatch = useDispatch();
+
+  const closeModal = () => dispatch(close());
 
   const onReadingSpeedChange = (value: number) => {
     dispatch(updateReadingSpeed(value));
@@ -101,7 +99,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={closeModal}>
       <ModalOverlay />
       <ModalContent m={4}>
         <ModalHeader>Settings</ModalHeader>
@@ -155,7 +153,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
           </Box>
         </ModalBody>
         <ModalFooter>
-          <TealButton mr={3} onClick={onClose}>
+          <TealButton mr={3} onClick={closeModal}>
             Done
           </TealButton>
         </ModalFooter>

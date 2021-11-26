@@ -1,10 +1,16 @@
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { useKeyboardShortcut } from '../hooks/keyboard';
 import { ROUTES } from '../utils/routes';
 import Answers from './Answers';
 import Clues from './Clues';
 import Search from './Search';
 
 const CluesGenerator: React.FC = () => {
+  const history = useHistory();
+
+  const predicate = (e: KeyboardEvent) => e.target === document.body;
+  useKeyboardShortcut('/', () => history.push(ROUTES.clues.search), predicate);
+
   return (
     <Switch>
       <Route exact path={ROUTES.clues.search}>

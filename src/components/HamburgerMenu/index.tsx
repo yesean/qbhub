@@ -7,8 +7,11 @@ import {
   Heading,
   Link,
 } from '@chakra-ui/react';
+import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
+import { useAppDispatch } from '../../app/hooks';
 import { ROUTES } from '../../utils/routes';
+import { selectHamburgerMenu, close } from './hamburgerMenuSlice';
 
 const links = [
   { name: 'Tossup Reader', href: ROUTES.reader.tossup },
@@ -16,17 +19,18 @@ const links = [
   { name: 'Clues Generator', href: ROUTES.clues.search },
 ];
 
-type HamburgerMenuProps = {
-  isOpen: boolean;
-  onClose: () => void;
-};
-const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ isOpen, onClose }) => {
+const HamburgerMenu: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { isOpen } = useSelector(selectHamburgerMenu);
+
+  const closeMenu = () => dispatch(close());
+
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} placement="right">
+    <Drawer isOpen={isOpen} onClose={closeMenu} placement="right">
       <DrawerOverlay />
       <DrawerContent>
         <Flex direction="column" align="center" p={4}>
-          <CloseButton size="lg" onClick={onClose} mb={4} />
+          <CloseButton size="lg" onClick={closeMenu} mb={4} />
           {links.map(({ name, href }) => (
             <Link
               as={RouterLink}

@@ -1,5 +1,10 @@
 import { useEffect } from 'react';
 
+/**
+ * Custom hook for registering keyboard shortcuts.
+ * Predicate function is used for "disabling" the shortcut without needing to
+ * hardcode the condition it in the callback.
+ */
 export const useKeyboardShortcut = (
   key: string,
   callback: () => void,

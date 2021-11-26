@@ -16,25 +16,64 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks';
+import { ROUTES } from '../../utils/routes';
 import TealButton from '../TealButton';
 import { close, selectInfoModal } from './infoModalSlice';
 
 type Shortcut = {
   label: string;
-  description: string;
+  description: string | JSX.Element;
 };
 
 const globalShortcuts = [
-  { label: '?', description: 'Open Info modal (current popup)' },
-  { label: '1', description: 'Go to Tossup Reader' },
-  { label: '2', description: 'Go to Frequency List' },
-  { label: '3', description: 'Go to Clue Generator' },
+  {
+    label: '?',
+    description: (
+      <>
+        Open <strong>Info</strong> (current popup)
+      </>
+    ),
+  },
+  {
+    label: 's',
+    description: (
+      <>
+        Open <strong>Settings</strong>
+      </>
+    ),
+  },
+  {
+    label: '1',
+    description: (
+      <>
+        Go to <strong>Tossup Reader</strong>
+      </>
+    ),
+  },
+  {
+    label: '2',
+    description: (
+      <>
+        Go to <strong>Frequency List</strong>
+      </>
+    ),
+  },
+  {
+    label: '3',
+    description: (
+      <>
+        Go to <strong>Clue Generator</strong>
+      </>
+    ),
+  },
 ];
 
 const readerShortcuts = [
   { label: 'n', description: 'Start reading / Next question' },
   { label: 'space', description: 'Buzz' },
+  { label: 'h', description: 'Open question history' },
 ];
 
 const freqShortcuts = [
@@ -42,7 +81,10 @@ const freqShortcuts = [
   { label: 'n/→', description: 'Next page' },
 ];
 
+const cluesShortcuts = [{ label: '/', description: 'Search for answers' }];
+
 const InfoModal: React.FC = () => {
+  const { pathname } = useLocation();
   const infoModal = useSelector(selectInfoModal);
   const dispatch = useAppDispatch();
 
@@ -71,6 +113,34 @@ const InfoModal: React.FC = () => {
     </Table>
   );
 
+  const renderLocalShortcuts = () => {
+    if (pathname.startsWith(ROUTES.reader.root)) {
+      return (
+        <>
+          <Heading size="sm">Reader</Heading>
+          {renderTable(readerShortcuts)}
+        </>
+      );
+    }
+    if (pathname.startsWith(ROUTES.freq.root)) {
+      return (
+        <>
+          <Heading size="sm">Frequency List</Heading>
+          {renderTable(freqShortcuts)}
+        </>
+      );
+    }
+    if (pathname.startsWith(ROUTES.clues.root)) {
+      return (
+        <>
+          <Heading size="sm">Clues Generator</Heading>
+          {renderTable(cluesShortcuts)}
+        </>
+      );
+    }
+    return null;
+  };
+
   return (
     <Modal
       isOpen={infoModal.isOpen}
@@ -81,12 +151,13 @@ const InfoModal: React.FC = () => {
     >
       <ModalOverlay />
       <ModalContent m={4} maxH="max(75vh, 600px)">
-        <ModalHeader>Keyboard Shortcuts</ModalHeader>
+        <ModalHeader color="black">Info</ModalHeader>
         <ModalBody pt={0} display="flex" flexDirection="column">
-          <Heading size="md">Global</Heading>
+          {renderLocalShortcuts()}
+          <Heading size="sm" color="gray.800">
+            Global
+          </Heading>
           {renderTable(globalShortcuts)}
-          <Heading size="md">Reader</Heading>
-          {renderTable(readerShortcuts)}
         </ModalBody>
         <ModalFooter>
           <TealButton mr={3} onClick={closeModal}>

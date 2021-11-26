@@ -2,7 +2,6 @@ import { InfoOutlineIcon } from '@chakra-ui/icons';
 import { Flex, Icon, IconButton, Link, Text } from '@chakra-ui/react';
 import { AiFillGithub } from 'react-icons/ai';
 import { useAppDispatch } from '../../app/hooks';
-import InfoModal from '../InfoModal';
 import { open } from '../InfoModal/infoModalSlice';
 
 const Footer: React.FC = () => {
@@ -41,7 +40,6 @@ const Footer: React.FC = () => {
           icon={<InfoOutlineIcon />}
         />
       </Flex>
-      <InfoModal />
     </>
   );
 };

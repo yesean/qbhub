@@ -13,20 +13,19 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
+import { useAppDispatch } from '../../app/hooks';
 import { selectResults } from '../../TossupReader/tossupReaderSlice';
 import { TossupScore } from '../../types/tossups';
 import { parseHTMLString, renderQuestion } from '../../utils/questionReader';
 import TealButton from '../TealButton';
+import { selectTossupHistoryModal, close } from './tossupHistoryModalSlice';
 
-type TossupHistoryModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-};
-const TossupHistoryModal: React.FC<TossupHistoryModalProps> = ({
-  isOpen,
-  onClose,
-}) => {
+const TossupHistoryModal: React.FC = () => {
+  const dispatch = useAppDispatch();
+
   const results = useSelector(selectResults);
+  const { isOpen } = useSelector(selectTossupHistoryModal);
+  const closeModal = () => dispatch(close());
 
   const powers = results.filter((r) => r.score === TossupScore.power).length;
   const tens = results.filter((r) => r.score === TossupScore.ten).length;
@@ -36,13 +35,13 @@ const TossupHistoryModal: React.FC<TossupHistoryModalProps> = ({
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={closeModal}
       size="6xl"
       scrollBehavior="inside"
       isCentered
     >
       <ModalOverlay />
-      <ModalContent m={4} maxH="max(75vh, 600px)">
+      <ModalContent m={4} maxW="min(90vw, 1400px)" maxH="max(75vh, 600px)">
         <ModalHeader>Tossup History</ModalHeader>
         <ModalBody pt={0} display="flex" flexDirection="column">
           <Table variant="simple" mb={4}>
@@ -101,7 +100,7 @@ const TossupHistoryModal: React.FC<TossupHistoryModalProps> = ({
           </Table>
         </ModalBody>
         <ModalFooter>
-          <TealButton mr={3} onClick={onClose}>
+          <TealButton mr={3} onClick={closeModal}>
             Done
           </TealButton>
         </ModalFooter>

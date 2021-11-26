@@ -1,41 +1,54 @@
 import { HamburgerIcon, SettingsIcon, TimeIcon } from '@chakra-ui/icons';
 import { Box, Flex, Heading, IconButton } from '@chakra-ui/react';
+import { useLocation } from 'react-router-dom';
+import { useAppDispatch } from '../../app/hooks';
+import { open as openSettings } from '../../Settings/settingsSlice';
+import { ROUTES } from '../../utils/routes';
+import { open as openHamburgerMenu } from '../HamburgerMenu/hamburgerMenuSlice';
+import { open as openHistory } from '../TossupHistoryModal/tossupHistoryModalSlice';
 
-type HeaderProps = {
-  onClickHistoryIcon: () => void;
-  onClickSettingsIcon: () => void;
-  onClickMenuIcon: () => void;
-};
+const Header: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { pathname } = useLocation();
 
-const Header: React.FC<HeaderProps> = ({
-  onClickHistoryIcon,
-  onClickSettingsIcon,
-  onClickMenuIcon,
-}) => {
+  const openHistoryModal = () => dispatch(openHistory());
+  const openSettingsModal = () => dispatch(openSettings());
+  const openMenu = () => dispatch(openHamburgerMenu());
+
+  // only render history icon on reader pages
+  const renderHistory = () => {
+    if (pathname.startsWith(ROUTES.reader.root)) {
+      return (
+        <IconButton
+          aria-label="Tossup history"
+          icon={<TimeIcon boxSize={6} />}
+          size="lg"
+          onClick={openHistoryModal}
+          mr={4}
+        />
+      );
+    }
+    return null;
+  };
+
   return (
     <Box p={3} mb={2}>
       <Flex justify="space-between" align="center">
         <Heading d="inline">QBHub</Heading>
         <Box>
-          <IconButton
-            aria-label="Tossup history"
-            icon={<TimeIcon boxSize={6} />}
-            size="lg"
-            onClick={onClickHistoryIcon}
-            mr={4}
-          />
+          {renderHistory()}
           <IconButton
             aria-label="Open settings"
             icon={<SettingsIcon boxSize={6} />}
             size="lg"
-            onClick={onClickSettingsIcon}
+            onClick={openSettingsModal}
             mr={4}
           />
           <IconButton
             aria-label="Open menu"
             icon={<HamburgerIcon boxSize={6} />}
             size="lg"
-            onClick={onClickMenuIcon}
+            onClick={openMenu}
           />
         </Box>
       </Flex>

@@ -33,6 +33,7 @@ const TimerProgress: React.FC<TimerProgressProps> = ({
       borderRadius="sm"
       mb={4}
       value={progress}
+      flexShrink={0}
     />
   );
 };
