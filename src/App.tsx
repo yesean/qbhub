@@ -35,9 +35,9 @@ const App: React.FC = () => {
   }, [dispatch, questionSettings]);
 
   const predicate = (e: KeyboardEvent) => e.target === document.body;
-  useKeyboardShortcut('1', () => history.push(ROUTES.tossupReader), predicate);
-  useKeyboardShortcut('2', () => history.push(ROUTES.freq), predicate);
-  useKeyboardShortcut('3', () => history.push(ROUTES.cluesSearch), predicate);
+  useKeyboardShortcut('1', () => history.push(ROUTES.reader.tossup), predicate);
+  useKeyboardShortcut('2', () => history.push(ROUTES.freq.root), predicate);
+  useKeyboardShortcut('3', () => history.push(ROUTES.clues.search), predicate);
   useKeyboardShortcut('?', () => dispatch(openInfo()), predicate);
 
   return (

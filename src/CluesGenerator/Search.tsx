@@ -13,7 +13,7 @@ const Search: React.FC = () => {
   };
 
   const submitSearch = async () => {
-    history.push(ROUTES.cluesSearchResults(search));
+    history.push(ROUTES.clues.searchResults(search));
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

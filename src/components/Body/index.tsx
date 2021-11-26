@@ -9,17 +9,17 @@ const Body: React.FC = () => {
   return (
     <Center flexDir="column" overflow="auto" flex={1} p={3}>
       <Switch>
-        <Route path={ROUTES.tossupReader}>
+        <Route path={ROUTES.reader.tossup}>
           <TossupReader />
         </Route>
-        <Route path={ROUTES.freq}>
+        <Route path={ROUTES.freq.root}>
           <FrequencyList />
         </Route>
-        <Route path={ROUTES.cluesRoot}>
+        <Route path={ROUTES.clues.root}>
           <CluesGenerator />
         </Route>
         <Route>
-          <Redirect to={ROUTES.tossupReader} />
+          <Redirect to={ROUTES.reader.tossup} />
         </Route>
       </Switch>
     </Center>

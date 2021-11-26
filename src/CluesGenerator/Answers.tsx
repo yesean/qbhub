@@ -26,7 +26,7 @@ const Answers: React.FC = () => {
   }, [dispatch, answerParam]);
 
   const createLink = (answer: string) => (
-    <Link as={RouterLink} to={ROUTES.cluesDisplay(answer)}>
+    <Link as={RouterLink} to={ROUTES.clues.display(answer)}>
       {answer}
     </Link>
   );

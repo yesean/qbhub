@@ -1,9 +1,16 @@
 export const ROUTES = {
-  tossupReader: '/reader/tossup',
-  bonusReader: '/reader/bonuses',
-  freq: '/freq',
-  cluesRoot: '/clues',
-  cluesSearch: '/clues/search',
-  cluesSearchResults: (answer: string) => `/clues/search/${answer}`,
-  cluesDisplay: (answer: string) => `/clues/display/${answer}`,
+  reader: {
+    root: '/reader',
+    tossup: '/reader/tossup',
+    bonus: '/reader/bonus',
+  },
+  freq: {
+    root: '/freq',
+  },
+  clues: {
+    root: '/clues',
+    search: '/clues/search',
+    searchResults: (answer: string) => `/clues/search/${answer}`,
+    display: (answer: string) => `/clues/display/${answer}`,
+  },
 };

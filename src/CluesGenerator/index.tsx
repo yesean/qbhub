@@ -7,16 +7,16 @@ import Search from './Search';
 const CluesGenerator: React.FC = () => {
   return (
     <Switch>
-      <Route exact path={ROUTES.cluesSearch}>
+      <Route exact path={ROUTES.clues.search}>
         <Search />
       </Route>
-      <Route exact path={ROUTES.cluesSearchResults(':answer')}>
+      <Route exact path={ROUTES.clues.searchResults(':answer')}>
         <Answers />
       </Route>
-      <Route exact path={ROUTES.cluesDisplay(':answer')}>
+      <Route exact path={ROUTES.clues.display(':answer')}>
         <Clues />
       </Route>
-      <Redirect to={ROUTES.cluesSearch} />
+      <Redirect to={ROUTES.clues.search} />
     </Switch>
   );
 };

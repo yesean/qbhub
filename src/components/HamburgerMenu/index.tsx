@@ -11,9 +11,9 @@ import { Link as RouterLink } from 'react-router-dom';
 import { ROUTES } from '../../utils/routes';
 
 const links = [
-  { name: 'Tossup Reader', href: ROUTES.tossupReader },
-  { name: 'Frequency List', href: ROUTES.freq },
-  { name: 'Clues Generator', href: ROUTES.cluesSearch },
+  { name: 'Tossup Reader', href: ROUTES.reader.tossup },
+  { name: 'Frequency List', href: ROUTES.freq.root },
+  { name: 'Clues Generator', href: ROUTES.clues.search },
 ];
 
 type HamburgerMenuProps = {
