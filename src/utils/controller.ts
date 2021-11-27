@@ -3,10 +3,13 @@ import {
   parseAnswer,
   parseCategories,
   parseDifficulties,
+  parseFrom,
   parseLimit,
   parseOffset,
+  parseSort,
   parseSubcategories,
   parseText,
+  parseUntil,
 } from './queryString';
 
 /**
@@ -21,6 +24,9 @@ const parseQuestionFilters = (
   difficulties: parseDifficulties(q),
   text: parseText(q),
   answer: parseAnswer(q, answer),
+  sort: parseSort(q),
+  from: parseFrom(q),
+  until: parseUntil(q),
   offset: parseOffset(q),
   limit: parseLimit(q, limit),
 });

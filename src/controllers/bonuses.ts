@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { getBonuses } from '../models/bonus';
+import { getBonuses } from '../models/bonuses';
 import { QueryStringParsingError } from '../types/errors';
 import { parseQueryString } from '../utils/controller';
 

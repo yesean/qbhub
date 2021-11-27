@@ -1,5 +1,7 @@
 import { Category, Difficulty, Subcategory } from 'questions';
+import { SortOption } from '../types/controller';
 import { QueryStringParsingError } from '../types/errors';
+import { MAX_TOURNAMENT_YEAR, MIN_TOURNAMENT_YEAR } from './constants';
 import {
   isCategoryArray,
   isDifficultyArray,
@@ -17,7 +19,7 @@ import {
 const requiredMessage = (field: string) =>
   `The query string field '${field}' is required.`;
 const typeErrorMessage = (field: string, T: string) =>
-  `The query string field '${field}' must be a ${T}.`;
+  `The query string field '${field}' must be of type '${T}'.`;
 const noEmptyStringMessage = (field: string) =>
   `The query string field '${field}' cannot be an empty string.`;
 const rangeErrorMessage = (field: string, low: number, high?: number) =>
@@ -113,6 +115,67 @@ export const parseAnswer = (q: qs.ParsedQs, required = false): string => {
     throw new QueryStringParsingError(noEmptyStringMessage('answer'));
 
   return answer;
+};
+
+/**
+ * Parses the `sort` query string field.
+ */
+export const parseSort = (q: qs.ParsedQs): SortOption => {
+  const { sort } = q;
+
+  if (sort === undefined) return SortOption.random;
+
+  if (!isString(sort))
+    throw new QueryStringParsingError(typeErrorMessage('sort', 'string'));
+
+  if (!Object.values<string>(SortOption).includes(sort))
+    throw new QueryStringParsingError(
+      typeErrorMessage('sort', 'random | latest | earliest'),
+    );
+
+  return sort as SortOption;
+};
+
+/**
+ * Parses the `from` query string field.
+ */
+export const parseFrom = (q: qs.ParsedQs): number => {
+  const { from } = q;
+
+  if (from === undefined) return MIN_TOURNAMENT_YEAR;
+
+  if (!isNumeric(from))
+    throw new QueryStringParsingError(typeErrorMessage('from', 'number'));
+
+  const castedFrom = stringToNumber(from);
+
+  if (castedFrom < MIN_TOURNAMENT_YEAR || castedFrom > MAX_TOURNAMENT_YEAR)
+    throw new QueryStringParsingError(
+      rangeErrorMessage('from', MIN_TOURNAMENT_YEAR, MAX_TOURNAMENT_YEAR),
+    );
+
+  return castedFrom;
+};
+
+/**
+ * Parses the `until` query string field.
+ */
+export const parseUntil = (q: qs.ParsedQs): number => {
+  const { until } = q;
+
+  if (until === undefined) return MAX_TOURNAMENT_YEAR;
+
+  if (!isNumeric(until))
+    throw new QueryStringParsingError(typeErrorMessage('until', 'number'));
+
+  const castedUntil = stringToNumber(until);
+
+  if (castedUntil < MIN_TOURNAMENT_YEAR || castedUntil > MAX_TOURNAMENT_YEAR)
+    throw new QueryStringParsingError(
+      rangeErrorMessage('until', MIN_TOURNAMENT_YEAR, MAX_TOURNAMENT_YEAR),
+    );
+
+  return castedUntil;
 };
 
 /**

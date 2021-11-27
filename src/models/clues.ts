@@ -11,6 +11,9 @@ const columns = [
   { name: TABLES.tournaments.columns.name, alias: 'tournament' },
 ];
 
+/**
+ * Retrieves and formats unique clues sorted by relevance from the database.
+ */
 export const getClues = async (questionFilters: QuestionFilters) => {
   const [query, values] = new QueryBuilder()
     .select(columns)

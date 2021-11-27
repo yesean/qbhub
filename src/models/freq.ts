@@ -13,6 +13,9 @@ const columnOrder: Order = [
   { name: TABLES.tossups.columns.normalizedAnswer, direction: 'asc' },
 ];
 
+/**
+ * Retrieves and formats answers sorted by frequency from the database.
+ */
 export const getFreq = async (questionFilters: QuestionFilters) => {
   const [query, values] = new QueryBuilder()
     .select(columns)

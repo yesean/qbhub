@@ -1,4 +1,9 @@
-import { BonusPart, BonusParts, QuestionFilters } from '../types/controller';
+import {
+  BonusPart,
+  BonusParts,
+  QuestionFilters,
+  SortOption,
+} from '../types/controller';
 import { Bonus as DBBonus, BonusPart as DBBonusPart, Order } from '../types/db';
 import { TABLES } from '../utils/constants';
 import { client, QueryBuilder } from '../utils/db';
@@ -25,13 +30,27 @@ const bonusPartsColumns = [
   { name: TABLES.bonusParts.columns.number },
 ];
 
-const bonusPartsColumnOrder: Order = [
+const bonusPartsOrder: Order = [
   { name: TABLES.bonusParts.columns.bonusId, direction: 'asc' },
   { name: TABLES.bonusParts.columns.number, direction: 'asc' },
 ];
 
+/**
+ * Retrieves and formats bonuses from the database.
+ * Bonus retrieval is a two-step process:
+ *  1. Retrieve the bonuses from the `bonuses` table. (only metadata)
+ *  2. Retrieve all of the bonusParts from the `bonus_parts` table (actual content) that match the bonuses from step 1.
+ */
 export const getBonuses = async (questionFilters: QuestionFilters) => {
-  const [bonusesQuery, bonusesValues] = new QueryBuilder()
+  const bonusesOrder: Order = [
+    {
+      name: TABLES.tournaments.columns.year,
+      direction: questionFilters.sort === SortOption.latest ? 'desc' : 'asc',
+    },
+  ];
+
+  // query bonuses
+  const partialQuery = new QueryBuilder()
     .select(bonusesColumns)
     .from(TABLES.bonuses.name)
     .innerJoin(
@@ -39,8 +58,13 @@ export const getBonuses = async (questionFilters: QuestionFilters) => {
       TABLES.bonuses.columns.tournament,
       TABLES.tournaments.columns.id,
     )
-    .filterBonuses(questionFilters)
-    .random()
+    .filterBonuses(questionFilters);
+  if (questionFilters.sort === SortOption.random) {
+    partialQuery.random();
+  } else {
+    partialQuery.orderBy(bonusesOrder);
+  }
+  const [bonusesQuery, bonusesValues] = partialQuery
     .limit(questionFilters.limit)
     .build();
 
@@ -56,11 +80,12 @@ export const getBonuses = async (questionFilters: QuestionFilters) => {
   );
   const bonusIds = bonuses.map(({ id }) => id);
 
+  // query bonus_parts
   const [bonusPartsQuery, bonusPartsValues] = new QueryBuilder()
     .select(bonusPartsColumns)
     .from(TABLES.bonusParts.name)
     .filterBonusParts(bonusIds)
-    .orderBy(bonusPartsColumnOrder)
+    .orderBy(bonusPartsOrder)
     .build();
 
   logger.info(`Bonus parts SQL Query:\n${bonusPartsQuery}`);
@@ -73,6 +98,7 @@ export const getBonuses = async (questionFilters: QuestionFilters) => {
     bonusPartsValues,
   );
 
+  // map bonus_id to BonusParts
   const bonusPartsMap = bonusParts.reduce<Map<number, BonusPart[]>>(
     (acc, bonusPart) => {
       const { bonus_id: bonusId } = bonusPart;
@@ -86,6 +112,7 @@ export const getBonuses = async (questionFilters: QuestionFilters) => {
     new Map(),
   );
 
+  // combine bonuses with bonus parts
   const transformedBonuses = bonuses.map((bonus) =>
     transformBonus(bonus, bonusPartsMap.get(bonus.id) as BonusParts),
   );

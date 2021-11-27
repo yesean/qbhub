@@ -1,5 +1,5 @@
-import { QuestionFilters } from '../types/controller';
-import { Tossup } from '../types/db';
+import { QuestionFilters, SortOption } from '../types/controller';
+import { Order, Tossup } from '../types/db';
 import { TABLES } from '../utils/constants';
 import { client, QueryBuilder } from '../utils/db';
 import logger from '../utils/logger';
@@ -18,8 +18,18 @@ const columns = [
   { name: TABLES.tournaments.columns.year },
 ];
 
+/**
+ * Retrieves and formats tossups from the database.
+ */
 export const getTossups = async (questionFilters: QuestionFilters) => {
-  const [query, values] = new QueryBuilder()
+  const order: Order = [
+    {
+      name: TABLES.tournaments.columns.year,
+      direction: questionFilters.sort === SortOption.latest ? 'desc' : 'asc',
+    },
+  ];
+
+  const partialQuery = new QueryBuilder()
     .select(columns)
     .from(TABLES.tossups.name)
     .innerJoin(
@@ -27,10 +37,13 @@ export const getTossups = async (questionFilters: QuestionFilters) => {
       TABLES.tossups.columns.tournament,
       TABLES.tournaments.columns.id,
     )
-    .filterTossups(questionFilters)
-    .random()
-    .limit(questionFilters.limit)
-    .build();
+    .filterTossups(questionFilters);
+  if (questionFilters.sort === SortOption.random) {
+    partialQuery.random();
+  } else {
+    partialQuery.orderBy(order);
+  }
+  const [query, values] = partialQuery.limit(questionFilters.limit).build();
 
   logger.info(`Tossups SQL Query:\n${query}`);
   logger.info(

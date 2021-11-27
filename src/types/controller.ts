@@ -58,8 +58,17 @@ export type QuestionParameters = {
   answer: string;
 };
 
+export enum SortOption {
+  random = 'random',
+  latest = 'latest',
+  earliest = 'earliest',
+}
+
 // sql query specific parameters
 export type QueryParameters = {
+  sort: SortOption;
+  from: number;
+  until: number;
   offset: number;
   limit: number;
 };

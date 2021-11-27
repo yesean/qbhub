@@ -59,3 +59,6 @@ export const TABLES = {
     },
   },
 };
+
+export const MIN_TOURNAMENT_YEAR = 2005;
+export const MAX_TOURNAMENT_YEAR = 2020;

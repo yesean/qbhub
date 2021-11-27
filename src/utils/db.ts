@@ -11,11 +11,15 @@ export const client = new Client({
 });
 client.connect();
 
+// helper functions for sql syntax
 const fuzzy = (s: string) => `%${s}%`;
 const getList = (values: any[]) => `(${values.join(',')})`;
 const columnInList = (column: string, list: any[]) =>
   `${column} in ${getList(list)}`;
 
+/**
+ * Build `where` condition for filtering by category/subcategory.
+ */
 export const getCombinedCategoriesCondition = (
   questionParameters: QuestionParameters,
   addArg: (arg: Parameter) => string,
@@ -53,6 +57,9 @@ export const getCombinedCategoriesCondition = (
   return combinedCategoriesCondition;
 };
 
+/**
+ * Build `where` condition for filtering by difficulty.
+ */
 export const getDifficultiesCondition = (
   questionParameters: QuestionParameters,
   addArg: (arg: Parameter) => string,
@@ -72,6 +79,9 @@ export const getDifficultiesCondition = (
   return difficultiesCondition;
 };
 
+/**
+ * Build `where` condition for filtering by text.
+ */
 export const getTextCondition = (
   questionParameters: QuestionParameters,
   addArg: (arg: Parameter) => string,
@@ -81,6 +91,9 @@ export const getTextCondition = (
   return textCondition;
 };
 
+/**
+ * Build `where` condition for filtering by answer.
+ */
 export const getAnswerCondition = (
   questionParameters: QuestionParameters,
   addArg: (arg: Parameter) => string,
@@ -97,6 +110,34 @@ export const getAnswerCondition = (
   return answerCondition;
 };
 
+/**
+ * Build `where` condition for filtering by start year.
+ */
+export const getFromCondition = (
+  questionParameters: QuestionFilters,
+  addArg: (arg: Parameter) => string,
+) => {
+  const { from } = questionParameters;
+  const fromCondition = `year >= ${addArg(from)}`;
+  return fromCondition;
+};
+
+/**
+ * Build `where` condition for filtering by end year.
+ */
+export const getUntilCondition = (
+  questionParameters: QuestionFilters,
+  addArg: (arg: Parameter) => string,
+) => {
+  const { until } = questionParameters;
+  const untilCondition = `year <= ${addArg(until)}`;
+  return untilCondition;
+};
+
+/**
+ * Build `where` condition for filtering by primary key `id` of bonus.
+ * Used to retrieve bonus_parts, when the bonus_id is known.
+ */
 export const getPrimaryKeyBonusCondition = (
   bonusIds: number[],
   addArg: (arg: Parameter) => string,
@@ -109,28 +150,26 @@ export const getPrimaryKeyBonusCondition = (
 };
 
 /**
- * Builds the `where` condition to filter various tossups.
+ * Builds the `where` condition to filter tossups.
  */
 export const getTossupCondition = (
-  questionParameters: QuestionParameters,
+  questionFilters: QuestionFilters,
   addArg: (arg: Parameter) => string,
   options: QuestionFilterOptions,
 ) => {
   const { ignoreEmptyNormalizedAnswer = true } = options;
   const combinedCategoriesCondition = getCombinedCategoriesCondition(
-    questionParameters,
+    questionFilters,
     addArg,
   );
   const difficultiesCondition = getDifficultiesCondition(
-    questionParameters,
+    questionFilters,
     addArg,
   );
-  const textCondition = getTextCondition(questionParameters, addArg);
-  const answerCondition = getAnswerCondition(
-    questionParameters,
-    addArg,
-    options,
-  );
+  const textCondition = getTextCondition(questionFilters, addArg);
+  const answerCondition = getAnswerCondition(questionFilters, addArg, options);
+  const fromCondition = getFromCondition(questionFilters, addArg);
+  const untilCondition = getUntilCondition(questionFilters, addArg);
   const ignoreEmptyNormalizedAnswerCondition = ignoreEmptyNormalizedAnswer
     ? "normalized_answer != ''"
     : true;
@@ -139,28 +178,43 @@ export const getTossupCondition = (
     difficultiesCondition,
     textCondition,
     answerCondition,
+    fromCondition,
+    untilCondition,
     ignoreEmptyNormalizedAnswerCondition,
   ];
   return conditions.join(' and ');
 };
 
+/**
+ * Builds the `where` condition to filter bonuses.
+ */
 export const getBonusesCondition = (
-  questionParameters: QuestionParameters,
+  questionFilters: QuestionFilters,
   addArg: (arg: Parameter) => string,
 ) => {
   const combinedCategoriesCondition = getCombinedCategoriesCondition(
-    questionParameters,
+    questionFilters,
     addArg,
   );
   const difficultiesCondition = getDifficultiesCondition(
-    questionParameters,
+    questionFilters,
     addArg,
   );
+  const fromCondition = getFromCondition(questionFilters, addArg);
+  const untilCondition = getUntilCondition(questionFilters, addArg);
 
-  const conditions = [combinedCategoriesCondition, difficultiesCondition];
+  const conditions = [
+    combinedCategoriesCondition,
+    difficultiesCondition,
+    fromCondition,
+    untilCondition,
+  ];
   return conditions.join(' and ');
 };
 
+/**
+ * Builds the `where` condition to filter bonus parts.
+ */
 export const getBonusPartsCondition = (
   bonusIds: number[],
   addArg: (arg: Parameter) => string,
@@ -183,7 +237,13 @@ export const getBonusPartsCondition = (
 };
 
 /**
- * Helper class for building SQL queries.
+ * Helper class for building SQL queries. Uses parameterized queries.
+ *
+ * Sample usage:
+ * const [query, values] = new QueryBuilder().select(...)
+ *                                           .from(...)
+ *                                           ...
+ *                                           .build() // must call build at the end
  */
 export class QueryBuilder {
   private commands: string[];
@@ -281,6 +341,9 @@ export class QueryBuilder {
     return this.addCommand(`LIMIT ${this.register(n)}`);
   }
 
+  /**
+   * Builds and returns the fully formed query and its parameters.
+   */
   build(): [string, Parameter[]] {
     return [this.commands.join('\n'), this.parameters];
   }
