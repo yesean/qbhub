@@ -1,18 +1,23 @@
+import { TABLES } from '../utils/constants';
 import { QuestionFilters } from '../types/questions';
 import { client, QueryBuilder } from '../utils/db';
 import logger from '../utils/logger';
 
 const columns = [
-  { name: 'name', alias: 'tournament' },
-  { name: 'text' },
-  { name: 'normalized_answer', alias: 'answer' },
+  { name: TABLES.tournaments.columns.name, alias: 'tournament' },
+  { name: TABLES.tossups.columns.text },
+  { name: TABLES.tossups.columns.normalizedAnswer, alias: 'answer' },
 ];
 
 export const getClues = (questionFilters: QuestionFilters) => {
   const [query, values] = new QueryBuilder()
     .select(columns)
-    .from('tossups')
-    .innerJoin('tournaments', 'tournament_id', 'tournaments.id')
+    .from(TABLES.tossups.name)
+    .innerJoin(
+      TABLES.tournaments.name,
+      TABLES.tossups.columns.tournament,
+      TABLES.tournaments.columns.id,
+    )
     .questionFilter(questionFilters, {
       useNormalizedAnswer: true,
       useExactAnswer: true,
