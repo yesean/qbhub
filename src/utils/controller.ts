@@ -28,23 +28,29 @@ const parseQuestionFilters = (
 /**
  * Parse query string for the /tossups endpoint.
  */
-export const parseTossups = (q: qs.ParsedQs) =>
+const parseTossups = (q: qs.ParsedQs) =>
   parseQuestionFilters(q, { limit: true });
 
 /**
  * Parse query string for the /bonuses endpoint.
  */
-export const parseBonuses = (q: qs.ParsedQs) =>
+const parseBonuses = (q: qs.ParsedQs) =>
   parseQuestionFilters(q, { limit: true });
 
 /**
  * Parse query string for the /freq endpoint.
  */
-export const parseFreq = (q: qs.ParsedQs) =>
-  parseQuestionFilters(q, { limit: true });
+const parseFreq = (q: qs.ParsedQs) => parseQuestionFilters(q, { limit: true });
 
 /**
  * Parse query string for the /clues endpoint.
  */
-export const parseClues = (q: qs.ParsedQs) =>
+const parseClues = (q: qs.ParsedQs) =>
   parseQuestionFilters(q, { answer: true, limit: true });
+
+export const parseQueryString = {
+  tossups: parseTossups,
+  bonuses: parseBonuses,
+  freq: parseFreq,
+  clues: parseClues,
+};
