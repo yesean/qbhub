@@ -1,7 +1,9 @@
-import { Bag, Clue, ClueBagMap, PlainTossup } from 'clues';
 import nlp from 'compromise';
 import ngrams from 'compromise-ngrams';
 import sentences from 'compromise-sentences';
+import { PlainTossup } from 'db';
+import { Bag, ClueBagMap } from '../types/clues';
+import { Clue } from '../types/controller';
 import { each, max, unique } from './array';
 import logger from './logger';
 
@@ -178,7 +180,7 @@ const combineClues = (
   clues: Clue[],
   clueBagMap: ClueBagMap,
   corpusBag: Bag,
-) => {
+): Clue[] => {
   const uniqueClues: Clue[] = [];
   while (clues.length > 0) {
     // ideally, tf > 2.5 and idf < 6

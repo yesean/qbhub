@@ -7,9 +7,7 @@ const tossupsRouter = Router();
 tossupsRouter.get('/', async (req: Request, res: Response) => {
   try {
     const questionFilters = parseQueryString.tossups(req.query);
-    const data = await getTossups(questionFilters);
-    const tossups = data.rows;
-
+    const tossups = await getTossups(questionFilters);
     res.json(tossups);
   } catch (e) {
     if (e instanceof QueryStringParsingError) {

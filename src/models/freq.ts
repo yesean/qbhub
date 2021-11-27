@@ -1,6 +1,6 @@
-import { Order } from 'db';
+import { Freq, Order } from '../types/db';
+import { QuestionFilters } from '../types/controller';
 import { TABLES } from '../utils/constants';
-import { QuestionFilters } from '../types/questions';
 import { client, QueryBuilder } from '../utils/db';
 import logger from '../utils/logger';
 
@@ -13,7 +13,7 @@ const columnOrder: Order = [
   { name: TABLES.tossups.columns.normalizedAnswer, direction: 'asc' },
 ];
 
-export const getFreq = (questionFilters: QuestionFilters) => {
+export const getFreq = async (questionFilters: QuestionFilters) => {
   const [query, values] = new QueryBuilder()
     .select(columns)
     .from(TABLES.tossups.name)
@@ -36,5 +36,6 @@ export const getFreq = (questionFilters: QuestionFilters) => {
     'Parameters:',
     Object.entries(values).map((e) => [Number(e[0]) + 1, e[1]]),
   );
-  return client.query(query, values);
+  const { rows: freq } = await client.query<Freq>(query, values);
+  return freq;
 };

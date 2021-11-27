@@ -1,7 +1,9 @@
+import { QuestionFilters } from '../types/controller';
+import { Tossup } from '../types/db';
 import { TABLES } from '../utils/constants';
-import { QuestionFilters } from '../types/questions';
 import { client, QueryBuilder } from '../utils/db';
 import logger from '../utils/logger';
+import { transformTossup } from '../utils/model';
 
 const columns = [
   { name: TABLES.tossups.columns.text },
@@ -16,7 +18,7 @@ const columns = [
   { name: TABLES.tournaments.columns.year },
 ];
 
-export const getTossups = (questionFilters: QuestionFilters) => {
+export const getTossups = async (questionFilters: QuestionFilters) => {
   const [query, values] = new QueryBuilder()
     .select(columns)
     .from(TABLES.tossups.name)
@@ -35,5 +37,6 @@ export const getTossups = (questionFilters: QuestionFilters) => {
     'Parameters:',
     Object.entries(values).map((e) => [Number(e[0]) + 1, e[1]]),
   );
-  return client.query(query, values);
+  const { rows: tossups } = await client.query<Tossup>(query, values);
+  return tossups.map(transformTossup);
 };

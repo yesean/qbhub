@@ -1,16 +1,3 @@
-// stripped down tossup, used in clue parsing
-export type PlainTossup = {
-  text: string;
-  answer: string;
-};
-
-// represents a tossup clue, generally a short clause or phrase
-export type Clue = {
-  clue: string; // phrase
-  sentence: string; // the sentence it came from
-  score: number;
-};
-
 // bag of words model of a string (i.e. map of form: word -> frequency)
 export type Bag = {
   [word: string]: number;

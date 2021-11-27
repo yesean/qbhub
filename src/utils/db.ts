@@ -1,6 +1,6 @@
 import { Client } from 'pg';
 import { Column, Order, Parameter, QuestionFilterOptions } from '../types/db';
-import { QuestionFilters, QuestionParameters } from '../types/questions';
+import { QuestionFilters, QuestionParameters } from '../types/controller';
 
 // connect to postgresql database
 export const client = new Client({

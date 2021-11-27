@@ -1,4 +1,4 @@
-import { QuestionFilters } from 'questions';
+import { QuestionFilters } from '../types/controller';
 import {
   parseAnswer,
   parseCategories,
