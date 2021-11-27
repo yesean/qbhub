@@ -13,6 +13,7 @@ cluesRouter.get('/', async (req: Request, res: Response) => {
     const questionFilters = parseClues(req.query);
     const data = await getClues(questionFilters);
     const answers = data.rows as PlainTossup[];
+    logger.info('Parsing tossups into clues.');
     const clues = getAllClues(answers);
     const uniqueClues = getUniqueClues(clues);
     res.json(uniqueClues);

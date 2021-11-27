@@ -2,7 +2,8 @@ import { Bag, Clue, ClueBagMap, PlainTossup } from 'clues';
 import nlp from 'compromise';
 import ngrams from 'compromise-ngrams';
 import sentences from 'compromise-sentences';
-import { each } from './array';
+import { each, max, unique } from './array';
+import logger from './logger';
 
 const nlpEx = nlp.extend(ngrams).extend(sentences);
 
@@ -17,10 +18,10 @@ const shrinkSpace: RegexReplace = [/\s\s+/g, ' '];
 const quotes: RegexReplace = [/["'\u2018\u2019\u201C\u201D]/g, ''];
 
 /**
- * Normalizes a clues string. Removes non-alphanumeric characters. Fixes
+ * Normalizes a string. Removes non-alphanumeric characters. Fixes
  * whitespace issues. Converts all to lowercase.
  */
-export const normalize = (s: Clue) =>
+export const normalize = (s: string) =>
   s
     .toLowerCase()
     .replaceAll(...punctuation(false))
@@ -34,29 +35,38 @@ export const normalize = (s: Clue) =>
  */
 export const getAllClues = (clues: PlainTossup[]): Clue[] =>
   Array.from(
-    new Set(
-      clues
-        .map(({ text }) =>
-          nlpEx(text.replaceAll(...quotes))
-            // .ngrams({ size: 5 })
-            // .map((sen: any) => sen.normal),
-            .sentences()
-            .json()
-            .map((sen: any) => sen.text),
-        )
-        .flat()
-        .map(normalize)
-        .map((sen) => nlpEx(sen).clauses().out('array'))
-        .flat()
-        .map((s) => s.replaceAll(...punctuation()))
-        .sort((a, b) => b.length - a.length),
-    ),
+    clues
+      .map(({ text }) =>
+        nlpEx(text.replaceAll(...quotes))
+          // .ngrams({ size: 5 })
+          // .map((sen: any) => sen.normal),
+          .sentences()
+          .json()
+          .map((sen: any) => sen.text),
+      )
+      .flat()
+      .map(normalize)
+      .map((sentence) =>
+        nlpEx(sentence)
+          .clauses()
+          .out('array')
+          .map((clue) => ({
+            clue: clue.replaceAll(...punctuation()).trim(),
+            sentence,
+          })),
+      )
+      .flat()
+      .reduce<[Clue[], Set<string>]>(
+        unique<Clue>((clue) => clue.clue),
+        [[], new Set()],
+      )[0]
+      .sort((a, b) => b.clue.length - a.clue.length),
   );
 
 /**
  * Gets a bag of words model from a string.
  */
-const getBag = (clue: Clue) => {
+const getBag = (clue: string) => {
   const doc = nlpEx(clue);
   const ignore = new Set(
     [
@@ -69,28 +79,26 @@ const getBag = (clue: Clue) => {
       .flat(),
   );
 
-  return clue
-    .split(' ')
-    .filter((w) => !ignore.has(w))
-    .reduce<Bag>((acc, w) => {
-      if (w in acc) {
-        acc[w] += 1;
-      } else {
-        acc[w] = 1;
-      }
-      return acc;
-    }, {});
+  const meaningfulWords = clue.split(' ').filter((w) => !ignore.has(w));
+  return meaningfulWords.reduce<Bag>((bag, word) => {
+    if (word in bag) {
+      bag[word] += 1;
+    } else {
+      bag[word] = 1;
+    }
+    return bag;
+  }, {});
 };
 
 /**
- * Gets a ClueBagMap from an array of clues.
+ * Gets a ClueBagMap from an array of clues, mapping each clue to its bag.
  */
 const getClueBagMap = (clues: Clue[]) =>
-  clues.reduce<ClueBagMap>(each(getBag), {});
+  clues.map(({ clue }) => clue).reduce<ClueBagMap>(each(getBag), {});
 
 /**
- * Gets a bag of words model from a collection of clues. However, the term
- * frequency in a corpus, is not its total frequency but rather the number of
+ * Gets a bag of words model from a collection of clues. The term
+ * frequency in the corpus is not its total frequency but rather the number of
  * clues (documents) that it is contained in (i.e. document frequency).
  */
 const getCorpusBag = (clueBagMap: ClueBagMap) =>
@@ -110,7 +118,7 @@ const getCorpusBag = (clueBagMap: ClueBagMap) =>
  * Remove a clue from the corpus bag.
  */
 const removeClue = (clue: Clue, clueBagMap: ClueBagMap, corpusBag: Bag) => {
-  const words = Object.keys(clueBagMap[clue]);
+  const words = Object.keys(clueBagMap[clue.clue]);
   words.forEach((word) => {
     corpusBag[word] -= 1;
   });
@@ -127,11 +135,11 @@ const tfIdf = (
   corpusBag: Bag,
   numClues: number,
 ) => {
-  const corpusWeight = 1;
-  const documentWeight = corpusBag[word] ?? 0;
+  const idfWeight = 1;
+  const documentFrequency = corpusBag[word] ?? 0;
 
   const tf = clueBag[word] ?? 0;
-  const idf = Math.log(numClues / (1 + corpusWeight * documentWeight)); // add one to avoid division by zero
+  const idf = Math.log(numClues / (1 + idfWeight * documentFrequency)); // add one to avoid division by zero
   return tf * idf;
 };
 
@@ -144,7 +152,7 @@ const scoreWord = (
   clueBagMap: ClueBagMap,
   corpusBag: Bag,
   numClues: number,
-) => tfIdf(word, clueBagMap[clue], corpusBag, numClues);
+) => tfIdf(word, clueBagMap[clue.clue], corpusBag, numClues);
 
 /**
  * Scores a clue against a clue and the corpus.
@@ -156,7 +164,7 @@ const scoreClue = (
   corpusBag: Bag,
   numClues: number,
 ) => {
-  const words = Object.keys(clueBagMap[queryClue]);
+  const words = Object.keys(clueBagMap[queryClue.clue]);
   const totalScore = words
     .map((word) => scoreWord(word, baseClue, clueBagMap, corpusBag, numClues))
     .reduce((sum, score) => sum + score);
@@ -171,12 +179,16 @@ const combineClues = (
   clueBagMap: ClueBagMap,
   corpusBag: Bag,
 ) => {
-  const uniqueClues: [string, number][] = [];
+  const uniqueClues: Clue[] = [];
   while (clues.length > 0) {
-    const SCORE_THRESHOLD = 2.5 * (1 * Math.log(clues.length / (1 + 6)));
-    const queryClue = clues[0];
+    // ideally, tf > 2.5 and idf < 6
+    const SCORE_THRESHOLD = 2.5 * Math.log(clues.length / (1 + 6));
 
-    const toRemove = new Map([[0, 0]]);
+    const queryClue = clues[0]; // use first clue as the search query
+    const clueScores = new Map([[0, 0]]); // maps clue index to clue score
+    const similarClues = [0]; // indices of clues to remove
+
+    // score clues compared to first clue
     for (let i = 1; i < clues.length; i += 1) {
       const clueScore = scoreClue(
         queryClue,
@@ -186,39 +198,50 @@ const combineClues = (
         clues.length,
       );
       if (clueScore > SCORE_THRESHOLD) {
-        toRemove.set(i, clueScore);
+        clueScores.set(i, clueScore);
+        similarClues.push(i);
       }
     }
-    const highestCluePair = Array.from(toRemove.entries()).reduce((acc, e) =>
-      e[1] > acc[1] ? e : acc,
+
+    // get clue with best match
+    const bestClue = similarClues.reduce(max((e) => clueScores.get(e)));
+    uniqueClues.push({ ...clues[bestClue], score: clueScores.get(bestClue) });
+
+    // remove similar clues
+    // ignore warning since the forEach callback is used immediately
+    // eslint-disable-next-line @typescript-eslint/no-loop-func
+    similarClues.forEach((idx) =>
+      removeClue(clues[idx], clueBagMap, corpusBag),
     );
-    const highestClue = clues[highestCluePair[0]];
-    uniqueClues.push([highestClue, highestCluePair[1]]);
-    const cluesCopy = clues.slice();
-    toRemove.forEach((_, idx) =>
-      removeClue(cluesCopy[idx], clueBagMap, corpusBag),
-    );
-    clues = clues.filter((_, idx) => !toRemove.has(idx));
+    clues = clues.filter((_, idx) => !clueScores.has(idx));
   }
+
+  // sort clues by score
   const roundToHundreths = (n: number) => Math.round(n * 100) / 100;
   return uniqueClues
-    .sort((a, b) => b[1] - a[1])
-    .map(([clue, score]) => ({ clue, score: roundToHundreths(score) }));
+    .sort((a, b) => b.score - a.score)
+    .map((clue) => ({ ...clue, score: roundToHundreths(clue.score) }));
 };
 
 /**
  * Wrapper function for combineClues.
  */
 export const getUniqueClues = (clues: Clue[]) => {
+  logger.info('Calculating bag of words for each clue.');
   const clueBagMap = getClueBagMap(clues);
+
   // remove useless clues
+  logger.info('Removing useless clues.');
   clues = clues.filter((clue) => {
-    if (Object.keys(clueBagMap[clue]).length === 0) {
-      delete clueBagMap[clue];
+    if (Object.keys(clueBagMap[clue.clue]).length === 0) {
+      delete clueBagMap[clue.clue];
       return false;
     }
     return true;
   });
+
+  logger.info('Calculating bag of words for corpus.');
   const corpusBag = getCorpusBag(clueBagMap);
+  logger.info('Combining clues.');
   return combineClues(clues, clueBagMap, corpusBag);
 };

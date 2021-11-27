@@ -5,7 +5,11 @@ export type PlainTossup = {
 };
 
 // represents a tossup clue, generally a short clause or phrase
-export type Clue = string;
+export type Clue = {
+  clue: string; // phrase
+  sentence: string; // the sentence it came from
+  score: number;
+};
 
 // bag of words model of a string (i.e. map of form: word -> frequency)
 export type Bag = {
@@ -14,5 +18,5 @@ export type Bag = {
 
 // maps a clue to its bag of words model
 export type ClueBagMap = {
-  [clue: Clue]: Bag;
+  [clue: string]: Bag;
 };
