@@ -20,6 +20,7 @@ export const TABLES = {
       leading: 'bonuses.leadin',
       formattedLeadin: 'bonuses.formatted_leadin',
       category: 'bonuses.category_id',
+      subcategory: 'bonuses.subcategory_id',
       difficulty: 'bonuses.difficulty',
       tournament: 'bonuses.tournament_id',
     },
