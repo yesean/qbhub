@@ -16,22 +16,11 @@ const getList = (values: any[]) => `(${values.join(',')})`;
 const columnInList = (column: string, list: any[]) =>
   `${column} in ${getList(list)}`;
 
-/**
- * Builds the `where` condition to filter various entities (tossups, clues, etc).
- */
-export const getQuestionCondition = (
+export const getCombinedCategoriesCondition = (
   questionParameters: QuestionParameters,
   addArg: (arg: Parameter) => string,
-  options: QuestionFilterOptions,
 ) => {
-  const { categories, subcategories, difficulties, text, answer } =
-    questionParameters;
-
-  const {
-    useExactAnswer = false,
-    useNormalizedAnswer = false,
-    ignoreEmptyNormalizedAnswer = true,
-  } = options;
+  const { categories, subcategories } = questionParameters;
 
   /*
    * Category/Subcategory filtering falls into 4 cases.
@@ -61,6 +50,14 @@ export const getQuestionCondition = (
   } else {
     combinedCategoriesCondition = `(${categoriesCondition} or ${subcategoriesCondition})`;
   }
+  return combinedCategoriesCondition;
+};
+
+export const getDifficultiesCondition = (
+  questionParameters: QuestionParameters,
+  addArg: (arg: Parameter) => string,
+) => {
+  const { difficulties } = questionParameters;
 
   let difficultiesCondition;
   if (difficulties.length === 0) {
@@ -72,17 +69,71 @@ export const getQuestionCondition = (
     );
   }
 
-  const textCondition = `tossups.text ILIKE ${addArg(fuzzy(text))}`;
+  return difficultiesCondition;
+};
+
+export const getTextCondition = (
+  questionParameters: QuestionParameters,
+  addArg: (arg: Parameter) => string,
+) => {
+  const { text } = questionParameters;
+  const textCondition = `text ILIKE ${addArg(fuzzy(text))}`;
+  return textCondition;
+};
+
+export const getAnswerCondition = (
+  questionParameters: QuestionParameters,
+  addArg: (arg: Parameter) => string,
+  options: QuestionFilterOptions,
+) => {
+  const { answer } = questionParameters;
+  const { useExactAnswer = false, useNormalizedAnswer = false } = options;
 
   const source = useNormalizedAnswer ? 'normalized_answer' : 'answer';
   const comparison = useExactAnswer ? '=' : 'ILIKE';
   const pattern = useExactAnswer ? answer : fuzzy(answer);
   const answerCondition = `${source} ${comparison} ${addArg(pattern)}`;
 
+  return answerCondition;
+};
+
+export const getPrimaryKeyBonusCondition = (
+  bonusIds: number[],
+  addArg: (arg: Parameter) => string,
+) => {
+  const primaryKeyBonusCondition = columnInList(
+    'bonus_id',
+    bonusIds.map(addArg),
+  );
+  return primaryKeyBonusCondition;
+};
+
+/**
+ * Builds the `where` condition to filter various tossups.
+ */
+export const getTossupCondition = (
+  questionParameters: QuestionParameters,
+  addArg: (arg: Parameter) => string,
+  options: QuestionFilterOptions,
+) => {
+  const { ignoreEmptyNormalizedAnswer = true } = options;
+  const combinedCategoriesCondition = getCombinedCategoriesCondition(
+    questionParameters,
+    addArg,
+  );
+  const difficultiesCondition = getDifficultiesCondition(
+    questionParameters,
+    addArg,
+  );
+  const textCondition = getTextCondition(questionParameters, addArg);
+  const answerCondition = getAnswerCondition(
+    questionParameters,
+    addArg,
+    options,
+  );
   const ignoreEmptyNormalizedAnswerCondition = ignoreEmptyNormalizedAnswer
     ? "normalized_answer != ''"
     : true;
-
   const conditions = [
     combinedCategoriesCondition,
     difficultiesCondition,
@@ -92,6 +143,45 @@ export const getQuestionCondition = (
   ];
   return conditions.join(' and ');
 };
+
+export const getBonusesCondition = (
+  questionParameters: QuestionParameters,
+  addArg: (arg: Parameter) => string,
+) => {
+  const combinedCategoriesCondition = getCombinedCategoriesCondition(
+    questionParameters,
+    addArg,
+  );
+  const difficultiesCondition = getDifficultiesCondition(
+    questionParameters,
+    addArg,
+  );
+
+  const conditions = [combinedCategoriesCondition, difficultiesCondition];
+  return conditions.join(' and ');
+};
+
+export const getBonusPartsCondition = (
+  bonusIds: number[],
+  addArg: (arg: Parameter) => string,
+  options: QuestionFilterOptions,
+) => {
+  const { ignoreEmptyNormalizedAnswer = false } = options;
+
+  const primaryKeyBonusCondition = getPrimaryKeyBonusCondition(
+    bonusIds,
+    addArg,
+  );
+  const ignoreEmptyNormalizedAnswerCondition = ignoreEmptyNormalizedAnswer
+    ? "normalized_answer != ''"
+    : true;
+  const conditions = [
+    primaryKeyBonusCondition,
+    ignoreEmptyNormalizedAnswerCondition,
+  ];
+  return conditions.join(' and ');
+};
+
 /**
  * Helper class for building SQL queries.
  */
@@ -137,12 +227,29 @@ export class QueryBuilder {
     return this.addCommand(`INNER JOIN ${table} ON ${foreign} = ${primary}`);
   }
 
-  questionFilter(
+  filterTossups(
     questionFilters: QuestionFilters,
     options: QuestionFilterOptions = {},
   ) {
-    const command = getQuestionCondition(
+    const command = getTossupCondition(
       questionFilters,
+      this.register.bind(this),
+      options,
+    );
+    return this.addCommand(`WHERE ${command}`);
+  }
+
+  filterBonuses(questionFilters: QuestionFilters) {
+    const command = getBonusesCondition(
+      questionFilters,
+      this.register.bind(this),
+    );
+    return this.addCommand(`WHERE ${command}`);
+  }
+
+  filterBonusParts(bonusIds: number[], options: QuestionFilterOptions = {}) {
+    const command = getBonusPartsCondition(
+      bonusIds,
       this.register.bind(this),
       options,
     );

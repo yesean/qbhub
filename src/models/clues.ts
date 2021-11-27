@@ -20,7 +20,7 @@ export const getClues = async (questionFilters: QuestionFilters) => {
       TABLES.tossups.columns.tournament,
       TABLES.tournaments.columns.id,
     )
-    .questionFilter(questionFilters, {
+    .filterTossups(questionFilters, {
       useNormalizedAnswer: true,
       useExactAnswer: true,
     })

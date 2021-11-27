@@ -27,7 +27,7 @@ export const getTossups = async (questionFilters: QuestionFilters) => {
       TABLES.tossups.columns.tournament,
       TABLES.tournaments.columns.id,
     )
-    .questionFilter(questionFilters)
+    .filterTossups(questionFilters)
     .random()
     .limit(questionFilters.limit)
     .build();

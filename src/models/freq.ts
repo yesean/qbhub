@@ -22,7 +22,7 @@ export const getFreq = async (questionFilters: QuestionFilters) => {
       TABLES.tossups.columns.tournament,
       TABLES.tournaments.columns.id,
     )
-    .questionFilter(questionFilters, {
+    .filterTossups(questionFilters, {
       useNormalizedAnswer: true,
     })
     .groupBy(TABLES.tossups.columns.normalizedAnswer)

@@ -2,8 +2,8 @@ import { Category, Subcategory, Difficulty } from './questions';
 
 export type Tossup = {
   text: string;
-  formattedText: string;
   answer: string;
+  formattedText: string;
   formattedAnswer: string;
   normalizedAnswer: string;
   category: Category;
@@ -13,20 +13,27 @@ export type Tossup = {
   year: number;
 };
 
+export type BonusParts = [BonusPart, BonusPart, BonusPart];
+
 // bonuses are not on the main metadata object and are nested instead similar to
 // its database structure
 export type Bonus = {
+  id: number;
+  leadin: string;
+  formattedLeadin: string;
   category: Category;
   subcategory: Subcategory | null;
   difficulty: Difficulty;
-  leadin: string;
-  parts: [BonusPart, BonusPart, BonusPart];
+  tournament: string;
+  year: number;
+  parts: BonusParts;
 };
 export type BonusPart = {
   text: string;
-  formattedText: string;
   answer: string;
+  formattedText: string;
   formattedAnswer: string;
+  number: number;
 };
 
 export type Freq = {

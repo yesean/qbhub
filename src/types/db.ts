@@ -29,6 +29,26 @@ export type Tossup = {
   year: number;
 };
 
+export type Bonus = {
+  id: number;
+  leadin: string;
+  formatted_leadin: string;
+  category: number;
+  subcategory: number | null;
+  difficulty: number;
+  tournament: string;
+  year: number;
+};
+
+export type BonusPart = {
+  bonus_id: number;
+  text: string;
+  answer: string;
+  formatted_text: string;
+  formatted_answer: string;
+  number: number;
+};
+
 export type Freq = {
   answer: string;
   frequency: number;

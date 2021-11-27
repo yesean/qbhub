@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 import path from 'path';
+import bonusesRouter from './controllers/bonuses';
 import cluesRouter from './controllers/clues';
 import freqRouter from './controllers/freq';
 import tossupsRouter from './controllers/tossups';
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, 'build')));
 
 app.use('/api/tossups', tossupsRouter);
+app.use('/api/bonuses', bonusesRouter);
 app.use('/api/freq', freqRouter);
 app.use('/api/clues', cluesRouter);
 app.get('*', (_, res) =>

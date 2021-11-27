@@ -1,5 +1,9 @@
-import { Tossup } from '../types/controller';
-import { Tossup as DBTossup } from '../types/db';
+import { BonusPart, Tossup, Bonus, BonusParts } from '../types/controller';
+import {
+  Tossup as DBTossup,
+  BonusPart as DBBonusPart,
+  Bonus as DBBonus,
+} from '../types/db';
 
 export const transformTossup = (tossup: DBTossup): Tossup => ({
   text: tossup.text,
@@ -12,4 +16,27 @@ export const transformTossup = (tossup: DBTossup): Tossup => ({
   difficulty: tossup.difficulty,
   tournament: tossup.tournament,
   year: tossup.year,
+});
+
+export const transformBonus = (
+  bonus: DBBonus,
+  parts: BonusParts,
+): Bonus => ({
+  id: bonus.id,
+  leadin: bonus.leadin,
+  formattedLeadin: bonus.formatted_leadin,
+  category: bonus.category,
+  subcategory: bonus.subcategory,
+  difficulty: bonus.difficulty,
+  tournament: bonus.tournament,
+  year: bonus.year,
+  parts,
+});
+
+export const transformBonusPart = (bonusPart: DBBonusPart): BonusPart => ({
+  text: bonusPart.text,
+  answer: bonusPart.answer,
+  formattedText: bonusPart.formatted_text,
+  formattedAnswer: bonusPart.formatted_answer,
+  number: bonusPart.number,
 });
