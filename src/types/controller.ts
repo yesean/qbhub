@@ -38,6 +38,7 @@ export type Freq = {
 export type Clue = {
   clue: string; // phrase
   sentence: string; // the sentence it came from
+  tournament: string;
   score: number;
 };
 

@@ -33,37 +33,45 @@ export const normalize = (s: string) =>
     .trim();
 
 /**
+ * Split a string into sentences.
+ */
+export const getSentences = (s: string): string[] =>
+  nlpEx(s.replaceAll(...quotes)) // remove quotes since quotes after periods hurt parsing
+    .sentences()
+    .json()
+    .map(({ text }: any) => text);
+
+/**
+ * Split a string into clauses.
+ */
+export const getClauses = (s: string) => nlp(s).clauses().out('array');
+
+/**
  * Parses clues from an array of tossups.
  */
-export const getAllClues = (clues: PlainTossup[]): Clue[] =>
-  Array.from(
-    clues
-      .map(({ text }) =>
-        nlpEx(text.replaceAll(...quotes))
-          // .ngrams({ size: 5 })
-          // .map((sen: any) => sen.normal),
-          .sentences()
-          .json()
-          .map((sen: any) => sen.text),
-      )
-      .flat()
-      .map(normalize)
-      .map((sentence) =>
-        nlpEx(sentence)
-          .clauses()
-          .out('array')
-          .map((clue) => ({
-            clue: clue.replaceAll(...punctuation()).trim(),
-            sentence,
+export const getAllClues = (tossups: PlainTossup[]): Clue[] =>
+  tossups
+    .map((tossup) => {
+      const sens = getSentences(tossup.text);
+      const clues = sens
+        .map(normalize)
+        .map((sen) =>
+          getClauses(sen).map((clause) => ({
+            clue: clause,
+            sentence: sen,
+            tournament: tossup.tournament,
+            score: 0,
           })),
-      )
-      .flat()
-      .reduce<[Clue[], Set<string>]>(
-        unique<Clue>((clue) => clue.clue),
-        [[], new Set()],
-      )[0]
-      .sort((a, b) => b.clue.length - a.clue.length),
-  );
+        )
+        .flat();
+      return clues;
+    })
+    .flat()
+    .reduce<[Clue[], Set<string>]>(
+      unique<Clue>((clue) => clue.clue),
+      [[], new Set()],
+    )[0]
+    .sort((a, b) => b.clue.length - a.clue.length);
 
 /**
  * Gets a bag of words model from a string.
