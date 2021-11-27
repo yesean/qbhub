@@ -150,7 +150,7 @@ export class QueryBuilder {
   }
 
   where(condition: string) {
-    return this.addCommand(`WHERE ${this.register(condition)}`);
+    return this.addCommand(`WHERE ${condition}`);
   }
 
   groupBy(column: string) {
