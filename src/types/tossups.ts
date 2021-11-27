@@ -10,6 +10,7 @@ export type Tossup = {
   subcategory: Subcategory;
   difficulty: Difficulty;
   tournament: string;
+  year: number;
 };
 
 export enum TossupScore {
@@ -46,5 +47,7 @@ export type Answer = {
 
 export type Clue = {
   clue: string;
+  sentence: string;
+  tournament: string;
   score: number;
 };
