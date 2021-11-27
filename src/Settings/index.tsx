@@ -99,13 +99,7 @@ const SettingsModal: React.FC = () => {
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={closeModal}
-      size="6xl"
-      scrollBehavior="inside"
-      isCentered
-    >
+    <Modal isOpen={isOpen} onClose={closeModal} size="6xl" isCentered>
       <ModalOverlay />
       <ModalContent m={4} maxW="600px" maxH="max(75vh, 600px)">
         <ModalHeader>Settings</ModalHeader>
