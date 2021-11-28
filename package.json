@@ -13,6 +13,8 @@
     "build:ui": "cd ../qbhub-client && yarn build && cp -r build ../qbhub-server/dist && cd ../qbhub-server",
     "build:server": "tsc",
     "build": "yarn clean && yarn build:server && yarn build:ui",
+    "deploy": "scp -r dist qbhub:~/qbhub-server/ && ssh qbhub 'pm2 restart qbhub'",
+    "deploy:full": "yarn build && yarn deploy",
     "lint": "eslint ./src --ext .ts,.tsx",
     "dev": "NODE_ENV=development nodemon --watch 'src/**/*.ts' --exec ts-node -r dotenv/config src/index.ts"
   },
