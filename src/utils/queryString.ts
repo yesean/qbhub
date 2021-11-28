@@ -1,7 +1,12 @@
 import { Category, Difficulty, Subcategory } from 'questions';
 import { SortOption } from '../types/controller';
 import { QueryStringParsingError } from '../types/errors';
-import { MAX_TOURNAMENT_YEAR, MIN_TOURNAMENT_YEAR } from './constants';
+import {
+  MAX_LIMIT,
+  MAX_TOURNAMENT_YEAR,
+  MIN_LIMIT,
+  MIN_TOURNAMENT_YEAR,
+} from './constants';
 import {
   isCategoryArray,
   isDifficultyArray,
@@ -212,8 +217,10 @@ export const parseLimit = (q: qs.ParsedQs, required = false): number => {
 
   const castedLimit = stringToNumber(limit);
 
-  if (castedLimit < 0 || castedLimit > 100)
-    throw new QueryStringParsingError(rangeErrorMessage('limit', 0, 100));
+  if (castedLimit < MIN_LIMIT || castedLimit > MAX_LIMIT)
+    throw new QueryStringParsingError(
+      rangeErrorMessage('limit', MIN_LIMIT, MAX_LIMIT),
+    );
 
   return castedLimit;
 };
