@@ -1,33 +1,45 @@
 import nlp from 'compromise';
-import ngrams from 'compromise-ngrams';
-import sentences from 'compromise-sentences';
+import cNgrams from 'compromise-ngrams';
+import cSentences from 'compromise-sentences';
 import { PlainTossup } from 'db';
 import { Bag, ClueBagMap } from '../types/clues';
 import { Clue } from '../types/controller';
 import { each, max, unique } from './array';
 import logger from './logger';
 
-const nlpEx = nlp.extend(ngrams).extend(sentences);
+const nlpEx = nlp.extend(cNgrams).extend(cSentences);
 
 type RegexReplace = [RegExp | string, string];
-const punctuation = (includeSeparators: boolean = true): RegexReplace => [
-  includeSeparators ? /["'()/\\*.,?]/g : /["'()/\\*?]/g,
-  '',
-];
-const hyphen: RegexReplace = [/-/g, ' '];
-const ftp: RegexReplace = ['for 10 points', ' '];
-const shrinkSpace: RegexReplace = [/\s\s+/g, ' '];
 const quotes: RegexReplace = [/["'\u2018\u2019\u201C\u201D]/g, ''];
+const between: RegexReplace = [/\(.*\)|\[.*\]|<.*>|&lt;.*&gt;.*/g, ''];
+const uselessPunctuation: RegexReplace = [/[`~@#$%^&()+=[\]{}|\\:<>/]/g, ''];
+
+const spacePunctuation: RegexReplace = [/[-_,*]/g, ' '];
+const usefulPunctuation: RegexReplace = [/[`;;.!?/]/g, ''];
+const ftp: RegexReplace = ['for (?:10|ten) points', ''];
+const shrinkSpace: RegexReplace = [/\s\s+/g, ' '];
 
 /**
- * Normalizes a string. Removes non-alphanumeric characters. Fixes
- * whitespace issues. Converts all to lowercase.
+ * Normalizes a tossup for splitting into sentences.
  */
-export const normalize = (s: string) =>
+export const normalizeTossup = (s: string) =>
   s
     .toLowerCase()
-    .replaceAll(...punctuation(false))
-    .replaceAll(...hyphen)
+    .replaceAll(...quotes)
+    .replaceAll(...between)
+    .replaceAll(...uselessPunctuation)
+    .replaceAll(...shrinkSpace)
+    .trim();
+
+/**
+ * Normalizes a clue for scoring.
+ */
+export const normalizeClue = (s: string) =>
+  s
+    .toLowerCase()
+    .replaceAll(...spacePunctuation)
+    .replaceAll(...usefulPunctuation)
+    .replaceAll(...shrinkSpace)
     .replaceAll(...ftp)
     .replaceAll(...shrinkSpace)
     .trim();
@@ -36,7 +48,7 @@ export const normalize = (s: string) =>
  * Split a string into sentences.
  */
 export const getSentences = (s: string): string[] =>
-  nlpEx(s.replaceAll(...quotes)) // remove quotes since quotes after periods hurt parsing
+  nlpEx(normalizeTossup(s)) // remove quotes since quotes after periods hurt parsing
     .sentences()
     .json()
     .map(({ text }: any) => text);
@@ -44,7 +56,7 @@ export const getSentences = (s: string): string[] =>
 /**
  * Split a string into clauses.
  */
-export const getClauses = (s: string) => nlp(s).clauses().out('array');
+export const getClauses = (s: string) => nlpEx(s).clauses().out('array');
 
 /**
  * Parses clues from an array of tossups.
@@ -54,10 +66,9 @@ export const getAllClues = (tossups: PlainTossup[]): Clue[] =>
     .map((tossup) => {
       const sens = getSentences(tossup.text);
       const clues = sens
-        .map(normalize)
         .map((sen) =>
           getClauses(sen).map((clause) => ({
-            clue: clause,
+            clue: normalizeClue(clause),
             sentence: sen,
             tournament: tossup.tournament,
             score: 0,
