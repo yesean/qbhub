@@ -12,8 +12,8 @@ import {
 } from './cluesGeneratorSlice';
 
 const answersFields = [
-  { label: 'Answer', key: 'answer' },
-  { label: 'Frequency', key: 'frequency' },
+  { label: 'Answer', dataKey: 'answer' },
+  { label: 'Frequency', dataKey: 'frequency' },
 ] as const;
 
 const Answers: React.FC = () => {
@@ -41,7 +41,7 @@ const Answers: React.FC = () => {
           ...answer,
           answer: createLink(answer.answer),
         }))}
-        fields={answersFields}
+        headers={answersFields}
         width={600}
         height={700}
       />

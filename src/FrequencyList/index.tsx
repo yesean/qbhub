@@ -15,8 +15,8 @@ import {
 } from './frequencyListSlice';
 
 const freqFields = [
-  { label: 'Answer', key: 'answer' },
-  { label: 'Frequency', key: 'frequency' },
+  { label: 'Answer', dataKey: 'answer' },
+  { label: 'Frequency', dataKey: 'frequency' },
 ] as const;
 
 const FrequencyList: React.FC = () => {
@@ -62,7 +62,7 @@ const FrequencyList: React.FC = () => {
     return (
       <TwoColumnTable
         data={page}
-        fields={freqFields}
+        headers={freqFields}
         width={600}
         height={700}
       />

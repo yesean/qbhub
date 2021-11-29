@@ -10,8 +10,8 @@ import {
 } from './cluesGeneratorSlice';
 
 const cluesFields = [
-  { label: 'Clue', key: 'clue' },
-  { label: 'Score', key: 'score' },
+  { label: 'Clue', dataKey: 'clue' },
+  { label: 'Score', dataKey: 'score' },
 ] as const;
 
 const Clues: React.FC = () => {
@@ -30,7 +30,7 @@ const Clues: React.FC = () => {
     return (
       <TwoColumnTable
         data={clues}
-        fields={cluesFields}
+        headers={cluesFields}
         width={600}
         height={700}
       />
