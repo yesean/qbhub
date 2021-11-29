@@ -3,7 +3,7 @@ import type { RootState } from '../app/store';
 import { Answer, Clue } from '../types/tossups';
 import * as fetchUtils from '../utils/fetch';
 
-const FETCH_LIMIT = 100;
+const FETCH_LIMIT = 200;
 
 export enum CluesGeneratorStatus {
   initial,
