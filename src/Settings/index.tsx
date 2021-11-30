@@ -21,6 +21,7 @@ import {
   SUBCATEGORIES,
   SUBCATEGORY_MAP,
 } from '../constants';
+import { useKeyboardShortcut } from '../hooks/keyboard';
 import { Category, Difficulty, Subcategory } from '../types/questions';
 import {
   setInitialCategories,
@@ -43,6 +44,8 @@ const SettingsModal: React.FC = () => {
   const dispatch = useDispatch();
 
   const closeModal = () => dispatch(close());
+
+  useKeyboardShortcut('Escape', closeModal);
 
   const onReadingSpeedChange = (value: number) => {
     dispatch(updateReadingSpeed(value));
