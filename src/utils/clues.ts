@@ -4,7 +4,7 @@ import cSentences from 'compromise-sentences';
 import { PlainTossup } from 'db';
 import { Bag, ClueBagMap } from '../types/clues';
 import { Clue } from '../types/controller';
-import { each, max, unique } from './array';
+import { each, max, shuffle, sum, unique } from './array';
 import logger from './logger';
 
 const nlpEx = nlp.extend(cNgrams).extend(cSentences);
@@ -12,11 +12,11 @@ const nlpEx = nlp.extend(cNgrams).extend(cSentences);
 type RegexReplace = [RegExp | string, string];
 const quotes: RegexReplace = [/["'\u2018\u2019\u201C\u201D]/g, ''];
 const between: RegexReplace = [/\(.*\)|\[.*\]|<.*>|&lt;.*&gt;.*/g, ''];
-const uselessPunctuation: RegexReplace = [/[`~@#$%^&()+=[\]{}|\\:<>/]/g, ''];
+const uselessPunctuation: RegexReplace = [/[`~@#$%^&()+=[\]{}|\\:<>]/g, ''];
 
-const spacePunctuation: RegexReplace = [/[-_,*]/g, ' '];
+const spacePunctuation: RegexReplace = [/[-–_,*/]/g, ' '];
 const usefulPunctuation: RegexReplace = [/[`;;.!?/]/g, ''];
-const ftp: RegexReplace = ['for (?:10|ten) points', ''];
+const ftp: RegexReplace = [/for (?:10|ten) points/g, ''];
 const shrinkSpace: RegexReplace = [/\s\s+/g, ' '];
 
 /**
@@ -37,10 +37,10 @@ export const normalizeTossup = (s: string) =>
 export const normalizeClue = (s: string) =>
   s
     .toLowerCase()
+    .replaceAll(...ftp)
     .replaceAll(...spacePunctuation)
     .replaceAll(...usefulPunctuation)
     .replaceAll(...shrinkSpace)
-    .replaceAll(...ftp)
     .replaceAll(...shrinkSpace)
     .trim();
 
@@ -62,27 +62,32 @@ export const getClauses = (s: string) => nlpEx(s).clauses().out('array');
  * Parses clues from an array of tossups.
  */
 export const getAllClues = (tossups: PlainTossup[]): Clue[] =>
-  tossups
-    .map((tossup) => {
-      const sens = getSentences(tossup.text);
-      const clues = sens
-        .map((sen) =>
-          getClauses(sen).map((clause) => ({
-            clue: normalizeClue(clause),
-            sentence: sen,
-            tournament: tossup.tournament,
-            score: 0,
-          })),
-        )
-        .flat();
-      return clues;
-    })
-    .flat()
-    .reduce<[Clue[], Set<string>]>(
-      unique<Clue>((clue) => clue.clue),
-      [[], new Set()],
-    )[0]
-    .sort((a, b) => b.clue.length - a.clue.length);
+  shuffle(
+    tossups
+      .map(({ text, tournament }) => {
+        const sens = getSentences(text);
+        const clues = sens
+          .map((sentence) => {
+            const normalizedSentence = normalizeClue(sentence);
+            return getClauses(sentence).map((clause) => {
+              const clue = normalizeClue(clause);
+              return {
+                clue,
+                sentence: normalizedSentence,
+                tournament,
+                score: 0,
+              };
+            });
+          })
+          .flat();
+        return clues;
+      })
+      .flat()
+      .reduce<[Clue[], Set<string>]>(
+        unique<Clue>((clue) => clue.clue),
+        [[], new Set()],
+      )[0],
+  );
 
 /**
  * Gets a bag of words model from a string.
@@ -100,15 +105,18 @@ const getBag = (clue: string) => {
       .flat(),
   );
 
-  const meaningfulWords = clue.split(' ').filter((w) => !ignore.has(w));
-  return meaningfulWords.reduce<Bag>((bag, word) => {
-    if (word in bag) {
-      bag[word] += 1;
+  const words = clue.split(' ');
+  const meaningfulWords = words.filter((w) => !ignore.has(w));
+  const bag = meaningfulWords.reduce<Bag>((acc, word) => {
+    if (word in acc) {
+      acc[word] += 1;
     } else {
-      bag[word] = 1;
+      acc[word] = 1;
     }
-    return bag;
+    return acc;
   }, {});
+
+  return bag;
 };
 
 /**
