@@ -3,9 +3,10 @@ import cNgrams from 'compromise-ngrams';
 import cSentences from 'compromise-sentences';
 import { PlainTossup } from 'db';
 import { Bag, ClueBagMap } from '../types/clues';
-import { Clue } from '../types/controller';
+import { Clue, ClueResult } from '../types/controller';
 import { each, max, shuffle, sum, unique } from './array';
 import logger from './logger';
+import { round } from './number';
 
 const nlpEx = nlp.extend(cNgrams).extend(cSentences);
 
@@ -61,33 +62,32 @@ export const getClauses = (s: string) => nlpEx(s).clauses().out('array');
 /**
  * Parses clues from an array of tossups.
  */
-export const getAllClues = (tossups: PlainTossup[]): Clue[] =>
-  shuffle(
-    tossups
-      .map(({ text, tournament }) => {
-        const sens = getSentences(text);
-        const clues = sens
-          .map((sentence) => {
-            const normalizedSentence = normalizeClue(sentence);
-            return getClauses(sentence).map((clause) => {
-              const clue = normalizeClue(clause);
-              return {
-                clue,
-                sentence: normalizedSentence,
-                tournament,
-                score: 0,
-              };
-            });
-          })
-          .flat();
-        return clues;
-      })
-      .flat()
-      .reduce<[Clue[], Set<string>]>(
-        unique<Clue>((clue) => clue.clue),
-        [[], new Set()],
-      )[0],
-  );
+export const getAllClues = (tossups: PlainTossup[]): Clue[] => {
+  const allClues = tossups
+    .map(({ text, tournament }) => {
+      const sens = getSentences(text);
+      const clues = sens
+        .map((sentence) => {
+          const normalizedSentence = normalizeClue(sentence);
+          return getClauses(sentence).map((clause) => {
+            const clue = normalizeClue(clause);
+            return {
+              clue,
+              sentence: normalizedSentence,
+              tournament,
+            };
+          });
+        })
+        .flat();
+      return clues;
+    })
+    .flat();
+  const uniqueClues = allClues.reduce<[Clue[], Set<string>]>(
+    unique<Clue>((clue) => clue.clue),
+    [[], new Set()],
+  )[0];
+  return shuffle(uniqueClues);
+};
 
 /**
  * Gets a bag of words model from a string.
@@ -194,10 +194,10 @@ const scoreClue = (
   numClues: number,
 ) => {
   const words = Object.keys(clueBagMap[queryClue.clue]);
-  const totalScore = words
+  const score = words
     .map((word) => scoreWord(word, baseClue, clueBagMap, corpusBag, numClues))
-    .reduce((sum, score) => sum + score);
-  return totalScore;
+    .reduce(sum());
+  return score;
 };
 
 /**
@@ -207,49 +207,59 @@ const combineClues = (
   clues: Clue[],
   clueBagMap: ClueBagMap,
   corpusBag: Bag,
-): Clue[] => {
-  const uniqueClues: Clue[] = [];
+): ClueResult[] => {
+  const uniqueClues: ClueResult[] = [];
   while (clues.length > 0) {
     // ideally, tf > 2.5 and idf < 6
-    const SCORE_THRESHOLD = 2.5 * Math.log(clues.length / (1 + 6));
+    const [NUM_TERMS, TF, DF, IDF_WEIGHT] = [2.5, 1, 6, 1];
+    const SCORE_THRESHOLD =
+      NUM_TERMS * (TF * Math.log(clues.length / (1 + IDF_WEIGHT * DF)));
 
     const queryClue = clues[0]; // use first clue as the search query
-    const clueScores = new Map([[0, 0]]); // maps clue index to clue score
+    const clueScores = new Map<number, number>([[0, 0]]); // maps clue index to clue score
     const similarClues = [0]; // indices of clues to remove
 
     // score clues compared to first clue
     for (let i = 1; i < clues.length; i += 1) {
-      const clueScore = scoreClue(
+      const score = scoreClue(
         queryClue,
         clues[i],
         clueBagMap,
         corpusBag,
         clues.length,
       );
-      if (clueScore > SCORE_THRESHOLD) {
-        clueScores.set(i, clueScore);
+      if (score > SCORE_THRESHOLD) {
+        clueScores.set(i, score);
         similarClues.push(i);
       }
     }
 
+    const cluesCopy = [...clues];
+
     // get clue with best match
-    const bestClue = similarClues.reduce(max((e) => clueScores.get(e)));
-    uniqueClues.push({ ...clues[bestClue], score: clueScores.get(bestClue) });
+    const bestClueIdx = similarClues.reduce(max((e) => clueScores.get(e)));
+    const bestClueScore = clueScores.get(bestClueIdx);
+    const matches = similarClues.slice(1).map((i) => ({
+      ...cluesCopy[i],
+      score: round(clueScores.get(i), 2),
+    }));
+    uniqueClues.push({
+      ...queryClue,
+      score: bestClueScore,
+      matches,
+    } as ClueResult);
 
     // remove similar clues
-    // ignore warning since the forEach callback is used immediately
-    // eslint-disable-next-line @typescript-eslint/no-loop-func
     similarClues.forEach((idx) =>
-      removeClue(clues[idx], clueBagMap, corpusBag),
+      removeClue(cluesCopy[idx], clueBagMap, corpusBag),
     );
     clues = clues.filter((_, idx) => !clueScores.has(idx));
   }
 
   // sort clues by score
-  const roundToHundreths = (n: number) => Math.round(n * 100) / 100;
   return uniqueClues
     .sort((a, b) => b.score - a.score)
-    .map((clue) => ({ ...clue, score: roundToHundreths(clue.score) }));
+    .map((clue) => ({ ...clue, score: round(clue.score, 2) }));
 };
 
 /**
