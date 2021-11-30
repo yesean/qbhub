@@ -2,6 +2,7 @@ import { Request, Response, Router } from 'express';
 import { getFreq } from '../models/freq';
 import { QueryStringParsingError } from '../types/errors';
 import { parseQueryString } from '../utils/controller';
+import logger from '../utils/logger';
 
 const freqRouter = Router();
 freqRouter.get('/', async (req: Request, res: Response) => {
@@ -13,6 +14,7 @@ freqRouter.get('/', async (req: Request, res: Response) => {
     if (e instanceof QueryStringParsingError) {
       res.status(400).send(e.message);
     }
+    logger.error(e);
   }
 });
 

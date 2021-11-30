@@ -2,6 +2,7 @@ import { Request, Response, Router } from 'express';
 import { getBonuses } from '../models/bonuses';
 import { QueryStringParsingError } from '../types/errors';
 import { parseQueryString } from '../utils/controller';
+import logger from '../utils/logger';
 
 const bonusesRouter = Router();
 bonusesRouter.get('/', async (req: Request, res: Response) => {
@@ -13,6 +14,7 @@ bonusesRouter.get('/', async (req: Request, res: Response) => {
     if (e instanceof QueryStringParsingError) {
       res.status(400).send(e.message);
     }
+    logger.error(e);
   }
 });
 
