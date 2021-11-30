@@ -46,8 +46,10 @@ export type Clue = {
   clue: string; // phrase
   sentence: string; // the sentence it came from
   tournament: string;
-  score: number;
 };
+
+export type ClueMatch = Clue & { score: number };
+export type ClueResult = Clue & { score: number; matches: ClueMatch[] };
 
 // question specific parameters
 export type QuestionParameters = {
