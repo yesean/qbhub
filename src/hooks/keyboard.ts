@@ -7,13 +7,13 @@ import { useEffect } from 'react';
  */
 export const useKeyboardShortcut = (
   key: string,
-  callback: () => void,
+  callback: (e: KeyboardEvent) => void,
   predicate: (e: KeyboardEvent) => boolean = () => true,
 ) => {
   // eslint-disable-next-line consistent-return
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
-      if (e.key === key && predicate(e)) callback();
+      if (e.key === key && predicate(e)) callback(e);
     };
     window.addEventListener('keydown', listener);
     return () => window.removeEventListener('keydown', listener);
