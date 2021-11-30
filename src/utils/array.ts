@@ -31,11 +31,14 @@ export const unique =
     return acc;
   };
 
+export const randomNumber = (start = 0, len = 1) =>
+  Math.floor(Math.random() * len + start);
+
 /**
  * Selects a random element from an array.
  */
-export const random = (arr: any[]) =>
-  arr[Math.floor(Math.random() * arr.length)];
+export const random = (arr: any[], start = 0, end = arr.length) =>
+  arr[randomNumber(start, end - start - 1)];
 
 type NumberMapping = Mapping<number, number>;
 
@@ -62,3 +65,23 @@ export const min =
   (f: NumberMapping = id) =>
   (acc: number, e: number) =>
     f(e) < f(acc) ? e : acc;
+
+/**
+ * Zips an arbitrary number of arrays together, similar to Python's `zip`.
+ */
+export const zip = (...arrs: any[][]) => {
+  const longest = arrs.map((a) => a.length).reduce(max());
+  return new Array(longest).fill(null).map((_, i) => arrs.map((arr) => arr[i]));
+};
+
+/**
+ * Shuffle an array, using the Fisher-Yates shuffle.
+ */
+export const shuffle = (arr: any[]) => {
+  arr.forEach((_, i) => {
+    if (i >= arr.length - 1) return;
+    const randomIdx = randomNumber(i + 1, arr.length - i - 1);
+    [arr[i], arr[randomIdx]] = [arr[randomIdx], arr[i]];
+  });
+  return arr;
+};
