@@ -1,3 +1,5 @@
+import { random as randomNumber } from './number';
+
 type Mapping<T, S> = (s: T) => S;
 type StringAccumulator = { [key: string]: any };
 
@@ -30,9 +32,6 @@ export const unique =
     }
     return acc;
   };
-
-export const randomNumber = (start = 0, len = 1) =>
-  Math.floor(Math.random() * len + start);
 
 /**
  * Selects a random element from an array.
