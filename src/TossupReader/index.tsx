@@ -7,14 +7,14 @@ import Progress from './Progress';
 import Question from './Question';
 import Result from './Result';
 import Score from './Score';
-import { ReaderStatus, selectStatus } from './tossupReaderSlice';
+import { ReaderStatus, selectTossupReader } from './tossupReaderSlice';
 import UserInput from './UserInput';
 
 type TossupReaderProps = {};
 
 const TossupReader: React.FC<TossupReaderProps> = () => {
   const [progress, setProgress] = useState(100);
-  const status = useSelector(selectStatus);
+  const { status } = useSelector(selectTossupReader);
 
   useEffect(() => {
     if (status === ReaderStatus.answered) {

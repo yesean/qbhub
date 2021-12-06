@@ -14,16 +14,16 @@ import {
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../app/hooks';
-import { selectResults } from '../../TossupReader/tossupReaderSlice';
+import { selectTossupReader } from '../../TossupReader/tossupReaderSlice';
 import { TossupScore } from '../../types/tossups';
 import { parseHTMLString, renderQuestion } from '../../utils/questionReader';
 import TealButton from '../TealButton';
-import { selectTossupHistoryModal, close } from './tossupHistoryModalSlice';
+import { close, selectTossupHistoryModal } from './tossupHistoryModalSlice';
 
 const TossupHistoryModal: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const results = useSelector(selectResults);
+  const { results } = useSelector(selectTossupReader);
   const { isOpen } = useSelector(selectTossupHistoryModal);
   const closeModal = () => dispatch(close());
 

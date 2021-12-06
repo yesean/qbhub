@@ -1,10 +1,10 @@
 import { Heading } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { TossupScore } from '../types/tossups';
-import { selectCurrentResult } from './tossupReaderSlice';
+import { selectTossupReader } from './tossupReaderSlice';
 
 const Result: React.FC = () => {
-  const result = useSelector(selectCurrentResult);
+  const { currentResult: result } = useSelector(selectTossupReader);
 
   let text;
   if (result.score === TossupScore.power) text = '🎉  Power!  🥳';

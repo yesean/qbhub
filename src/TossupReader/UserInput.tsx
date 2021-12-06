@@ -16,10 +16,7 @@ import {
   buzz as buzzAction,
   nextTossup as nextTossupAction,
   ReaderStatus,
-  selectCurrentBuzz,
-  selectCurrentResult,
-  selectCurrentTossup,
-  selectStatus,
+  selectTossupReader,
   submitAnswer,
 } from './tossupReaderSlice';
 
@@ -29,10 +26,8 @@ type UserInputProps = {
 const UserInput: React.FC<UserInputProps> = ({ progress }) => {
   const [inputValue, setInputValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-  const status = useSelector(selectStatus);
-  const currentTossup = useSelector(selectCurrentTossup);
-  const currentResult = useSelector(selectCurrentResult);
-  const currentBuzz = useSelector(selectCurrentBuzz);
+  const { status, currentTossup, currentResult, currentBuzz } =
+    useSelector(selectTossupReader);
   const settings = useSelector(selectSettings);
   const dispatch = useAppDispatch();
 

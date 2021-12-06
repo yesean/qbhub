@@ -6,17 +6,14 @@ import {
   StatNumber,
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
-import {
-  ReaderStatus,
-  selectCurrentResult,
-  selectScore,
-  selectStatus,
-} from './tossupReaderSlice';
+import { ReaderStatus, selectTossupReader } from './tossupReaderSlice';
 
 const Score: React.FC = () => {
-  const status = useSelector(selectStatus);
-  const score = useSelector(selectScore);
-  const result = useSelector(selectCurrentResult);
+  const {
+    status,
+    score,
+    currentResult: result,
+  } = useSelector(selectTossupReader);
 
   const scoreDisplay =
     status === ReaderStatus.answered

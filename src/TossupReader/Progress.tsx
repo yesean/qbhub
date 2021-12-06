@@ -1,7 +1,7 @@
 import { Progress } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { ReaderStatus, selectStatus } from './tossupReaderSlice';
+import { ReaderStatus, selectTossupReader } from './tossupReaderSlice';
 
 type TimerProgressProps = {
   progress: number;
@@ -11,10 +11,10 @@ const TimerProgress: React.FC<TimerProgressProps> = ({
   progress,
   setProgress,
 }) => {
-  const mode = useSelector(selectStatus);
+  const { status } = useSelector(selectTossupReader);
 
   useEffect(() => {
-    if (mode === ReaderStatus.answering) {
+    if (status === ReaderStatus.answering) {
       const id = setTimeout(() => {
         setProgress((p) => (p > 0 ? p - 0.1 : 0));
       }, 5);
@@ -23,7 +23,7 @@ const TimerProgress: React.FC<TimerProgressProps> = ({
       };
     }
     return () => {};
-  }, [mode, progress, setProgress]);
+  }, [status, progress, setProgress]);
 
   return (
     <Progress

@@ -1,11 +1,12 @@
 import { Heading } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { Category, Difficulty, Subcategory } from '../types/questions';
-import { selectCurrentTossup } from './tossupReaderSlice';
+import { selectTossupReader } from './tossupReaderSlice';
 
 const Info: React.FC = () => {
-  const { tournament, category, subcategory, difficulty } =
-    useSelector(selectCurrentTossup);
+  const {
+    currentTossup: { tournament, category, subcategory, difficulty },
+  } = useSelector(selectTossupReader);
 
   const info = subcategory
     ? `${tournament} / ${Difficulty[difficulty]} / ${Category[category]} / ${Subcategory[subcategory]}`

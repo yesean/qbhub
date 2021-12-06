@@ -9,6 +9,7 @@ export enum ReaderStatus {
   fetching,
   reading,
   answering,
+  prompting,
   answered,
   empty,
 }
@@ -140,14 +141,6 @@ export const {
   filterTossupsByDifficulties,
 } = tossupReaderSlice.actions;
 
-export const selectStatus = (state: RootState) => state.tossupReader.status;
-export const selectResults = (state: RootState) => state.tossupReader.results;
-export const selectScore = (state: RootState) => state.tossupReader.score;
-export const selectCurrentBuzz = (state: RootState) =>
-  state.tossupReader.currentBuzz;
-export const selectCurrentTossup = (state: RootState) =>
-  state.tossupReader.currentTossup;
-export const selectCurrentResult = (state: RootState) =>
-  state.tossupReader.currentResult;
+export const selectTossupReader = (state: RootState) => state.tossupReader;
 
 export default tossupReaderSlice.reducer;

@@ -1,13 +1,14 @@
 import { Container, Link, Text } from '@chakra-ui/react';
-import { Link as RouterLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { Link as RouterLink } from 'react-router-dom';
 import { parseHTMLString } from '../utils/questionReader';
-import { selectCurrentTossup } from './tossupReaderSlice';
 import { ROUTES } from '../utils/routes';
+import { selectTossupReader } from './tossupReaderSlice';
 
 const Answer: React.FC = () => {
-  const { formattedAnswer, normalizedAnswer } =
-    useSelector(selectCurrentTossup);
+  const {
+    currentTossup: { formattedAnswer, normalizedAnswer },
+  } = useSelector(selectTossupReader);
 
   return (
     <Container

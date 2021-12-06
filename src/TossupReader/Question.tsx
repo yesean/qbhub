@@ -10,9 +10,7 @@ import { shuffleString } from '../utils/string';
 import {
   buzz,
   ReaderStatus,
-  selectCurrentBuzz,
-  selectCurrentTossup,
-  selectStatus,
+  selectTossupReader,
   setBuzz,
 } from './tossupReaderSlice';
 
@@ -47,10 +45,12 @@ const getPowerWordsCount = (formattedText: string) => {
 const Question: React.FC = () => {
   const [visibleIndex, setVisibleIndex] = useState(0);
   const [incrementId, setIncrementId] = useState<NodeJS.Timeout | null>(null);
-  const status = useSelector(selectStatus);
-  const { text, formattedText } = useSelector(selectCurrentTossup);
+  const {
+    status,
+    currentTossup: { text, formattedText },
+    currentBuzz,
+  } = useSelector(selectTossupReader);
   const settings = useSelector(selectSettings);
-  const currentBuzz = useSelector(selectCurrentBuzz);
   const dispatch = useDispatch();
 
   const words: TossupReaderWord[] = useMemo(() => {
@@ -149,7 +149,7 @@ const Question: React.FC = () => {
 };
 
 const QuestionContainer: React.FC = () => {
-  const status = useSelector(selectStatus);
+  const { status } = useSelector(selectTossupReader);
 
   const shouldShowCircularProgress = status === ReaderStatus.fetching;
   const shouldShowEmptyMsg = status === ReaderStatus.empty;
