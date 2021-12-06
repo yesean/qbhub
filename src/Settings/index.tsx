@@ -20,7 +20,7 @@ import {
   DIFFICULTIES,
   SUBCATEGORIES,
   SUBCATEGORY_MAP,
-} from '../constants';
+} from '../utils/constants';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import { Category, Difficulty, Subcategory } from '../types/questions';
 import {

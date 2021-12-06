@@ -1,4 +1,4 @@
-import { Category, Difficulty, Subcategory } from './types/questions';
+import { Category, Difficulty, Subcategory } from '../types/questions';
 
 export const CATEGORIES = [
   { label: 'Current Events', value: Category['Current Events'] },

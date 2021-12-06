@@ -4,7 +4,7 @@ import {
   DIFFICULTIES_LS_KEY,
   READING_SPEED_LS_KEY,
   SUBCATEGORIES_LS_KEY,
-} from '../constants';
+} from './constants';
 import { Category, Difficulty, Subcategory } from '../types/questions';
 
 const checkReadingSpeedValid = (speed: number) => {
