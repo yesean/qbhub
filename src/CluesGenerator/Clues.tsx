@@ -48,7 +48,7 @@ const Clues: React.FC = () => {
         hasArrow
         placement="top"
         label={renderTooltip(clue)}
-        borderRadius="12px"
+        borderRadius="5px"
         p={2}
       >
         <Text>{clue.clue}</Text>
