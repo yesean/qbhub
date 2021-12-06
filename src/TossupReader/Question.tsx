@@ -26,8 +26,8 @@ const getWords = (text: string) =>
 
 const getPowerWordsCount = (formattedText: string) => {
   const boldText =
-    getTextBetweenTags('strong', formattedText).join(' ') ||
-    getTextBetweenTags('b', formattedText).join(' ') ||
+    getTextBetweenTags(formattedText, 'strong').join(' ') ||
+    getTextBetweenTags(formattedText, 'b').join(' ') ||
     '';
 
   return boldText

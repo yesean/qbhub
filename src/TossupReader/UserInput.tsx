@@ -7,7 +7,7 @@ import { useKeyboardShortcut } from '../hooks/keyboard';
 import { selectSettings } from '../Settings/settingsSlice';
 import { TossupScore } from '../types/tossups';
 import logger from '../utils/logger';
-import { checkAnswer, getAnswers } from '../utils/questionReader';
+import { checkAnswer, parseAnswers } from '../utils/questionReader';
 import { convertNumberToWords } from '../utils/string';
 import {
   buzz as buzzAction,
@@ -52,7 +52,7 @@ const UserInput: React.FC<UserInputProps> = ({ progress }) => {
       const submittedAnswer = convertNumberToWords(
         inputValue.trim().toLowerCase(),
       );
-      const answers = getAnswers(currentTossup.formattedAnswer);
+      const answers = parseAnswers(currentTossup.formattedAnswer);
       const isAnswerCorrect = checkAnswer(submittedAnswer, answers);
 
       logger.info(`User submitted "${submittedAnswer}"`);

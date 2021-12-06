@@ -61,7 +61,7 @@ export const convertNumberToWords = (s: string) =>
  * Get text between opening and closing tags.
  * e.g. <foo>bar</foo> => bar
  */
-export const getTextBetweenTags = (t: string, text: string) =>
+export const getTextBetweenTags = (text: string, t: string) =>
   getCaptureGroups(text, betweenTags(t));
 
 /**
@@ -73,5 +73,5 @@ export const checkIfWordIsBetweenTags = (
   text: string,
   word: string,
 ) => {
-  return getTextBetweenTags(t, text)?.includes(word);
+  return getTextBetweenTags(text, t)?.includes(word);
 };

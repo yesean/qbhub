@@ -10,7 +10,6 @@ import {
   betweenParentheses,
   getCaptureGroups,
   ltgt,
-  nonAlphaNumeric,
   remove,
   tag,
 } from './regex';
@@ -21,99 +20,18 @@ import {
 } from './string';
 
 /**
- * Check if an answer "approximately" matches any correct answers. Uses Dice's
- * coefficient to compare strings.
- */
-export const checkAnswer = (answer: string, correctAnswers: string[]) => {
-  const minRating = 0.6;
-  const ratings = ss.findBestMatch(answer, correctAnswers);
-  logger.info('Answer ratings:', ratings);
-  return ratings.bestMatch.rating > minRating;
-};
-
-/**
- * Clean a tossup answerline for parsing.
- */
-const cleanAnswerline = (s: string) =>
-  s
-    .toLowerCase()
-    .replaceAll(ltgt, '') // remove author metadata
-    .replaceAll(betweenParentheses, '') // remove parenthesized stuff
-    .replaceAll(tag('u'), '') // remove underline tags
-    .replaceAll(tag('em'), '') // remove underline tags
-    .replaceAll(/-/g, ' ') // dashes to spaces
-    .trim();
-
-/**
- * Parse all valid answers from an answerline.
- */
-export const getAnswers = (answer: string): string[] => {
-  // clean answerline
-  let normalizedAnswer = cleanAnswerline(answer);
-
-  // get all bold answers
-  const boldTags = ['strong', 'b'];
-  const boldAnswers = boldTags.flatMap((t) =>
-    getTextBetweenTags(normalizedAnswer, t)
-      .map(removeExtraSpaces)
-      .map((s) => s.trim()),
-  );
-
-  // remove tags from answerline
-  normalizedAnswer = remove(normalizedAnswer, anyTag);
-
-  // parse answers according to acf guidelines
-  const answerRegexes = [
-    /(.*)\[/g, // first answer up to '['
-    /(?:\[|\s)accept\s(.*?)\s(?:or\s)/g, // 'accept' to 'or'
-    /(?:\[|\s)accept\s(.*?)\s(?:until\s)/g, // 'accept' to 'until'
-    /(?:\[|\s)accept\s(.*?)\s(?:before\s)/g, // 'accept' to 'before'
-    /(?:\[|\s)accept\s(.*?)(?:,|;|\])/g, // 'accept' to ',' | ';' | ']'
-    /(?:,|;|\[|\s)or\s(.*?)(?:or\s)/g, // 'or' to 'or'
-    /(?:,|;|\[|\s)or\s(.*?)(?:until\s)/g, // 'or' to 'until'
-    /(?:,|;|\[|\s)or\s(.*?)(?:before\s)/g, // 'or' to 'before'
-    /(?:,|;|\[|\s)or\s(.*?)(?:,|;|\])/g, // 'or' to ',' | ';' | ']'
-    /(.*)/g, // entire answer
-  ];
-  const answers = answerRegexes.flatMap(
-    (r) =>
-      getCaptureGroups(normalizedAnswer, r)
-        .map((s) => remove(s, nonAlphaNumeric))
-        .map(removeExtraSpaces)
-        .map((s) => s.trim())
-        .filter(Boolean), // remove empty strings
-  );
-
-  // combine bold answers and parsed answers
-  let allAnswers = [...boldAnswers, ...answers];
-
-  // convert numbers to word form
-  allAnswers = allAnswers.map((ans) => convertNumberToWords(ans));
-
-  // parse any last names and mark them as valid
-  const lastNames = allAnswers
-    .flatMap((ans) => {
-      return nlp(ans).people().match('#LastName').text();
-    })
-    .filter(Boolean);
-  logger.info('Last names:', lastNames);
-
-  return [...new Set([...allAnswers, ...lastNames])];
-};
-
-/**
- * Determine whether or not to get shuffled word, depending on the reading position.
- */
-const getWord = (word: TossupReaderWord, index: number, visibleIndex: number) =>
-  index <= visibleIndex ? word.original : word.shuffled;
-
-/**
  * Compute the visibility of a word, depending on the reading position.
  */
 const computeVisibility = (
   index: number,
   visibleIndex: number,
 ): 'visible' | 'hidden' => (index <= visibleIndex ? 'visible' : 'hidden');
+
+/**
+ * Determine whether or not to get shuffled word, depending on the reading position.
+ */
+const getWord = (word: TossupReaderWord, index: number, visibleIndex: number) =>
+  index <= visibleIndex ? word.original : word.shuffled;
 
 /**
  * Render a question given its reading position. Display the buzz symbol if
@@ -153,3 +71,85 @@ export const renderQuestion = (
       )}
     </Fragment>
   ));
+
+/**
+ * Clean a tossup answerline for parsing.
+ */
+const cleanAnswerline = (s: string) =>
+  s
+    .toLowerCase()
+    .replaceAll(ltgt, '') // remove author metadata
+    .replaceAll(betweenParentheses, '') // remove parenthesized stuff
+    .replaceAll(tag('u'), '') // remove underline tags
+    .replaceAll(tag('em'), '') // remove underline tags
+    .replaceAll(/-/g, ' ') // dashes to spaces
+    .trim();
+
+/**
+ * Parse all valid answers from an answerline.
+ */
+export const parseAnswers = (answer: string): string[] => {
+  // clean answerline
+  let normalizedAnswer = cleanAnswerline(answer);
+
+  // get all bold answers
+  const boldTags = ['strong', 'b'];
+  const boldAnswers = boldTags.flatMap((t) =>
+    getTextBetweenTags(normalizedAnswer, t)
+      .map(removeExtraSpaces)
+      .map((s) => s.trim()),
+  );
+
+  // remove tags from answerline
+  normalizedAnswer = remove(normalizedAnswer, anyTag);
+
+  // parse answers according to acf guidelines
+  const answerRegexes = [
+    /(.*)\[/g, // first answer up to '['
+    /(?!\[|,|;|\s)(?:accept|or)\s(.*?)\s(?=accept|or|until|before|after\s)/g, // 'accept'/'or' to 'accept' | 'or' | 'until' | 'before' 'after'
+    /(?!\[|,|;|\s)(?:accept|or)\s(.*?)(?=,|;|\[|\])/g, // 'accept'/'or' to ',' | ';' | ']'
+    /(.*)/g, // entire answer
+  ];
+  const answers = answerRegexes.flatMap(
+    (r) =>
+      getCaptureGroups(normalizedAnswer, r)
+        .map(removeExtraSpaces)
+        .map((s) => s.trim())
+        .filter(Boolean), // remove empty strings
+  );
+
+  // combine bold answers and parsed answers
+  let allAnswers = [...boldAnswers, ...answers];
+
+  // convert numbers to word form
+  allAnswers = allAnswers.map((ans) => convertNumberToWords(ans));
+
+  // parse any last names and mark them as valid
+  const lastNames = allAnswers
+    .flatMap((ans) => {
+      return nlp(ans).people().match('#LastName').text();
+    })
+    .filter(Boolean);
+  logger.info('Last names:', lastNames);
+
+  return [...new Set([...allAnswers, ...lastNames])];
+};
+
+/**
+ * Parse all promptable answers from an answerline.
+ */
+export const parsePromptableAnswers = (answer: string) => {
+  // clean answerline
+  const normalizedAnswer = cleanAnswerline(answer);
+};
+
+/**
+ * Check if an answer "approximately" matches any correct answers. Uses Dice's
+ * coefficient to compare strings.
+ */
+export const checkAnswer = (answer: string, correctAnswers: string[]) => {
+  const minRating = 0.6;
+  const ratings = ss.findBestMatch(answer, correctAnswers);
+  logger.info('Answer ratings:', ratings);
+  return ratings.bestMatch.rating > minRating;
+};
