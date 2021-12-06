@@ -63,14 +63,16 @@ export const TwoColumnTable: React.FC<TwoColumnTableProps> = ({
       </Flex>
       <Box ref={tableBodyRef} flex="1" overflow="auto">
         {data.map(
-          ({ [headers[0].dataKey]: text, [headers[1].dataKey]: score }) => (
+          ({ [headers[0].dataKey]: text, [headers[1].dataKey]: score }, i) => (
             <Flex
+              // eslint-disable-next-line react/no-array-index-key
+              key={i}
               px={4}
               py={2}
               borderBottom="1px"
               borderColor="gray.200"
               sx={{
-                '&:nth-child(odd)': { bg: 'gray.100' },
+                '&:nth-of-type(odd)': { bg: 'gray.100' },
                 '&:last-child': {
                   borderBottom: scroll > client ? 'none' : '1px',
                   borderColor: 'gray.200',
