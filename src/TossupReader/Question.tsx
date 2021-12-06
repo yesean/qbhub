@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectSettings } from '../Settings/settingsSlice';
 import { TossupReaderWord } from '../types/tossups';
 import logger from '../utils/logger';
-import { getTextBetweenTags, renderQuestion } from '../utils/questionReader';
+import { renderQuestion } from '../utils/questionReader';
 import { getReadingTimeoutDelay } from '../utils/settings';
-import { shuffleString } from '../utils/string';
+import { getTextBetweenTags, shuffleString } from '../utils/string';
 import {
   buzz,
   ReaderStatus,

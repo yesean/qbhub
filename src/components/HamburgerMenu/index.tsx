@@ -34,6 +34,7 @@ const HamburgerMenu: React.FC = () => {
           <CloseButton size="lg" onClick={closeMenu} mb={4} />
           {links.map(({ name, href }) => (
             <Link
+              key={name}
               as={RouterLink}
               to={href}
               p={4}

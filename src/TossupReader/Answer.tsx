@@ -1,8 +1,8 @@
 import { Container, Link, Text } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
-import { parseHTMLString } from '../utils/questionReader';
 import { ROUTES } from '../utils/routes';
+import { parseHTMLString } from '../utils/string';
 import { selectTossupReader } from './tossupReaderSlice';
 
 const Answer: React.FC = () => {

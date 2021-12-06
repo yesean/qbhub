@@ -92,7 +92,11 @@ const InfoModal: React.FC = () => {
 
   const renderShortcutLabel = (label: string | string[]) => {
     if (Array.isArray(label)) {
-      return label.map((l) => <Kbd mr={1}>{l}</Kbd>);
+      return label.map((l) => (
+        <Kbd key={l} mr={1}>
+          {l}
+        </Kbd>
+      ));
     }
     return <Kbd>{label}</Kbd>;
   };
@@ -110,7 +114,7 @@ const InfoModal: React.FC = () => {
       </Thead>
       <Tbody>
         {shortcuts.map(({ label, description }) => (
-          <Tr>
+          <Tr key={Array.isArray(label) ? label[0] : label}>
             <Td>{renderShortcutLabel(label)}</Td>
             <Td>
               <Text>{description}</Text>

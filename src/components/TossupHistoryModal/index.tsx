@@ -16,7 +16,8 @@ import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../app/hooks';
 import { selectTossupReader } from '../../TossupReader/tossupReaderSlice';
 import { TossupScore } from '../../types/tossups';
-import { parseHTMLString, renderQuestion } from '../../utils/questionReader';
+import { renderQuestion } from '../../utils/questionReader';
+import { parseHTMLString } from '../../utils/string';
 import TealButton from '../TealButton';
 import { close, selectTossupHistoryModal } from './tossupHistoryModalSlice';
 

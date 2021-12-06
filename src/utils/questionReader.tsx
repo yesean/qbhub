@@ -1,14 +1,29 @@
 import { BellIcon } from '@chakra-ui/icons';
 import { Container, Text } from '@chakra-ui/react';
 import nlp from 'compromise';
-import DOMPurify from 'dompurify';
-import { toWords } from 'number-to-words';
 import { Fragment } from 'react';
-import ReactHTMLParser from 'react-html-parser';
 import ss from 'string-similarity';
 import { TossupReaderWord } from '../types/tossups';
 import logger from './logger';
+import {
+  anyTag,
+  betweenParentheses,
+  getCaptureGroups,
+  ltgt,
+  nonAlphaNumeric,
+  remove,
+  tag,
+} from './regex';
+import {
+  convertNumberToWords,
+  getTextBetweenTags,
+  removeExtraSpaces,
+} from './string';
 
+/**
+ * Check if an answer "approximately" matches any correct answers. Uses Dice's
+ * coefficient to compare strings.
+ */
 export const checkAnswer = (answer: string, correctAnswers: string[]) => {
   const minRating = 0.6;
   const ratings = ss.findBestMatch(answer, correctAnswers);
@@ -16,60 +31,38 @@ export const checkAnswer = (answer: string, correctAnswers: string[]) => {
   return ratings.bestMatch.rating > minRating;
 };
 
-export const parseHTMLString = (s: string) =>
-  ReactHTMLParser(DOMPurify.sanitize(s));
-
-export const getTextBetweenTags = (tag: string, text: string) => {
-  const regex = new RegExp(
-    /* eslint no-useless-escape: "off" */
-    `<${tag}>(.*?)<\/${tag}>`,
-    'g',
-  );
-  return Array.from(text.matchAll(regex)).map((t) => t[1]);
-};
-
-export const checkIfTagEnclosed = (tag: string, text: string, word: string) => {
-  return getTextBetweenTags(tag, text).join(' ')?.includes(word);
-};
-
-const getCaptureGroups = (s: string, r: RegExp) => {
-  return Array.from(s.matchAll(r)).map((m) => m[1]);
-};
-
-const isNumeric = (s: string) => /^-?\d+$/.test(s);
-
-const removeNonAlphaNum = (s: string) => s.replaceAll(/[^\w\d\s]/g, '');
-const removeTags = (s: string) => s.replaceAll(/<.*?>/g, '');
-const removeExtraSpaces = (s: string) => s.replaceAll(/\s\s+/g, ' ');
-export const convertNumberToWords = (s: string) =>
-  s
-    .split(' ')
-    .map((w) => (isNumeric(w) ? toWords(w) : w))
-    .join(' ');
-
-const clean = (s: string) =>
+/**
+ * Clean a tossup answerline for parsing.
+ */
+const cleanAnswerline = (s: string) =>
   s
     .toLowerCase()
-    .replaceAll(/&lt;.*&gt;/g, '') // remove metadata
-    .replaceAll(/\(.*?\)/g, '') // remove parenthesized stuff
-    .replaceAll(/<u>|<\/u>|<em>|<\/em>/g, '') // remove underline tags
+    .replaceAll(ltgt, '') // remove author metadata
+    .replaceAll(betweenParentheses, '') // remove parenthesized stuff
+    .replaceAll(tag('u'), '') // remove underline tags
+    .replaceAll(tag('em'), '') // remove underline tags
     .replaceAll(/-/g, ' ') // dashes to spaces
     .trim();
 
+/**
+ * Parse all valid answers from an answerline.
+ */
 export const getAnswers = (answer: string): string[] => {
-  let normalizedAnswer = clean(answer);
-  const boldRegexes = [
-    /<strong>(.*?)<\/strong>/g, // text between <strong> tags
-    /<b>(.*?)<\/b>/g, // text between <b> tags
-  ];
-  const boldAnswers = boldRegexes.flatMap((r) =>
-    getCaptureGroups(normalizedAnswer, r)
-      .map(removeNonAlphaNum)
-      .map((s) => s.trim())
-      .filter(Boolean),
+  // clean answerline
+  let normalizedAnswer = cleanAnswerline(answer);
+
+  // get all bold answers
+  const boldTags = ['strong', 'b'];
+  const boldAnswers = boldTags.flatMap((t) =>
+    getTextBetweenTags(normalizedAnswer, t)
+      .map(removeExtraSpaces)
+      .map((s) => s.trim()),
   );
 
-  normalizedAnswer = removeTags(normalizedAnswer);
+  // remove tags from answerline
+  normalizedAnswer = remove(normalizedAnswer, anyTag);
+
+  // parse answers according to acf guidelines
   const answerRegexes = [
     /(.*)\[/g, // first answer up to '['
     /(?:\[|\s)accept\s(.*?)\s(?:or\s)/g, // 'accept' to 'or'
@@ -85,34 +78,47 @@ export const getAnswers = (answer: string): string[] => {
   const answers = answerRegexes.flatMap(
     (r) =>
       getCaptureGroups(normalizedAnswer, r)
-        .map(removeNonAlphaNum)
+        .map((s) => remove(s, nonAlphaNumeric))
         .map(removeExtraSpaces)
         .map((s) => s.trim())
         .filter(Boolean), // remove empty strings
   );
-  const allAnswers = [...boldAnswers, ...answers].map((ans) =>
-    convertNumberToWords(ans),
-  );
+
+  // combine bold answers and parsed answers
+  let allAnswers = [...boldAnswers, ...answers];
+
+  // convert numbers to word form
+  allAnswers = allAnswers.map((ans) => convertNumberToWords(ans));
+
+  // parse any last names and mark them as valid
   const lastNames = allAnswers
     .flatMap((ans) => {
       return nlp(ans).people().match('#LastName').text();
     })
     .filter(Boolean);
   logger.info('Last names:', lastNames);
+
   return [...new Set([...allAnswers, ...lastNames])];
 };
 
-export const getWord = (
-  word: TossupReaderWord,
-  index: number,
-  visibleIndex: number,
-) => (index <= visibleIndex ? word.original : word.shuffled);
+/**
+ * Determine whether or not to get shuffled word, depending on the reading position.
+ */
+const getWord = (word: TossupReaderWord, index: number, visibleIndex: number) =>
+  index <= visibleIndex ? word.original : word.shuffled;
 
-export const computeVisibility = (
+/**
+ * Compute the visibility of a word, depending on the reading position.
+ */
+const computeVisibility = (
   index: number,
   visibleIndex: number,
 ): 'visible' | 'hidden' => (index <= visibleIndex ? 'visible' : 'hidden');
 
+/**
+ * Render a question given its reading position. Display the buzz symbol if
+ * specified.
+ */
 export const renderQuestion = (
   words: TossupReaderWord[],
   buzzIndex: number,

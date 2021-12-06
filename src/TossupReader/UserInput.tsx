@@ -7,11 +7,8 @@ import { useKeyboardShortcut } from '../hooks/keyboard';
 import { selectSettings } from '../Settings/settingsSlice';
 import { TossupScore } from '../types/tossups';
 import logger from '../utils/logger';
-import {
-  checkAnswer,
-  convertNumberToWords,
-  getAnswers,
-} from '../utils/questionReader';
+import { checkAnswer, getAnswers } from '../utils/questionReader';
+import { convertNumberToWords } from '../utils/string';
 import {
   buzz as buzzAction,
   nextTossup as nextTossupAction,
