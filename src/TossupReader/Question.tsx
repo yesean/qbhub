@@ -65,14 +65,6 @@ const Question: React.FC = () => {
     });
   }, [text, formattedText]);
 
-  const pauseWords = useCallback(() => {
-    logger.info('Pausing tossup reading.');
-    if (incrementId !== null) {
-      window.clearTimeout(incrementId);
-      setIncrementId(null);
-    }
-  }, [incrementId]);
-
   const revealWords = useCallback(() => {
     logger.info('Revealing rest of tossup.');
     setIncrementId(null);
@@ -81,14 +73,22 @@ const Question: React.FC = () => {
 
   // pause reading when answering
   useEffect(() => {
+    const pauseWords = () => {
+      if (incrementId !== null) {
+        logger.info('Pausing tossup reading.');
+        window.clearTimeout(incrementId);
+        setIncrementId(null);
+      }
+    };
+
     if (status === ReaderStatus.answering) {
       pauseWords();
     }
-  }, [pauseWords, status]);
+  }, [incrementId, status]);
 
   // reveal rest of tossup
   useEffect(() => {
-    if (status === ReaderStatus.answered) {
+    if (status === ReaderStatus.judged) {
       revealWords();
     }
   }, [revealWords, status]);
