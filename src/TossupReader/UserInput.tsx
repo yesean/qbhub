@@ -1,17 +1,18 @@
 import { Center, Flex, Input } from '@chakra-ui/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../app/hooks';
 import TealButton from '../components/TealButton';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import { selectSettings } from '../Settings/settingsSlice';
-import { TossupScore } from '../types/tossups';
+import { JudgeResult } from '../types/tossups';
 import logger from '../utils/logger';
-import { checkAnswer, parseAnswers } from '../utils/questionReader';
+import { getTossupScore, Judge } from '../utils/questionReader';
 import { convertNumberToWords } from '../utils/string';
 import {
   buzz as buzzAction,
   nextTossup as nextTossupAction,
+  prompt,
   ReaderStatus,
   selectTossupReader,
   submitAnswer,
@@ -21,63 +22,74 @@ type UserInputProps = {
   progress: number;
 };
 const UserInput: React.FC<UserInputProps> = ({ progress }) => {
-  const [inputValue, setInputValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const { status, currentTossup, currentResult, currentBuzz } =
     useSelector(selectTossupReader);
   const settings = useSelector(selectSettings);
+  const [inputValue, setInputValue] = useState('');
+  const [judge, setJudge] = useState<Judge>();
   const dispatch = useAppDispatch();
+
+  const isAnswering = useMemo(
+    () => [ReaderStatus.answering, ReaderStatus.prompting].includes(status),
+    [status],
+  );
 
   // focus input when user is answering, blur otherwise
   useEffect(() => {
     if (inputRef.current !== null) {
-      if (status === ReaderStatus.answering) {
+      if (isAnswering) {
+        setInputValue('');
         inputRef.current.focus();
       } else {
         inputRef.current.blur();
       }
     }
-  }, [status]);
+  }, [isAnswering, status]);
 
   // reset input when fetching a new tossup
   useEffect(() => {
     if (status === ReaderStatus.reading) {
       setInputValue('');
+      setJudge(new Judge(currentTossup.formattedAnswer));
     }
-  }, [status]);
+  }, [currentTossup.formattedAnswer, status]);
 
   // process a user's answer when submitting
   const submit = useCallback(() => {
-    if (status === ReaderStatus.answering) {
-      const submittedAnswer = convertNumberToWords(
-        inputValue.trim().toLowerCase(),
-      );
-      const answers = parseAnswers(currentTossup.formattedAnswer);
-      const isAnswerCorrect = checkAnswer(submittedAnswer, answers);
+    if (judge === undefined) return;
 
-      logger.info(`User submitted "${submittedAnswer}"`);
-      logger.info('Buzz:', currentBuzz);
-      logger.info('Processed answers:', answers);
+    // judge the user answer
+    const userAnswer = convertNumberToWords(inputValue.trim().toLowerCase());
+    logger.info(`User submitted "${userAnswer}".`);
+    const judgeResult = judge.judge(userAnswer);
 
-      let score;
-      if (isAnswerCorrect) {
-        score = currentBuzz.isPower ? TossupScore.power : TossupScore.ten;
-      } else {
-        score = TossupScore.neg;
-      }
-
-      const result = {
-        tossup: currentTossup,
-        isCorrect: isAnswerCorrect,
-        score,
-        submittedAnswer,
-        buzz: currentBuzz,
-      };
-
-      dispatch(submitAnswer(result));
+    // prompt on answer
+    if (judgeResult === JudgeResult.prompt) {
+      logger.info(`Prompting on "${userAnswer}".`);
+      dispatch(prompt());
+      return;
     }
-  }, [currentBuzz, currentTossup, dispatch, inputValue, status]);
 
+    // submit answer
+    const isCorrect = judgeResult === JudgeResult.correct;
+    const result = {
+      tossup: currentTossup,
+      isCorrect,
+      score: getTossupScore(isCorrect, currentBuzz.isPower),
+      userAnswer,
+      buzz: currentBuzz,
+    };
+    logger.info(
+      `User answer "${userAnswer}" is ${
+        isCorrect ? `correct for ${result.score}` : 'incorrect'
+      }.`,
+    );
+    logger.info('Buzz:', currentBuzz);
+    dispatch(submitAnswer(result));
+  }, [currentBuzz, currentTossup, dispatch, inputValue, judge]);
+
+  // if timer ends, forcefully submit user answer
   useEffect(() => {
     if (progress === 0) {
       submit();
@@ -89,14 +101,14 @@ const UserInput: React.FC<UserInputProps> = ({ progress }) => {
   const next = useCallback(() => dispatch(nextTossupAction()), [dispatch]);
   useKeyboardShortcut('n', next, () => !settings.isOpen);
   useKeyboardShortcut(' ', buzz, () => !settings.isOpen);
-  useKeyboardShortcut('Enter', submit, () => !settings.isOpen);
+  useKeyboardShortcut('Enter', submit, () => !settings.isOpen && isAnswering);
 
   // add button behavior in different modes
   const statusBehavior: { [key in ReaderStatus]?: any } = {
     [ReaderStatus.idle]: next,
     [ReaderStatus.reading]: buzz,
     [ReaderStatus.answering]: submit,
-    [ReaderStatus.answered]: next,
+    [ReaderStatus.judged]: next,
   };
   const onButtonClick = () => statusBehavior[status]();
 
@@ -106,13 +118,17 @@ const UserInput: React.FC<UserInputProps> = ({ progress }) => {
     [ReaderStatus.fetching]: '...',
     [ReaderStatus.reading]: 'Buzz',
     [ReaderStatus.answering]: 'Submit',
-    [ReaderStatus.answered]: 'Next',
+    [ReaderStatus.prompting]: 'Submit',
+    [ReaderStatus.judged]: 'Next',
   };
   const buttonText = statusText[status];
 
+  const inputPlaceholder =
+    status === ReaderStatus.prompting ? 'Prompt:' : 'Answer:';
+
   // set input border depending on user correctness
   let inputBorderColor;
-  if (status === ReaderStatus.answered)
+  if (status === ReaderStatus.judged)
     inputBorderColor = currentResult.isCorrect ? 'green.400' : 'red.400';
 
   // only show start button at start
@@ -126,12 +142,12 @@ const UserInput: React.FC<UserInputProps> = ({ progress }) => {
             ref={inputRef}
             value={inputValue}
             onChange={(e) => setInputValue(e.currentTarget.value)}
-            placeholder="Answer:"
+            placeholder={inputPlaceholder}
             mb={8}
             mr={4}
-            isDisabled={status !== ReaderStatus.answering}
+            isDisabled={!isAnswering}
             borderColor={inputBorderColor}
-            borderWidth={status === ReaderStatus.answered ? 2 : undefined}
+            borderWidth={status === ReaderStatus.judged ? 2 : undefined}
           />
         )}
         <TealButton onClick={onButtonClick}>{buttonText}</TealButton>

@@ -3,13 +3,14 @@ import { Container, Text } from '@chakra-ui/react';
 import nlp from 'compromise';
 import { Fragment } from 'react';
 import ss from 'string-similarity';
-import { TossupReaderWord } from '../types/tossups';
+import { JudgeResult, TossupReaderWord, TossupScore } from '../types/tossups';
 import logger from './logger';
 import {
   anyTag,
   betweenParentheses,
   getCaptureGroups,
   ltgt,
+  quotes,
   remove,
   tag,
 } from './regex';
@@ -18,6 +19,16 @@ import {
   getTextBetweenTags,
   removeExtraSpaces,
 } from './string';
+
+/**
+ * Calculate tossup score based on buzz.
+ */
+export const getTossupScore = (isCorrect: boolean, isInPower: boolean) => {
+  if (isCorrect) {
+    return isInPower ? TossupScore.power : TossupScore.ten;
+  }
+  return TossupScore.neg;
+};
 
 /**
  * Compute the visibility of a word, depending on the reading position.
@@ -80,6 +91,7 @@ const cleanAnswerline = (s: string) =>
     .toLowerCase()
     .replaceAll(ltgt, '') // remove author metadata
     .replaceAll(betweenParentheses, '') // remove parenthesized stuff
+    .replaceAll(quotes, '')
     .replaceAll(tag('u'), '') // remove underline tags
     .replaceAll(tag('em'), '') // remove underline tags
     .replaceAll(/-/g, ' ') // dashes to spaces
@@ -88,7 +100,7 @@ const cleanAnswerline = (s: string) =>
 /**
  * Parse all valid answers from an answerline.
  */
-export const parseAnswers = (answer: string): string[] => {
+const parseCorrectAnswers = (answer: string): string[] => {
   // clean answerline
   let normalizedAnswer = cleanAnswerline(answer);
 
@@ -106,8 +118,8 @@ export const parseAnswers = (answer: string): string[] => {
   // parse answers according to acf guidelines
   const answerRegexes = [
     /(.*)\[/g, // first answer up to '['
-    /(?!\[|,|;|\s)(?:accept|or)\s(.*?)\s(?=accept|or|until|before|after\s)/g, // 'accept'/'or' to 'accept' | 'or' | 'until' | 'before' 'after'
-    /(?!\[|,|;|\s)(?:accept|or)\s(.*?)(?=,|;|\[|\])/g, // 'accept'/'or' to ',' | ';' | ']'
+    /(?!\[|,|;|\s)(?<!do not )(?:accept|or)\s(.*?)\s(?=accept|or|until|before|after\s)/g, // 'accept'/'or' to 'accept' | 'or' | 'until' | 'before' 'after'
+    /(?!\[|,|;|\s)(?<!do not )(?:accept|or)\s(.*?)(?=,|;|\[|\])/g, // 'accept'/'or' to ',' | ';' | ']'
     /(.*)/g, // entire answer
   ];
   const answers = answerRegexes.flatMap(
@@ -138,18 +150,84 @@ export const parseAnswers = (answer: string): string[] => {
 /**
  * Parse all promptable answers from an answerline.
  */
-export const parsePromptableAnswers = (answer: string) => {
+const parsePromptableAnswers = (answer: string) => {
   // clean answerline
-  const normalizedAnswer = cleanAnswerline(answer);
+  let normalizedAnswer = cleanAnswerline(answer);
+
+  // get all underlined answers
+  const underlineTags = ['u'];
+  const underlinedAnswers = underlineTags.flatMap((t) =>
+    getTextBetweenTags(normalizedAnswer, t)
+      .map(removeExtraSpaces)
+      .map((s) => s.trim()),
+  );
+
+  // remove tags from answerline
+  normalizedAnswer = remove(normalizedAnswer, anyTag);
+
+  // parse answers according to acf guidelines
+  const answerRegexes = [
+    /(?!\[|,|;|\s)(?<!do not |do not accept or)(?:prompt on)\s(.*?)\s(?=prompt on|or|until|before|after\s)/g, // 'accept'/'or' to 'accept' | 'or' | 'until' | 'before' 'after'
+    /(?!\[|,|;|\s)(?<!do not |do not accept or)(?:prompt on)\s(.*?)(?=,|;|\[|\])/g, // 'accept'/'or' to ',' | ';' | ']'
+  ];
+  const answers = answerRegexes.flatMap(
+    (r) =>
+      getCaptureGroups(normalizedAnswer, r)
+        .map(removeExtraSpaces)
+        .map((s) => s.trim())
+        .filter(Boolean), // remove empty strings
+  );
+
+  // combine underlined answers and parsed answers
+  let allAnswers = [...underlinedAnswers, ...answers];
+
+  // convert numbers to word form
+  allAnswers = allAnswers.map((ans) => convertNumberToWords(ans));
+
+  return [...new Set(allAnswers)];
 };
 
 /**
  * Check if an answer "approximately" matches any correct answers. Uses Dice's
  * coefficient to compare strings.
  */
-export const checkAnswer = (answer: string, correctAnswers: string[]) => {
-  const minRating = 0.6;
-  const ratings = ss.findBestMatch(answer, correctAnswers);
-  logger.info('Answer ratings:', ratings);
-  return ratings.bestMatch.rating > minRating;
+const checkAnswer = (userAnswer: string, answers: string[]) => {
+  return ss.findBestMatch(userAnswer, answers);
 };
+
+export class Judge {
+  correctAnswers: string[];
+
+  promptableAnswers: string[];
+
+  constructor(answerline: string) {
+    this.correctAnswers = parseCorrectAnswers(answerline);
+    this.promptableAnswers = parsePromptableAnswers(answerline);
+    logger.info('Correct answers:', this.correctAnswers);
+    logger.info('Promptable answers:', this.promptableAnswers);
+  }
+
+  judge(userAnswer: string): JudgeResult {
+    const MIN_RATING = 0.6;
+
+    let ratings = checkAnswer(userAnswer, this.correctAnswers);
+    logger.info(`Correct answer ratings for "${userAnswer}":`, ratings.ratings);
+    if (ratings.bestMatch.rating > MIN_RATING) {
+      return JudgeResult.correct;
+    }
+
+    if (this.promptableAnswers.length > 0) {
+      ratings = checkAnswer(userAnswer, this.promptableAnswers);
+      logger.info(
+        `Promptable answer ratings for "${userAnswer}":`,
+        ratings.ratings,
+      );
+      if (ratings.bestMatch.rating > MIN_RATING) {
+        this.promptableAnswers.splice(ratings.bestMatchIndex, 1);
+        return JudgeResult.prompt;
+      }
+    }
+
+    return JudgeResult.incorrect;
+  }
+}
