@@ -10,7 +10,7 @@ export enum ReaderStatus {
   reading,
   answering,
   prompting,
-  answered,
+  judged,
   empty,
 }
 
@@ -63,7 +63,7 @@ export const nextTossup = createAsyncThunk<
   {
     condition: (_, { getState }) => {
       const { tossupReader } = getState();
-      return [ReaderStatus.idle, ReaderStatus.answered].includes(
+      return [ReaderStatus.idle, ReaderStatus.judged].includes(
         tossupReader.status,
       );
     },

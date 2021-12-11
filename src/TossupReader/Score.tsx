@@ -16,7 +16,7 @@ const Score: React.FC = () => {
   } = useSelector(selectTossupReader);
 
   const scoreDisplay =
-    status === ReaderStatus.answered
+    status === ReaderStatus.judged
       ? `${score - result.score} → ${score}`
       : score;
 

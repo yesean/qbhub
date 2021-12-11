@@ -85,7 +85,7 @@ const TossupHistoryModal: React.FC = () => {
                   backgroundColor={r.score > 0 ? 'green.200' : 'red.200'}
                 >
                   <Td>{r.score}</Td>
-                  <Td>{r.submittedAnswer}</Td>
+                  <Td>{r.userAnswer}</Td>
                   <Td>{parseHTMLString(r.tossup.formattedAnswer)}</Td>
                   <Td>
                     {renderQuestion(

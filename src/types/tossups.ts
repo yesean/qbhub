@@ -19,6 +19,12 @@ export enum TossupScore {
   power = 15,
 }
 
+export enum JudgeResult {
+  correct,
+  incorrect,
+  prompt,
+}
+
 export type TossupReaderWord = {
   original: string;
   shuffled: string;
@@ -35,7 +41,7 @@ export type TossupBuzz = {
 export type TossupResult = {
   tossup: Tossup;
   isCorrect: boolean;
-  submittedAnswer: string;
+  userAnswer: string;
   score: TossupScore;
   buzz: TossupBuzz;
 };

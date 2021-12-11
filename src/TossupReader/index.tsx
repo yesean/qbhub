@@ -26,7 +26,7 @@ const TossupReader: React.FC<TossupReaderProps> = () => {
     ![ReaderStatus.idle, ReaderStatus.fetching, ReaderStatus.empty].includes(
       status,
     ) && <Info />;
-  const renderAnswer = () => status === ReaderStatus.answered && <Answer />;
+  const renderAnswer = () => status === ReaderStatus.judged && <Answer />;
   const renderQuestion = () => status !== ReaderStatus.idle && <Question />;
   const renderResult = () => status === ReaderStatus.answered && <Result />;
   const renderProgress = () =>
