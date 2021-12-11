@@ -5,6 +5,7 @@ export const betweenTags = (t: string) => new RegExp(`<${t}>(.*?)</${t}>`, 'g');
 export const betweenParentheses = /\(.*?\)/g;
 export const duplicateSpace = /\s\s+/g;
 export const ltgt = /&lt;.*?&gt;/g;
+export const quotes = /["'\u2018\u2019\u201C\u201D]/g;
 
 /**
  * Get all regex capture groups from a string. Assumes only capture group per
