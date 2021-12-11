@@ -82,9 +82,19 @@ const tossupReaderSlice = createSlice({
     setBuzz: (state, action: PayloadAction<TossupBuzz>) => {
       state.currentBuzz = action.payload;
     },
+    prompt: (state) => {
+      if (
+        [ReaderStatus.answering, ReaderStatus.prompting].includes(state.status)
+      ) {
+        state.status = ReaderStatus.prompting;
+      }
+    },
     submitAnswer: (state, action: PayloadAction<TossupResult>) => {
-      if (state.status === ReaderStatus.answering) {
-        state.status = ReaderStatus.answered;
+      if (
+        state.status === ReaderStatus.answering ||
+        state.status === ReaderStatus.prompting
+      ) {
+        state.status = ReaderStatus.judged;
         state.currentResult = action.payload;
         state.results.unshift(action.payload);
         state.score += action.payload.score;
@@ -135,6 +145,7 @@ const tossupReaderSlice = createSlice({
 export const {
   buzz,
   setBuzz,
+  prompt,
   submitAnswer,
   filterTossupsByCategory,
   filterTossupsBySubcategory,
