@@ -50,22 +50,12 @@ const getWord = (word: TossupReaderWord, index: number, visibleIndex: number) =>
  */
 export const renderQuestion = (
   words: TossupReaderWord[],
-  buzzIndex: number,
-  visibleIndex: number,
-) =>
-  words.map((w, i) => (
-    <Fragment key={`${w}${i}`}>
-      <Text
-        /* eslint react/no-array-index-key: "off" */
-        d="inline-flex"
-        alignItems="center"
-        whiteSpace="pre"
-        visibility={computeVisibility(i, visibleIndex)}
-        fontWeight={w.isInPower ? 'bold' : 'normal'}
-      >
-        {`${getWord(w, i, visibleIndex)} `}
-      </Text>
-      {i === buzzIndex && (
+  buzzIndex: number = -1,
+  visibleIndex: number = words.length,
+) => {
+  const renderBell = (shouldRender: boolean) => {
+    if (shouldRender) {
+      return (
         <Container
           color="cyan.500"
           m={0}
@@ -79,9 +69,27 @@ export const renderQuestion = (
           <BellIcon w={4} h={4} />
           <Text d="inline"> </Text>
         </Container>
-      )}
+      );
+    }
+    return null;
+  };
+
+  return words.map((w, i) => (
+    <Fragment key={`${w}${i}`}>
+      <Text
+        /* eslint react/no-array-index-key: "off" */
+        d="inline-flex"
+        alignItems="center"
+        whiteSpace="pre"
+        visibility={computeVisibility(i, visibleIndex)}
+        fontWeight={w.isInPower ? 'bold' : 'normal'}
+      >
+        {`${getWord(w, i, visibleIndex)} `}
+      </Text>
+      {renderBell(i === buzzIndex)}
     </Fragment>
   ));
+};
 
 /**
  * Clean a tossup answerline for parsing.

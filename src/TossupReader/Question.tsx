@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectSettings } from '../Settings/settingsSlice';
 import { TossupReaderWord } from '../types/tossups';
 import logger from '../utils/logger';
-import { renderQuestion } from '../utils/questionReader';
+import { renderQuestion } from '../utils/reader';
 import { getReadingTimeoutDelay } from '../utils/settings';
 import { getTextBetweenTags, shuffle } from '../utils/string';
 import {

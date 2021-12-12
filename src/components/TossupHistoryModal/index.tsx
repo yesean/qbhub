@@ -16,7 +16,7 @@ import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../app/hooks';
 import { selectTossupReader } from '../../TossupReader/tossupReaderSlice';
 import { TossupScore } from '../../types/tossups';
-import { renderQuestion } from '../../utils/questionReader';
+import { renderQuestion } from '../../utils/reader';
 import { parseHTMLString } from '../../utils/string';
 import TealButton from '../TealButton';
 import { close, selectTossupHistoryModal } from './tossupHistoryModalSlice';
@@ -87,13 +87,7 @@ const TossupHistoryModal: React.FC = () => {
                   <Td>{r.score}</Td>
                   <Td>{r.userAnswer}</Td>
                   <Td>{parseHTMLString(r.tossup.formattedAnswer)}</Td>
-                  <Td>
-                    {renderQuestion(
-                      r.buzz.textWithBuzz,
-                      r.buzz.index,
-                      r.buzz.textWithBuzz.length,
-                    )}
-                  </Td>
+                  <Td>{renderQuestion(r.buzz.textWithBuzz, r.buzz.index)}</Td>
                   <Td>{r.tossup.tournament}</Td>
                 </Tr>
               ))}
