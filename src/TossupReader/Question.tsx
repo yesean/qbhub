@@ -6,7 +6,7 @@ import { TossupReaderWord } from '../types/tossups';
 import logger from '../utils/logger';
 import { renderQuestion } from '../utils/questionReader';
 import { getReadingTimeoutDelay } from '../utils/settings';
-import { getTextBetweenTags, shuffleString } from '../utils/string';
+import { getTextBetweenTags, shuffle } from '../utils/string';
 import {
   buzz,
   ReaderStatus,
@@ -21,7 +21,7 @@ type PowerWordsCount = {
 const getWords = (text: string) =>
   text.split(' ').map((w) => ({
     original: w,
-    shuffled: shuffleString(w),
+    shuffled: shuffle(w),
   }));
 
 const getPowerWordsCount = (formattedText: string) => {

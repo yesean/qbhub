@@ -7,7 +7,7 @@ import { betweenTags, getCaptureGroups } from './regex';
 /**
  * Shuffle a string using Fischer-Yates shuffle.
  */
-export const shuffleString = (s: string) => {
+export const shuffle = (s: string) => {
   const chars = s.split('');
   const shuffled = [];
   while (shuffled.length < s.length) {
