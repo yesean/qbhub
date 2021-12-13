@@ -10,11 +10,11 @@ const Info: React.FC = () => {
     },
   } = useSelector(selectTossupReader);
 
-  const info = subcategory
+  const text = subcategory
     ? `${tournament} / ${Difficulty[difficulty]} / ${Category[category]} / ${Subcategory[subcategory]}`
     : `${tournament} / ${Difficulty[difficulty]} / ${Category[category]}`;
 
-  return <ReaderInfo info={info} />;
+  return <ReaderInfo text={text} />;
 };
 
 export default Info;

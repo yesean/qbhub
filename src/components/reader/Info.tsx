@@ -1,12 +1,12 @@
 import { Heading } from '@chakra-ui/react';
 
 type InfoProps = {
-  info: string;
+  text: string;
 };
-const Info: React.FC<InfoProps> = ({ info }) => {
+const Info: React.FC<InfoProps> = ({ text }) => {
   return (
     <Heading pl={4} size="sm" mb={4}>
-      {info}
+      {text}
     </Heading>
   );
 };
