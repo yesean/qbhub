@@ -1,6 +1,6 @@
-import { Center, CircularProgress, Container } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import ReaderQuestion from '../components/reader/Question';
 import { useReader } from '../hooks/reader';
 import { renderQuestion } from '../utils/reader';
 import {
@@ -10,7 +10,7 @@ import {
   setVisible,
 } from './tossupReaderSlice';
 
-const Question: React.FC = () => {
+const Question = () => {
   const {
     status,
     current: {
@@ -59,41 +59,23 @@ const Question: React.FC = () => {
   );
 };
 
-const QuestionContainer: React.FC = () => {
+const Container = () => {
   const { status } = useSelector(selectTossupReader);
 
-  const shouldShowCircularProgress = status === ReaderStatus.fetching;
-  const shouldShowEmptyMsg = status === ReaderStatus.empty;
-
-  const render = () => {
-    if (shouldShowCircularProgress) {
-      return (
-        <Center>
-          <CircularProgress isIndeterminate color="cyan.100" />
-        </Center>
-      );
-    }
-    if (shouldShowEmptyMsg) {
-      return 'No tossups found. Try tweaking the search parameters.';
-    }
-    return <Question />;
-  };
+  const showLoading = status === ReaderStatus.fetching;
+  const showEmpty = status === ReaderStatus.empty;
+  const emptyMessage =
+    'No tossups found. Try checking your network connection or tweaking the search parameters.';
 
   return (
-    <Container
-      maxW="container.md"
-      bg="gray.100"
-      w="100%"
-      mb={4}
-      p={4}
-      d="flex"
-      flexWrap="wrap"
-      justifyContent={shouldShowCircularProgress ? 'center' : 'start'}
-      borderRadius="md"
+    <ReaderQuestion
+      showLoading={showLoading}
+      showEmpty={showEmpty}
+      emptyMessage={emptyMessage}
     >
-      {render()}
-    </Container>
+      <Question />
+    </ReaderQuestion>
   );
 };
 
-export default QuestionContainer;
+export default Container;
