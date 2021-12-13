@@ -3,11 +3,12 @@ import { Container, Text } from '@chakra-ui/react';
 import nlp from 'compromise';
 import { Fragment } from 'react';
 import ss from 'string-similarity';
-import { JudgeResult, TossupReaderWord, TossupScore } from '../types/tossups';
+import { JudgeResult, TossupScore } from '../types/tossups';
 import logger from './logger';
 import {
   anyTag,
   betweenParentheses,
+  duplicateSpace,
   getCaptureGroups,
   ltgt,
   quotes,
@@ -20,6 +21,14 @@ import {
   removeExtraSpaces,
 } from './string';
 
+export const getCleanedWords = (text: string) => {
+  return text
+    .replaceAll(anyTag, '')
+    .replaceAll(duplicateSpace, ' ')
+    .trim()
+    .split(' ');
+};
+
 /**
  * Calculate tossup score based on buzz.
  */
@@ -31,27 +40,24 @@ export const getTossupScore = (isCorrect: boolean, isInPower: boolean) => {
 };
 
 /**
- * Compute the visibility of a word, depending on the reading position.
+ * Get power index from tossup text.
  */
-const computeVisibility = (
-  index: number,
-  visibleIndex: number,
-): 'visible' | 'hidden' => (index <= visibleIndex ? 'visible' : 'hidden');
+export const getPowerIndex = (text: string) => {
+  const boldText = getTextBetweenTags(text, 'strong', false);
 
-/**
- * Determine whether or not to get shuffled word, depending on the reading position.
- */
-const getWord = (word: TossupReaderWord, index: number, visibleIndex: number) =>
-  index <= visibleIndex ? word.original : word.shuffled;
+  if (boldText.length === 0) {
+    return -1;
+  }
+  return getCleanedWords(boldText.join(' ')).length - 1;
+};
 
 /**
  * Render a question given its reading position. Display the buzz symbol if
  * specified.
  */
 export const renderQuestion = (
-  words: TossupReaderWord[],
-  buzzIndex: number = -1,
-  visibleIndex: number = words.length,
+  words: string[],
+  { visible = words.length, bold = -1, buzz = -1 },
 ) => {
   const renderBell = (shouldRender: boolean) => {
     if (shouldRender) {
@@ -81,12 +87,12 @@ export const renderQuestion = (
         d="inline-flex"
         alignItems="center"
         whiteSpace="pre"
-        visibility={computeVisibility(i, visibleIndex)}
-        fontWeight={w.isInPower ? 'bold' : 'normal'}
+        visibility={i <= visible ? 'visible' : 'hidden'}
+        fontWeight={i <= bold ? 'bold' : 'normal'}
       >
-        {`${getWord(w, i, visibleIndex)} `}
+        {`${w} `}
       </Text>
-      {renderBell(i === buzzIndex)}
+      {renderBell(i === buzz)}
     </Fragment>
   ));
 };

@@ -12,7 +12,7 @@ const Score: React.FC = () => {
   const {
     status,
     score,
-    currentResult: result,
+    current: { result },
   } = useSelector(selectTossupReader);
 
   const scoreDisplay =

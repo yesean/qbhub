@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Category, Difficulty, Subcategory } from '../types/questions';
 import { Tossup, Clue, Answer } from '../types/tossups';
 import logger from './logger';
-import { cleanTossupText } from './string';
+import { cleanTossupText, normalizeTags } from './string';
 
 const API_URL = '/api';
 const TOSSUP_URL = `${API_URL}/tossups`;
@@ -54,7 +54,7 @@ export const fetchTossups = async (params: FetchParams): Promise<Tossup[]> => {
       text: cleanTossupText(tu.text),
       answer: tu.answer,
       formattedText: cleanTossupText(tu.formattedText),
-      formattedAnswer: tu.formattedAnswer,
+      formattedAnswer: normalizeTags(tu.formattedAnswer),
       normalizedAnswer: tu.normalizedAnswer,
       category: tu.category,
       subcategory: tu.subcategory,

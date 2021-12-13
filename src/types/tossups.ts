@@ -15,36 +15,26 @@ export type Tossup = {
 
 export enum TossupScore {
   neg = -5,
+  incorrect = 0,
   ten = 10,
   power = 15,
 }
+
+export type TossupResult = {
+  isCorrect: boolean;
+  userAnswer: string;
+  score: TossupScore;
+  buzzIndex: number;
+  powerIndex: number;
+  words: string[];
+  tossup: Tossup;
+};
 
 export enum JudgeResult {
   correct,
   incorrect,
   prompt,
 }
-
-export type TossupReaderWord = {
-  original: string;
-  shuffled: string;
-  isInPower: boolean;
-};
-
-export type TossupBuzz = {
-  isPower: boolean;
-  readText: string;
-  index: number;
-  textWithBuzz: TossupReaderWord[];
-};
-
-export type TossupResult = {
-  tossup: Tossup;
-  isCorrect: boolean;
-  userAnswer: string;
-  score: TossupScore;
-  buzz: TossupBuzz;
-};
 
 export type Answer = {
   answer: string;
@@ -56,4 +46,8 @@ export type Clue = {
   sentence: string;
   tournament: string;
   score: number;
+};
+
+export type PowerWordsMap = {
+  [word: string]: number;
 };

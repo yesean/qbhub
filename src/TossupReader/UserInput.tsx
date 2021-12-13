@@ -7,7 +7,7 @@ import { useKeyboardShortcut } from '../hooks/keyboard';
 import { selectSettings } from '../Settings/settingsSlice';
 import { JudgeResult } from '../types/tossups';
 import logger from '../utils/logger';
-import { getTossupScore, Judge } from '../utils/reader';
+import { Judge } from '../utils/reader';
 import { convertNumberToWords } from '../utils/string';
 import {
   buzz as buzzAction,
@@ -23,8 +23,10 @@ type UserInputProps = {
 };
 const UserInput: React.FC<UserInputProps> = ({ progress }) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { status, currentTossup, currentResult, currentBuzz } =
-    useSelector(selectTossupReader);
+  const {
+    status,
+    current: { tossup, result },
+  } = useSelector(selectTossupReader);
   const settings = useSelector(selectSettings);
   const [inputValue, setInputValue] = useState('');
   const [judge, setJudge] = useState<Judge>();
@@ -51,9 +53,9 @@ const UserInput: React.FC<UserInputProps> = ({ progress }) => {
   useEffect(() => {
     if (status === ReaderStatus.reading) {
       setInputValue('');
-      setJudge(new Judge(currentTossup.formattedAnswer));
+      setJudge(new Judge(tossup.formattedAnswer));
     }
-  }, [currentTossup.formattedAnswer, status]);
+  }, [tossup.formattedAnswer, status]);
 
   // process a user's answer when submitting
   const submit = useCallback(() => {
@@ -73,21 +75,16 @@ const UserInput: React.FC<UserInputProps> = ({ progress }) => {
 
     // submit answer
     const isCorrect = judgeResult === JudgeResult.correct;
-    const result = {
-      tossup: currentTossup,
-      isCorrect,
-      score: getTossupScore(isCorrect, currentBuzz.isPower),
-      userAnswer,
-      buzz: currentBuzz,
-    };
     logger.info(
-      `User answer "${userAnswer}" is ${
-        isCorrect ? `correct for ${result.score}` : 'incorrect'
-      }.`,
+      `User answer "${userAnswer}" is ${isCorrect ? `correct` : 'incorrect'}.`,
     );
-    logger.info('Buzz:', currentBuzz);
-    dispatch(submitAnswer(result));
-  }, [currentBuzz, currentTossup, dispatch, inputValue, judge]);
+    dispatch(
+      submitAnswer({
+        isCorrect,
+        userAnswer,
+      }),
+    );
+  }, [dispatch, inputValue, judge]);
 
   // if timer ends, forcefully submit user answer
   useEffect(() => {
@@ -129,7 +126,7 @@ const UserInput: React.FC<UserInputProps> = ({ progress }) => {
   // set input border depending on user correctness
   let inputBorderColor;
   if (status === ReaderStatus.judged)
-    inputBorderColor = currentResult.isCorrect ? 'green.400' : 'red.400';
+    inputBorderColor = result.isCorrect ? 'green.400' : 'red.400';
 
   // only show start button at start
   const shouldShowInput = status !== ReaderStatus.idle;

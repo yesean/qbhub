@@ -26,13 +26,25 @@ export const removeExtraSpaces = (s: string) => {
 };
 
 /**
- * Adjust spacing for power marking.
+ * Normalize equivalent markup tags.
+ */
+export const normalizeTags = (s: string) => {
+  return s
+    .replaceAll(/<b>/g, '<strong>')
+    .replaceAll(/<\/b>/g, '</strong>')
+    .replaceAll(/<i>/g, '<em>')
+    .replaceAll(/<\/i>/g, '</em>');
+};
+
+/**
+ * Normalize tags and adjust spacing for power marking.
  */
 export const cleanTossupText = (text: string) => {
   return removeExtraSpaces(
-    text
+    normalizeTags(text)
       .replaceAll(/<\/strong>\s*\(\*\)/g, '(*) </strong>')
-      .replaceAll(/\(\*\)/g, ' (*) '),
+      .replaceAll(/\(\*\)/g, ' (*) ')
+      .replaceAll(/\(\*\)\s<\/strong>\)/g, '(*) </strong>'),
   );
 };
 
@@ -61,8 +73,8 @@ export const convertNumberToWords = (s: string) =>
  * Get text between opening and closing tags.
  * e.g. <foo>bar</foo> => bar
  */
-export const getTextBetweenTags = (text: string, t: string) =>
-  getCaptureGroups(text, betweenTags(t));
+export const getTextBetweenTags = (text: string, t: string, lazy = true) =>
+  getCaptureGroups(text, betweenTags(t, lazy));
 
 /**
  * Check if a word is between opening and closing tags.

@@ -7,7 +7,9 @@ import { selectTossupReader } from './tossupReaderSlice';
 
 const Answer: React.FC = () => {
   const {
-    currentTossup: { formattedAnswer, normalizedAnswer },
+    current: {
+      tossup: { formattedAnswer, normalizedAnswer },
+    },
   } = useSelector(selectTossupReader);
 
   return (

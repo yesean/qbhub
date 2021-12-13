@@ -5,7 +5,9 @@ import { selectTossupReader } from './tossupReaderSlice';
 
 const Info: React.FC = () => {
   const {
-    currentTossup: { tournament, category, subcategory, difficulty },
+    current: {
+      tossup: { tournament, category, subcategory, difficulty },
+    },
   } = useSelector(selectTossupReader);
 
   const info = subcategory
