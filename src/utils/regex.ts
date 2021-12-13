@@ -8,7 +8,7 @@ export const ltgt = /&lt;.*?&gt;/g;
 export const quotes = /["'\u2018\u2019\u201C\u201D]/g;
 
 /**
- * Get all regex capture groups from a string. Assumes only capture group per
+ * Get all regex capture groups from a string. Assumes only one capture group per
  * match.
  */
 export const getCaptureGroups = (s: string, r: RegExp) => {
