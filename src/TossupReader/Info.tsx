@@ -1,5 +1,5 @@
-import { Heading } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
+import ReaderInfo from '../components/reader/Info';
 import { Category, Difficulty, Subcategory } from '../types/questions';
 import { selectTossupReader } from './tossupReaderSlice';
 
@@ -14,11 +14,7 @@ const Info: React.FC = () => {
     ? `${tournament} / ${Difficulty[difficulty]} / ${Category[category]} / ${Subcategory[subcategory]}`
     : `${tournament} / ${Difficulty[difficulty]} / ${Category[category]}`;
 
-  return (
-    <Heading pl={4} size="sm" mb={4}>
-      {info}
-    </Heading>
-  );
+  return <ReaderInfo info={info} />;
 };
 
 export default Info;
