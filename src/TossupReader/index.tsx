@@ -2,13 +2,13 @@ import { Flex } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../app/hooks';
+import Progress from '../components/reader/Progress';
 import { JudgeResult } from '../types/tossups';
 import logger from '../utils/logger';
 import { Judge } from '../utils/reader';
 import { convertNumberToWords } from '../utils/string';
 import Answer from './Answer';
 import Info from './Info';
-import Progress from './Progress';
 import Question from './Question';
 import Result from './Result';
 import Score from './Score';
@@ -90,7 +90,13 @@ const TossupReader = () => {
       <Result />
     );
   const renderProgress = () =>
-    isAnswering && <Progress progress={progress} setProgress={setProgress} />;
+    isAnswering && (
+      <Progress
+        progress={progress}
+        setProgress={setProgress}
+        shouldTick={isAnswering}
+      />
+    );
   const renderInput = () =>
     status !== ReaderStatus.empty && (
       <UserInput progress={progress} submit={submit} />
