@@ -195,5 +195,9 @@ export const {
 } = tossupReaderSlice.actions;
 
 export const selectTossupReader = (state: RootState) => state.tossupReader;
+export const selectIsAnswering = (state: RootState) =>
+  [ReaderStatus.answering, ReaderStatus.prompting].includes(
+    state.tossupReader.status,
+  );
 
 export default tossupReaderSlice.reducer;
