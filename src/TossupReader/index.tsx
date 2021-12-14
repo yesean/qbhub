@@ -1,31 +1,83 @@
 import { Flex } from '@chakra-ui/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useAppDispatch } from '../app/hooks';
+import { JudgeResult } from '../types/tossups';
+import logger from '../utils/logger';
+import { Judge } from '../utils/reader';
+import { convertNumberToWords } from '../utils/string';
 import Answer from './Answer';
 import Info from './Info';
 import Progress from './Progress';
 import Question from './Question';
 import Result from './Result';
 import Score from './Score';
-import { ReaderStatus, selectTossupReader } from './tossupReaderSlice';
+import {
+  prompt,
+  ReaderStatus,
+  selectIsAnswering,
+  selectTossupReader,
+  submitAnswer,
+} from './tossupReaderSlice';
 import UserInput from './UserInput';
 
-type TossupReaderProps = {};
-
-const TossupReader: React.FC<TossupReaderProps> = () => {
+const TossupReader = () => {
   const [progress, setProgress] = useState(100);
-  const { status } = useSelector(selectTossupReader);
+  const [judge, setJudge] = useState<Judge>();
+  const {
+    status,
+    current: { tossup },
+  } = useSelector(selectTossupReader);
+  const isAnswering = useSelector(selectIsAnswering);
+  const dispatch = useAppDispatch();
 
-  const isAnswering = useMemo(
-    () => [ReaderStatus.answering, ReaderStatus.prompting].includes(status),
-    [status],
-  );
-
+  // reset timer when answering
   useEffect(() => {
     if (isAnswering) {
       setProgress(100);
     }
   }, [isAnswering, status]);
+
+  // reset judge on new tossup
+  useEffect(() => {
+    if (status === ReaderStatus.reading) {
+      setJudge(new Judge(tossup.formattedAnswer));
+    }
+  }, [status, tossup.formattedAnswer]);
+
+  // process a user's answer when submitting
+  const submit = useCallback(
+    (input: string) => {
+      if (judge === undefined || !isAnswering) return;
+
+      // judge the user answer
+      const userAnswer = convertNumberToWords(input.trim().toLowerCase());
+      logger.info(`User submitted "${userAnswer}".`);
+      const judgeResult = judge.judge(userAnswer);
+
+      // either prompt on answer or mark it as correct/incorrect
+      if (judgeResult === JudgeResult.prompt) {
+        // prompt on answer
+        logger.info(`Prompting on "${userAnswer}".`);
+        dispatch(prompt());
+      } else {
+        // submit answer
+        const isCorrect = judgeResult === JudgeResult.correct;
+        logger.info(
+          `User answer "${userAnswer}" is ${
+            isCorrect ? `correct` : 'incorrect'
+          }.`,
+        );
+        dispatch(
+          submitAnswer({
+            isCorrect,
+            userAnswer,
+          }),
+        );
+      }
+    },
+    [dispatch, isAnswering, judge],
+  );
 
   const renderInfo = () =>
     ![ReaderStatus.idle, ReaderStatus.fetching, ReaderStatus.empty].includes(
@@ -40,7 +92,9 @@ const TossupReader: React.FC<TossupReaderProps> = () => {
   const renderProgress = () =>
     isAnswering && <Progress progress={progress} setProgress={setProgress} />;
   const renderInput = () =>
-    status !== ReaderStatus.empty && <UserInput progress={progress} />;
+    status !== ReaderStatus.empty && (
+      <UserInput progress={progress} submit={submit} />
+    );
   const renderScore = () =>
     ![ReaderStatus.idle, ReaderStatus.empty].includes(status) && <Score />;
 
