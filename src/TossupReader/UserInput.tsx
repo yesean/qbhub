@@ -76,6 +76,12 @@ const UserInput: React.FC<UserInputProps> = ({ progress, submit }) => {
     }
   }, [progress, submitInput]);
 
+  // default, correct answer, incorrect answer
+  let borderColor;
+  if (status !== ReaderStatus.judged) borderColor = 'gray.300';
+  else if (result.isCorrect) borderColor = 'green.400';
+  else borderColor = 'red.400';
+
   return (
     <ReaderUserInput
       input={input}
@@ -86,7 +92,7 @@ const UserInput: React.FC<UserInputProps> = ({ progress, submit }) => {
       submit={submitInput}
       shouldSubmit={progress === 0}
       disabled={!isAnswering}
-      borderColor={result.isCorrect ? 'green.400' : 'red.400'}
+      borderColor={borderColor}
       showBorder={status === ReaderStatus.judged}
       showInput={status !== ReaderStatus.idle}
     />
