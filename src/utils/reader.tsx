@@ -1,33 +1,32 @@
 import { BellIcon } from '@chakra-ui/icons';
 import { Container, Text } from '@chakra-ui/react';
-import nlp from 'compromise';
 import { Fragment } from 'react';
 import ss from 'string-similarity';
 import { JudgeResult, TossupScore } from '../types/tossups';
+import { combine, emptyStringFilter, getUnique } from './array';
 import logger from './logger';
 import {
   anyTag,
-  betweenParentheses,
-  duplicateSpace,
   getCaptureGroups,
   ltgt,
   quotes,
   remove,
-  tag,
+  removeNonAlphanumeric,
+  removeTags,
 } from './regex';
 import {
   convertNumberToWords,
   getTextBetweenTags,
-  removeExtraSpaces,
+  normalizeSpacing,
+  removeFirstNames,
 } from './string';
 
-export const getCleanedWords = (text: string) => {
-  return text
-    .replaceAll(anyTag, '')
-    .replaceAll(duplicateSpace, ' ')
-    .trim()
-    .split(' ');
-};
+/**
+ * Get words from string without any tags.
+ * e.g. I <strong>love</strong> dogs -> [I, love, dogs]
+ */
+export const getCleanedWords = (text: string) =>
+  normalizeSpacing(text.replaceAll(anyTag, '')).split(' ');
 
 /**
  * Calculate tossup score based on buzz.
@@ -101,104 +100,85 @@ export const renderQuestion = (
  * Clean a tossup answerline for parsing.
  */
 const cleanAnswerline = (s: string) =>
-  s
-    .toLowerCase()
-    .replaceAll(ltgt, '') // remove author metadata
-    .replaceAll(betweenParentheses, '') // remove parenthesized stuff
-    .replaceAll(quotes, '')
-    .replaceAll(tag('u'), '') // remove underline tags
-    .replaceAll(tag('em'), '') // remove underline tags
-    .replaceAll(/-/g, ' ') // dashes to spaces
-    .trim();
+  normalizeSpacing(
+    s
+      .replaceAll(ltgt, '') // remove author metadata
+      .replaceAll(/\((?!accept|or|prompt).*?\)/g, '') // remove parenthesized stuff if the information is not important
+      .replaceAll('(', '[')
+      .replaceAll(')', ']'),
+  );
+
+/**
+ * Normalize answer for comparison.
+ */
+const normalizeAnswer = (s: string) =>
+  normalizeSpacing(
+    removeNonAlphanumeric(
+      convertNumberToWords(
+        s.replaceAll(/-/g, ' ').replaceAll(quotes, ''),
+      ).toLowerCase(),
+    ),
+  );
 
 /**
  * Parse all valid answers from an answerline.
  */
-const parseCorrectAnswers = (answer: string): string[] => {
-  // clean answerline
-  let normalizedAnswer = cleanAnswerline(answer);
+const parseCorrectAnswers = (answerline: string): string[] => {
+  let normalizedAnswer = cleanAnswerline(answerline);
 
-  // get all bold answers
-  const boldTags = ['strong', 'b'];
-  const boldAnswers = boldTags.flatMap((t) =>
-    getTextBetweenTags(normalizedAnswer, t)
-      .map(removeExtraSpaces)
-      .map((s) => s.trim()),
+  // get bolded answers
+  const boldAnswers = getTextBetweenTags(normalizedAnswer, 'strong').map(
+    removeTags,
   );
 
-  // remove tags from answerline
+  // remove tags since they are not needed anymore
   normalizedAnswer = remove(normalizedAnswer, anyTag);
 
-  // parse answers according to acf guidelines
+  // parse acceptable answers, roughly based on acf guidelines
   const answerRegexes = [
-    /(.*)\[/g, // first answer up to '['
-    /(?!\[|,|;|\s)(?<!do not )(?:accept|or)\s(.*?)\s(?=accept|or|until|before|after\s)/g, // 'accept'/'or' to 'accept' | 'or' | 'until' | 'before' 'after'
-    /(?!\[|,|;|\s)(?<!do not )(?:accept|or)\s(.*?)(?=,|;|\[|\])/g, // 'accept'/'or' to ',' | ';' | ']'
-    /(.*)/g, // entire answer
+    /^(.*?)(?:$|(?:\[| or ).*)/g, // first answer up to '[' or EOL
+    /(?<=[[,;\s])(?:(?<!do not (?:prompt on or )?)accept|(?<!(?:do not accept|(?:do not )?prompt on)[^,;]* )or)\s(.*?)(?=\s(?:(?:do not )?(?:prompt on|accept)|or|until|before|after)\s|[,;[\]]|$)/g,
   ];
-  const answers = answerRegexes.flatMap(
-    (r) =>
-      getCaptureGroups(normalizedAnswer, r)
-        .map(removeExtraSpaces)
-        .map((s) => s.trim())
-        .filter(Boolean), // remove empty strings
+  const answers = answerRegexes.flatMap((regex) =>
+    getCaptureGroups(normalizedAnswer, regex),
   );
 
-  // combine bold answers and parsed answers
-  let allAnswers = [...boldAnswers, ...answers];
+  let allAnswers = combine(boldAnswers, answers);
+  const answersWithoutFirstNames = allAnswers.map(removeFirstNames);
+  allAnswers = combine(allAnswers, answersWithoutFirstNames)
+    .map(normalizeAnswer)
+    .filter(emptyStringFilter);
 
-  // convert numbers to word form
-  allAnswers = allAnswers.map((ans) => convertNumberToWords(ans));
-
-  // parse any last names and mark them as valid
-  const lastNames = allAnswers
-    .flatMap((ans) => {
-      return nlp(ans).people().match('#LastName').text();
-    })
-    .filter(Boolean);
-  logger.info('Last names:', lastNames);
-
-  return [...new Set([...allAnswers, ...lastNames])];
+  return getUnique(allAnswers);
 };
 
 /**
  * Parse all promptable answers from an answerline.
  */
 const parsePromptableAnswers = (answer: string) => {
-  // clean answerline
   let normalizedAnswer = cleanAnswerline(answer);
 
-  // get all underlined answers
-  const underlineTags = ['u'];
-  const underlinedAnswers = underlineTags.flatMap((t) =>
-    getTextBetweenTags(normalizedAnswer, t)
-      .map(removeExtraSpaces)
-      .map((s) => s.trim()),
+  // get underlined answers
+  const underlinedAnswers = getTextBetweenTags(normalizedAnswer, 'u').map(
+    removeTags,
   );
 
-  // remove tags from answerline
+  // remove tags since they are not needed anymore
   normalizedAnswer = remove(normalizedAnswer, anyTag);
 
-  // parse answers according to acf guidelines
-  const answerRegexes = [
-    /(?!\[|,|;|\s)(?<!do not |do not accept or)(?:prompt on)\s(.*?)\s(?=prompt on|or|until|before|after\s)/g, // 'accept'/'or' to 'accept' | 'or' | 'until' | 'before' 'after'
-    /(?!\[|,|;|\s)(?<!do not |do not accept or)(?:prompt on)\s(.*?)(?=,|;|\[|\])/g, // 'accept'/'or' to ',' | ';' | ']'
+  // parse promptable answers, roughly based on acf guidelines
+  const promptRegexes = [
+    /(?<=[[,;\s])(?:(?<!do not(?: accept or)? )prompt on|(?<=(?<!do not(?: accept or)? )prompt on(?:[^,;\n]*))or)\s(.*?)(?=\s(?:(?:do not )?(?:prompt on|accept)|or|until|before|after)\s|[,;[\]]|$)/g,
   ];
-  const answers = answerRegexes.flatMap(
-    (r) =>
-      getCaptureGroups(normalizedAnswer, r)
-        .map(removeExtraSpaces)
-        .map((s) => s.trim())
-        .filter(Boolean), // remove empty strings
+  const answers = promptRegexes.flatMap((regex) =>
+    getCaptureGroups(normalizedAnswer, regex),
   );
 
-  // combine underlined answers and parsed answers
-  let allAnswers = [...underlinedAnswers, ...answers];
+  const allAnswers = combine(underlinedAnswers, answers)
+    .map(normalizeAnswer)
+    .filter(emptyStringFilter);
 
-  // convert numbers to word form
-  allAnswers = allAnswers.map((ans) => convertNumberToWords(ans));
-
-  return [...new Set(allAnswers)];
+  return getUnique(allAnswers);
 };
 
 /**
@@ -209,6 +189,9 @@ const checkAnswer = (userAnswer: string, answers: string[]) => {
   return ss.findBestMatch(userAnswer, answers);
 };
 
+/**
+ * Class for judging user answers against an answerline, supports prompts.
+ */
 export class Judge {
   correctAnswers: string[];
 
@@ -237,6 +220,7 @@ export class Judge {
         ratings.ratings,
       );
       if (ratings.bestMatch.rating > MIN_RATING) {
+        // remove promptable answer, so it does not get prompted again
         this.promptableAnswers.splice(ratings.bestMatchIndex, 1);
         return JudgeResult.prompt;
       }
