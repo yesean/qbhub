@@ -1,8 +1,9 @@
+import nlp from 'compromise';
 import DOMPurify from 'dompurify';
 import { toWords } from 'number-to-words';
 import ReactHTMLParser from 'react-html-parser';
 import { getRand } from './number';
-import { betweenTags, getCaptureGroups } from './regex';
+import { betweenTags, getCaptureGroups, removeExtraSpaces } from './regex';
 
 /**
  * Shuffle a string using Fischer-Yates shuffle.
@@ -19,11 +20,9 @@ export const shuffle = (s: string) => {
 };
 
 /**
- * Squeeze multiple spaces into one space.
+ * Squeeze multiple spaces and trim string.
  */
-export const removeExtraSpaces = (s: string) => {
-  return s.replaceAll(/\s\s+/g, ' ');
-};
+export const normalizeSpacing = (s: string) => removeExtraSpaces(s).trim();
 
 /**
  * Normalize equivalent markup tags.
@@ -40,7 +39,7 @@ export const normalizeTags = (s: string) => {
  * Normalize tags and adjust spacing for power marking.
  */
 export const cleanTossupText = (text: string) => {
-  return removeExtraSpaces(
+  return normalizeSpacing(
     normalizeTags(text)
       .replaceAll(/<\/strong>\s*\(\*\)/g, '(*) </strong>')
       .replaceAll(/\(\*\)/g, ' (*) ')
@@ -55,7 +54,7 @@ export const parseHTMLString = (s: string) =>
   ReactHTMLParser(DOMPurify.sanitize(s));
 
 /**
- * Check if string is numberic.
+ * Check if string is numeric.
  */
 export const isNumeric = (s: string) => /^-?\d+$/.test(s);
 
@@ -71,19 +70,25 @@ export const convertNumberToWords = (s: string) =>
 
 /**
  * Get text between opening and closing tags.
- * e.g. <foo>bar</foo> => bar
+ * e.g. <foo>bar hello world</foo> => bar hello world
  */
 export const getTextBetweenTags = (text: string, t: string, lazy = true) =>
   getCaptureGroups(text, betweenTags(t, lazy));
 
 /**
- * Check if a word is between opening and closing tags.
- * Used to check if a word is in power (strong tags).
+ * Get words between opening and closing tags.
+ * e.g. <foo>bar hello world</foo> => [bar, hello, world]
  */
-export const checkIfWordIsBetweenTags = (
-  t: string,
-  text: string,
-  word: string,
-) => {
-  return getTextBetweenTags(text, t)?.includes(word);
-};
+export const getWordsBetweenTags = (text: string, t: string, lazy = true) =>
+  normalizeSpacing(getTextBetweenTags(text, t, lazy).join(' ')).split(' ');
+
+/**
+ * Remove first names from full names.
+ * e.g. Michael Jordan went to Larry Bird's house -> Jordan went to Bird's house
+ */
+export const removeFirstNames = (s: string) =>
+  nlp(s)
+    .replace('[#FirstName+] #LastName', (name: any) =>
+      name.match('#LastName')[0].text(),
+    )
+    .text();
