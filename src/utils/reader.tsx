@@ -1,5 +1,6 @@
 import { BellIcon } from '@chakra-ui/icons';
 import { Container, Text } from '@chakra-ui/react';
+import nlp from 'compromise';
 import { Fragment } from 'react';
 import ss from 'string-similarity';
 import { JudgeResult, TossupScore } from '../types/tossups';
@@ -111,11 +112,11 @@ const cleanAnswerline = (s: string) =>
 /**
  * Normalize answer for comparison.
  */
-const normalizeAnswer = (s: string) =>
+export const normalizeAnswer = (s: string) =>
   normalizeSpacing(
     removeNonAlphanumeric(
       convertNumberToWords(
-        s.replaceAll(/-/g, ' ').replaceAll(quotes, ''),
+        nlp(s).normalize('heavy').text().replaceAll(quotes, ''),
       ).toLowerCase(),
     ),
   );

@@ -5,8 +5,7 @@ import { useAppDispatch } from '../app/hooks';
 import Progress from '../components/reader/Progress';
 import { JudgeResult } from '../types/tossups';
 import logger from '../utils/logger';
-import { Judge } from '../utils/reader';
-import { convertNumberToWords } from '../utils/string';
+import { Judge, normalizeAnswer } from '../utils/reader';
 import Answer from './Answer';
 import Info from './Info';
 import Question from './Question';
@@ -51,7 +50,7 @@ const TossupReader = () => {
       if (judge === undefined || !isAnswering) return;
 
       // judge the user answer
-      const userAnswer = convertNumberToWords(input.trim().toLowerCase());
+      const userAnswer = normalizeAnswer(input);
       logger.info(`User submitted "${userAnswer}".`);
       const judgeResult = judge.judge(userAnswer);
 
