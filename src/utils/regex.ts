@@ -1,6 +1,5 @@
-export const nonAlphaNumeric = /[^\w\d\s]/g;
+export const nonAlphanumeric = /[^\w\d\s]/g;
 export const anyTag = /<.*?>/g;
-export const tag = (t: string) => new RegExp(`<${t}>|</${t}>`, 'g');
 export const betweenTags = (t: string, lazy = true) =>
   new RegExp(`<${t}>(.*${lazy ? '?' : ''})</${t}>`, 'g');
 export const betweenParentheses = /\(.*?\)/g;
@@ -20,3 +19,18 @@ export const getCaptureGroups = (s: string, r: RegExp) => {
  * Remove regex match from string.
  */
 export const remove = (s: string, r: RegExp) => s.replaceAll(r, '');
+
+/**
+ * Remove all tags from string.
+ */
+export const removeTags = (s: string) => remove(s, anyTag);
+
+/**
+ * Squeeze multiple spaces into one space.
+ */
+export const removeExtraSpaces = (s: string) => s.replaceAll(/\s\s+/g, ' ');
+
+/**
+ * Remove non-alphanumeric characters.
+ */
+export const removeNonAlphanumeric = (s: string) => remove(s, nonAlphanumeric);
