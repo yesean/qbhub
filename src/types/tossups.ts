@@ -20,13 +20,17 @@ export enum TossupScore {
   power = 15,
 }
 
+export type TossupWord = {
+  word: string;
+  bold: boolean;
+};
+
 export type TossupResult = {
   isCorrect: boolean;
   userAnswer: string;
   score: TossupScore;
   buzzIndex: number;
-  powerIndex: number;
-  words: string[];
+  words: TossupWord[];
   tossup: Tossup;
 };
 
@@ -46,8 +50,4 @@ export type Clue = {
   sentence: string;
   tournament: string;
   score: number;
-};
-
-export type PowerWordsMap = {
-  [word: string]: number;
 };

@@ -3,7 +3,7 @@ import { Container, Text } from '@chakra-ui/react';
 import nlp from 'compromise';
 import { Fragment } from 'react';
 import ss from 'string-similarity';
-import { JudgeResult, TossupScore } from '../types/tossups';
+import { JudgeResult, TossupScore, TossupWord } from '../types/tossups';
 import { combine, emptyStringFilter, getUnique } from './array';
 import logger from './logger';
 import {
@@ -18,6 +18,8 @@ import {
 import {
   convertNumberToWords,
   getTextBetweenTags,
+  getWords,
+  getWordsBetweenTags,
   normalizeSpacing,
   removeFirstNames,
 } from './string';
@@ -26,8 +28,29 @@ import {
  * Get words from string without any tags.
  * e.g. I <strong>love</strong> dogs -> [I, love, dogs]
  */
-export const getCleanedWords = (text: string) =>
-  normalizeSpacing(text.replaceAll(anyTag, '')).split(' ');
+export const getTossupWords = (text: string): TossupWord[] => {
+  const boldWords = getWordsBetweenTags(text, 'strong').map(removeTags);
+  const words = getWords(removeTags(text));
+
+  let boldWordIndex = 0;
+  const tossupWords = words.map((word) => {
+    if (boldWordIndex < boldWords.length && word === boldWords[boldWordIndex]) {
+      boldWordIndex += 1;
+      return { word, bold: true };
+    }
+    return { word, bold: false };
+  });
+
+  return tossupWords;
+};
+
+/**
+ * Get power index from tossup text.
+ */
+export const getPowerIndex = (tossupWords: TossupWord[]) => {
+  const POWER_MARKER = '(*)';
+  return tossupWords.findIndex(({ word }) => word === POWER_MARKER);
+};
 
 /**
  * Calculate tossup score based on buzz.
@@ -40,24 +63,12 @@ export const getTossupScore = (isCorrect: boolean, isInPower: boolean) => {
 };
 
 /**
- * Get power index from tossup text.
- */
-export const getPowerIndex = (text: string) => {
-  const boldText = getTextBetweenTags(text, 'strong', false);
-
-  if (boldText.length === 0) {
-    return -1;
-  }
-  return getCleanedWords(boldText.join(' ')).length - 1;
-};
-
-/**
  * Render a question given its reading position. Display the buzz symbol if
  * specified.
  */
 export const renderQuestion = (
-  words: string[],
-  { visible = words.length, bold = -1, buzz = -1 },
+  words: { word: string; bold: boolean }[],
+  { visible = words.length, buzz = -1 },
 ) => {
   const renderBell = (shouldRender: boolean) => {
     if (shouldRender) {
@@ -88,9 +99,9 @@ export const renderQuestion = (
         alignItems="center"
         whiteSpace="pre"
         visibility={i <= visible ? 'visible' : 'hidden'}
-        fontWeight={i <= bold ? 'bold' : 'normal'}
+        fontWeight={w.bold ? 'bold' : 'normal'}
       >
-        {`${w} `}
+        {`${w.word} `}
       </Text>
       {renderBell(i === buzz)}
     </Fragment>

@@ -89,7 +89,6 @@ const TossupHistoryModal: React.FC = () => {
                   <Td>{parseHTMLString(r.tossup.formattedAnswer)}</Td>
                   <Td>
                     {renderQuestion(r.words, {
-                      bold: r.powerIndex,
                       buzz: r.buzzIndex,
                     })}
                   </Td>

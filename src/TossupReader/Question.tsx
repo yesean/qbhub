@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ReaderQuestion from '../components/reader/Question';
 import { useReader } from '../hooks/reader';
-import { renderQuestion } from '../utils/reader';
+import { getTossupWords, renderQuestion } from '../utils/reader';
 import {
   buzz,
   ReaderStatus,
@@ -15,12 +15,17 @@ const Question = () => {
     status,
     current: {
       tossup: { formattedText },
-      powerIndex,
       buzzIndex,
+      tossupWords,
     },
   } = useSelector(selectTossupReader);
   const dispatch = useDispatch();
-  const { words, visibleIndex, pause, reveal } = useReader(formattedText);
+
+  const words = useMemo(
+    () => getTossupWords(formattedText).map(({ word }) => word),
+    [formattedText],
+  );
+  const { displayWords, visibleIndex, pause, reveal } = useReader(words);
 
   // update visible index
   useEffect(() => {
@@ -43,16 +48,20 @@ const Question = () => {
 
   // buzz at the end of the tossup
   useEffect(() => {
-    if (visibleIndex === words.length - 1) {
+    if (visibleIndex === displayWords.length - 1) {
       dispatch(buzz());
     }
-  }, [dispatch, visibleIndex, words.length]);
+  }, [dispatch, visibleIndex, displayWords.length]);
+
+  const shuffledTossupWords = displayWords.map((word, i) => ({
+    word,
+    bold: tossupWords[i].bold,
+  }));
 
   return (
     <>
-      {renderQuestion(words, {
+      {renderQuestion(shuffledTossupWords, {
         visible: visibleIndex,
-        bold: powerIndex,
         buzz: buzzIndex,
       })}
     </>

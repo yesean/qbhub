@@ -1,13 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../app/store';
 import { Category, Difficulty, Subcategory } from '../types/questions';
-import { Tossup, TossupResult } from '../types/tossups';
+import { Tossup, TossupResult, TossupWord } from '../types/tossups';
 import * as fetchUtils from '../utils/fetch';
-import {
-  getCleanedWords,
-  getPowerIndex,
-  getTossupScore,
-} from '../utils/reader';
+import { getTossupWords, getTossupScore, getPowerIndex } from '../utils/reader';
 
 export enum ReaderStatus {
   idle,
@@ -27,10 +23,10 @@ type TossupReaderState = {
   current: {
     tossup: Tossup;
     result: TossupResult;
-    powerIndex: number;
     buzzIndex: number;
     visibleIndex: number;
-    words: string[];
+    powerIndex: number;
+    tossupWords: TossupWord[];
   };
 };
 
@@ -45,7 +41,7 @@ const initialState: TossupReaderState = {
     visibleIndex: -1,
     buzzIndex: -1,
     powerIndex: -1,
-    words: [],
+    tossupWords: [],
   },
 };
 
@@ -123,12 +119,10 @@ const tossupReaderSlice = createSlice({
           state.current.buzzIndex <= state.current.powerIndex,
         );
         state.current.result = {
-          ...state.current.result,
           ...action.payload,
           score,
           buzzIndex: state.current.buzzIndex,
-          powerIndex: state.current.powerIndex,
-          words: state.current.words,
+          words: state.current.tossupWords,
           tossup: state.current.tossup,
         };
 
@@ -172,12 +166,10 @@ const tossupReaderSlice = createSlice({
         } else {
           state.current = { ...initialState.current };
           [state.current.tossup] = state.tossups;
-          state.current.powerIndex = getPowerIndex(
+          state.current.tossupWords = getTossupWords(
             state.current.tossup.formattedText,
           );
-          state.current.words = getCleanedWords(
-            state.current.tossup.formattedText,
-          );
+          state.current.powerIndex = getPowerIndex(state.current.tossupWords);
           state.tossups.shift();
           state.status = ReaderStatus.reading;
         }

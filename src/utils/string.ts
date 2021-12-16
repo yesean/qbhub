@@ -41,6 +41,8 @@ export const normalizeTags = (s: string) => {
 export const cleanTossupText = (text: string) => {
   return normalizeSpacing(
     normalizeTags(text)
+      .replaceAll(/([^\s])(<strong>)/g, '$1 $2')
+      .replaceAll(/(<\/strong>)([^\s])/g, '$1 $2')
       .replaceAll(/<\/strong>\s*\(\*\)/g, '(*) </strong>')
       .replaceAll(/\(\*\)/g, ' (*) ')
       .replaceAll(/\(\*\)\s<\/strong>\)/g, '(*) </strong>'),
@@ -69,18 +71,24 @@ export const convertNumberToWords = (s: string) =>
     .join(' ');
 
 /**
- * Get text between opening and closing tags.
- * e.g. <foo>bar hello world</foo> => bar hello world
+ * Split string words.
+ * e.g. hello it's me -> [hello, it's, me]
  */
-export const getTextBetweenTags = (text: string, t: string, lazy = true) =>
-  getCaptureGroups(text, betweenTags(t, lazy));
+export const getWords = (s: string) => normalizeSpacing(s).split(' ');
+
+/**
+ * Get text between opening and closing tags.
+ * e.g. <foo>bar hello</foo> <bar>world</bar> => [bar hello, world]
+ */
+export const getTextBetweenTags = (text: string, t: string) =>
+  getCaptureGroups(text, betweenTags(t)).map(normalizeSpacing);
 
 /**
  * Get words between opening and closing tags.
  * e.g. <foo>bar hello world</foo> => [bar, hello, world]
  */
-export const getWordsBetweenTags = (text: string, t: string, lazy = true) =>
-  normalizeSpacing(getTextBetweenTags(text, t, lazy).join(' ')).split(' ');
+export const getWordsBetweenTags = (text: string, t: string) =>
+  getWords(getTextBetweenTags(text, t).join(' '));
 
 /**
  * Remove first names from full names.

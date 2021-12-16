@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectSettings } from '../Settings/settingsSlice';
-import { getCleanedWords } from '../utils/reader';
 import { getReadingTimeoutDelay } from '../utils/settings';
 import { shuffle } from '../utils/string';
 
@@ -17,7 +16,7 @@ import { shuffle } from '../utils/string';
  * @returns {Function} resume Callback to resume reading.
  * @returns {Function} reveal Callback to reveal all words.
  */
-export const useReader = (text: string, startImmediately = true) => {
+export const useReader = (words: string[], startImmediately = true) => {
   const { readingSpeed } = useSelector(selectSettings);
   const [visibleIndex, setVisibleIndex] = useState(0);
   const [incrementId, setIncrementId] = useState<NodeJS.Timeout | null>(null);
@@ -27,13 +26,12 @@ export const useReader = (text: string, startImmediately = true) => {
     () => getReadingTimeoutDelay(readingSpeed),
     [readingSpeed],
   );
-  const words = useMemo(() => {
-    const textWords = getCleanedWords(text);
-    return textWords.map((word) => ({
+  const shuffledWords = useMemo(() => {
+    return words.map((word) => ({
       original: word,
       shuffled: shuffle(word),
     }));
-  }, [text]);
+  }, [words]);
 
   // periodically reveal words
   useEffect(() => {
@@ -66,13 +64,15 @@ export const useReader = (text: string, startImmediately = true) => {
     setVisibleIndex(words.length);
   }, [pause, words.length]);
 
-  const visible = words
+  const visible = shuffledWords
     .slice(0, visibleIndex + 1)
     .map(({ original }) => original);
-  const hidden = words.slice(visibleIndex + 1).map(({ original }) => original);
+  const hidden = shuffledWords
+    .slice(visibleIndex + 1)
+    .map(({ shuffled }) => shuffled);
 
   return {
-    words: [...visible, ...hidden],
+    displayWords: [...visible, ...hidden],
     visibleIndex,
     pause,
     resume,
