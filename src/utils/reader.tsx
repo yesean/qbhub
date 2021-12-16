@@ -127,7 +127,7 @@ export const normalizeAnswer = (s: string) =>
   normalizeSpacing(
     removeNonAlphanumeric(
       convertNumberToWords(
-        nlp(s).normalize('heavy').text().replaceAll(quotes, ''),
+        nlp(s).normalize('light').text().replaceAll(quotes, ''),
       ).toLowerCase(),
     ),
   );
