@@ -71,10 +71,10 @@ const UserInput: React.FC<UserInputProps> = ({ progress, submit }) => {
 
   // submit user answer when timer ends
   useEffect(() => {
-    if (progress === 0) {
+    if (isAnswering && progress === 0) {
       submitInput();
     }
-  }, [progress, submitInput]);
+  }, [isAnswering, progress, submitInput]);
 
   // default, correct answer, incorrect answer
   let borderColor;

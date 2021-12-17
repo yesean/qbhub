@@ -30,17 +30,11 @@ const TossupReader = () => {
   const isAnswering = useSelector(selectIsAnswering);
   const dispatch = useAppDispatch();
 
-  // reset timer when answering
-  useEffect(() => {
-    if (isAnswering) {
-      setProgress(100);
-    }
-  }, [isAnswering, status]);
-
-  // reset judge on new tossup
+  // reset judge and progress on new tossup
   useEffect(() => {
     if (status === ReaderStatus.reading) {
       setJudge(new Judge(tossup.formattedAnswer));
+      setProgress(100);
     }
   }, [status, tossup.formattedAnswer]);
 
