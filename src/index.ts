@@ -10,14 +10,14 @@ import logger from './utils/logger';
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, '..', 'build')));
 
 app.use('/api/tossups', tossupsRouter);
 app.use('/api/bonuses', bonusesRouter);
 app.use('/api/freq', freqRouter);
 app.use('/api/clues', cluesRouter);
 app.get('*', (_, res) =>
-  res.sendFile(path.join(__dirname, 'build', 'index.html')),
+  res.sendFile(path.join(__dirname, '..', 'build', 'index.html')),
 );
 
 const PORT = process.env.PORT || 3001;

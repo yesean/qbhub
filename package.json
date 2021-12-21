@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node -r dotenv/config dist/index.js",
     "clean": "rm -rf dist",
-    "build:ui": "cd ../qbhub-client && yarn build && cp -r build ../qbhub-server/dist && cd ../qbhub-server",
+    "build:ui": "cd ../qbhub-client && yarn build && cp -r build ../qbhub-server && cd ../qbhub-server",
     "build:server": "tsc",
     "build": "yarn clean && yarn build:server && yarn build:ui",
     "deploy": "scp -r dist qbhub:~/qbhub-server/ && ssh qbhub 'pm2 restart qbhub'",
