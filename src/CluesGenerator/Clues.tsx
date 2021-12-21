@@ -1,4 +1,4 @@
-import { CircularProgress, Text, Tooltip } from '@chakra-ui/react';
+import { CircularProgress, Heading, Text, Tooltip } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
@@ -27,10 +27,20 @@ const Clues: React.FC = () => {
   const renderTooltip = (clue: Clue) => {
     const startIndex = clue.sentence.indexOf(clue.clue);
     if (startIndex === -1) {
-      return <Text>{clue.sentence}</Text>;
+      return (
+        <>
+          <Heading size="sm" mb={1}>
+            {clue.tournament}
+          </Heading>
+          <Text>{clue.sentence}</Text>
+        </>
+      );
     }
     return (
       <>
+        <Heading size="sm" mb={1}>
+          {clue.tournament}
+        </Heading>
         <Text display="inline">{clue.sentence.substring(0, startIndex)}</Text>
         <Text display="inline" as="mark" bgColor="#fffea9">
           {clue.sentence.substring(startIndex, startIndex + clue.clue.length)}
