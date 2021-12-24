@@ -22,3 +22,13 @@ export const getUnique = <T>(arr: T[]) => [...new Set(arr)];
  * Concatenate arrays.
  */
 export const combine = <T>(...arrs: T[][]) => arrs.flat();
+
+/**
+ * Zips an arbitrary number of arrays together, similar to Python's `zip`.
+ */
+export const zip = (...arrs: any[]) => {
+  const maxLength = arrs.reduce((max, arr) => Math.max(max, arr.length), 0);
+  return new Array(maxLength)
+    .fill(null)
+    .map((_, i) => arrs.map((arr) => arr[i]));
+};
