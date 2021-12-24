@@ -23,7 +23,7 @@ const Footer: React.FC = () => {
           bg="white"
           icon={
             <Link
-              href="https://github.com/seanye24/qbhub-frontend"
+              href="https://github.com/seanye24/qbhub-client"
               isExternal
               w={6}
               h={6}
