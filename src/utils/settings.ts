@@ -48,7 +48,7 @@ export const getInitialReadingSpeed = () => {
 };
 
 export const getInitialCategories = () => {
-  const defaultCategories = [Category.Science];
+  const defaultCategories: Category[] = [];
   const categories = window.localStorage.getItem(CATEGORIES_LS_KEY);
   if (categories === null) {
     setInitialCategories(defaultCategories);
