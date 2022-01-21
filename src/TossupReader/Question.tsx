@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { elementScrollIntoView } from 'seamless-scroll-polyfill';
 import ReaderQuestion from '../components/reader/Question';
 import { useReader } from '../hooks/reader';
 import { getTossupWords, renderQuestion } from '../utils/reader';
@@ -55,7 +56,9 @@ const Question = () => {
   }, [dispatch, visibleIndex, displayWords.length]);
 
   useEffect(() => {
-    visibleRef.current?.scrollIntoView({ block: 'center' });
+    if (visibleRef.current === null) return;
+
+    elementScrollIntoView(visibleRef.current, { block: 'center' });
   }, [visibleIndex, buzzIndex, status]);
 
   const shuffledTossupWords = displayWords.map((word, i) => ({
