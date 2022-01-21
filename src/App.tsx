@@ -1,5 +1,5 @@
 import { Flex } from '@chakra-ui/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useAppDispatch } from './app/hooks';
@@ -25,11 +25,22 @@ const App: React.FC = () => {
   const { pathname } = useLocation();
   const dispatch = useAppDispatch();
   const questionSettings = useSelector(selectQuestionSettings);
+  const [pageHeight, setPageHeight] = useState(window.innerHeight);
 
   // if question settings change, reset freq to initial state
   useEffect(() => {
     dispatch(reset());
   }, [dispatch, questionSettings]);
+
+  useEffect(() => {
+    const resize = () => {
+      setPageHeight(window.innerHeight);
+    };
+    window.addEventListener('resize', resize);
+    return () => {
+      window.removeEventListener('resize', resize);
+    };
+  }, []);
 
   // add global keyboard shortcuts
   const predicate = (e: KeyboardEvent) => e.target === document.body;
@@ -49,7 +60,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      <Flex direction="column" h="100vh">
+      <Flex direction="column" h={pageHeight}>
         <Header />
         <Body />
         <Footer />
