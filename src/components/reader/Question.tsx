@@ -32,6 +32,7 @@ const Question: React.FC<QuestionProps> = ({
       overflow="auto"
       bg="gray.100"
       w="100%"
+      minH="100px"
       mb={4}
       p={4}
       d="flex"
