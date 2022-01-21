@@ -1,6 +1,7 @@
 import {
   Box,
   FormLabel,
+  Heading,
   Modal,
   ModalBody,
   ModalContent,
@@ -108,7 +109,9 @@ const SettingsModal: React.FC = () => {
         <ModalHeader>Settings</ModalHeader>
         <ModalBody>
           <Box mb={4}>
-            <FormLabel>Reading Speed</FormLabel>
+            <Heading size="sm" mb={2} color="gray.800">
+              Reading Speed
+            </Heading>
             <Slider
               aria-label="tossup reading speed"
               colorScheme="cyan"
@@ -125,7 +128,9 @@ const SettingsModal: React.FC = () => {
             </Slider>
           </Box>
           <Box mb={4}>
-            <FormLabel>Category</FormLabel>
+            <Heading size="sm" mb={2} color="gray.800">
+              Category
+            </Heading>
             <Select
               isMulti
               name="categories"
@@ -135,7 +140,9 @@ const SettingsModal: React.FC = () => {
             />
           </Box>
           <Box mb={4}>
-            <FormLabel>Subcategory</FormLabel>
+            <Heading size="sm" mb={2} color="gray.800">
+              Subcategory
+            </Heading>
             <Select
               isMulti
               name="subcategories"
@@ -145,7 +152,9 @@ const SettingsModal: React.FC = () => {
             />
           </Box>
           <Box>
-            <FormLabel>Difficulty</FormLabel>
+            <Heading size="sm" mb={2} color="gray.800">
+              Difficulty
+            </Heading>
             <Select
               isMulti
               name="difficulties"
