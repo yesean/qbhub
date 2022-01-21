@@ -12,14 +12,17 @@ const About = () => {
     if (subheaders !== undefined) {
       content = subheaders.map((sub) => (
         <Box key={sub.label} mb={4}>
-          <Heading size="md" color="gray.600">
-            ▶ {sub.label}
+          <Heading size="md" pos="relative" color="gray.600">
+            <Text pos="absolute" left="-1rem">
+              •
+            </Text>
+            {sub.label}
           </Heading>
-          <Text fontFamily="IBM Plex Sans, sans-serif">{sub.text}</Text>
+          <Text>{sub.text}</Text>
         </Box>
       ));
     } else {
-      content = <Text fontFamily="IBM Plex Sans, sans-serif">{text}</Text>;
+      content = <Text>{text}</Text>;
     }
 
     return (

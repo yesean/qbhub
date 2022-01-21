@@ -29,7 +29,7 @@ export const headers = [
     text: 'QBHub is a Quizbowl platform that provides a collection of useful tools for studying and playing quizbowl. It was built with a focus on rich functionality combined with a clean, minimal design language.',
   },
   {
-    label: 'Tools',
+    label: 'Tools 🛠',
     subheaders: [
       {
         label: 'Tossup Reader',
@@ -50,7 +50,7 @@ export const headers = [
     ],
   },
   {
-    label: 'Features',
+    label: 'Features 🚀',
     subheaders: [
       {
         label: 'Minimalist Interface',
@@ -71,14 +71,14 @@ export const headers = [
     ],
   },
   {
-    label: 'Motivation',
+    label: 'Motivation ⚛',
     text: replaceLinks`With the compilation of the QuizDB database, I knew there was potential for useful features but the existing Quizbowl resources lacked what I wanted. QuizDB is excellent for viewing questions but lacks other features, Protobowl has a great question reader but lacks packet selection and has a clunky interface (IMO), and the other sites seemed similarly lacking in various regards. Also prior to QBHub, I developed some small offline text processing utilities that I wanted to port to a more accessible interface like the web. QBHub also seemed like a fun project to try out some new technologies (Redux, ChakraUI) and polish my web development skills. Originally, QBHub started off simply as a tossup reader with an interface similar to ${{
       label: 'typings.gg',
       href: 'https://typings.gg/',
     }}, but I later on began adding more features, eventually morphing QBHub into what it is now.`,
   },
   {
-    label: 'FAQ',
+    label: 'FAQ 💭',
     subheaders: [
       {
         label: 'How are the clues generated?',
@@ -108,7 +108,7 @@ export const headers = [
     ],
   },
   {
-    label: 'Contributing',
+    label: 'Contributing 🤝',
     text: replaceLinks`Contributions are welcome! If you want to file an issue, open a PR, or just browse the source code, you can do that ${{
       label: 'here',
       href: 'https:github.com/yesean/qbhub-client',
