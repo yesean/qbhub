@@ -1,5 +1,5 @@
 import { InfoOutlineIcon } from '@chakra-ui/icons';
-import { Flex, Icon, IconButton, Link, Text } from '@chakra-ui/react';
+import { Flex, Heading, Icon, IconButton, Link } from '@chakra-ui/react';
 import { AiFillGithub } from 'react-icons/ai';
 import { useAppDispatch } from '../../app/hooks';
 import { open } from '../InfoModal/infoModalSlice';
@@ -12,12 +12,12 @@ const Footer: React.FC = () => {
   return (
     <>
       <Flex align="center" justify="center" mt={2} p={3}>
-        <Text textAlign="center" fontWeight="bold" mr={2}>
+        <Heading textAlign="center" fontWeight="bold" size="sm" mr={2}>
           Created by{' '}
           <Link href="https://seanye.me" color="cyan.600" isExternal>
             Sean Ye
           </Link>
-        </Text>
+        </Heading>
         <IconButton
           aria-label="github link"
           bg="white"
