@@ -29,6 +29,7 @@ const Question: React.FC<QuestionProps> = ({
   return (
     <Container
       maxW="container.md"
+      overflow="auto"
       bg="gray.100"
       w="100%"
       mb={4}

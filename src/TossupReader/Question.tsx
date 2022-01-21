@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ReaderQuestion from '../components/reader/Question';
 import { useReader } from '../hooks/reader';
@@ -11,6 +11,7 @@ import {
 } from './tossupReaderSlice';
 
 const Question = () => {
+  const visibleRef = useRef<HTMLParagraphElement>(null);
   const {
     status,
     current: {
@@ -53,6 +54,10 @@ const Question = () => {
     }
   }, [dispatch, visibleIndex, displayWords.length]);
 
+  useEffect(() => {
+    visibleRef.current?.scrollIntoView({ block: 'center' });
+  }, [visibleIndex, buzzIndex, status]);
+
   const shuffledTossupWords = displayWords.map((word, i) => ({
     word,
     bold: tossupWords[i].bold,
@@ -60,10 +65,14 @@ const Question = () => {
 
   return (
     <>
-      {renderQuestion(shuffledTossupWords, {
-        visible: visibleIndex,
-        buzz: buzzIndex,
-      })}
+      {renderQuestion(
+        shuffledTossupWords,
+        {
+          visible: visibleIndex,
+          buzz: buzzIndex,
+        },
+        visibleRef,
+      )}
     </>
   );
 };

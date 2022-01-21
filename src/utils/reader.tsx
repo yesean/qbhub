@@ -70,6 +70,7 @@ export const getTossupScore = (isCorrect: boolean, isInPower: boolean) => {
 export const renderQuestion = (
   words: { word: string; bold: boolean }[],
   { visible = words.length, buzz = -1 },
+  visibleRef?: React.RefObject<HTMLParagraphElement>,
 ) => {
   const renderBell = (shouldRender: boolean) => {
     if (shouldRender) {
@@ -96,8 +97,8 @@ export const renderQuestion = (
     <Fragment key={`${w}${i}`}>
       <Text
         /* eslint react/no-array-index-key: "off" */
-        d="inline-flex"
-        alignItems="center"
+        ref={i === visible ? visibleRef : undefined}
+        d="inline-block"
         whiteSpace="pre"
         visibility={i <= visible ? 'visible' : 'hidden'}
         fontWeight={w.bold ? 'bold' : 'normal'}
