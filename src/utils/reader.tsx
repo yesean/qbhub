@@ -99,7 +99,8 @@ export const renderQuestion = (
         /* eslint react/no-array-index-key: "off" */
         ref={i === visible ? visibleRef : undefined}
         d="inline-block"
-        whiteSpace="pre"
+        whiteSpace="break-spaces"
+        wordBreak="break-all"
         visibility={i <= visible ? 'visible' : 'hidden'}
         fontWeight={w.bold ? 'bold' : 'normal'}
       >
