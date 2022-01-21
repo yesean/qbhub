@@ -20,6 +20,7 @@ import {
   getTextBetweenTags,
   getWords,
   getWordsBetweenTags,
+  multipleLastIndexOf,
   normalizeSpacing,
   removeFirstNames,
 } from './string';
@@ -133,9 +134,53 @@ export const normalizeAnswer = (s: string) =>
   );
 
 /**
+ * Filters out negated answers such as 'do not accept foo' or 'do not prompt on
+ * or accept bar'. Used as a drop-in replacement for lookbehind assertions
+ * (not supported in Safari) in the answer parser regex.
+ * Answerlines often take the form 'do not accept foo or bar' and the answer
+ * regex will match at 'accept' or 'or' so a lookup has to be performed to ensure
+ * that an answer isn't proceeded by 'do not' or some other form of negation.
+ */
+const filterNegativeAnswers = (
+  matchArray: RegExpExecArray,
+  answerType: 'accept' | 'prompt',
+) => {
+  const { 0: match, index, input } = matchArray;
+  const answerPrefix = match.slice(1).split(' ')[0];
+
+  if (answerType === 'accept' && answerPrefix === 'accept') {
+    const negatives = ['do not', 'do not prompt on or', 'do not prompt or'];
+    return negatives.every((neg) => !input.endsWith(neg, index));
+  }
+
+  if (answerType === 'prompt' && answerPrefix === 'prompt') {
+    const negatives = ['do not', 'do not accept or'];
+    return negatives.every((neg) => !input.endsWith(neg, index));
+  }
+
+  const startIndex = multipleLastIndexOf(input, [';', ',', '['], index);
+  const prevString = input.slice(startIndex, index);
+
+  if (answerType === 'accept' && answerPrefix === 'or') {
+    const negatives = ['do not accept', 'prompt on', 'prompt'];
+    return negatives.every((neg) => !prevString.includes(neg));
+  }
+
+  if (answerType === 'prompt' && answerPrefix === 'or') {
+    const promptIndex = prevString.lastIndexOf('prompt on');
+    if (promptIndex === -1) return false;
+
+    const negatives = ['do not ', 'do not accept or '];
+    return negatives.every((neg) => !prevString.endsWith(neg, promptIndex));
+  }
+
+  return true;
+};
+
+/**
  * Parse all valid answers from an answerline.
  */
-const parseCorrectAnswers = (answerline: string): string[] => {
+export const parseAcceptableAnswers = (answerline: string): string[] => {
   let normalizedAnswer = cleanAnswerline(answerline);
 
   // get bolded answers
@@ -147,13 +192,19 @@ const parseCorrectAnswers = (answerline: string): string[] => {
   normalizedAnswer = remove(normalizedAnswer, anyTag);
 
   // parse acceptable answers, roughly based on acf guidelines
-  const answerRegexes = [
-    /^(.*?)(?:$|(?:\[| or ).*)/g, // first answer up to '[' or EOL
-    /(?<=[[,;\s])(?:(?<!do not (?:prompt on or )?)accept|(?<!(?:do not accept|(?:do not )?prompt on)[^,;]* )or)\s(.*?)(?=\s(?:(?:do not )?(?:prompt on|accept)|or|until|before|after)\s|[,;[\]]|$)/g,
+  const primaryAnswer = /^(.*?)(?:$|(?:\[| or ).*)/g; // first answer up to '[' or EOL
+  const acceptableAnswers =
+    /(?:[[,; ])(?:accept |or )(.*?)(?= (?:do not|prompt|accept|or|until|before|after) |[,;[\]]|$)/g;
+  const answers = [
+    ...getCaptureGroups(normalizedAnswer, primaryAnswer),
+    ...(
+      Array.from(
+        normalizedAnswer.matchAll(acceptableAnswers),
+      ) as RegExpExecArray[]
+    )
+      .filter((match) => filterNegativeAnswers(match, 'accept'))
+      .map((e) => e[1]),
   ];
-  const answers = answerRegexes.flatMap((regex) =>
-    getCaptureGroups(normalizedAnswer, regex),
-  );
 
   let allAnswers = combine(boldAnswers, answers);
   const answersWithoutFirstNames = allAnswers.map(removeFirstNames);
@@ -167,7 +218,7 @@ const parseCorrectAnswers = (answerline: string): string[] => {
 /**
  * Parse all promptable answers from an answerline.
  */
-const parsePromptableAnswers = (answer: string) => {
+export const parsePromptableAnswers = (answer: string) => {
   let normalizedAnswer = cleanAnswerline(answer);
 
   // get underlined answers
@@ -179,14 +230,15 @@ const parsePromptableAnswers = (answer: string) => {
   normalizedAnswer = remove(normalizedAnswer, anyTag);
 
   // parse promptable answers, roughly based on acf guidelines
-  const promptRegexes = [
-    /(?<=[[,;\s])(?:(?<!do not(?: accept or)? )prompt on|(?<=(?<!do not(?: accept or)? )prompt on(?:[^,;\n]*))or)\s(.*?)(?=\s(?:(?:do not )?(?:prompt on|accept)|or|until|before|after)\s|[,;[\]]|$)/g,
-  ];
-  const answers = promptRegexes.flatMap((regex) =>
-    getCaptureGroups(normalizedAnswer, regex),
-  );
+  const promptRegex =
+    /(?:[[,; ])(?:prompt on |or )(.*?)(?= (?:do not|prompt|accept|or|until|before|after) |[,;[\]]|$)/g;
+  const prompts = (
+    Array.from(normalizedAnswer.matchAll(promptRegex)) as RegExpExecArray[]
+  )
+    .filter((match) => filterNegativeAnswers(match, 'prompt'))
+    .map((e) => e[1]);
 
-  const allAnswers = combine(underlinedAnswers, answers)
+  const allAnswers = combine(underlinedAnswers, prompts)
     .map(normalizeAnswer)
     .filter(emptyStringFilter);
 
@@ -205,22 +257,25 @@ const checkAnswer = (userAnswer: string, answers: string[]) => {
  * Class for judging user answers against an answerline, supports prompts.
  */
 export class Judge {
-  correctAnswers: string[];
+  acceptableAnswers: string[];
 
   promptableAnswers: string[];
 
   constructor(answerline: string) {
-    this.correctAnswers = parseCorrectAnswers(answerline);
+    this.acceptableAnswers = parseAcceptableAnswers(answerline);
     this.promptableAnswers = parsePromptableAnswers(answerline);
-    logger.info('Correct answers:', this.correctAnswers);
+    logger.info('Correct answers:', this.acceptableAnswers);
     logger.info('Promptable answers:', this.promptableAnswers);
   }
 
   judge(userAnswer: string): JudgeResult {
     const MIN_RATING = 0.6;
 
-    let ratings = checkAnswer(userAnswer, this.correctAnswers);
-    logger.info(`Correct answer ratings for "${userAnswer}":`, ratings.ratings);
+    let ratings = checkAnswer(userAnswer, this.acceptableAnswers);
+    logger.info(
+      `Acceptable answer ratings for "${userAnswer}":`,
+      ratings.ratings,
+    );
     if (ratings.bestMatch.rating > MIN_RATING) {
       return JudgeResult.correct;
     }
