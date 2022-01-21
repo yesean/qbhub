@@ -100,3 +100,20 @@ export const removeFirstNames = (s: string) =>
       name.match('#LastName')[0].text(),
     )
     .text();
+
+/**
+ * Similar to String.prototype.lastIndexOf but accepts multiple values, stopping
+ * the search when any of the values are found. Returns -1 if no values are found.
+ */
+export const multipleLastIndexOf = (
+  s: string,
+  values: string[] | Set<string>,
+  fromIndex = s.length,
+) => {
+  values = new Set(values);
+  for (let i = fromIndex; i >= 0; i -= 1) {
+    const ch = s[i];
+    if (values.has(ch)) return i;
+  }
+  return -1;
+};
