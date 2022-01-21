@@ -1,6 +1,5 @@
 import {
   Box,
-  FormLabel,
   Heading,
   Modal,
   ModalBody,
@@ -16,14 +15,14 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import Select, { OptionsType } from 'react-select';
 import TealButton from '../components/TealButton';
+import { useKeyboardShortcut } from '../hooks/keyboard';
+import { Category, Difficulty, Subcategory } from '../types/questions';
 import {
   CATEGORIES,
   DIFFICULTIES,
   SUBCATEGORIES,
   SUBCATEGORY_MAP,
 } from '../utils/constants';
-import { useKeyboardShortcut } from '../hooks/keyboard';
-import { Category, Difficulty, Subcategory } from '../types/questions';
 import {
   setInitialCategories,
   setInitialDifficulties,
@@ -31,12 +30,12 @@ import {
   setInitialSubcategories,
 } from '../utils/settings';
 import {
+  close,
   selectSettings,
   updateCategories,
   updateDifficulties,
   updateReadingSpeed,
   updateSubcategories,
-  close,
 } from './settingsSlice';
 
 const SettingsModal: React.FC = () => {
