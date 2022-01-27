@@ -32,7 +32,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <Box p={3} mb={2}>
+    <Box p={3}>
       <Flex justify="space-between" align="center">
         <Heading d="inline">QBHub</Heading>
         <Box>

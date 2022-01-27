@@ -22,7 +22,7 @@ const Score: React.FC<ScoreProps> = ({ score, delta, showDelta }) => {
       </StatLabel>
       <StatNumber textAlign="center">{renderScore}</StatNumber>
       {showDelta && (
-        <StatHelpText textAlign="center">
+        <StatHelpText textAlign="center" mb={0}>
           <StatArrow type={delta > 0 ? 'increase' : 'decrease'} />
           {Math.abs(delta)}
         </StatHelpText>

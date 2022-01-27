@@ -8,7 +8,7 @@ import { ROUTES } from '../../utils/routes';
 
 const Body: React.FC = () => {
   return (
-    <Center flexDir="column" overflow="auto" flex={1} p={3}>
+    <Center flexDir="column" overflow="auto" flex={1} px={3}>
       <Switch>
         <Route path={ROUTES.reader.tossup}>
           <TossupReader />

@@ -98,14 +98,7 @@ const TossupReader = () => {
     ![ReaderStatus.idle, ReaderStatus.empty].includes(status) && <Score />;
 
   return (
-    <Flex
-      direction="column"
-      w="100%"
-      maxH="100%"
-      maxW="3xl"
-      padding={4}
-      overflow="auto"
-    >
+    <Flex direction="column" w="100%" maxH="100%" maxW="3xl" overflow="auto">
       {renderInfo()}
       {renderAnswer()}
       {renderQuestion()}

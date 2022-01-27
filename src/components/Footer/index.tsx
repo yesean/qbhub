@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
 
   return (
     <>
-      <Flex align="center" justify="center" mt={2} p={3}>
+      <Flex align="center" justify="center" p={3}>
         <Heading textAlign="center" fontWeight="bold" size="sm" mr={2}>
           Created by{' '}
           <Link href="https://seanye.me" color="cyan.600" isExternal>
