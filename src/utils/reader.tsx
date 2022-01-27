@@ -252,6 +252,15 @@ export const parsePromptableAnswers = (answer: string) => {
  * coefficient to compare strings.
  */
 const checkAnswer = (userAnswer: string, answers: string[]) => {
+  if (answers.length === 0)
+    return {
+      ratings: [],
+      bestMatch: {
+        rating: 0,
+      },
+      bestMatchIndex: -1,
+    };
+
   return ss.findBestMatch(userAnswer, answers);
 };
 
