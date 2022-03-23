@@ -72,7 +72,7 @@ export const convertNumberToWords = (s: string) =>
 
 /**
  * Split string words.
- * e.g. hello it's me -> [hello, it's, me]
+ * e.g. hello it's me => [hello, it's, me]
  */
 export const getWords = (s: string) => normalizeSpacing(s).split(' ');
 
@@ -92,7 +92,7 @@ export const getWordsBetweenTags = (text: string, t: string) =>
 
 /**
  * Remove first names from full names.
- * e.g. Michael Jordan went to Larry Bird's house -> Jordan went to Bird's house
+ * e.g. Michael Jordan went to Larry Bird's house => Jordan went to Bird's house
  */
 export const removeFirstNames = (s: string) =>
   nlp(s)

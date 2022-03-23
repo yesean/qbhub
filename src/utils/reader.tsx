@@ -27,7 +27,7 @@ import {
 
 /**
  * Get words from string without any tags.
- * e.g. I <strong>love</strong> dogs -> [I, love, dogs]
+ * e.g. I <strong>love</strong> dogs => [I, love, dogs]
  */
 export const getTossupWords = (text: string): TossupWord[] => {
   const boldWords = getWordsBetweenTags(text, 'strong').map(removeTags);
