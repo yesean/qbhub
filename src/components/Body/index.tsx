@@ -6,8 +6,7 @@ import TossupReader from '../../TossupReader';
 import About from '../../About';
 import { ROUTES } from '../../utils/routes';
 
-const Body: React.FC = () => {
-  return (
+const Body: React.FC = () => (
     <Center flexDir="column" overflow="auto" flex={1} px={3}>
       <Switch>
         <Route path={ROUTES.reader.tossup}>
@@ -28,6 +27,5 @@ const Body: React.FC = () => {
       </Switch>
     </Center>
   );
-};
 
 export default Body;

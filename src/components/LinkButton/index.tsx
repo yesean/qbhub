@@ -10,8 +10,7 @@ const LinkButton: React.FC<LinkButtonProps> = ({
   download,
   children,
   ...rest
-}) => {
-  return (
+}) => (
     <Link
       href={href}
       download={download}
@@ -30,6 +29,5 @@ const LinkButton: React.FC<LinkButtonProps> = ({
       {children}
     </Link>
   );
-};
 
 export default LinkButton;

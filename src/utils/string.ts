@@ -27,19 +27,16 @@ export const normalizeSpacing = (s: string) => removeExtraSpaces(s).trim();
 /**
  * Normalize equivalent markup tags.
  */
-export const normalizeTags = (s: string) => {
-  return s
+export const normalizeTags = (s: string) => s
     .replaceAll(/<b>/g, '<strong>')
     .replaceAll(/<\/b>/g, '</strong>')
     .replaceAll(/<i>/g, '<em>')
     .replaceAll(/<\/i>/g, '</em>');
-};
 
 /**
  * Normalize tags and adjust spacing for power marking.
  */
-export const cleanTossupText = (text: string) => {
-  return normalizeSpacing(
+export const cleanTossupText = (text: string) => normalizeSpacing(
     normalizeTags(text)
       .replaceAll(/([^\s])(<strong>)/g, '$1 $2')
       .replaceAll(/(<\/strong>)([^\s])/g, '$1 $2')
@@ -47,7 +44,6 @@ export const cleanTossupText = (text: string) => {
       .replaceAll(/\(\*\)/g, ' (*) ')
       .replaceAll(/\(\*\)\s<\/strong>\)/g, '(*) </strong>'),
   );
-};
 
 /**
  * Sanitize and parse string into JSX.

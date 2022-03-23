@@ -87,8 +87,7 @@ const Clues: React.FC = () => {
     );
   };
 
-  const renderClue = (clue: Clue) => {
-    return (
+  const renderClue = (clue: Clue) => (
       <Tooltip
         hasArrow
         placement="top"
@@ -99,7 +98,6 @@ const Clues: React.FC = () => {
         <Text>{clue.clue}</Text>
       </Tooltip>
     );
-  };
 
   const render = () => {
     if (status !== CluesGeneratorStatus.idle) {

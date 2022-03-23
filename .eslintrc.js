@@ -8,14 +8,13 @@ module.exports = {
     'prettier',
   ],
   rules: {
-    'react/no-array-index-key': 'warn',
-    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-    'arrow-body-style': 'off',
     'import/prefer-default-export': 'off',
+    'no-param-reassign': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
-    'no-param-reassign': 'off',
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
   },
+  ignorePatterns: ['.eslintrc.js'],
   parserOptions: {
     project: './tsconfig.json',
   },

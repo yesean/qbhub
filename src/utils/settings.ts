@@ -7,9 +7,7 @@ import {
 } from './constants';
 import { Category, Difficulty, Subcategory } from '../types/questions';
 
-const checkReadingSpeedValid = (speed: number) => {
-  return speed >= 0 && speed <= 100 && speed % 5 === 0;
-};
+const checkReadingSpeedValid = (speed: number) => speed >= 0 && speed <= 100 && speed % 5 === 0;
 
 export const setInitialReadingSpeed = (speed: number) => {
   window.localStorage.setItem(READING_SPEED_LS_KEY, JSON.stringify(speed));
