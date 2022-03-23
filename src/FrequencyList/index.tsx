@@ -1,7 +1,14 @@
-import { Button, Center, CircularProgress, Flex, Link, Text } from '@chakra-ui/react';
+import {
+  Button,
+  Center,
+  CircularProgress,
+  Flex,
+  Link,
+  Text,
+} from '@chakra-ui/react';
 import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import {Link as RouterLink} from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom';
 import { useAppDispatch } from '../app/hooks';
 import { TwoColumnTable } from '../components/Table';
 import { useKeyboardShortcut } from '../hooks/keyboard';
@@ -63,13 +70,16 @@ const FrequencyList: React.FC = () => {
       );
     }
     const renderAnswer = (answer: Answer) => (
-        <Link as={RouterLink} to={ROUTES.clues.display(answer.answer)}>
-         {answer.answer} 
-        </Link>
-    )
+      <Link as={RouterLink} to={ROUTES.clues.display(answer.answer)}>
+        {answer.answer}
+      </Link>
+    );
     return (
       <TwoColumnTable
-        data={page.map(answer => ({...answer, answer: renderAnswer(answer)}))}
+        data={page.map((answer) => ({
+          ...answer,
+          answer: renderAnswer(answer),
+        }))}
         headers={freqFields}
         width={600}
         height={700}

@@ -10,7 +10,8 @@ export const quotes = /["'\u2018\u2019\u201C\u201D]/g;
  * Get all regex capture groups from a string. Assumes only one capture group per
  * match.
  */
-export const getCaptureGroups = (s: string, r: RegExp) => Array.from(s.matchAll(r)).map((m) => m[1]);
+export const getCaptureGroups = (s: string, r: RegExp) =>
+  Array.from(s.matchAll(r)).map((m) => m[1]);
 
 /**
  * Remove regex match from string.

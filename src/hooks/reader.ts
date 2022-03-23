@@ -26,10 +26,14 @@ export const useReader = (words: string[], startImmediately = true) => {
     () => getReadingTimeoutDelay(readingSpeed),
     [readingSpeed],
   );
-  const shuffledWords = useMemo(() => words.map((word) => ({
-      original: word,
-      shuffled: shuffle(word),
-    })), [words]);
+  const shuffledWords = useMemo(
+    () =>
+      words.map((word) => ({
+        original: word,
+        shuffled: shuffle(word),
+      })),
+    [words],
+  );
 
   // periodically reveal words
   useEffect(() => {

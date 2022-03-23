@@ -88,16 +88,16 @@ const Clues: React.FC = () => {
   };
 
   const renderClue = (clue: Clue) => (
-      <Tooltip
-        hasArrow
-        placement="top"
-        label={renderTooltip(clue)}
-        borderRadius="5px"
-        p={2}
-      >
-        <Text>{clue.clue}</Text>
-      </Tooltip>
-    );
+    <Tooltip
+      hasArrow
+      placement="top"
+      label={renderTooltip(clue)}
+      borderRadius="5px"
+      p={2}
+    >
+      <Text>{clue.clue}</Text>
+    </Tooltip>
+  );
 
   const render = () => {
     if (status !== CluesGeneratorStatus.idle) {
