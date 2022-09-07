@@ -99,6 +99,16 @@ export const headers = [
         text: 'Same as above.',
       },
       {
+        label: 'Will there be a multiplayer version of the Tossup reader?',
+        text: replaceLinks`Probably not. It's not really in line with the goals of QBHub and there are already some pretty good ones: ${{
+          label: 'Protobowl',
+          href: 'https://protobowl.com/',
+        }}, ${{
+          label: 'QBReader',
+          href: 'https://www.qbreader.org/',
+        }}. It's also a lot of work, which I don't have too much time for.`,
+      },
+      {
         label: 'Can I get a copy of the database?',
         text: replaceLinks`Sure! A copy of the PostgreSQL dump can be found ${{
           label: 'here',
