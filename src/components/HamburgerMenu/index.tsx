@@ -15,6 +15,7 @@ import { selectHamburgerMenu, close } from './hamburgerMenuSlice';
 
 const links = [
   { name: 'Tossup Reader', href: ROUTES.reader.tossup },
+  { name: 'Bonus Reader', href: ROUTES.reader.bonus },
   { name: 'Frequency List', href: ROUTES.freq.root },
   { name: 'Clues Generator', href: ROUTES.clues.search },
   { name: 'About', href: ROUTES.about.root },

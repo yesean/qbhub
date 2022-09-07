@@ -6,10 +6,12 @@ import tossupHistoryModalReducer from '../components/TossupHistoryModal/tossupHi
 import frequencyListReducer from '../FrequencyList/frequencyListSlice';
 import settingsReducer from '../Settings/settingsSlice';
 import tossupReaderReducer from '../TossupReader/tossupReaderSlice';
+import bonusReaderReducer from '../BonusReader/bonusReaderSlice';
 
 export const store = configureStore({
   reducer: {
     tossupReader: tossupReaderReducer,
+    bonusReader: bonusReaderReducer,
     settings: settingsReducer,
     frequencyList: frequencyListReducer,
     cluesGenerator: cluesGeneatorReducer,

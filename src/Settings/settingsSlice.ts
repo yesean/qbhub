@@ -5,6 +5,11 @@ import {
 } from '@reduxjs/toolkit';
 import type { RootState } from '../app/store';
 import {
+  filterBonusesByCategory,
+  filterBonusesByDifficulties,
+  filterBonusesBySubcategory,
+} from '../BonusReader/bonusReaderSlice';
+import {
   filterTossupsByCategory,
   filterTossupsByDifficulties,
   filterTossupsBySubcategory,
@@ -29,6 +34,7 @@ export const updateCategories = createAsyncThunk<Category[], Category[]>(
   'settings/updateCategories',
   (categories, { dispatch }) => {
     dispatch(filterTossupsByCategory(categories));
+    dispatch(filterBonusesByCategory(categories));
     return categories;
   },
 );
@@ -38,6 +44,7 @@ export const updateSubcategories = createAsyncThunk<
   Subcategory[]
 >('settings/updateSubcategories', (subcategories, { dispatch }) => {
   dispatch(filterTossupsBySubcategory(subcategories));
+  dispatch(filterBonusesBySubcategory(subcategories));
   return subcategories;
 });
 
@@ -45,6 +52,7 @@ export const updateDifficulties = createAsyncThunk<Difficulty[], Difficulty[]>(
   'settings/updateDifficulties',
   (difficulties, { dispatch }) => {
     dispatch(filterTossupsByDifficulties(difficulties));
+    dispatch(filterBonusesByDifficulties(difficulties));
     return difficulties;
   },
 );

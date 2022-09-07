@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Bonus } from '../types/bonus';
 import { Category, Difficulty, Subcategory } from '../types/questions';
 import { Tossup, Clue, Answer } from '../types/tossups';
 import logger from './logger';
@@ -6,6 +7,7 @@ import { cleanTossupText, normalizeTags } from './string';
 
 const API_URL = '/api';
 const TOSSUP_URL = `${API_URL}/tossups`;
+const BONUS_URL = `${API_URL}/bonuses`;
 const FREQ_URL = `${API_URL}/freq`;
 const CLUES_URL = `${API_URL}/clues`;
 
@@ -64,6 +66,33 @@ export const fetchTossups = async (params: FetchParams): Promise<Tossup[]> => {
     }));
     logger.info('Received tossups.');
     return tossups;
+  } catch (err) {
+    return [];
+  }
+};
+
+export const fetchBonuses = async (params: FetchParams) => {
+  const url = addParams(BONUS_URL, createParams(params));
+
+  try {
+    logger.info('Fetching bonuses.');
+    const { data } = await axios.get<Bonus[]>(url);
+    const bonuses = data.map((bn) => ({
+      leadin: bn.leadin,
+      formattedLeadin: normalizeTags(bn.formattedLeadin),
+      category: bn.category,
+      subcategory: bn.subcategory,
+      difficulty: bn.difficulty,
+      tournament: bn.tournament,
+      year: bn.year,
+      parts: bn.parts.map((part) => ({
+        ...part,
+        formattedText: normalizeTags(part.formattedText),
+        formattedAnswer: normalizeTags(part.formattedAnswer),
+      })),
+    }));
+    logger.info('Received bonuses.');
+    return bonuses;
   } catch (err) {
     return [];
   }

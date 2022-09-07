@@ -3,6 +3,7 @@ import { Container, Text } from '@chakra-ui/react';
 import nlp from 'compromise';
 import { Fragment } from 'react';
 import ss from 'string-similarity';
+import { BonusPartResult, BonusScore } from '../types/bonus';
 import { JudgeResult, TossupScore, TossupWord } from '../types/tossups';
 import { combine, emptyStringFilter, getUnique } from './array';
 import logger from './logger';
@@ -61,6 +62,24 @@ export const getTossupScore = (isCorrect: boolean, isInPower: boolean) => {
     return isInPower ? TossupScore.power : TossupScore.ten;
   }
   return TossupScore.neg;
+};
+
+export const getBonusScore = (results: BonusPartResult[]) => {
+  const correctCount = results.reduce(
+    (acc, res) => acc + (res.isCorrect ? 1 : 0),
+    0,
+  );
+
+  if (correctCount === 3) {
+    return BonusScore.thirty;
+  }
+  if (correctCount === 2) {
+    return BonusScore.twenty;
+  }
+  if (correctCount === 1) {
+    return BonusScore.ten;
+  }
+  return BonusScore.zero;
 };
 
 /**

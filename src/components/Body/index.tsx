@@ -5,12 +5,16 @@ import FrequencyList from '../../FrequencyList';
 import TossupReader from '../../TossupReader';
 import About from '../../About';
 import { ROUTES } from '../../utils/routes';
+import BonusReader from '../../BonusReader';
 
 const Body: React.FC = () => (
   <Center flexDir="column" overflow="auto" flex={1} px={3}>
     <Switch>
       <Route path={ROUTES.reader.tossup}>
         <TossupReader />
+      </Route>
+      <Route path={ROUTES.reader.bonus}>
+        <BonusReader />
       </Route>
       <Route path={ROUTES.freq.root}>
         <FrequencyList />
