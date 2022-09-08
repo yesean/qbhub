@@ -97,8 +97,6 @@ const freqShortcuts = [
   { label: ['n', '→'], description: 'Next page' },
 ];
 
-const cluesShortcuts = [{ label: '/', description: 'Search for answers' }];
-
 const InfoModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { pathname } = useLocation();
   const infoModal = useSelector(selectInfoModal);
@@ -155,14 +153,6 @@ const InfoModal: React.FC<React.PropsWithChildren<unknown>> = () => {
         <>
           <Heading size="sm">Frequency List Shortcuts</Heading>
           {renderTable(freqShortcuts)}
-        </>
-      );
-    }
-    if (pathname.startsWith(ROUTES.clues.root)) {
-      return (
-        <>
-          <Heading size="sm">Clues Generator Shortcuts</Heading>
-          {renderTable(cluesShortcuts)}
         </>
       );
     }
