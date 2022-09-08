@@ -14,7 +14,7 @@ import {
 
 // button text depending on the status
 const buttonTexts = new Map([
-  [ReaderStatus.idle, 'Start'],
+  [ReaderStatus.idle, 'Start Tossups'],
   [ReaderStatus.fetching, '...'],
   [ReaderStatus.reading, 'Buzz'],
   [ReaderStatus.answering, 'Submit'],
@@ -26,7 +26,10 @@ type UserInputProps = {
   progress: number;
   submit: (s: string) => void;
 };
-const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({ progress, submit }) => {
+const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
+  progress,
+  submit,
+}) => {
   const {
     status,
     current: { result },

@@ -15,7 +15,7 @@ import {
 
 // button text depending on the status
 const buttonTexts = new Map([
-  [ReaderStatus.idle, 'Start'],
+  [ReaderStatus.idle, 'Start Bonuses'],
   [ReaderStatus.fetching, '...'],
   [ReaderStatus.reading, 'Buzz'],
   [ReaderStatus.answering, 'Submit'],
