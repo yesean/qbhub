@@ -49,12 +49,9 @@ const BonusRow: React.FC<React.PropsWithChildren<BonusRowProps>> = ({
     if (rowRef.current) {
       let height = rowRef.current.scrollHeight;
       if (answerBoxRef.current)
-        height = Math.max(height, answerBoxRef.current.scrollHeight + 20 + 32); // row padding + cell padding
+        height = Math.max(height, answerBoxRef.current.scrollHeight + 20); // row padding + cell padding
       if (questionBoxRef.current)
-        height = Math.max(
-          height,
-          questionBoxRef.current.scrollHeight + 20 + 32,
-        );
+        height = Math.max(height, questionBoxRef.current.scrollHeight + 20);
       setRowHeight(index, height);
     }
   }, [index, rowRef, questionBoxRef, setRowHeight]);
@@ -90,7 +87,7 @@ const BonusRow: React.FC<React.PropsWithChildren<BonusRowProps>> = ({
       <Center
         flex="2 0"
         h={`${questionBoxRef.current?.scrollHeight}px + 2rem`}
-        padding={4}
+        px={4}
       >
         <Box minW="80px" textAlign="center" ref={answerBoxRef}>
           {parseHTMLString(result.part.formattedAnswer)}
@@ -98,9 +95,8 @@ const BonusRow: React.FC<React.PropsWithChildren<BonusRowProps>> = ({
       </Center>
       <Box
         flex="4 0"
-        // overflowY="auto"
         h={`${questionBoxRef.current?.scrollHeight}px + 2rem`}
-        padding={4}
+        px={4}
       >
         <Box minW="120px" ref={questionBoxRef}>
           {renderQuestion(getTossupWords(result.part.formattedText), {
