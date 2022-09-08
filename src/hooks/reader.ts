@@ -18,7 +18,7 @@ import { shuffle } from '../utils/string';
  */
 export const useReader = (words: string[], startImmediately = true) => {
   const { readingSpeed } = useSelector(selectSettings);
-  const [visibleIndex, setVisibleIndex] = useState(0);
+  const [visibleIndex, setVisibleIndex] = useState(-1);
   const [incrementId, setIncrementId] = useState<NodeJS.Timeout | null>(null);
   const [shouldRead, setShouldRead] = useState(startImmediately);
 

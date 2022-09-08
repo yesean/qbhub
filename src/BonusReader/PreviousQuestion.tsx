@@ -6,16 +6,26 @@ import { BonusPart, BonusPartResult } from '../types/bonus';
 import { getTossupWords, renderQuestion } from '../utils/reader';
 
 type PreviousQuestionProps = {
+  leadinOffset: number;
   part: BonusPart;
   partResult: BonusPartResult;
 };
 
-const PreviousQuestion = ({ part, partResult }: PreviousQuestionProps) => {
+const PreviousQuestion = ({
+  leadinOffset,
+  part,
+  partResult,
+}: PreviousQuestionProps) => {
   const displayQuestionWords = getTossupWords(part.formattedText);
+
+  const buzzIndex =
+    part.number === 1
+      ? partResult.buzzIndex - leadinOffset
+      : partResult.buzzIndex;
 
   return (
     <Box mb={4}>
-      {renderQuestion(displayQuestionWords)}
+      <b>[10]</b> {renderQuestion(displayQuestionWords, { buzz: buzzIndex })}
       <Box mt={1} py={1}>
         <Answer text={part.formattedAnswer} />
         <UserAnswer
