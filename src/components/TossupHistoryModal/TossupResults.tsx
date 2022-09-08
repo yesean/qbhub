@@ -21,22 +21,23 @@ const TossupRow: React.FC<React.PropsWithChildren<TossupRowProps>> = ({
   data: { results, setRowHeight },
 }) => {
   const rowRef = useRef<HTMLTableRowElement>(null);
-  const boxRef = useRef<HTMLDivElement>(null);
+  const questionBoxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (rowRef.current) {
       let height = rowRef.current.scrollHeight;
-      if (boxRef.current)
-        height = Math.max(height, boxRef.current.scrollHeight + 20);
+      if (questionBoxRef.current)
+        height = Math.max(height, questionBoxRef.current.scrollHeight + 20);
       setRowHeight(index, height);
     }
-  }, [index, rowRef, boxRef, setRowHeight]);
+  }, [index, rowRef, questionBoxRef, setRowHeight]);
 
   const result = results[index];
 
   return (
     <Flex
       style={style}
+      align="center"
       overflowX="auto"
       ref={rowRef}
       backgroundColor={result.score > 0 ? 'green.200' : 'red.200'}
@@ -51,8 +52,12 @@ const TossupRow: React.FC<React.PropsWithChildren<TossupRowProps>> = ({
           {parseHTMLString(result.tossup.formattedAnswer)}
         </Box>
       </Center>
-      <Box flex="4 0" overflow="auto" h={boxRef.current?.scrollHeight}>
-        <Box minW={80} ref={boxRef}>
+      <Box
+        flex="4 0"
+        overflow="auto"
+        h={`${questionBoxRef.current?.scrollHeight}px`}
+      >
+        <Box minW={80} ref={questionBoxRef}>
           {renderQuestion(result.words, {
             buzz: result.buzzIndex,
           })}
@@ -77,7 +82,9 @@ type TossupResultProps = {
   results: TossupResult[];
 };
 
-const TossupResults: React.FC<React.PropsWithChildren<TossupResultProps>> = ({ results }) => {
+const TossupResults: React.FC<React.PropsWithChildren<TossupResultProps>> = ({
+  results,
+}) => {
   const listRef = useRef<VariableSizeList>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const [rowHeights, setRowHeights] = useState<number[]>([]);
