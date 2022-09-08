@@ -1,6 +1,5 @@
-import nlp from 'compromise';
-import cNgrams from 'compromise-ngrams';
-import cSentences from 'compromise-sentences';
+import _nlp from 'compromise/three';
+import stats from 'compromise-stats';
 import { PlainTossup } from 'db';
 import { Bag, ClueBagMap } from '../types/clues';
 import { Clue, ClueResult } from '../types/controller';
@@ -8,7 +7,7 @@ import { each, max, shuffle, sum, unique } from './array';
 import logger from './logger';
 import { round } from './number';
 
-const nlpEx = nlp.extend(cNgrams).extend(cSentences);
+const nlp = _nlp.plugin(stats);
 
 type RegexReplace = [RegExp | string, string];
 const quotes: RegexReplace = [/["'\u2018\u2019\u201C\u201D]/g, ''];
@@ -49,7 +48,7 @@ export const normalizeClue = (s: string) =>
  * Split a string into sentences.
  */
 export const getSentences = (s: string): string[] =>
-  nlpEx(normalizeTossup(s)) // remove quotes since quotes after periods hurt parsing
+  nlp(normalizeTossup(s)) // remove quotes since quotes after periods hurt parsing
     .sentences()
     .json()
     .map(({ text }: any) => text);
@@ -57,7 +56,8 @@ export const getSentences = (s: string): string[] =>
 /**
  * Split a string into clauses.
  */
-export const getClauses = (s: string) => nlpEx(s).clauses().out('array');
+export const getClauses = (s: string): string[] =>
+  nlp(s).clauses().out('array');
 
 /**
  * Parses clues from an array of tossups.
@@ -93,7 +93,7 @@ export const getAllClues = (tossups: PlainTossup[]): Clue[] => {
  * Gets a bag of words model from a string.
  */
 const getBag = (clue: string) => {
-  const doc = nlpEx(clue);
+  const doc = nlp(clue);
   const ignore = new Set(
     [
       doc.conjunctions(),
