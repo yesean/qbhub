@@ -98,7 +98,7 @@ const ActiveQuestion = () => {
     () => getTossupWords(formattedLeadin).length,
     [formattedLeadin],
   );
-  const [isLeadinFinished, setIsLeadinFinished] = useState(false);
+  const [isLeadinFinished, setIsLeadinFinished] = useState(!hasLeadin);
 
   const words = useMemo(
     () => getTossupWords(formattedText).map(({ word }) => word),
@@ -111,7 +111,7 @@ const ActiveQuestion = () => {
 
   // begin reading nonleadin, if leadin doesn't exist or is finished already
   useEffect(() => {
-    if (!hasLeadin || isLeadinFinished) resume();
+    if (isLeadinFinished) resume();
   }, [hasLeadin, isLeadinFinished, resume]);
 
   // update visible index
@@ -153,7 +153,11 @@ const ActiveQuestion = () => {
   return (
     <>
       {hasLeadin && <Leadin setIsLeadinFinished={setIsLeadinFinished} />}
-      <b>[10]</b>{' '}
+      {isLeadinFinished && (
+        <>
+          <b>[10]</b>{' '}
+        </>
+      )}
       {renderQuestion(
         shuffledQuestionWords,
         {
