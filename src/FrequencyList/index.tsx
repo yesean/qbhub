@@ -29,7 +29,7 @@ const freqFields = [
   { label: 'Frequency', dataKey: 'frequency' },
 ] as const;
 
-const FrequencyList: React.FC = () => {
+const FrequencyList: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { page, offset, status } = useSelector(selectFrequencyList);
   const settings = useSelector(selectSettings);
   const dispatch = useAppDispatch();

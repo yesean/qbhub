@@ -23,7 +23,7 @@ import TossupResults from './TossupResults';
 
 const scoreHeaders = ['15', '10', '-5', 'Points'];
 
-const TossupHistoryModal: React.FC = () => {
+const TossupHistoryModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   const dispatch = useAppDispatch();
   const { results } = useSelector(selectTossupReader);
   const { isOpen } = useSelector(selectTossupHistoryModal);

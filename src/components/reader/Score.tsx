@@ -12,7 +12,7 @@ type ScoreProps = {
   showDelta: boolean;
 };
 
-const Score: React.FC<ScoreProps> = ({ score, delta, showDelta }) => {
+const Score: React.FC<React.PropsWithChildren<ScoreProps>> = ({ score, delta, showDelta }) => {
   const renderScore = showDelta ? `${score - delta} → ${score}` : score;
 
   return (

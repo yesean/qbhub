@@ -26,7 +26,7 @@ type UserInputProps = {
   progress: number;
   submit: (s: string) => void;
 };
-const UserInput: React.FC<UserInputProps> = ({ progress, submit }) => {
+const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({ progress, submit }) => {
   const {
     status,
     current: { result },

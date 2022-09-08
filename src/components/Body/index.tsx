@@ -7,7 +7,7 @@ import About from '../../About';
 import { ROUTES } from '../../utils/routes';
 import BonusReader from '../../BonusReader';
 
-const Body: React.FC = () => (
+const Body: React.FC<React.PropsWithChildren<unknown>> = () => (
   <Center flexDir="column" overflow="auto" flex={1} px={3}>
     <Switch>
       <Route path={ROUTES.reader.tossup}>

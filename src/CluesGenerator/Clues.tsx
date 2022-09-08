@@ -24,7 +24,7 @@ const cluesFields = [
   { label: 'Score', dataKey: 'score' },
 ] as const;
 
-const Clues: React.FC = () => {
+const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { status, clues } = useAppSelector(selectCluesGenerator);
   const dispatch = useAppDispatch();
   const { answer } = useParams<{ answer: string }>();

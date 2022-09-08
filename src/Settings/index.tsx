@@ -38,7 +38,7 @@ import {
   updateSubcategories,
 } from './settingsSlice';
 
-const SettingsModal: React.FC = () => {
+const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { readingSpeed, categories, subcategories, difficulties, isOpen } =
     useSelector(selectSettings);
   const dispatch = useDispatch();

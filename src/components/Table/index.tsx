@@ -14,7 +14,7 @@ type TwoColumnTableProps = {
 /**
  * Custom striped, two column table for presenting data in the format `key (1st column) -> value (2nd column)`.
  */
-export const TwoColumnTable: React.FC<TwoColumnTableProps> = ({
+export const TwoColumnTable: React.FC<React.PropsWithChildren<TwoColumnTableProps>> = ({
   data,
   headers,
   width,

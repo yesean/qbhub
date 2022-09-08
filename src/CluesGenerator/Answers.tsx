@@ -16,7 +16,7 @@ const answersFields = [
   { label: 'Frequency', dataKey: 'frequency' },
 ] as const;
 
-const Answers: React.FC = () => {
+const Answers: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { answers, status } = useSelector(selectCluesGenerator);
   const dispatch = useAppDispatch();
   const { answer: answerParam } = useParams<{ answer: string }>();

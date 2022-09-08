@@ -83,7 +83,7 @@ const freqShortcuts = [
 
 const cluesShortcuts = [{ label: '/', description: 'Search for answers' }];
 
-const InfoModal: React.FC = () => {
+const InfoModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { pathname } = useLocation();
   const infoModal = useSelector(selectInfoModal);
   const dispatch = useAppDispatch();

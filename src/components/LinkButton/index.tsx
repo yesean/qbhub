@@ -5,7 +5,7 @@ type LinkButtonProps = {
   download: string;
 } & LinkProps;
 
-const LinkButton: React.FC<LinkButtonProps> = ({
+const LinkButton: React.FC<React.PropsWithChildren<LinkButtonProps>> = ({
   href,
   download,
   children,

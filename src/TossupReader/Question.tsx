@@ -36,23 +36,17 @@ const Question = () => {
 
   // pause reading when answering
   useEffect(() => {
-    if (status === ReaderStatus.answering) {
-      pause();
-    }
+    if (status === ReaderStatus.answering) pause();
   }, [pause, status]);
 
   // reveal rest of tossup
   useEffect(() => {
-    if (status === ReaderStatus.judged) {
-      reveal();
-    }
+    if (status === ReaderStatus.judged) reveal();
   }, [reveal, status]);
 
   // buzz at the end of the tossup
   useEffect(() => {
-    if (visibleIndex === displayWords.length - 1) {
-      dispatch(buzz());
-    }
+    if (visibleIndex === displayWords.length - 1) dispatch(buzz());
   }, [dispatch, visibleIndex, displayWords.length]);
 
   useEffect(() => {

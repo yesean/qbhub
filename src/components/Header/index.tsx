@@ -7,7 +7,7 @@ import { ROUTES } from '../../utils/routes';
 import { open as openHamburgerMenu } from '../HamburgerMenu/hamburgerMenuSlice';
 import { open as openHistory } from '../TossupHistoryModal/tossupHistoryModalSlice';
 
-const Header: React.FC = () => {
+const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
   const dispatch = useAppDispatch();
   const { pathname } = useLocation();
 
@@ -34,7 +34,7 @@ const Header: React.FC = () => {
   return (
     <Box p={3}>
       <Flex justify="space-between" align="center">
-        <Heading d="inline">QBHub</Heading>
+        <Heading display="inline">QBHub</Heading>
         <Box>
           {renderHistory()}
           <IconButton

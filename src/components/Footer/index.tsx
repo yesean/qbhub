@@ -4,7 +4,7 @@ import { AiFillGithub } from 'react-icons/ai';
 import { useAppDispatch } from '../../app/hooks';
 import { open } from '../InfoModal/infoModalSlice';
 
-const Footer: React.FC = () => {
+const Footer: React.FC<React.PropsWithChildren<unknown>> = () => {
   const dispatch = useAppDispatch();
 
   const openModal = () => dispatch(open());

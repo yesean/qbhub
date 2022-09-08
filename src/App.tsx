@@ -20,7 +20,7 @@ import {
 } from './Settings/settingsSlice';
 import { ROUTES } from './utils/routes';
 
-const App: React.FC = () => {
+const App: React.FC<React.PropsWithChildren<unknown>> = () => {
   const history = useHistory();
   const { pathname } = useLocation();
   const dispatch = useAppDispatch();

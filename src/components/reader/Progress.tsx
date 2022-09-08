@@ -7,7 +7,7 @@ type ProgressProps = {
   shouldTick: boolean;
 };
 
-const Progress: React.FC<ProgressProps> = ({
+const Progress: React.FC<React.PropsWithChildren<ProgressProps>> = ({
   progress,
   setProgress,
   shouldTick,

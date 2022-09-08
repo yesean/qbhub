@@ -3,7 +3,7 @@ import ReaderResult from '../components/reader/Result';
 import { TossupScore } from '../types/tossups';
 import { ReaderStatus, selectTossupReader } from './tossupReaderSlice';
 
-const Result: React.FC = () => {
+const Result: React.FC<React.PropsWithChildren<unknown>> = () => {
   const {
     status,
     current: {

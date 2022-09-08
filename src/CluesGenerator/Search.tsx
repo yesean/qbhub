@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import TealButton from '../components/TealButton';
 import { ROUTES } from '../utils/routes';
 
-const Search: React.FC = () => {
+const Search: React.FC<React.PropsWithChildren<unknown>> = () => {
   const [search, setSearch] = useState('');
   const history = useHistory();
 

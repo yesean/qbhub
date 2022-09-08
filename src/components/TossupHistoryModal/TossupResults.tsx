@@ -15,7 +15,7 @@ type TossupRowProps = {
   };
 };
 
-const TossupRow: React.FC<TossupRowProps> = ({
+const TossupRow: React.FC<React.PropsWithChildren<TossupRowProps>> = ({
   style,
   index,
   data: { results, setRowHeight },
@@ -77,7 +77,7 @@ type TossupResultProps = {
   results: TossupResult[];
 };
 
-const TossupResults: React.FC<TossupResultProps> = ({ results }) => {
+const TossupResults: React.FC<React.PropsWithChildren<TossupResultProps>> = ({ results }) => {
   const listRef = useRef<VariableSizeList>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const [rowHeights, setRowHeights] = useState<number[]>([]);

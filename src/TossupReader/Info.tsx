@@ -3,7 +3,7 @@ import ReaderInfo from '../components/reader/Info';
 import { Category, Difficulty, Subcategory } from '../types/questions';
 import { selectTossupReader } from './tossupReaderSlice';
 
-const Info: React.FC = () => {
+const Info: React.FC<React.PropsWithChildren<unknown>> = () => {
   const {
     current: {
       tossup: { tournament, category, subcategory, difficulty },

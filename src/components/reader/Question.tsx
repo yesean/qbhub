@@ -6,7 +6,7 @@ type QuestionProps = {
   emptyMessage: string;
 };
 
-const Question: React.FC<QuestionProps> = ({
+const Question: React.FC<React.PropsWithChildren<QuestionProps>> = ({
   showLoading,
   showEmpty,
   emptyMessage,
@@ -35,7 +35,7 @@ const Question: React.FC<QuestionProps> = ({
       minH="100px"
       mb={4}
       p={4}
-      d="flex"
+      display="flex"
       flexWrap="wrap"
       justifyContent={showLoading ? 'center' : 'start'}
       borderRadius="md"

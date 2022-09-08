@@ -5,7 +5,7 @@ import Answers from './Answers';
 import Clues from './Clues';
 import Search from './Search';
 
-const CluesGenerator: React.FC = () => {
+const CluesGenerator: React.FC<React.PropsWithChildren<unknown>> = () => {
   const history = useHistory();
 
   const predicate = (e: KeyboardEvent) => e.target === document.body;

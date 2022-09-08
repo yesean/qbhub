@@ -16,7 +16,7 @@ type UserInputProps = {
   showInput: boolean;
 };
 
-const UserInput: React.FC<UserInputProps> = ({
+const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
   input,
   setInput,
   placeholder,

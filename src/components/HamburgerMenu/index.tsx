@@ -21,7 +21,7 @@ const links = [
   { name: 'About', href: ROUTES.about.root },
 ];
 
-const HamburgerMenu: React.FC = () => {
+const HamburgerMenu: React.FC<React.PropsWithChildren<unknown>> = () => {
   const dispatch = useAppDispatch();
   const { isOpen } = useSelector(selectHamburgerMenu);
 
