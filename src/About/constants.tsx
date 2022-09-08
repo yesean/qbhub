@@ -100,21 +100,40 @@ export const headers = [
       },
       {
         label: 'Will there be a multiplayer version of the Tossup reader?',
-        text: replaceLinks`Probably not. It's not really in line with the goals of QBHub and there are already some pretty good ones: ${{
+        text: replaceLinks`Probably not, QBHub is intended to be a personal studying tool. A multiplayer reader isn't really in line with the goals of this site and would be better suited for in-person packet reading. Plus, there are already some pretty good options out there: ${{
           label: 'Protobowl',
           href: 'https://protobowl.com/',
         }}, ${{
           label: 'QBReader',
           href: 'https://www.qbreader.org/',
-        }}. It's also a lot of work, which I don't have too much time for.`,
+        }}.`,
+      },
+      {
+        label: 'What is QBHub built with?',
+        text: replaceLinks`We use ${{
+          label: 'React',
+          href: 'https://reactjs.org/',
+        }} to build the UI, with components provided by ${{
+          label: 'Chakra UI',
+          href: 'https://chakra-ui.com/',
+        }}. The backend is powered by ${{
+          label: 'Node',
+          href: 'https://nodejs.org/en/',
+        }} + ${{ label: 'Express', href: 'https://expressjs.com/' }} + ${{
+          label: 'PostgreSQL',
+          href: 'https://www.postgresql.org/',
+        }}, all running on a DigitalOcean droplet.`,
       },
       {
         label: 'Where are the questions from?',
-        text: 'Thanks to the amazing work from QuizDB and Quinterest, their database provides an enormous collection of questions, correctly tagged and labeled. We use the QuizDB question bank and add a bit more metadata to provide some additional features.',
+        text: replaceLinks`Thanks to the amazing work from QuizDB and Quinterest, ${{
+          label: 'their database table',
+          href: 'https://s3.console.aws.amazon.com/s3/buckets/quizdb-public/?region=us-east-1&tab=objects',
+        }} provides an enormous collection of questions, correctly tagged and labeled. We use the QuizDB question bank and add a bit more metadata to provide some additional features.`,
       },
       {
         label: 'Can I get a copy of the database?',
-        text: replaceLinks`Sure! A copy of the PostgreSQL dump can be found ${{
+        text: replaceLinks`Sure! A copy of the modified QuizDB PostgreSQL dump can be found ${{
           label: 'here',
           href: 'https://www.dropbox.com/sh/5jiw5isl5bbk1b5/AAAnsj4Pl9ZYhgY9NYtccT3Ta?dl=0',
         }}.`,
@@ -123,11 +142,11 @@ export const headers = [
   },
   {
     label: 'Contributing 🤝',
-    text: replaceLinks`Contributions are welcome! If you want to file an issue, open a PR, or just browse the source code, you can do that ${{
-      label: 'here',
+    text: replaceLinks`Contributions are welcome! If you want to file an issue, open a PR, or just browse the source code, here is the ${{
+      label: 'UI',
       href: 'https:github.com/yesean/qbhub-client',
-    }}. The same for the backend can be found ${{
-      label: 'here',
+    }} and ${{
+      label: 'backend',
       href: 'https://github.com/yesean/qbhub-server',
     }}. You can also leave general feedback on this ${{
       label: 'form',
