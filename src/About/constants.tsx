@@ -37,7 +37,7 @@ export const headers = [
       },
       {
         label: 'Bonus Reader',
-        text: 'Coming soon!',
+        text: 'A fully featured bonus reader that keeps track of score and a detailed history of questions. Just like the Tossup Reader, but for bonuses.',
       },
       {
         label: 'Frequency List',
@@ -107,6 +107,10 @@ export const headers = [
           label: 'QBReader',
           href: 'https://www.qbreader.org/',
         }}. It's also a lot of work, which I don't have too much time for.`,
+      },
+      {
+        label: 'Where are the questions from?',
+        text: 'Thanks to the amazing work from QuizDB and Quinterest, their database provides an enormous collection of questions, correctly tagged and labeled. We use the QuizDB question bank and add a bit more metadata to provide some additional features.',
       },
       {
         label: 'Can I get a copy of the database?',
