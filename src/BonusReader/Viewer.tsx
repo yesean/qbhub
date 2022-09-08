@@ -3,6 +3,7 @@ import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import Answer from '../components/reader/Answer';
 import ReaderQuestion from '../components/reader/Question';
+import UserAnswer from '../components/reader/UserAnswer';
 import { range } from '../utils/array';
 import { getTossupWords } from '../utils/reader';
 import ActiveQuestion from './ActiveQuestion';
@@ -13,7 +14,7 @@ import PreviousQuestion from './PreviousQuestion';
 const Container = () => {
   const {
     status,
-    current: { number, bonus, result, part },
+    current: { number, bonus, result, part, partResult },
   } = useSelector(selectBonusReader);
 
   const showLoading = status === ReaderStatus.fetching;
@@ -58,6 +59,10 @@ const Container = () => {
       {[ReaderStatus.partialJudged, ReaderStatus.judged].includes(status) && (
         <Box mt={1} py={1}>
           <Answer text={part.formattedAnswer} />
+          <UserAnswer
+            text={partResult.userAnswer}
+            isCorrect={partResult.isCorrect}
+          />
         </Box>
       )}
     </ReaderQuestion>
