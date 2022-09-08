@@ -15,20 +15,18 @@ const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
   const openSettingsModal = () => dispatch(openSettings());
   const openMenu = () => dispatch(openHamburgerMenu());
 
-  // only render history icon on reader pages
-  const renderHistory = () => {
-    if (pathname.startsWith(ROUTES.reader.root)) {
-      return (
-        <IconButton
-          aria-label="Tossup history"
-          icon={<TimeIcon boxSize={6} />}
-          size="lg"
-          onClick={openHistoryModal}
-          mr={4}
-        />
-      );
-    }
-    return null;
+  const renderTossupHistory = () => {
+    if (!pathname.startsWith(ROUTES.reader.tossup)) return null;
+
+    return (
+      <IconButton
+        aria-label="Tossup history"
+        icon={<TimeIcon boxSize={6} />}
+        size="lg"
+        onClick={openHistoryModal}
+        mr={4}
+      />
+    );
   };
 
   return (
@@ -36,7 +34,7 @@ const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
       <Flex justify="space-between" align="center">
         <Heading display="inline">QBHub</Heading>
         <Box>
-          {renderHistory()}
+          {renderTossupHistory()}
           <IconButton
             aria-label="Open settings"
             icon={<SettingsIcon boxSize={6} />}
