@@ -56,7 +56,7 @@ const globalShortcuts = [
     label: '2',
     description: (
       <>
-        Go to <strong>Frequency List</strong>
+        Go to <strong>Bonus Reader</strong>
       </>
     ),
   },
@@ -64,7 +64,23 @@ const globalShortcuts = [
     label: '3',
     description: (
       <>
+        Go to <strong>Frequency List</strong>
+      </>
+    ),
+  },
+  {
+    label: '4',
+    description: (
+      <>
         Go to <strong>Clue Generator</strong>
+      </>
+    ),
+  },
+  {
+    label: '5',
+    description: (
+      <>
+        Go to <strong>About</strong>
       </>
     ),
   },
@@ -72,7 +88,7 @@ const globalShortcuts = [
 
 const readerShortcuts = [
   { label: 'n', description: 'Start reading / Next question' },
-  { label: '⎵', description: 'Buzz' },
+  { label: 'space', description: 'Buzz' },
   { label: 'h', description: 'Open question history' },
 ];
 

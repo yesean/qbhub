@@ -47,9 +47,10 @@ const App: React.FC<React.PropsWithChildren<unknown>> = () => {
   useKeyboardShortcut('?', () => dispatch(openInfo()), predicate);
   useKeyboardShortcut('s', () => dispatch(openSettings()), predicate);
   useKeyboardShortcut('1', () => history.push(ROUTES.reader.tossup), predicate);
-  useKeyboardShortcut('2', () => history.push(ROUTES.freq.root), predicate);
-  useKeyboardShortcut('3', () => history.push(ROUTES.clues.search), predicate);
-  useKeyboardShortcut('4', () => history.push(ROUTES.about.root), predicate);
+  useKeyboardShortcut('2', () => history.push(ROUTES.reader.bonus), predicate);
+  useKeyboardShortcut('3', () => history.push(ROUTES.freq.root), predicate);
+  useKeyboardShortcut('4', () => history.push(ROUTES.clues.search), predicate);
+  useKeyboardShortcut('5', () => history.push(ROUTES.about.root), predicate);
   const isReaderActive = pathname.startsWith(ROUTES.reader.root);
   const customPredicate = (e: KeyboardEvent) => predicate(e) && isReaderActive;
   useKeyboardShortcut(
