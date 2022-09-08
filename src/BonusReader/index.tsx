@@ -1,35 +1,110 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { nextBonus, ReaderStatus, selectBonusReader } from './bonusReaderSlice';
+import { Flex } from '@chakra-ui/react';
+import { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useAppDispatch } from '../app/hooks';
+import Progress from '../components/reader/Progress';
+import { JudgeResult } from '../types/tossups';
+import logger from '../utils/logger';
+import { Judge, normalizeAnswer } from '../utils/reader';
+import {
+  prompt,
+  ReaderStatus,
+  selectBonusReader,
+  selectIsAnswering,
+  submitAnswer,
+} from './bonusReaderSlice';
+import Info from './Info';
+import Result from './Result';
+import Score from './Score';
+import UserInput from './UserInput';
+import Viewer from './Viewer';
 
-const BonusReader: React.FC = () => {
+const BonusReader: React.FC<React.PropsWithChildren<unknown>> = () => {
+  const [progress, setProgress] = useState(100);
+  const [judge, setJudge] = useState<Judge>();
   const {
     status,
-    current: { bonus },
+    current: { part },
   } = useSelector(selectBonusReader);
-  const dispatch = useDispatch();
+  const isAnswering = useSelector(selectIsAnswering);
+  const dispatch = useAppDispatch();
 
-  console.log('bonus:', bonus);
+  // reset judge and progress on new tossup
   useEffect(() => {
-    if (status === ReaderStatus.idle && Object.keys(bonus).length === 0) {
-      dispatch(nextBonus());
+    if (status === ReaderStatus.reading) {
+      setJudge(new Judge(part.formattedAnswer));
+      setProgress(100);
     }
-  }, [bonus, dispatch, status]);
+  }, [part.formattedAnswer, status]);
 
-  if (Object.keys(bonus).length === 0) return <>loading</>;
+  // process a user's answer when submitting
+  const submit = useCallback(
+    (input: string) => {
+      if (judge === undefined || !isAnswering) return;
+
+      // judge the user answer
+      const userAnswer = normalizeAnswer(input);
+      logger.info(`User submitted "${userAnswer}".`);
+      const judgeResult = judge.judge(userAnswer);
+
+      // either prompt on answer or mark it as correct/incorrect
+      if (judgeResult === JudgeResult.prompt) {
+        // prompt on answer
+        logger.info(`Prompting on "${userAnswer}".`);
+        dispatch(prompt());
+      } else {
+        // submit answer
+        const isCorrect = judgeResult === JudgeResult.correct;
+        logger.info(
+          `User answer "${userAnswer}" is ${isCorrect ? `correct` : 'incorrect'
+          }.`,
+        );
+        dispatch(
+          submitAnswer({
+            isCorrect,
+            userAnswer,
+          }),
+        );
+      }
+    },
+    [dispatch, isAnswering, judge],
+  );
+
+  const renderInfo = () =>
+    ![ReaderStatus.idle, ReaderStatus.fetching, ReaderStatus.empty].includes(
+      status,
+    ) && <Info />;
+  const renderViewer = () => status !== ReaderStatus.idle && <Viewer />;
+  const renderResult = () =>
+    [
+      ReaderStatus.prompting,
+      ReaderStatus.partialJudged,
+      ReaderStatus.judged,
+    ].includes(status) && <Result />;
+  const renderProgress = () =>
+    isAnswering && (
+      <Progress
+        progress={progress}
+        setProgress={setProgress}
+        shouldTick={isAnswering}
+      />
+    );
+  const renderInput = () =>
+    status !== ReaderStatus.empty && (
+      <UserInput progress={progress} submit={submit} />
+    );
+  const renderScore = () =>
+    ![ReaderStatus.idle, ReaderStatus.empty].includes(status) && <Score />;
 
   return (
-    <div>
-      {bonus.leadin}
-      <hr />
-      {bonus.parts.map((bn) => (
-        <div key={bn.number}>
-          <div>{bn.text}</div>
-          <div>ANSWER: {bn.answer}</div>
-          <hr />
-        </div>
-      ))}
-    </div>
+    <Flex direction="column" w="100%" maxH="100%" maxW="3xl" overflow="auto">
+      {renderInfo()}
+      {renderViewer()}
+      {renderResult()}
+      {renderProgress()}
+      {renderInput()}
+      {renderScore()}
+    </Flex>
   );
 };
 

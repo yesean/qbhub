@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../app/store';
-import { Bonus, BonusPart, BonusResult } from '../types/bonus';
+import { Bonus, BonusPart, BonusPartResult, BonusResult } from '../types/bonus';
 import { Category, Difficulty, Subcategory } from '../types/questions';
 import * as fetchUtils from '../utils/fetch';
 import { getBonusScore } from '../utils/reader';
@@ -10,6 +10,7 @@ export enum ReaderStatus {
   fetching,
   reading,
   answering,
+  partialJudged,
   prompting,
   judged,
   empty,
@@ -23,6 +24,7 @@ type BonusReaderState = {
   current: {
     number: number;
     part: BonusPart;
+    partResult: BonusPartResult;
     bonus: Bonus;
     result: BonusResult;
     buzzIndex: number;
@@ -38,8 +40,13 @@ const initialState: BonusReaderState = {
   current: {
     number: 1,
     part: {} as BonusPart,
+    partResult: {} as BonusPartResult,
     bonus: {} as Bonus,
-    result: {} as BonusResult,
+    result: {
+      score: 0,
+      parts: [],
+      bonus: {} as Bonus,
+    },
     buzzIndex: -1,
     visibleIndex: -1,
   },
@@ -102,8 +109,12 @@ const bonusReaderSlice = createSlice({
       state.current.visibleIndex = action.payload;
     },
     nextBonusPart: (state) => {
+      state.current.buzzIndex = initialState.current.buzzIndex;
+      state.current.visibleIndex = initialState.current.visibleIndex;
+      state.current.partResult = initialState.current.partResult;
       state.current.number += 1;
-      state.current.part = state.current.bonus.parts[state.current.number];
+      state.current.part = state.current.bonus.parts[state.current.number - 1];
+      state.status = ReaderStatus.reading;
     },
     submitAnswer: (
       state,
@@ -116,18 +127,22 @@ const bonusReaderSlice = createSlice({
         state.status === ReaderStatus.answering ||
         state.status === ReaderStatus.prompting
       ) {
-        state.status = ReaderStatus.judged;
+        state.status = ReaderStatus.partialJudged;
 
-        state.current.result.parts.push({
+        const partResult = {
           ...action.payload,
           buzzIndex: state.current.buzzIndex,
           number: state.current.number,
-        });
+        };
+        state.current.partResult = partResult;
+        state.current.result.parts.push(partResult);
 
         if (state.current.number === 3) {
           const score = getBonusScore(state.current.result.parts);
           state.current.result.score = score;
+          state.score += score;
           state.results.unshift(state.current.result);
+          state.status = ReaderStatus.judged;
         }
       }
     },
@@ -179,6 +194,7 @@ export const {
   prompt,
   setVisible,
   submitAnswer,
+  nextBonusPart,
   filterBonusesByCategory,
   filterBonusesBySubcategory,
   filterBonusesByDifficulties,

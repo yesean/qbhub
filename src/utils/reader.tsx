@@ -88,9 +88,10 @@ export const getBonusScore = (results: BonusPartResult[]) => {
  */
 export const renderQuestion = (
   words: { word: string; bold: boolean }[],
-  { visible = words.length, buzz = -1 },
+  indices?: { visible?: number; buzz?: number },
   visibleRef?: React.RefObject<HTMLParagraphElement>,
 ) => {
+  const { visible = words.length, buzz = -1 } = indices ?? {};
   const renderBell = (shouldRender: boolean) => {
     if (shouldRender) {
       return (
@@ -99,13 +100,13 @@ export const renderQuestion = (
           m={0}
           p={0}
           w="auto"
-          d="inline-flex"
+          display="inline-flex"
           alignItems="center"
           whiteSpace="pre"
           verticalAlign="bottom"
         >
           <BellIcon w={4} h={4} />
-          <Text d="inline"> </Text>
+          <Text display="inline"> </Text>
         </Container>
       );
     }
@@ -117,7 +118,7 @@ export const renderQuestion = (
       <Text
         /* eslint react/no-array-index-key: "off" */
         ref={i === visible ? visibleRef : undefined}
-        d="inline-block"
+        display="inline-block"
         whiteSpace="break-spaces"
         wordBreak="break-all"
         visibility={i <= visible ? 'visible' : 'hidden'}

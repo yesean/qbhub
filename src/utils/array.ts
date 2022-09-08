@@ -24,6 +24,19 @@ export const getUnique = <T>(arr: T[]) => [...new Set(arr)];
 export const combine = <T>(...arrs: T[][]) => arrs.flat();
 
 /**
+ * Create ranged sequences, similar to Python's `range`.
+ */
+export const range = (startOrEnd: number, end?: number) => {
+  if (end == null) {
+    return [...Array(startOrEnd).keys()];
+  }
+
+  return Array(end - startOrEnd)
+    .fill(null)
+    .map((_, i) => i + startOrEnd);
+};
+
+/**
  * Zips an arbitrary number of arrays together, similar to Python's `zip`.
  */
 export const zip = (...arrs: any[]) => {
