@@ -19,7 +19,7 @@ const Answer: React.FC<React.PropsWithChildren<unknown>> = () => {
       p={4}
       borderRadius="md"
     >
-      <ReaderAnswer text={formattedAnswer} query={normalizedAnswer} />;
+      <ReaderAnswer text={formattedAnswer} query={normalizedAnswer} />
     </Container>
   );
 };
