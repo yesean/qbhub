@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useAppDispatch } from './app/hooks';
 import Body from './components/Body';
+import BonusHistoryModal from './components/BonusHistoryModal';
 import Footer from './components/Footer';
 import HamburgerMenu from './components/HamburgerMenu';
 import Header from './components/Header';
@@ -11,6 +12,7 @@ import InfoModal from './components/InfoModal';
 import { open as openInfo } from './components/InfoModal/infoModalSlice';
 import TossupHistoryModal from './components/TossupHistoryModal';
 import { open as openTossupHistory } from './components/TossupHistoryModal/tossupHistoryModalSlice';
+import { open as openBonusHistory } from './components/BonusHistoryModal/bonusHistoryModalSlice';
 import { reset } from './FrequencyList/frequencyListSlice';
 import { useKeyboardShortcut } from './hooks/keyboard';
 import SettingsModal from './Settings';
@@ -52,10 +54,14 @@ const App: React.FC<React.PropsWithChildren<unknown>> = () => {
   useKeyboardShortcut('4', () => history.push(ROUTES.clues.search), predicate);
   useKeyboardShortcut('5', () => history.push(ROUTES.about.root), predicate);
   const isReaderActive = pathname.startsWith(ROUTES.reader.root);
+  const isTossupReaderActive = pathname.startsWith(ROUTES.reader.tossup);
   const customPredicate = (e: KeyboardEvent) => predicate(e) && isReaderActive;
   useKeyboardShortcut(
     'h',
-    () => dispatch(openTossupHistory()),
+    () =>
+      isTossupReaderActive
+        ? dispatch(openTossupHistory())
+        : dispatch(openBonusHistory()),
     customPredicate,
   );
 
@@ -70,6 +76,7 @@ const App: React.FC<React.PropsWithChildren<unknown>> = () => {
       <InfoModal />
       <HamburgerMenu />
       <TossupHistoryModal />
+      <BonusHistoryModal />
     </>
   );
 };

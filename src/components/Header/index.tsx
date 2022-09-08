@@ -5,25 +5,31 @@ import { useAppDispatch } from '../../app/hooks';
 import { open as openSettings } from '../../Settings/settingsSlice';
 import { ROUTES } from '../../utils/routes';
 import { open as openHamburgerMenu } from '../HamburgerMenu/hamburgerMenuSlice';
-import { open as openHistory } from '../TossupHistoryModal/tossupHistoryModalSlice';
+import { open as openTossupHistory } from '../TossupHistoryModal/tossupHistoryModalSlice';
+import { open as openBonusHistory } from '../BonusHistoryModal/bonusHistoryModalSlice';
 
 const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
   const dispatch = useAppDispatch();
   const { pathname } = useLocation();
 
-  const openHistoryModal = () => dispatch(openHistory());
+  const openTossupHistoryModal = () => dispatch(openTossupHistory());
+  const openBonusHistoryModal = () => dispatch(openBonusHistory());
   const openSettingsModal = () => dispatch(openSettings());
   const openMenu = () => dispatch(openHamburgerMenu());
 
-  const renderTossupHistory = () => {
-    if (!pathname.startsWith(ROUTES.reader.tossup)) return null;
+  // only render history icon on reader pages
+  const renderQuestionHistory = () => {
+    if (!pathname.startsWith(ROUTES.reader.root)) return null;
 
+    const isTossupReaderActive = pathname.startsWith(ROUTES.reader.tossup);
     return (
       <IconButton
         aria-label="Tossup history"
         icon={<TimeIcon boxSize={6} />}
         size="lg"
-        onClick={openHistoryModal}
+        onClick={
+          isTossupReaderActive ? openTossupHistoryModal : openBonusHistoryModal
+        }
         mr={4}
       />
     );
@@ -34,7 +40,7 @@ const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
       <Flex justify="space-between" align="center">
         <Heading display="inline">QBHub</Heading>
         <Box>
-          {renderTossupHistory()}
+          {renderQuestionHistory()}
           <IconButton
             aria-label="Open settings"
             icon={<SettingsIcon boxSize={6} />}

@@ -1,6 +1,7 @@
 import { Box, Divider } from '@chakra-ui/react';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import { elementScrollIntoView } from 'seamless-scroll-polyfill';
 import Answer from '../components/reader/Answer';
 import ReaderQuestion from '../components/reader/Question';
 import UserAnswer from '../components/reader/UserAnswer';
@@ -16,6 +17,7 @@ const Container = () => {
     status,
     current: { number, bonus, result, part, partResult },
   } = useSelector(selectBonusReader);
+  const userAnswerRef = useRef(null);
 
   const showLoading = status === ReaderStatus.fetching;
   const showEmpty = status === ReaderStatus.empty;
@@ -28,6 +30,12 @@ const Container = () => {
         : 0,
     [bonus.formattedLeadin],
   );
+
+  useEffect(() => {
+    if (userAnswerRef.current === null) return;
+
+    elementScrollIntoView(userAnswerRef.current, { block: 'center' });
+  }, [status]);
 
   return (
     <ReaderQuestion
@@ -59,10 +67,12 @@ const Container = () => {
       {[ReaderStatus.partialJudged, ReaderStatus.judged].includes(status) && (
         <Box mt={1} py={1}>
           <Answer text={part.formattedAnswer} />
-          <UserAnswer
-            text={partResult.userAnswer}
-            isCorrect={partResult.isCorrect}
-          />
+          <Box ref={userAnswerRef}>
+            <UserAnswer
+              text={partResult.userAnswer}
+              isCorrect={partResult.isCorrect}
+            />
+          </Box>
         </Box>
       )}
     </ReaderQuestion>

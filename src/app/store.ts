@@ -3,6 +3,7 @@ import cluesGeneatorReducer from '../CluesGenerator/cluesGeneratorSlice';
 import infoModalReducer from '../components/InfoModal/infoModalSlice';
 import hamburgerMenuReducer from '../components/HamburgerMenu/hamburgerMenuSlice';
 import tossupHistoryModalReducer from '../components/TossupHistoryModal/tossupHistoryModalSlice';
+import bonusHistoryModalReducer from '../components/BonusHistoryModal/bonusHistoryModalSlice';
 import frequencyListReducer from '../FrequencyList/frequencyListSlice';
 import settingsReducer from '../Settings/settingsSlice';
 import tossupReaderReducer from '../TossupReader/tossupReaderSlice';
@@ -17,6 +18,7 @@ export const store = configureStore({
     cluesGenerator: cluesGeneatorReducer,
     infoModal: infoModalReducer,
     tossupHistoryModal: tossupHistoryModalReducer,
+    bonusHistoryModal: bonusHistoryModalReducer,
     hamburgerMenu: hamburgerMenuReducer,
   },
 });

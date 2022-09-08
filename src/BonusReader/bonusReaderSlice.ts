@@ -180,10 +180,18 @@ const bonusReaderSlice = createSlice({
         if (state.bonuses.length === 0) {
           state.status = ReaderStatus.empty;
         } else {
-          state.current = { ...initialState.current };
-          [state.current.bonus] = state.bonuses;
+          // reset current
+          state.current = {
+            ...initialState.current,
+            result: { ...initialState.current.result },
+          };
+
+          // initialize current
+          const currentBonus = state.bonuses.shift() as Bonus;
+          state.current.bonus = currentBonus;
+          state.current.result.bonus = state.current.bonus;
           [state.current.part] = state.current.bonus.parts;
-          state.bonuses.shift();
+
           state.status = ReaderStatus.reading;
         }
       });
