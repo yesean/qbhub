@@ -31,8 +31,8 @@ const Question = () => {
 
   // update visible index
   useEffect(() => {
-    dispatch(setVisible(visibleIndex));
-  }, [dispatch, visibleIndex]);
+    if (status === ReaderStatus.reading) dispatch(setVisible(visibleIndex));
+  }, [dispatch, status, visibleIndex]);
 
   // pause reading when answering
   useEffect(() => {
