@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { useAppDispatch } from '../app/hooks';
-import { TwoColumnTable } from '../components/Table';
+import { KeyValueTable } from '../components/Table';
 import { ROUTES } from '../utils/routes';
 import {
   CluesGeneratorStatus,
@@ -36,7 +36,7 @@ const Answers: React.FC<React.PropsWithChildren<unknown>> = () => {
       return <CircularProgress isIndeterminate color="cyan" />;
     }
     return (
-      <TwoColumnTable
+      <KeyValueTable
         data={answers.map((answer) => ({
           ...answer,
           answer: createLink(answer.answer),

@@ -1,7 +1,7 @@
 import { Box, Flex, Heading } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 
-type TwoColumnTableProps = {
+type KeyValueTableProps = {
   data: { [key: string]: any }[];
   headers: readonly [
     { label: string; dataKey: string },
@@ -14,12 +14,9 @@ type TwoColumnTableProps = {
 /**
  * Custom striped, two column table for presenting data in the format `key (1st column) -> value (2nd column)`.
  */
-export const TwoColumnTable: React.FC<React.PropsWithChildren<TwoColumnTableProps>> = ({
-  data,
-  headers,
-  width,
-  height,
-}) => {
+export const KeyValueTable: React.FC<
+  React.PropsWithChildren<KeyValueTableProps>
+> = ({ data, headers, width, height }) => {
   /**
    * Since we set the bottom border for each row, if the table body has to scroll,
    * then the last row will draw an overlapping border with the table border (it creates a double border, which looks ugly).
