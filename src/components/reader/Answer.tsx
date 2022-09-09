@@ -8,7 +8,10 @@ type AnswerProps = {
   query?: string;
 };
 
-const Answer: React.FC<React.PropsWithChildren<AnswerProps>> = ({ text, query }) => {
+const Answer: React.FC<React.PropsWithChildren<AnswerProps>> = ({
+  text,
+  query,
+}) => {
   const renderAnswer = () => {
     if (query === undefined) {
       return parseHTMLString(text);

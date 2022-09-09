@@ -56,7 +56,8 @@ const BonusReader: React.FC<React.PropsWithChildren<unknown>> = () => {
         // submit answer
         const isCorrect = judgeResult === JudgeResult.correct;
         logger.info(
-          `User answer "${userAnswer}" is ${isCorrect ? `correct` : 'incorrect'
+          `User answer "${userAnswer}" is ${
+            isCorrect ? `correct` : 'incorrect'
           }.`,
         );
         dispatch(
