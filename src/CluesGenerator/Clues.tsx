@@ -104,7 +104,7 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
   );
 
   const render = () => {
-    if (status !== CluesGeneratorStatus.idle || answer !== selectedAnswer) {
+    if (status !== CluesGeneratorStatus.loaded || answer !== selectedAnswer) {
       return <CircularProgress isIndeterminate color="cyan" />;
     }
 

@@ -8,7 +8,7 @@ const FETCH_LIMIT = 200;
 export enum CluesGeneratorStatus {
   initial,
   loading,
-  idle,
+  loaded,
 }
 
 type CluesGeneratorSlice = {
@@ -87,7 +87,7 @@ const cluesGeneratorSlice = createSlice({
         state.status = CluesGeneratorStatus.loading;
       })
       .addCase(fetchAnswers.fulfilled, (state, action) => {
-        state.status = CluesGeneratorStatus.idle;
+        state.status = CluesGeneratorStatus.loaded;
         state.answers = action.payload;
       });
     builder
@@ -95,7 +95,7 @@ const cluesGeneratorSlice = createSlice({
         state.status = CluesGeneratorStatus.loading;
       })
       .addCase(fetchClues.fulfilled, (state, action) => {
-        state.status = CluesGeneratorStatus.idle;
+        state.status = CluesGeneratorStatus.loaded;
         state.clues = action.payload;
       });
   },

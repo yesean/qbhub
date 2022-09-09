@@ -34,7 +34,7 @@ const Answers: React.FC<React.PropsWithChildren<unknown>> = () => {
   );
 
   const render = () => {
-    if (status !== CluesGeneratorStatus.idle || answerParam !== currentQuery) {
+    if (status !== CluesGeneratorStatus.loaded || answerParam !== currentQuery) {
       return <CircularProgress isIndeterminate color="cyan" />;
     }
 
