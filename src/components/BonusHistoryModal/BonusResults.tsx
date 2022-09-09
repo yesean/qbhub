@@ -2,7 +2,7 @@ import { Box, Flex, Text } from '@chakra-ui/react';
 import { Bonus, BonusPart, BonusPartResult } from '../../types/bonus';
 import { getTossupWords, renderQuestion } from '../../utils/reader';
 import { parseHTMLString } from '../../utils/string';
-import { VirtualizedTable, VirtualizedTableColumn } from '../Table';
+import { VirtualizedTable, VirtualizedTableColumn } from '../tables';
 
 type BonusPartRowResult = BonusPartResult & { bonus: Bonus; part: BonusPart };
 type BonusResultProps = {

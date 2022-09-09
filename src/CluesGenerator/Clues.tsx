@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { LinkButton } from '../components/buttons';
-import { KeyValueTable } from '../components/Table';
+import { KeyValueTable } from '../components/tables';
 import { Clue } from '../types/tossups';
 import { toCSV, toJSON } from '../utils/array';
 import {

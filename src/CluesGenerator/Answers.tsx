@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { useAppDispatch } from '../app/hooks';
-import { KeyValueTable } from '../components/Table';
+import { KeyValueTable } from '../components/tables';
 import { ROUTES } from '../utils/routes';
 import {
   CluesGeneratorStatus,

@@ -2,7 +2,7 @@ import { Box, Text } from '@chakra-ui/react';
 import { TossupResult } from '../../types/tossups';
 import { renderQuestion } from '../../utils/reader';
 import { parseHTMLString } from '../../utils/string';
-import { VirtualizedTable, VirtualizedTableColumn } from '../Table';
+import { VirtualizedTable, VirtualizedTableColumn } from '../tables';
 
 type TossupResultProps = {
   results: TossupResult[];

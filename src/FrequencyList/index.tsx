@@ -10,7 +10,7 @@ import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import { useAppDispatch } from '../app/hooks';
-import { KeyValueTable } from '../components/Table';
+import { KeyValueTable } from '../components/tables';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import { selectSettings } from '../Settings/settingsSlice';
 import { Answer } from '../types/tossups';
