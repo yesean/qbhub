@@ -1,5 +1,5 @@
 import { Center, Flex, Input } from '@chakra-ui/react';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import TealButton from '../TealButton';
 
 type UserInputProps = {
@@ -14,6 +14,7 @@ type UserInputProps = {
   borderColor: string;
   showBorder: boolean;
   showInput: boolean;
+  inputRef: React.RefObject<HTMLInputElement>;
 };
 
 const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
@@ -28,9 +29,8 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
   borderColor,
   showBorder,
   showInput,
+  inputRef,
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-
   useEffect(() => {
     if (shouldSubmit) submit();
   }, [shouldSubmit, submit]);
@@ -44,7 +44,7 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
         inputRef.current.focus();
       }
     }
-  }, [disabled, setInput]);
+  }, [disabled, inputRef]);
 
   const renderInput = () => {
     if (!showInput) return null;

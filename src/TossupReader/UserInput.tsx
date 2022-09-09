@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../app/hooks';
 import ReaderUserInput from '../components/reader/UserInput';
@@ -38,6 +38,7 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
   const isAnswering = useSelector(selectIsAnswering);
   const [input, setInput] = useState('');
   const dispatch = useAppDispatch();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // clear input on new tossup
   useEffect(() => {
@@ -46,7 +47,13 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
     }
   }, [status]);
 
-  const buzz = useCallback(() => dispatch(buzzAction()), [dispatch]);
+  const buzz = useCallback(() => {
+    if (inputRef?.current != null) {
+      inputRef.current.disabled = false;
+      inputRef.current.focus();
+    }
+    dispatch(buzzAction());
+  }, [dispatch]);
   const submitInput = useCallback(() => submit(input), [input, submit]);
   const next = useCallback(() => dispatch(nextTossupAction()), [dispatch]);
 
@@ -98,6 +105,7 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
       borderColor={borderColor}
       showBorder={status === ReaderStatus.judged}
       showInput={status !== ReaderStatus.idle}
+      inputRef={inputRef}
     />
   );
 };
