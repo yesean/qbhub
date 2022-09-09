@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks';
 import { ROUTES } from '../../utils/routes';
-import TealButton from '../TealButton';
+import { TealButton } from '../buttons';
 import { close, selectInfoModal } from './infoModalSlice';
 
 type Shortcut = {

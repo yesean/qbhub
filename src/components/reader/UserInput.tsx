@@ -1,6 +1,6 @@
 import { Center, Flex, Input } from '@chakra-ui/react';
 import { useEffect } from 'react';
-import TealButton from '../TealButton';
+import { TealButton } from '../buttons';
 
 type UserInputProps = {
   input: string;

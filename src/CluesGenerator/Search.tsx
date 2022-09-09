@@ -1,7 +1,7 @@
 import { Flex, Input } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import TealButton from '../components/TealButton';
+import { TealButton } from '../components/buttons';
 import { ROUTES } from '../utils/routes';
 
 const Search: React.FC<React.PropsWithChildren<unknown>> = () => {

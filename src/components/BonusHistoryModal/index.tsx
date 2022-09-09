@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../app/hooks';
 import { selectBonusReader } from '../../BonusReader/bonusReaderSlice';
 import { BonusScore } from '../../types/bonus';
-import TealButton from '../TealButton';
+import { TealButton } from '../buttons';
 import { close, selectBonusHistoryModal } from './bonusHistoryModalSlice';
 import BonusResults from './BonusResults';
 

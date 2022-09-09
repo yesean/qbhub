@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import Select, { OptionsType } from 'react-select';
-import TealButton from '../components/TealButton';
+import { TealButton } from '../components/buttons';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import { Category, Difficulty, Subcategory } from '../types/questions';
 import {

@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import LinkButton from '../components/LinkButton';
+import { LinkButton } from '../components/buttons';
 import { KeyValueTable } from '../components/Table';
 import { Clue } from '../types/tossups';
 import { toCSV, toJSON } from '../utils/array';
