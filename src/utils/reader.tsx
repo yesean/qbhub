@@ -120,7 +120,6 @@ export const renderQuestion = (
         ref={i === visible ? visibleRef : undefined}
         display="inline-block"
         whiteSpace="break-spaces"
-        wordBreak="break-all"
         visibility={i <= visible ? 'visible' : 'hidden'}
         fontWeight={w.bold ? 'bold' : 'normal'}
       >
