@@ -39,7 +39,7 @@ const BonusHistoryModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   const points = results.reduce((acc, r) => acc + r.score, 0);
   const ppb = results.length > 0 ? points / results.length : 0;
 
-  const scoreBody = [thirties, twenties, tens, zeros, points, ppb];
+  const scoreBody = [thirties, twenties, tens, zeros, points, ppb.toFixed(2)];
 
   const partResults = useMemo(
     () =>
