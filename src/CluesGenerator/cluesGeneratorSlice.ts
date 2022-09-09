@@ -74,6 +74,9 @@ const cluesGeneratorSlice = createSlice({
   name: 'cluesGenerator',
   initialState,
   reducers: {
+    resetStatus: (state) => {
+      state.status = CluesGeneratorStatus.initial;
+    },
     selectAnswer: (state, action: PayloadAction<string>) => {
       state.selectedAnswer = action.payload;
     },
@@ -100,7 +103,8 @@ const cluesGeneratorSlice = createSlice({
       });
   },
 });
-export const { selectAnswer, setQuery } = cluesGeneratorSlice.actions;
+export const { resetStatus, selectAnswer, setQuery } =
+  cluesGeneratorSlice.actions;
 export const selectCluesGenerator = (state: RootState) => state.cluesGenerator;
 
 export default cluesGeneratorSlice.reducer;

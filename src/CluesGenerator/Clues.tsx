@@ -7,7 +7,7 @@ import {
   Text,
   Tooltip,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { FileDownloadButton } from '../components/buttons';
@@ -17,7 +17,7 @@ import { toCSV, toJSON } from '../utils/array';
 import {
   CluesGeneratorStatus,
   fetchClues,
-  selectAnswer,
+  resetStatus,
   selectCluesGenerator,
 } from './cluesGeneratorSlice';
 
@@ -27,8 +27,7 @@ const cluesFields = [
 ] as const;
 
 const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const { status, clues, selectedAnswer } =
-    useAppSelector(selectCluesGenerator);
+  const { status, clues } = useAppSelector(selectCluesGenerator);
   const dispatch = useAppDispatch();
   const { answer } = useParams<{ answer: string }>();
   const [CSVLink, setCSVLink] = useState('');
@@ -58,8 +57,8 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
     };
   }, [answer, clues]);
 
-  useEffect(() => {
-    dispatch(selectAnswer(answer));
+  useLayoutEffect(() => {
+    dispatch(resetStatus());
     dispatch(fetchClues(answer));
   }, [dispatch, answer]);
 
@@ -104,7 +103,7 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
   );
 
   const render = () => {
-    if (status !== CluesGeneratorStatus.loaded || answer !== selectedAnswer) {
+    if (status !== CluesGeneratorStatus.loaded) {
       return <CircularProgress isIndeterminate color="cyan" />;
     }
 

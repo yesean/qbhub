@@ -1,5 +1,5 @@
 import { CircularProgress, Container, Link, Text } from '@chakra-ui/react';
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { useAppDispatch } from '../app/hooks';
@@ -18,14 +18,14 @@ const answersFields = [
 ] as const;
 
 const Answers: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const { answers, status, currentQuery } = useSelector(selectCluesGenerator);
+  const { answers, status } = useSelector(selectCluesGenerator);
   const dispatch = useAppDispatch();
   const { answer: answerParam } = useParams<{ answer: string }>();
 
-  useEffect(() => {
-    dispatch(setQuery(answerParam));
+  useLayoutEffect(() => {
+    dispatch(resetStatus());
     dispatch(fetchAnswers(answerParam));
-  }, [dispatch, answerParam]);
+  }, [answerParam, dispatch]);
 
   const createLink = (answer: string) => (
     <Link as={RouterLink} to={ROUTES.clues.display(answer)}>
@@ -34,7 +34,7 @@ const Answers: React.FC<React.PropsWithChildren<unknown>> = () => {
   );
 
   const render = () => {
-    if (status !== CluesGeneratorStatus.loaded || answerParam !== currentQuery) {
+    if (status !== CluesGeneratorStatus.loaded) {
       return <CircularProgress isIndeterminate color="cyan" />;
     }
 
