@@ -1,2 +1,2 @@
-export { default as LinkButton } from './LinkButton';
+export { default as FileDownloadButton } from './FileDownloadButton';
 export { default as TealButton } from './TealButton';

@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { LinkButton } from '../components/buttons';
+import { FileDownloadButton } from '../components/buttons';
 import { KeyValueTable } from '../components/tables';
 import { Clue } from '../types/tossups';
 import { toCSV, toJSON } from '../utils/array';
@@ -130,12 +130,12 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
           />
         </Box>
         <Flex justify="center">
-          <LinkButton href={CSVLink} download={answer} mr={4}>
+          <FileDownloadButton href={CSVLink} download={answer} mr={4}>
             Export CSV
-          </LinkButton>
-          <LinkButton href={JSONLink} download={answer}>
+          </FileDownloadButton>
+          <FileDownloadButton href={JSONLink} download={answer}>
             Export JSON
-          </LinkButton>
+          </FileDownloadButton>
         </Flex>
       </>
     );
