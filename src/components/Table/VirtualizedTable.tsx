@@ -1,5 +1,5 @@
 import { Box, Center, Flex, Heading } from '@chakra-ui/react';
-import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { VariableSizeList } from 'react-window';
 
@@ -79,8 +79,9 @@ const Row = <T,>({
         });
       }}
     >
-      {columns.map(({ cell, proportion, minWidth, useForHeight }) => (
+      {columns.map(({ cell, proportion, minWidth, useForHeight, label }) => (
         <Center
+          key={label}
           minW={`${minWidth}px`}
           flex={`${proportion} 0`}
           px={4}
