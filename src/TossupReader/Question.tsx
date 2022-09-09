@@ -29,15 +29,15 @@ const Question = () => {
   );
   const { displayWords, visibleIndex, pause, reveal } = useReader(words);
 
-  // update visible index
-  useEffect(() => {
-    if (status === ReaderStatus.reading) dispatch(setVisible(visibleIndex));
-  }, [dispatch, status, visibleIndex]);
-
   // pause reading when answering
   useEffect(() => {
     if (status === ReaderStatus.answering) pause();
   }, [pause, status]);
+
+  // update visible index
+  useEffect(() => {
+    if (status === ReaderStatus.reading) dispatch(setVisible(visibleIndex));
+  }, [dispatch, status, visibleIndex]);
 
   // reveal rest of tossup
   useEffect(() => {
