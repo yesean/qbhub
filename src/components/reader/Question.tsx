@@ -20,29 +20,35 @@ const Question: React.FC<React.PropsWithChildren<QuestionProps>> = ({
         </Center>
       );
     }
+
     if (showEmpty) {
-      return emptyMessage;
+      return (
+        <Container bg="gray.100" p={4} borderRadius="md">
+          {emptyMessage}
+        </Container>
+      );
     }
-    return children;
+
+    return (
+      <Container
+        maxW="container.md"
+        overflow="auto"
+        bg="gray.100"
+        w="100%"
+        minH="100px"
+        mb={4}
+        p={4}
+        display="flex"
+        flexWrap="wrap"
+        justifyContent={showLoading ? 'center' : 'start'}
+        borderRadius="md"
+      >
+        {children}
+      </Container>
+    );
   };
 
-  return (
-    <Container
-      maxW="container.md"
-      overflow="auto"
-      bg="gray.100"
-      w="100%"
-      minH="100px"
-      mb={4}
-      p={4}
-      display="flex"
-      flexWrap="wrap"
-      justifyContent={showLoading ? 'center' : 'start'}
-      borderRadius="md"
-    >
-      {render()}
-    </Container>
-  );
+  return render();
 };
 
 export default Question;

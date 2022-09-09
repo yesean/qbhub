@@ -1,6 +1,7 @@
 import {
   Box,
   CircularProgress,
+  Container,
   Flex,
   Heading,
   Text,
@@ -105,6 +106,17 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
   const render = () => {
     if (status !== CluesGeneratorStatus.idle || answer !== selectedAnswer) {
       return <CircularProgress isIndeterminate color="cyan" />;
+    }
+
+    if (clues.length === 0) {
+      return (
+        <Container bg="gray.100" p={4} borderRadius="md">
+          <Text>
+            No clues found for <strong>{answer}</strong>. Try checking your
+            network connection or tweaking the search parameters.
+          </Text>
+        </Container>
+      );
     }
 
     return (

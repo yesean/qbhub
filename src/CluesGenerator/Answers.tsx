@@ -1,4 +1,4 @@
-import { CircularProgress, Link } from '@chakra-ui/react';
+import { CircularProgress, Container, Link, Text } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink, useParams } from 'react-router-dom';
@@ -37,6 +37,18 @@ const Answers: React.FC<React.PropsWithChildren<unknown>> = () => {
     if (status !== CluesGeneratorStatus.idle || answerParam !== currentQuery) {
       return <CircularProgress isIndeterminate color="cyan" />;
     }
+
+    if (answers.length === 0) {
+      return (
+        <Container bg="gray.100" p={4} borderRadius="md">
+          <Text>
+            No answerlines matching <strong>{answerParam}</strong>. Try checking
+            your network connection or tweaking the search parameters.
+          </Text>
+        </Container>
+      );
+    }
+
     return (
       <KeyValueTable
         data={answers.map((answer) => ({
