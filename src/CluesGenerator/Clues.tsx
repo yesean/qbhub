@@ -16,6 +16,7 @@ import { toCSV, toJSON } from '../utils/array';
 import {
   CluesGeneratorStatus,
   fetchClues,
+  selectAnswer,
   selectCluesGenerator,
 } from './cluesGeneratorSlice';
 
@@ -25,7 +26,8 @@ const cluesFields = [
 ] as const;
 
 const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const { status, clues } = useAppSelector(selectCluesGenerator);
+  const { status, clues, selectedAnswer } =
+    useAppSelector(selectCluesGenerator);
   const dispatch = useAppDispatch();
   const { answer } = useParams<{ answer: string }>();
   const [CSVLink, setCSVLink] = useState('');
@@ -56,6 +58,7 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
   }, [answer, clues]);
 
   useEffect(() => {
+    dispatch(selectAnswer(answer));
     dispatch(fetchClues(answer));
   }, [dispatch, answer]);
 
@@ -100,7 +103,7 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
   );
 
   const render = () => {
-    if (status !== CluesGeneratorStatus.idle) {
+    if (status !== CluesGeneratorStatus.idle || answer !== selectedAnswer) {
       return <CircularProgress isIndeterminate color="cyan" />;
     }
 

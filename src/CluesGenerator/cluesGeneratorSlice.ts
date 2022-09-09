@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../app/store';
 import { Answer, Clue } from '../types/tossups';
 import * as fetchUtils from '../utils/fetch';
@@ -15,12 +15,16 @@ type CluesGeneratorSlice = {
   status: CluesGeneratorStatus;
   clues: Clue[];
   answers: Answer[];
+  selectedAnswer: string;
+  currentQuery: string;
 };
 
 const initialState: CluesGeneratorSlice = {
   status: CluesGeneratorStatus.initial,
   clues: [],
   answers: [],
+  selectedAnswer: '',
+  currentQuery: '',
 };
 
 export const fetchAnswers = createAsyncThunk<
@@ -69,7 +73,14 @@ export const fetchClues = createAsyncThunk<
 const cluesGeneratorSlice = createSlice({
   name: 'cluesGenerator',
   initialState,
-  reducers: {},
+  reducers: {
+    selectAnswer: (state, action: PayloadAction<string>) => {
+      state.selectedAnswer = action.payload;
+    },
+    setQuery: (state, action: PayloadAction<string>) => {
+      state.currentQuery = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAnswers.pending, (state) => {
@@ -89,6 +100,7 @@ const cluesGeneratorSlice = createSlice({
       });
   },
 });
+export const { selectAnswer, setQuery } = cluesGeneratorSlice.actions;
 export const selectCluesGenerator = (state: RootState) => state.cluesGenerator;
 
 export default cluesGeneratorSlice.reducer;

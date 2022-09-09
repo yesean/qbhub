@@ -9,6 +9,7 @@ import {
   CluesGeneratorStatus,
   fetchAnswers,
   selectCluesGenerator,
+  setQuery,
 } from './cluesGeneratorSlice';
 
 const answersFields = [
@@ -17,11 +18,12 @@ const answersFields = [
 ] as const;
 
 const Answers: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const { answers, status } = useSelector(selectCluesGenerator);
+  const { answers, status, currentQuery } = useSelector(selectCluesGenerator);
   const dispatch = useAppDispatch();
   const { answer: answerParam } = useParams<{ answer: string }>();
 
   useEffect(() => {
+    dispatch(setQuery(answerParam));
     dispatch(fetchAnswers(answerParam));
   }, [dispatch, answerParam]);
 
@@ -32,7 +34,7 @@ const Answers: React.FC<React.PropsWithChildren<unknown>> = () => {
   );
 
   const render = () => {
-    if (status !== CluesGeneratorStatus.idle) {
+    if (status !== CluesGeneratorStatus.idle || answerParam !== currentQuery) {
       return <CircularProgress isIndeterminate color="cyan" />;
     }
     return (
