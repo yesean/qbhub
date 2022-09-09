@@ -1,5 +1,4 @@
 import { Box, Flex, Heading, Text } from '@chakra-ui/react';
-import React from 'react';
 import { headers } from './constants';
 
 const About = () => {
