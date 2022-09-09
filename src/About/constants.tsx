@@ -2,7 +2,9 @@ import { Kbd, Link } from '@chakra-ui/react';
 import { Fragment } from 'react';
 import { zip } from '../utils/array';
 
-const toStringFragments = (str: string) => <Fragment key={str}>{str}</Fragment>;
+const toStringFragments = (str: string, i: number) => (
+  <Fragment key={`${str}${i}`}>{str}</Fragment>
+);
 
 const replaceLinks = (
   strings: TemplateStringsArray,
