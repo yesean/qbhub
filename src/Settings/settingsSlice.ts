@@ -1,9 +1,5 @@
-import {
-  createAsyncThunk,
-  createSelector,
-  createSlice,
-} from '@reduxjs/toolkit';
-import type { RootState, Subscription } from '../app/store';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
+import type { AppDispatch, RootState, Subscription } from '../app/store';
 import {
   filterBonusesByCategory,
   filterBonusesByDifficulties,
@@ -34,33 +30,6 @@ const initialState = {
   difficulties: restoreDifficulties(),
 };
 
-export const updateCategories = createAsyncThunk<Category[], Category[]>(
-  'settings/updateCategories',
-  (categories, { dispatch }) => {
-    dispatch(filterTossupsByCategory(categories));
-    dispatch(filterBonusesByCategory(categories));
-    return categories;
-  },
-);
-
-export const updateSubcategories = createAsyncThunk<
-  Subcategory[],
-  Subcategory[]
->('settings/updateSubcategories', (subcategories, { dispatch }) => {
-  dispatch(filterTossupsBySubcategory(subcategories));
-  dispatch(filterBonusesBySubcategory(subcategories));
-  return subcategories;
-});
-
-export const updateDifficulties = createAsyncThunk<Difficulty[], Difficulty[]>(
-  'settings/updateDifficulties',
-  (difficulties, { dispatch }) => {
-    dispatch(filterTossupsByDifficulties(difficulties));
-    dispatch(filterBonusesByDifficulties(difficulties));
-    return difficulties;
-  },
-);
-
 const settingsSlice = createSlice({
   name: 'settings',
   initialState,
@@ -74,21 +43,25 @@ const settingsSlice = createSlice({
     updateReadingSpeed: (state, action) => {
       state.readingSpeed = action.payload;
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(updateCategories.fulfilled, (state, action) => {
-        state.categories = action.payload;
-      })
-      .addCase(updateSubcategories.fulfilled, (state, action) => {
-        state.subcategories = action.payload;
-      })
-      .addCase(updateDifficulties.fulfilled, (state, action) => {
-        state.difficulties = action.payload;
-      });
+    updateCategories: (state, action) => {
+      state.categories = action.payload;
+    },
+    updateSubcategories: (state, action) => {
+      state.subcategories = action.payload;
+    },
+    updateDifficulties: (state, action) => {
+      state.difficulties = action.payload;
+    },
   },
 });
-export const { updateReadingSpeed, open, close } = settingsSlice.actions;
+export const {
+  updateReadingSpeed,
+  updateCategories,
+  updateSubcategories,
+  updateDifficulties,
+  open,
+  close,
+} = settingsSlice.actions;
 
 export const selectSettings = (state: RootState) => state.settings;
 const selectReadingSpeed = (state: RootState) => state.settings.readingSpeed;
@@ -110,15 +83,27 @@ export const readingSpeedSubscription: Subscription<number> = [
 ];
 export const categoriesSubscription: Subscription<Category[]> = [
   selectCategories,
-  (categories: Category[]) => saveCategories(categories),
+  (categories: Category[], dispatch: AppDispatch) => {
+    saveCategories(categories);
+    dispatch(filterTossupsByCategory(categories));
+    dispatch(filterBonusesByCategory(categories));
+  },
 ];
 export const subcategoriesSubscription: Subscription<Subcategory[]> = [
   selectSubcategories,
-  (subcategories: Subcategory[]) => saveSubcategories(subcategories),
+  (subcategories: Subcategory[], dispatch: AppDispatch) => {
+    saveSubcategories(subcategories);
+    dispatch(filterTossupsBySubcategory(subcategories));
+    dispatch(filterBonusesBySubcategory(subcategories));
+  },
 ];
 export const difficultiesSubscription: Subscription<Difficulty[]> = [
   selectDifficulties,
-  (difficulties: Difficulty[]) => saveDifficulties(difficulties),
+  (difficulties: Difficulty[], dispatch: AppDispatch) => {
+    saveDifficulties(difficulties);
+    dispatch(filterTossupsByDifficulties(difficulties));
+    dispatch(filterBonusesByDifficulties(difficulties));
+  },
 ];
 
 export default settingsSlice.reducer;

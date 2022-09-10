@@ -33,7 +33,7 @@ export type AppDispatch = typeof store.dispatch;
 
 export const observeStore = <T>(
   selector: (state: RootState) => T,
-  onChange: (state: T) => void,
+  onChange: (state: T, dispatch: AppDispatch) => void,
 ) => {
   let currentState: T;
 
@@ -41,7 +41,7 @@ export const observeStore = <T>(
     const nextState = selector(store.getState());
     if (nextState !== currentState) {
       currentState = nextState;
-      onChange(currentState);
+      onChange(currentState, store.dispatch);
     }
   };
 
