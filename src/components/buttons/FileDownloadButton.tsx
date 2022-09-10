@@ -1,33 +1,37 @@
-import { Link, LinkProps } from '@chakra-ui/react';
+import { Box, Link, LinkProps } from '@chakra-ui/react';
+import { BaseButtonProps } from './base';
 
-type LinkButtonProps = {
+export type FileDownloadButtonProps = LinkProps & {
   href: string;
   download: string;
-} & LinkProps;
+  label: string;
+  icon?: React.ReactElement;
+};
 
-const LinkButton: React.FC<React.PropsWithChildren<LinkButtonProps>> = ({
-  href,
-  download,
-  children,
-  ...rest
-}) => (
-  <Link
-    href={href}
-    download={download}
-    p={3}
-    borderRadius="5px"
-    bg="cyan.400"
-    color="gray.50"
-    fontWeight="semibold"
-    _hover={{
-      textDecor: 'none',
-      bg: 'cyan.500',
-    }}
+const FileDownloadButton: React.FC<
+  React.PropsWithChildren<FileDownloadButtonProps>
+> = ({ href, download, icon, label, ...rest }) => {
+  const content = () => {
+    if (icon == null) {
+      return label;
+    }
+
+    return (
+      <>
+        <Box as="span" mr={1} display="inline-flex" alignItems="center">
+          {icon}
+        </Box>
+        {label}
+      </>
+    );
+  };
+
+  return (
     // eslint-disable-next-line react/jsx-props-no-spreading
-    {...rest}
-  >
-    {children}
-  </Link>
-);
+    <Link {...BaseButtonProps} href={href} download={download} {...rest}>
+      {content()}
+    </Link>
+  );
+};
 
-export default LinkButton;
+export default FileDownloadButton;
