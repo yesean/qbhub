@@ -24,10 +24,10 @@ import {
   SUBCATEGORY_MAP,
 } from '../utils/constants';
 import {
-  setInitialCategories,
-  setInitialDifficulties,
-  setInitialReadingSpeed,
-  setInitialSubcategories,
+  saveCategories,
+  saveDifficulties,
+  saveReadingSpeed,
+  saveSubcategories,
 } from '../utils/settings';
 import {
   close,
@@ -49,7 +49,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   const onReadingSpeedChange = (value: number) => {
     dispatch(updateReadingSpeed(value));
-    setInitialReadingSpeed(value);
+    saveReadingSpeed(value);
   };
 
   const categoriesInSelect = categories.map((c) => ({
@@ -61,13 +61,13 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   ) => {
     const newCategories = options.map((o) => o.value);
     dispatch(updateCategories(newCategories));
-    setInitialCategories(newCategories);
+    saveCategories(newCategories);
 
     const newSubcategories = subcategories.filter(
       (sc) => !newCategories.includes(SUBCATEGORY_MAP[sc]),
     );
     dispatch(updateSubcategories(newSubcategories));
-    setInitialSubcategories(newSubcategories);
+    saveSubcategories(newSubcategories);
   };
 
   const subcategoriesInSelect = subcategories.map((c) => ({
@@ -79,14 +79,14 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   ) => {
     const newSubcategories = options.map((o) => o.value);
     dispatch(updateSubcategories(newSubcategories));
-    setInitialSubcategories(newSubcategories);
+    saveSubcategories(newSubcategories);
 
     const categoriesToExclude = new Set(
       newSubcategories.map((sc) => SUBCATEGORY_MAP[sc]),
     );
     const newCategories = categories.filter((c) => !categoriesToExclude.has(c));
     dispatch(updateCategories(newCategories));
-    setInitialCategories(newCategories);
+    saveCategories(newCategories);
   };
 
   const difficultiesInSelect = difficulties.map((d) => ({
@@ -98,7 +98,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   ) => {
     const newDifficulties = options.map((o) => o.value);
     dispatch(updateDifficulties(newDifficulties));
-    setInitialDifficulties(newDifficulties);
+    saveDifficulties(newDifficulties);
   };
 
   return (

@@ -16,18 +16,18 @@ import {
 } from '../TossupReader/tossupReaderSlice';
 import { Category, Difficulty, Subcategory } from '../types/questions';
 import {
-  getInitialCategories,
-  getInitialDifficulties,
-  getInitialReadingSpeed,
-  getInitialSubcategories,
+  restoreCategories,
+  restoreDifficulties,
+  restoreReadingSpeed,
+  restoreSubcategories,
 } from '../utils/settings';
 
 const initialState = {
   isOpen: false,
-  readingSpeed: getInitialReadingSpeed(),
-  categories: getInitialCategories(),
-  subcategories: getInitialSubcategories(),
-  difficulties: getInitialDifficulties(),
+  readingSpeed: restoreReadingSpeed(),
+  categories: restoreCategories(),
+  subcategories: restoreSubcategories(),
+  difficulties: restoreDifficulties(),
 };
 
 export const updateCategories = createAsyncThunk<Category[], Category[]>(

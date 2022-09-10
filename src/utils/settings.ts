@@ -7,75 +7,75 @@ import {
 } from './constants';
 import { Category, Difficulty, Subcategory } from '../types/questions';
 
-const checkReadingSpeedValid = (speed: number) =>
+const validateReadingSpeed = (speed: number) =>
   speed >= 0 && speed <= 100 && speed % 5 === 0;
 
-export const setInitialReadingSpeed = (speed: number) => {
-  window.localStorage.setItem(READING_SPEED_LS_KEY, JSON.stringify(speed));
-};
+const save = (key: string, data: any) =>
+  window.localStorage.setItem(key, JSON.stringify(data));
 
-export const setInitialCategories = (categories: Category[]) => {
-  window.localStorage.setItem(CATEGORIES_LS_KEY, JSON.stringify(categories));
-};
+export const saveReadingSpeed = (speed: number) =>
+  save(READING_SPEED_LS_KEY, speed);
 
-export const setInitialSubcategories = (subcategories: Subcategory[]) => {
-  window.localStorage.setItem(
-    SUBCATEGORIES_LS_KEY,
-    JSON.stringify(subcategories),
-  );
-};
+export const saveCategories = (categories: Category[]) =>
+  save(CATEGORIES_LS_KEY, categories);
 
-export const setInitialDifficulties = (difficulties: Difficulty[]) => {
-  window.localStorage.setItem(
-    DIFFICULTIES_LS_KEY,
-    JSON.stringify(difficulties),
-  );
-};
+export const saveSubcategories = (subcategories: Subcategory[]) =>
+  save(SUBCATEGORIES_LS_KEY, subcategories);
 
-export const getInitialReadingSpeed = () => {
-  const speed = window.localStorage.getItem(READING_SPEED_LS_KEY);
+export const saveDifficulties = (difficulties: Difficulty[]) =>
+  save(DIFFICULTIES_LS_KEY, difficulties);
+
+const restore = (key: string) => window.localStorage.getItem(key);
+
+export const restoreReadingSpeed = () => {
+  const speed = restore(READING_SPEED_LS_KEY);
   const parsedSpeed = Number(speed);
-  if (
+
+  const isInvalid =
     speed === null ||
     Number.isNaN(parsedSpeed) ||
-    !checkReadingSpeedValid(parsedSpeed)
-  ) {
-    setInitialReadingSpeed(DEFAULT_READING_SPEED);
+    !validateReadingSpeed(parsedSpeed);
+  if (isInvalid) {
+    saveReadingSpeed(DEFAULT_READING_SPEED);
     return DEFAULT_READING_SPEED;
   }
+
   return parsedSpeed;
 };
 
-export const getInitialCategories = () => {
-  const defaultCategories: Category[] = [];
-  const categories = window.localStorage.getItem(CATEGORIES_LS_KEY);
+export const restoreCategories = () => {
+  const categories = restore(CATEGORIES_LS_KEY);
+
   if (categories === null) {
-    setInitialCategories(defaultCategories);
-    return defaultCategories;
+    saveCategories([]);
+    return [];
   }
   return JSON.parse(categories) as Category[];
 };
 
-export const getInitialSubcategories = () => {
-  const defaultSubcategories: Subcategory[] = [];
-  const subcategories = window.localStorage.getItem(SUBCATEGORIES_LS_KEY);
+export const restoreSubcategories = () => {
+  const subcategories = restore(SUBCATEGORIES_LS_KEY);
+
   if (subcategories === null) {
-    setInitialSubcategories(defaultSubcategories);
-    return defaultSubcategories;
+    saveSubcategories([]);
+    return [];
   }
   return JSON.parse(subcategories) as Subcategory[];
 };
 
-export const getInitialDifficulties = () => {
-  const defaultDifficulties: Difficulty[] = [];
-  const difficulties = window.localStorage.getItem(DIFFICULTIES_LS_KEY);
+export const restoreDifficulties = () => {
+  const difficulties = restore(DIFFICULTIES_LS_KEY);
+
   if (difficulties === null) {
-    setInitialDifficulties(defaultDifficulties);
-    return defaultDifficulties;
+    saveDifficulties([]);
+    return [];
   }
   return JSON.parse(difficulties) as Difficulty[];
 };
 
+/**
+ * Convert speed from percentage into a timeout delay.
+ */
 export const getReadingTimeoutDelay = (speed: number) => {
   // these number seem like a reasonable range
   const SLOWEST_DELAY = 500;
