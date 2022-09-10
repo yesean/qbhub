@@ -35,7 +35,6 @@ import {
   MAX_TOURNAMENT_YEAR,
   MIN_TOURNAMENT_YEAR,
   SUBCATEGORIES,
-  SUBCATEGORY_MAP,
   TOURNAMENTS,
 } from '../utils/constants';
 import {
@@ -74,13 +73,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
     options: OptionsType<{ label: string; value: Category }>,
   ) => {
     const newCategories = options.map((o) => o.value);
-    // remove subcategories of new categories since a category invalidates a subcategory
-    const newSubcategories = subcategories.filter(
-      (sc) => !newCategories.includes(SUBCATEGORY_MAP[sc]),
-    );
-
     dispatch(updateCategories(newCategories));
-    dispatch(updateSubcategories(newSubcategories));
   };
 
   const subcategoriesInSelect = subcategories.map((c) => ({
@@ -91,14 +84,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
     options: OptionsType<{ label: string; value: Subcategory }>,
   ) => {
     const newSubcategories = options.map((o) => o.value);
-    // remove categories of new subcategories since a subcategory invalidates a category
-    const categoriesToExclude = new Set(
-      newSubcategories.map((sc) => SUBCATEGORY_MAP[sc]),
-    );
-    const newCategories = categories.filter((c) => !categoriesToExclude.has(c));
-
     dispatch(updateSubcategories(newSubcategories));
-    dispatch(updateCategories(newCategories));
   };
 
   const difficultiesInSelect = difficulties.map((d) => ({

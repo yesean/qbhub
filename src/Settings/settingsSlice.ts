@@ -61,9 +61,21 @@ const settingsSlice = createSlice({
     },
     updateCategories: (state, action) => {
       state.categories = action.payload;
+      // remove subcategories of a newly added category, e.g. adding Science would invalidate Biology since Biology is too strict and would block other Science subcategories
+      state.subcategories = state.subcategories.filter(
+        (subcategory) =>
+          !state.categories.includes(SUBCATEGORY_MAP[subcategory]),
+      );
     },
     updateSubcategories: (state, action) => {
       state.subcategories = action.payload;
+      // remove categories of a newly added subcategory, e.g. adding Biology would invalidate Science since Biology is stricter than Science
+      const invalidCategories = new Set(
+        state.subcategories.map((subcategory) => SUBCATEGORY_MAP[subcategory]),
+      );
+      state.categories = state.categories.filter(
+        (category) => !invalidCategories.has(category),
+      );
     },
     updateDifficulties: (state, action) => {
       state.difficulties = action.payload;
