@@ -167,9 +167,9 @@ export const headers = [
     }} and ${{
       label: 'backend',
       href: 'https://github.com/yesean/qbhub-server',
-    }}. You can also leave any general feedback on this ${{
-      label: 'form',
-      href: 'https://docs.google.com/forms/d/e/1FAIpQLSfmLBEXd_p_j_t8M7qvGGC5fC5_B0a0DKCWy6K7YWjOyHA7Hg/viewform?usp=sf_link',
-    }}. I realize the documentation isn't the best, but feel free to reach out on the form and I'll be happy to go over it.`,
+    }}. The documentation isn't the best, but feel free to reach out on the form and I'll be happy to go over it. Lastly, if you enjoyed using QBHub, you can show your support by ${{
+      label: 'buying me a coffee',
+      href: 'https://www.buymeacoffee.com/qbhub',
+    }}! As much I love doing it, maintaining and developing this site requires a lot of time and effort, and on top of that, renting a server costs money. Your contributions mean a lot and go towards making this site even more amazing!`,
   },
 ];
