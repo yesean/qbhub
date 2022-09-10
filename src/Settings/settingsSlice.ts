@@ -20,6 +20,7 @@ import {
   Subcategory,
   Tournament,
 } from '../types/questions';
+import { SUBCATEGORY_MAP, TOURNAMENTS_MAP } from '../utils/constants';
 import {
   restoreCategories,
   restoreDifficulties,
@@ -72,6 +73,9 @@ const settingsSlice = createSlice({
     },
     updateFromYear: (state, action) => {
       state.fromYear = action.payload;
+      state.tournaments = state.tournaments.filter(
+        (tournament) => TOURNAMENTS_MAP[tournament].year >= state.fromYear,
+      );
     },
   },
 });

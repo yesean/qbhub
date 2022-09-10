@@ -17,6 +17,7 @@ import {
   SliderThumb,
   SliderTrack,
 } from '@chakra-ui/react';
+import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import Select, { OptionsType } from 'react-select';
 import { useAppDispatch } from '../app/hooks';
@@ -111,6 +112,10 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
     dispatch(updateDifficulties(newDifficulties));
   };
 
+  const tournamentsToDisplay = useMemo(
+    () => TOURNAMENTS.filter(({ year }) => year >= fromYear),
+    [fromYear],
+  );
   const tournamentsInSelect = tournaments.map((t) => ({
     value: t,
     label: Tournament[t],
@@ -194,7 +199,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
             <Select
               isMulti
               name="tournaments"
-              options={TOURNAMENTS}
+              options={tournamentsToDisplay}
               value={tournamentsInSelect}
               onChange={onTournamentsChange}
             />
