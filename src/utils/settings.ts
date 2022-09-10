@@ -2,13 +2,13 @@ import {
   CATEGORIES_LS_KEY,
   DEFAULT_READING_SPEED,
   DIFFICULTIES_LS_KEY,
+  FROM_YEAR_LS_KEY,
+  MAX_TOURNAMENT_YEAR,
+  MIN_TOURNAMENT_YEAR,
   READING_SPEED_LS_KEY,
   SUBCATEGORIES_LS_KEY,
 } from './constants';
 import { Category, Difficulty, Subcategory } from '../types/questions';
-
-const validateReadingSpeed = (speed: number) =>
-  speed >= 0 && speed <= 100 && speed % 5 === 0;
 
 const save = (key: string, data: any) =>
   window.localStorage.setItem(key, JSON.stringify(data));
@@ -25,7 +25,12 @@ export const saveSubcategories = (subcategories: Subcategory[]) =>
 export const saveDifficulties = (difficulties: Difficulty[]) =>
   save(DIFFICULTIES_LS_KEY, difficulties);
 
+export const saveFromYear = (from: number) => save(FROM_YEAR_LS_KEY, from);
+
 const restore = (key: string) => window.localStorage.getItem(key);
+
+const validateReadingSpeed = (speed: number) =>
+  speed >= 0 && speed <= 100 && speed % 5 === 0;
 
 export const restoreReadingSpeed = () => {
   const speed = restore(READING_SPEED_LS_KEY);
@@ -71,6 +76,23 @@ export const restoreDifficulties = () => {
     return [];
   }
   return JSON.parse(difficulties) as Difficulty[];
+};
+
+const validateFromYear = (year: number) =>
+  year >= MIN_TOURNAMENT_YEAR && year <= MAX_TOURNAMENT_YEAR;
+
+export const restoreFromYear = () => {
+  const year = restore(FROM_YEAR_LS_KEY);
+  const parsedYear = Number(year);
+
+  const isInvalid =
+    year === null || Number.isNaN(parsedYear) || !validateFromYear(parsedYear);
+  if (isInvalid) {
+    saveFromYear(MIN_TOURNAMENT_YEAR);
+    return MIN_TOURNAMENT_YEAR;
+  }
+
+  return parsedYear;
 };
 
 /**

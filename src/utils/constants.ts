@@ -111,9 +111,13 @@ export const DIFFICULTIES = [
   { label: 'Open', value: Difficulty.Open },
 ];
 
+export const MIN_TOURNAMENT_YEAR = 2005;
+export const MAX_TOURNAMENT_YEAR = 2020;
+
 export const READING_SPEED_LS_KEY = 'reading_speed';
 export const CATEGORIES_LS_KEY = 'categories';
 export const SUBCATEGORIES_LS_KEY = 'subcategories';
 export const DIFFICULTIES_LS_KEY = 'difficulties';
+export const FROM_YEAR_LS_KEY = 'from_year';
 
 export const DEFAULT_READING_SPEED = 60;

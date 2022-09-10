@@ -9,6 +9,7 @@ import frequencyListReducer from '../FrequencyList/frequencyListSlice';
 import settingsReducer, {
   categoriesSubscription,
   difficultiesSubscription,
+  fromYearSubscription,
   readingSpeedSubscription,
   subcategoriesSubscription
 } from '../Settings/settingsSlice';
@@ -56,3 +57,4 @@ observeStore(...readingSpeedSubscription)
 observeStore(...categoriesSubscription)
 observeStore(...subcategoriesSubscription)
 observeStore(...difficultiesSubscription)
+observeStore(...fromYearSubscription)

@@ -167,6 +167,9 @@ const bonusReaderSlice = createSlice({
         action.payload.includes(bn.difficulty),
       );
     },
+    filterBonusesByFromYear: (state, action: PayloadAction<number>) => {
+      state.bonuses = state.bonuses.filter((bn) => bn.year >= action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchBonuses.fulfilled, (state, action) => {
@@ -206,6 +209,7 @@ export const {
   filterBonusesByCategory,
   filterBonusesBySubcategory,
   filterBonusesByDifficulties,
+  filterBonusesByFromYear,
 } = bonusReaderSlice.actions;
 
 export const selectBonusReader = (state: RootState) => state.bonusReader;

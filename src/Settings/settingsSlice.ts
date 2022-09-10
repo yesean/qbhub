@@ -3,21 +3,25 @@ import type { AppDispatch, RootState, Subscription } from '../app/store';
 import {
   filterBonusesByCategory,
   filterBonusesByDifficulties,
+  filterBonusesByFromYear,
   filterBonusesBySubcategory,
 } from '../BonusReader/bonusReaderSlice';
 import {
   filterTossupsByCategory,
   filterTossupsByDifficulties,
+  filterTossupsByFromYear,
   filterTossupsBySubcategory,
 } from '../TossupReader/tossupReaderSlice';
 import { Category, Difficulty, Subcategory } from '../types/questions';
 import {
   restoreCategories,
   restoreDifficulties,
+  restoreFromYear,
   restoreReadingSpeed,
   restoreSubcategories,
   saveCategories,
   saveDifficulties,
+  saveFromYear,
   saveReadingSpeed,
   saveSubcategories,
 } from '../utils/settings';
@@ -28,6 +32,7 @@ const initialState = {
   categories: restoreCategories(),
   subcategories: restoreSubcategories(),
   difficulties: restoreDifficulties(),
+  fromYear: restoreFromYear(),
 };
 
 const settingsSlice = createSlice({
@@ -52,6 +57,9 @@ const settingsSlice = createSlice({
     updateDifficulties: (state, action) => {
       state.difficulties = action.payload;
     },
+    updateFromYear: (state, action) => {
+      state.fromYear = action.payload;
+    },
   },
 });
 export const {
@@ -59,6 +67,7 @@ export const {
   updateCategories,
   updateSubcategories,
   updateDifficulties,
+  updateFromYear,
   open,
   close,
 } = settingsSlice.actions;
@@ -68,12 +77,14 @@ const selectReadingSpeed = (state: RootState) => state.settings.readingSpeed;
 const selectCategories = (state: RootState) => state.settings.categories;
 const selectSubcategories = (state: RootState) => state.settings.subcategories;
 const selectDifficulties = (state: RootState) => state.settings.difficulties;
+const selectFromYear = (state: RootState) => state.settings.fromYear;
 export const selectQuestionSettings = createSelector(
-  [selectCategories, selectSubcategories, selectDifficulties],
-  (categories, subcategories, difficulties) => ({
+  [selectCategories, selectSubcategories, selectDifficulties, selectFromYear],
+  (categories, subcategories, difficulties, fromYear) => ({
     categories,
     subcategories,
     difficulties,
+    fromYear,
   }),
 );
 
@@ -103,6 +114,14 @@ export const difficultiesSubscription: Subscription<Difficulty[]> = [
     saveDifficulties(difficulties);
     dispatch(filterTossupsByDifficulties(difficulties));
     dispatch(filterBonusesByDifficulties(difficulties));
+  },
+];
+export const fromYearSubscription: Subscription<number> = [
+  selectFromYear,
+  (fromYear: number, dispatch: AppDispatch) => {
+    saveFromYear(fromYear);
+    dispatch(filterTossupsByFromYear(fromYear));
+    dispatch(filterBonusesByFromYear(fromYear));
   },
 ];
 

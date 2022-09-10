@@ -151,6 +151,9 @@ const tossupReaderSlice = createSlice({
         action.payload.includes(tu.difficulty),
       );
     },
+    filterTossupsByFromYear: (state, action: PayloadAction<number>) => {
+      state.tossups = state.tossups.filter((tu) => tu.year >= action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchTossups.fulfilled, (state, action) => {
@@ -184,6 +187,7 @@ export const {
   filterTossupsByCategory,
   filterTossupsBySubcategory,
   filterTossupsByDifficulties,
+  filterTossupsByFromYear,
 } = tossupReaderSlice.actions;
 
 export const selectTossupReader = (state: RootState) => state.tossupReader;
