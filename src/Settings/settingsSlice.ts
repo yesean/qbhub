@@ -3,7 +3,7 @@ import {
   createSelector,
   createSlice,
 } from '@reduxjs/toolkit';
-import type { RootState } from '../app/store';
+import type { RootState, Subscription } from '../app/store';
 import {
   filterBonusesByCategory,
   filterBonusesByDifficulties,
@@ -20,6 +20,10 @@ import {
   restoreDifficulties,
   restoreReadingSpeed,
   restoreSubcategories,
+  saveCategories,
+  saveDifficulties,
+  saveReadingSpeed,
+  saveSubcategories,
 } from '../utils/settings';
 
 const initialState = {
@@ -87,6 +91,7 @@ const settingsSlice = createSlice({
 export const { updateReadingSpeed, open, close } = settingsSlice.actions;
 
 export const selectSettings = (state: RootState) => state.settings;
+const selectReadingSpeed = (state: RootState) => state.settings.readingSpeed;
 const selectCategories = (state: RootState) => state.settings.categories;
 const selectSubcategories = (state: RootState) => state.settings.subcategories;
 const selectDifficulties = (state: RootState) => state.settings.difficulties;
@@ -98,4 +103,22 @@ export const selectQuestionSettings = createSelector(
     difficulties,
   }),
 );
+
+export const readingSpeedSubscription: Subscription<number> = [
+  selectReadingSpeed,
+  (readingSpeed: number) => saveReadingSpeed(readingSpeed),
+];
+export const categoriesSubscription: Subscription<Category[]> = [
+  selectCategories,
+  (categories: Category[]) => saveCategories(categories),
+];
+export const subcategoriesSubscription: Subscription<Subcategory[]> = [
+  selectSubcategories,
+  (subcategories: Subcategory[]) => saveSubcategories(subcategories),
+];
+export const difficultiesSubscription: Subscription<Difficulty[]> = [
+  selectDifficulties,
+  (difficulties: Difficulty[]) => saveDifficulties(difficulties),
+];
+
 export default settingsSlice.reducer;

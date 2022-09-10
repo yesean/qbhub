@@ -1,13 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit';
-import cluesGeneatorReducer from '../CluesGenerator/cluesGeneratorSlice';
-import infoModalReducer from '../components/InfoModal/infoModalSlice';
-import hamburgerMenuReducer from '../components/HamburgerMenu/hamburgerMenuSlice';
-import tossupHistoryModalReducer from '../components/TossupHistoryModal/tossupHistoryModalSlice';
-import bonusHistoryModalReducer from '../components/BonusHistoryModal/bonusHistoryModalSlice';
-import frequencyListReducer from '../FrequencyList/frequencyListSlice';
-import settingsReducer from '../Settings/settingsSlice';
-import tossupReaderReducer from '../TossupReader/tossupReaderSlice';
 import bonusReaderReducer from '../BonusReader/bonusReaderSlice';
+import cluesGeneatorReducer from '../CluesGenerator/cluesGeneratorSlice';
+import bonusHistoryModalReducer from '../components/BonusHistoryModal/bonusHistoryModalSlice';
+import hamburgerMenuReducer from '../components/HamburgerMenu/hamburgerMenuSlice';
+import infoModalReducer from '../components/InfoModal/infoModalSlice';
+import tossupHistoryModalReducer from '../components/TossupHistoryModal/tossupHistoryModalSlice';
+import frequencyListReducer from '../FrequencyList/frequencyListSlice';
+import settingsReducer, {
+  categoriesSubscription,
+  difficultiesSubscription,
+  readingSpeedSubscription,
+  subcategoriesSubscription
+} from '../Settings/settingsSlice';
+import tossupReaderReducer from '../TossupReader/tossupReaderSlice';
 
 export const store = configureStore({
   reducer: {
@@ -44,3 +49,10 @@ export const observeStore = <T>(
   handleChange();
   return unsubscribe;
 };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export type Subscription<T> = Parameters<typeof observeStore<T>>;
+
+observeStore(...readingSpeedSubscription)
+observeStore(...categoriesSubscription)
+observeStore(...subcategoriesSubscription)
+observeStore(...difficultiesSubscription)

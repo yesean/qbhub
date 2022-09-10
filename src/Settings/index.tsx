@@ -24,12 +24,6 @@ import {
   SUBCATEGORY_MAP,
 } from '../utils/constants';
 import {
-  saveCategories,
-  saveDifficulties,
-  saveReadingSpeed,
-  saveSubcategories,
-} from '../utils/settings';
-import {
   close,
   selectSettings,
   updateCategories,
@@ -47,10 +41,8 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   useKeyboardShortcut('Escape', closeModal);
 
-  const onReadingSpeedChange = (value: number) => {
+  const onReadingSpeedChange = (value: number) =>
     dispatch(updateReadingSpeed(value));
-    saveReadingSpeed(value);
-  };
 
   const categoriesInSelect = categories.map((c) => ({
     value: c,
@@ -60,14 +52,13 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
     options: OptionsType<{ label: string; value: Category }>,
   ) => {
     const newCategories = options.map((o) => o.value);
-    dispatch(updateCategories(newCategories));
-    saveCategories(newCategories);
-
+    // remove subcategories of new categories since a category invalidates a subcategory
     const newSubcategories = subcategories.filter(
       (sc) => !newCategories.includes(SUBCATEGORY_MAP[sc]),
     );
+
+    dispatch(updateCategories(newCategories));
     dispatch(updateSubcategories(newSubcategories));
-    saveSubcategories(newSubcategories);
   };
 
   const subcategoriesInSelect = subcategories.map((c) => ({
@@ -78,15 +69,14 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
     options: OptionsType<{ label: string; value: Subcategory }>,
   ) => {
     const newSubcategories = options.map((o) => o.value);
-    dispatch(updateSubcategories(newSubcategories));
-    saveSubcategories(newSubcategories);
-
+    // remove categories of new subcategories since a subcategory invalidates a category
     const categoriesToExclude = new Set(
       newSubcategories.map((sc) => SUBCATEGORY_MAP[sc]),
     );
     const newCategories = categories.filter((c) => !categoriesToExclude.has(c));
+
+    dispatch(updateSubcategories(newSubcategories));
     dispatch(updateCategories(newCategories));
-    saveCategories(newCategories);
   };
 
   const difficultiesInSelect = difficulties.map((d) => ({
@@ -98,7 +88,6 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   ) => {
     const newDifficulties = options.map((o) => o.value);
     dispatch(updateDifficulties(newDifficulties));
-    saveDifficulties(newDifficulties);
   };
 
   return (
