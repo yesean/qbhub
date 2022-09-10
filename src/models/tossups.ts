@@ -14,7 +14,7 @@ const columns = [
   { name: TABLES.tossups.columns.category, alias: 'category' },
   { name: TABLES.tossups.columns.subcategory, alias: 'subcategory' },
   { name: TABLES.tournaments.columns.difficulty },
-  { name: TABLES.tournaments.columns.name, alias: 'tournament' },
+  { name: TABLES.tournaments.columns.id, alias: 'tournament' },
   { name: TABLES.tournaments.columns.year },
 ];
 
