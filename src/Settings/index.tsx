@@ -7,19 +7,27 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   Slider,
   SliderFilledTrack,
   SliderThumb,
   SliderTrack,
 } from '@chakra-ui/react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Select, { OptionsType } from 'react-select';
+import { useAppDispatch } from '../app/hooks';
 import { TealButton } from '../components/buttons';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import { Category, Difficulty, Subcategory } from '../types/questions';
 import {
   CATEGORIES,
   DIFFICULTIES,
+  MAX_TOURNAMENT_YEAR,
+  MIN_TOURNAMENT_YEAR,
   SUBCATEGORIES,
   SUBCATEGORY_MAP,
 } from '../utils/constants';
@@ -28,17 +36,22 @@ import {
   selectSettings,
   updateCategories,
   updateDifficulties,
+  updateFromYear,
   updateReadingSpeed,
   updateSubcategories,
 } from './settingsSlice';
 
 const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const { readingSpeed, categories, subcategories, difficulties, isOpen } =
-    useSelector(selectSettings);
-  const dispatch = useDispatch();
-
+  const {
+    readingSpeed,
+    categories,
+    subcategories,
+    difficulties,
+    fromYear,
+    isOpen,
+  } = useSelector(selectSettings);
+  const dispatch = useAppDispatch();
   const closeModal = () => dispatch(close());
-
   useKeyboardShortcut('Escape', closeModal);
 
   const onReadingSpeedChange = (value: number) =>
@@ -90,6 +103,10 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
     dispatch(updateDifficulties(newDifficulties));
   };
 
+  const onFromYearChange = (_: any, year: number) => {
+    dispatch(updateFromYear(year));
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={closeModal} size="6xl" isCentered>
       <ModalOverlay />
@@ -139,7 +156,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
               onChange={onSubcategoriesChange}
             />
           </Box>
-          <Box>
+          <Box mb={4}>
             <Heading size="sm" mb={2} color="gray.800">
               Difficulty
             </Heading>
@@ -150,6 +167,24 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
               value={difficultiesInSelect}
               onChange={onDifficultiesChange}
             />
+          </Box>
+          <Box>
+            <Heading size="sm" mb={2} color="gray.800">
+              From Year
+            </Heading>
+            <NumberInput
+              value={fromYear}
+              onChange={onFromYearChange}
+              step={1}
+              min={MIN_TOURNAMENT_YEAR}
+              max={MAX_TOURNAMENT_YEAR}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
           </Box>
         </ModalBody>
         <ModalFooter>
