@@ -25,3 +25,22 @@ export const store = configureStore({
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+export const observeStore = <T>(
+  selector: (state: RootState) => T,
+  onChange: (state: T) => void,
+) => {
+  let currentState: T;
+
+  const handleChange = () => {
+    const nextState = selector(store.getState());
+    if (nextState !== currentState) {
+      currentState = nextState;
+      onChange(currentState);
+    }
+  };
+
+  const unsubscribe = store.subscribe(handleChange);
+  handleChange();
+  return unsubscribe;
+};
