@@ -1,4 +1,4 @@
-import { Category, Difficulty, Subcategory } from 'questions';
+import { Category, Difficulty, Subcategory, Tournament } from 'questions';
 import { SortOption } from '../types/controller';
 import { QueryStringParsingError } from '../types/errors';
 import {
@@ -15,6 +15,7 @@ import {
   isString,
   isStringArray,
   isSubcategoryArray,
+  isTournamentArray,
   stringToNumber,
 } from './types';
 
@@ -87,6 +88,20 @@ export const parseDifficulties = (q: qs.ParsedQs): Difficulty[] => {
     );
 
   return difficulties;
+};
+
+/**
+ * Parses the `tournaments` query string field.
+ */
+export const parseTournaments = (q: qs.ParsedQs): Tournament[] => {
+  const tournaments = parseNumericArray(q.tournaments, 'tournaments');
+
+  if (!isTournamentArray(tournaments))
+    throw new QueryStringParsingError(
+      typeErrorMessage('tournaments', 'Tournament[]'),
+    );
+
+  return tournaments;
 };
 
 /**

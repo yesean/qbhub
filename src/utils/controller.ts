@@ -9,6 +9,7 @@ import {
   parseSort,
   parseSubcategories,
   parseText,
+  parseTournaments,
   parseUntil,
 } from './queryString';
 
@@ -22,6 +23,7 @@ const parseQuestionFilters = (
   categories: parseCategories(q),
   subcategories: parseSubcategories(q),
   difficulties: parseDifficulties(q),
+  tournaments: parseTournaments(q),
   text: parseText(q),
   answer: parseAnswer(q, answer),
   sort: parseSort(q),

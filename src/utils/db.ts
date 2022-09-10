@@ -80,6 +80,28 @@ export const getDifficultiesCondition = (
 };
 
 /**
+ * Build `where` condition for filtering by tournaments.
+ */
+export const getTournamentsCondition = (
+  questionParameters: QuestionParameters,
+  addArg: (arg: Parameter) => string,
+) => {
+  const { tournaments } = questionParameters;
+
+  let tournamentsCondition;
+  if (tournaments.length === 0) {
+    tournamentsCondition = true;
+  } else {
+    tournamentsCondition = columnInList(
+      'tournament_id',
+      tournaments.map(addArg),
+    );
+  }
+
+  return tournamentsCondition;
+};
+
+/**
  * Build `where` condition for filtering by text.
  */
 export const getTextCondition = (
@@ -166,6 +188,7 @@ export const getTossupCondition = (
     questionFilters,
     addArg,
   );
+  const tournamentsCondition = getTournamentsCondition(questionFilters, addArg);
   const textCondition = getTextCondition(questionFilters, addArg);
   const answerCondition = getAnswerCondition(questionFilters, addArg, options);
   const fromCondition = getFromCondition(questionFilters, addArg);
@@ -176,6 +199,7 @@ export const getTossupCondition = (
   const conditions = [
     combinedCategoriesCondition,
     difficultiesCondition,
+    tournamentsCondition,
     textCondition,
     answerCondition,
     fromCondition,
@@ -200,12 +224,14 @@ export const getBonusesCondition = (
     questionFilters,
     addArg,
   );
+  const tournamentsCondition = getTournamentsCondition(questionFilters, addArg);
   const fromCondition = getFromCondition(questionFilters, addArg);
   const untilCondition = getUntilCondition(questionFilters, addArg);
 
   const conditions = [
     combinedCategoriesCondition,
     difficultiesCondition,
+    tournamentsCondition,
     fromCondition,
     untilCondition,
   ];

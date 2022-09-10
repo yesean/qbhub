@@ -1,4 +1,4 @@
-import { Category, Subcategory, Difficulty } from './questions';
+import { Category, Subcategory, Difficulty, Tournament } from './questions';
 
 export type Tossup = {
   text: string;
@@ -56,6 +56,7 @@ export type QuestionParameters = {
   categories: Category[];
   subcategories: Subcategory[];
   difficulties: Difficulty[];
+  tournaments: Tournament[];
   text: string;
   answer: string;
 };
