@@ -10,6 +10,7 @@ module.exports = {
   rules: {
     'import/prefer-default-export': 'off',
     'no-param-reassign': 'off',
+    quotes: ['error', 'single', { avoidEscape: true }],
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
     'react/require-default-props': 'off',
