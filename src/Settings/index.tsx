@@ -26,16 +26,21 @@ import { useKeyboardShortcut } from '../hooks/keyboard';
 import {
   Category,
   Difficulty,
+  QuestionParameter,
   Subcategory,
   Tournament,
 } from '../types/questions';
 import {
   CATEGORIES,
+  CATEGORY_MAP,
   DIFFICULTIES,
+  DIFFICULTY_MAP,
   MAX_TOURNAMENT_YEAR,
   MIN_TOURNAMENT_YEAR,
   SUBCATEGORIES,
+  SUBCATEGORY_MAP,
   TOURNAMENTS,
+  TOURNAMENT_MAP,
 } from '../utils/constants';
 import {
   close,
@@ -47,6 +52,21 @@ import {
   updateSubcategories,
   updateTournaments,
 } from './settingsSlice';
+
+const toSelect =
+  <T extends QuestionParameter, U extends { name: string }>(
+    map: Record<T, U>,
+  ) =>
+  (key: T) => ({
+    label: map[key].name,
+    value: key,
+    data: map[key],
+  });
+
+const categoriesForSelect = CATEGORIES.map(toSelect(CATEGORY_MAP));
+const subcategoriesForSelect = SUBCATEGORIES.map(toSelect(SUBCATEGORY_MAP));
+const difficultiesForSelect = DIFFICULTIES.map(toSelect(DIFFICULTY_MAP));
+const tournamentsForSelect = TOURNAMENTS.map(toSelect(TOURNAMENT_MAP));
 
 const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   const {
@@ -65,10 +85,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   const onReadingSpeedChange = (value: number) =>
     dispatch(updateReadingSpeed(value));
 
-  const categoriesInSelect = categories.map((c) => ({
-    value: c,
-    label: Category[c],
-  }));
+  const categoriesInSelect = categories.map(toSelect(CATEGORY_MAP));
   const onCategoriesChange = (
     options: OptionsType<{ label: string; value: Category }>,
   ) => {
@@ -76,10 +93,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
     dispatch(updateCategories(newCategories));
   };
 
-  const subcategoriesInSelect = subcategories.map((c) => ({
-    value: c,
-    label: Subcategory[c],
-  }));
+  const subcategoriesInSelect = subcategories.map(toSelect(SUBCATEGORY_MAP));
   const onSubcategoriesChange = (
     options: OptionsType<{ label: string; value: Subcategory }>,
   ) => {
@@ -87,10 +101,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
     dispatch(updateSubcategories(newSubcategories));
   };
 
-  const difficultiesInSelect = difficulties.map((d) => ({
-    value: d,
-    label: Difficulty[d],
-  }));
+  const difficultiesInSelect = difficulties.map(toSelect(DIFFICULTY_MAP));
   const onDifficultiesChange = (
     options: OptionsType<{ label: string; value: Difficulty }>,
   ) => {
@@ -98,14 +109,16 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
     dispatch(updateDifficulties(newDifficulties));
   };
 
-  const tournamentsToDisplay = useMemo(
-    () => TOURNAMENTS.filter(({ year }) => year >= fromYear),
-    [fromYear],
+  const filteredTournamentsForSelect = useMemo(
+    () =>
+      tournamentsForSelect.filter(
+        ({ data: { year, difficulty } }) =>
+          year >= fromYear &&
+          (difficulties.length === 0 || difficulties.includes(difficulty)),
+      ),
+    [difficulties, fromYear],
   );
-  const tournamentsInSelect = tournaments.map((t) => ({
-    value: t,
-    label: Tournament[t],
-  }));
+  const tournamentsInSelect = tournaments.map(toSelect(TOURNAMENT_MAP));
   const onTournamentsChange = (
     options: OptionsType<{ label: string; value: Tournament }>,
   ) => {
@@ -149,7 +162,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
             <Select
               isMulti
               name="categories"
-              options={CATEGORIES}
+              options={categoriesForSelect}
               value={categoriesInSelect}
               onChange={onCategoriesChange}
             />
@@ -161,7 +174,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
             <Select
               isMulti
               name="subcategories"
-              options={SUBCATEGORIES}
+              options={subcategoriesForSelect}
               value={subcategoriesInSelect}
               onChange={onSubcategoriesChange}
             />
@@ -173,7 +186,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
             <Select
               isMulti
               name="difficulties"
-              options={DIFFICULTIES}
+              options={difficultiesForSelect}
               value={difficultiesInSelect}
               onChange={onDifficultiesChange}
             />
@@ -185,7 +198,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
             <Select
               isMulti
               name="tournaments"
-              options={tournamentsToDisplay}
+              options={filteredTournamentsForSelect}
               value={tournamentsInSelect}
               onChange={onTournamentsChange}
             />

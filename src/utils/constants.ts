@@ -5,1487 +5,2277 @@ import {
   Tournament,
 } from '../types/questions';
 
-export const CATEGORIES = [
-  { label: 'Current Events', value: Category['Current Events'] },
-  { label: 'Fine Arts', value: Category['Fine Arts'] },
-  { label: 'Geography', value: Category.Geography },
-  { label: 'History', value: Category.History },
-  { label: 'Literature', value: Category.Literature },
-  { label: 'Mythology', value: Category.Mythology },
-  { label: 'Philosophy', value: Category.Philosophy },
-  { label: 'Religion', value: Category.Religion },
-  { label: 'Science', value: Category.Science },
-  { label: 'Social Science', value: Category['Social Science'] },
-  { label: 'Trash', value: Category.Trash },
-];
+export const CATEGORY_MAP = {
+  [Category['Current Events']]: { name: 'Current Events' },
+  [Category['Fine Arts']]: { name: 'Fine Arts' },
+  [Category.Geography]: { name: 'Geography' },
+  [Category.History]: { name: 'History' },
+  [Category.Literature]: { name: 'Literature' },
+  [Category.Mythology]: { name: 'Mythology' },
+  [Category.Philosophy]: { name: 'Philosophy' },
+  [Category.Religion]: { name: 'Religion' },
+  [Category.Science]: { name: 'Science' },
+  [Category['Social Science']]: { name: 'Social Science' },
+  [Category.Trash]: { name: 'Trash' },
+};
 
-export const SUBCATEGORIES = [
-  { label: 'Current Events American', value: 40, category: 26 },
-  { label: 'Current Events Other', value: 42, category: 26 },
-  { label: 'Fine Arts American', value: 35, category: 21 },
-  { label: 'Fine Arts Audiovisual', value: 27, category: 21 },
-  { label: 'Fine Arts Auditory', value: 8, category: 21 },
-  { label: 'Fine Arts British', value: 45, category: 21 },
-  { label: 'Fine Arts European', value: 50, category: 21 },
-  { label: 'Fine Arts Opera', value: 77, category: 21 },
-  { label: 'Fine Arts Other', value: 25, category: 21 },
-  { label: 'Fine Arts Visual', value: 2, category: 21 },
-  { label: 'Fine Arts World', value: 43, category: 21 },
-  { label: 'Geography American', value: 38, category: 20 },
-  { label: 'Geography World', value: 44, category: 20 },
-  { label: 'History American', value: 13, category: 18 },
-  { label: 'History British', value: 6, category: 18 },
-  { label: 'History Classical', value: 16, category: 18 },
-  { label: 'History European', value: 24, category: 18 },
-  { label: 'History Other', value: 28, category: 18 },
-  { label: 'History World', value: 20, category: 18 },
-  { label: 'Literature American', value: 4, category: 15 },
-  { label: 'Literature British', value: 22, category: 15 },
-  { label: 'Literature Classical', value: 30, category: 15 },
-  { label: 'Literature European', value: 1, category: 15 },
-  { label: 'Literature Other', value: 29, category: 15 },
-  { label: 'Literature World', value: 12, category: 15 },
-  { label: 'Mythology American', value: 33, category: 14 },
-  { label: 'Mythology Chinese', value: 47, category: 14 },
-  { label: 'Mythology Egyptian', value: 65, category: 14 },
-  { label: 'Mythology Greco-Roman', value: 58, category: 14 },
-  { label: 'Mythology Indian', value: 46, category: 14 },
-  { label: 'Mythology Japanese', value: 48, category: 14 },
-  { label: 'Mythology Norse', value: 63, category: 14 },
-  { label: 'Mythology Other', value: 54, category: 14 },
-  { label: 'Mythology Other East Asian', value: 49, category: 14 },
-  { label: 'Philosophy American', value: 39, category: 25 },
-  { label: 'Philosophy Classical', value: 61, category: 25 },
-  { label: 'Philosophy East Asian', value: 52, category: 25 },
-  { label: 'Philosophy European', value: 66, category: 25 },
-  { label: 'Philosophy Other', value: 74, category: 25 },
-  { label: 'Religion American', value: 31, category: 19 },
-  { label: 'Religion Christianity', value: 57, category: 19 },
-  { label: 'Religion East Asian', value: 51, category: 19 },
-  { label: 'Religion Islam', value: 68, category: 19 },
-  { label: 'Religion Judaism', value: 69, category: 19 },
-  { label: 'Religion Other', value: 62, category: 19 },
-  { label: 'Science American', value: 36, category: 17 },
-  { label: 'Science Biology', value: 14, category: 17 },
-  { label: 'Science Chemistry', value: 5, category: 17 },
-  { label: 'Science Computer Science', value: 23, category: 17 },
-  { label: 'Science Math', value: 26, category: 17 },
-  { label: 'Science Other', value: 10, category: 17 },
-  { label: 'Science Physics', value: 18, category: 17 },
-  { label: 'Science World', value: 37, category: 17 },
-  { label: 'Social Science American', value: 34, category: 22 },
-  { label: 'Social Science Anthropology', value: 76, category: 22 },
-  { label: 'Social Science Economics', value: 56, category: 22 },
-  { label: 'Social Science Linguistics', value: 75, category: 22 },
-  { label: 'Social Science Other', value: 60, category: 22 },
-  {
-    label: 'Social Science Political Science',
-    value: 64,
-    category: 22,
+export const SUBCATEGORY_MAP = {
+  [Subcategory['Current Events American']]: {
+    name: 'Current Events American',
+    category: Category['Current Events'],
   },
-  { label: 'Social Science Psychology', value: 71, category: 22 },
-  { label: 'Social Science Sociology', value: 73, category: 22 },
-  { label: 'Trash American', value: 32, category: 16 },
-  { label: 'Trash Movies', value: 72, category: 16 },
-  { label: 'Trash Music', value: 67, category: 16 },
-  { label: 'Trash Other', value: 59, category: 16 },
-  { label: 'Trash Sports', value: 55, category: 16 },
-  { label: 'Trash Television', value: 70, category: 16 },
-  { label: 'Trash Video Games', value: 53, category: 16 },
-];
-
-export const SUBCATEGORY_MAP = SUBCATEGORIES.reduce<{
-  [key in Subcategory]: Category;
-}>(
-  (acc, sc) => ({ ...acc, [sc.value]: sc.category }),
-  {} as { [key in Subcategory]: Category },
-);
-
-export const DIFFICULTIES = [
-  { label: 'Middle School', value: Difficulty['Middle School'] },
-  { label: 'Easy High School', value: Difficulty['Easy High School'] },
-  { label: 'Regular High School', value: Difficulty['Regular High School'] },
-  { label: 'Hard High School', value: Difficulty['Hard High School'] },
-  {
-    label: 'National High School',
-    value: Difficulty['National High School'],
+  [Subcategory['Current Events Other']]: {
+    name: 'Current Events Other',
+    category: Category['Current Events'],
   },
-  { label: 'Easy College', value: Difficulty['Easy College'] },
-  { label: 'Regular College', value: Difficulty['Regular College'] },
-  { label: 'Hard College', value: Difficulty['Hard College'] },
-  { label: 'Open', value: Difficulty.Open },
-];
+  [Subcategory['Fine Arts American']]: {
+    name: 'Fine Arts American',
+    category: Category['Fine Arts'],
+  },
+  [Subcategory['Fine Arts Audiovisual']]: {
+    name: 'Fine Arts Audiovisual',
+    category: Category['Fine Arts'],
+  },
+  [Subcategory['Fine Arts Auditory']]: {
+    name: 'Fine Arts Auditory',
+    category: Category['Fine Arts'],
+  },
+  [Subcategory['Fine Arts British']]: {
+    name: 'Fine Arts British',
+    category: Category['Fine Arts'],
+  },
+  [Subcategory['Fine Arts European']]: {
+    name: 'Fine Arts European',
+    category: Category['Fine Arts'],
+  },
+  [Subcategory['Fine Arts Opera']]: {
+    name: 'Fine Arts Opera',
+    category: Category['Fine Arts'],
+  },
+  [Subcategory['Fine Arts Other']]: {
+    name: 'Fine Arts Other',
+    category: Category['Fine Arts'],
+  },
+  [Subcategory['Fine Arts Visual']]: {
+    name: 'Fine Arts Visual',
+    category: Category['Fine Arts'],
+  },
+  [Subcategory['Fine Arts World']]: {
+    name: 'Fine Arts World',
+    category: Category['Fine Arts'],
+  },
+  [Subcategory['Geography American']]: {
+    name: 'Geography American',
+    category: Category.Geography,
+  },
+  [Subcategory['Geography World']]: {
+    name: 'Geography World',
+    category: Category.Geography,
+  },
+  [Subcategory['History American']]: {
+    name: 'History American',
+    category: Category.History,
+  },
+  [Subcategory['History British']]: {
+    name: 'History British',
+    category: Category.History,
+  },
+  [Subcategory['History Classical']]: {
+    name: 'History Classical',
+    category: Category.History,
+  },
+  [Subcategory['History European']]: {
+    name: 'History European',
+    category: Category.History,
+  },
+  [Subcategory['History Other']]: {
+    name: 'History Other',
+    category: Category.History,
+  },
+  [Subcategory['History World']]: {
+    name: 'History World',
+    category: Category.History,
+  },
+  [Subcategory['Literature American']]: {
+    name: 'Literature American',
+    category: Category.Literature,
+  },
+  [Subcategory['Literature British']]: {
+    name: 'Literature British',
+    category: Category.Literature,
+  },
+  [Subcategory['Literature Classical']]: {
+    name: 'Literature Classical',
+    category: Category.Literature,
+  },
+  [Subcategory['Literature European']]: {
+    name: 'Literature European',
+    category: Category.Literature,
+  },
+  [Subcategory['Literature Other']]: {
+    name: 'Literature Other',
+    category: Category.Literature,
+  },
+  [Subcategory['Literature World']]: {
+    name: 'Literature World',
+    category: Category.Literature,
+  },
+  [Subcategory['Mythology American']]: {
+    name: 'Mythology American',
+    category: Category.Mythology,
+  },
+  [Subcategory['Mythology Chinese']]: {
+    name: 'Mythology Chinese',
+    category: Category.Mythology,
+  },
+  [Subcategory['Mythology Egyptian']]: {
+    name: 'Mythology Egyptian',
+    category: Category.Mythology,
+  },
+  [Subcategory['Mythology Greco-Roman']]: {
+    name: 'Mythology Greco-Roman',
+    category: Category.Mythology,
+  },
+  [Subcategory['Mythology Indian']]: {
+    name: 'Mythology Indian',
+    category: Category.Mythology,
+  },
+  [Subcategory['Mythology Japanese']]: {
+    name: 'Mythology Japanese',
+    category: Category.Mythology,
+  },
+  [Subcategory['Mythology Norse']]: {
+    name: 'Mythology Norse',
+    category: Category.Mythology,
+  },
+  [Subcategory['Mythology Other']]: {
+    name: 'Mythology Other',
+    category: Category.Mythology,
+  },
+  [Subcategory['Mythology Other East Asian']]: {
+    name: 'Mythology Other East Asian',
+    category: Category.Mythology,
+  },
+  [Subcategory['Philosophy American']]: {
+    name: 'Philosophy American',
+    category: Category.Philosophy,
+  },
+  [Subcategory['Philosophy Classical']]: {
+    name: 'Philosophy Classical',
+    category: Category.Philosophy,
+  },
+  [Subcategory['Philosophy East Asian']]: {
+    name: 'Philosophy East Asian',
+    category: Category.Philosophy,
+  },
+  [Subcategory['Philosophy European']]: {
+    name: 'Philosophy European',
+    category: Category.Philosophy,
+  },
+  [Subcategory['Philosophy Other']]: {
+    name: 'Philosophy Other',
+    category: Category.Philosophy,
+  },
+  [Subcategory['Religion American']]: {
+    name: 'Religion American',
+    category: Category.Religion,
+  },
+  [Subcategory['Religion Christianity']]: {
+    name: 'Religion Christianity',
+    category: Category.Religion,
+  },
+  [Subcategory['Religion East Asian']]: {
+    name: 'Religion East Asian',
+    category: Category.Religion,
+  },
+  [Subcategory['Religion Islam']]: {
+    name: 'Religion Islam',
+    category: Category.Religion,
+  },
+  [Subcategory['Religion Judaism']]: {
+    name: 'Religion Judaism',
+    category: Category.Religion,
+  },
+  [Subcategory['Religion Other']]: {
+    name: 'Religion Other',
+    category: Category.Religion,
+  },
+  [Subcategory['Science American']]: {
+    name: 'Science American',
+    category: Category.Science,
+  },
+  [Subcategory['Science Biology']]: {
+    name: 'Science Biology',
+    category: Category.Science,
+  },
+  [Subcategory['Science Chemistry']]: {
+    name: 'Science Chemistry',
+    category: Category.Science,
+  },
+  [Subcategory['Science Computer Science']]: {
+    name: 'Science Computer Science',
+    category: Category.Science,
+  },
+  [Subcategory['Science Math']]: {
+    name: 'Science Math',
+    category: Category.Science,
+  },
+  [Subcategory['Science Other']]: {
+    name: 'Science Other',
+    category: Category.Science,
+  },
+  [Subcategory['Science Physics']]: {
+    name: 'Science Physics',
+    category: Category.Science,
+  },
+  [Subcategory['Science World']]: {
+    name: 'Science World',
+    category: Category.Science,
+  },
+  [Subcategory['Social Science American']]: {
+    name: 'Social Science American',
+    category: Category['Social Science'],
+  },
+  [Subcategory['Social Science Anthropology']]: {
+    name: 'Social Science Anthropology',
+    category: Category['Social Science'],
+  },
+  [Subcategory['Social Science Economics']]: {
+    name: 'Social Science Economics',
+    category: Category['Social Science'],
+  },
+  [Subcategory['Social Science Linguistics']]: {
+    name: 'Social Science Linguistics',
+    category: Category['Social Science'],
+  },
+  [Subcategory['Social Science Other']]: {
+    name: 'Social Science Other',
+    category: Category['Social Science'],
+  },
+  [Subcategory['Social Science Political Science']]: {
+    name: 'Social Science Political Science',
+    category: Category['Social Science'],
+  },
+  [Subcategory['Social Science Psychology']]: {
+    name: 'Social Science Psychology',
+    category: Category['Social Science'],
+  },
+  [Subcategory['Social Science Sociology']]: {
+    name: 'Social Science Sociology',
+    category: Category['Social Science'],
+  },
+  [Subcategory['Trash American']]: {
+    name: 'Trash American',
+    category: Category.Trash,
+  },
+  [Subcategory['Trash Movies']]: {
+    name: 'Trash Movies',
+    category: Category.Trash,
+  },
+  [Subcategory['Trash Music']]: {
+    name: 'Trash Music',
+    category: Category.Trash,
+  },
+  [Subcategory['Trash Other']]: {
+    name: 'Trash Other',
+    category: Category.Trash,
+  },
+  [Subcategory['Trash Sports']]: {
+    name: 'Trash Sports',
+    category: Category.Trash,
+  },
+  [Subcategory['Trash Television']]: {
+    name: 'Trash Television',
+    category: Category.Trash,
+  },
+  [Subcategory['Trash Video Games']]: {
+    name: 'Trash Video Games',
+    category: Category.Trash,
+  },
+};
 
-export const TOURNAMENTS = [
-  { label: '2020 CALISTO', year: 2020, value: Tournament['2020 CALISTO'] },
-  {
-    label: '2020 Oxford Online',
+export const DIFFICULTY_MAP = {
+  [Difficulty['Middle School']]: { name: 'Middle School' },
+  [Difficulty['Easy High School']]: { name: 'Easy High School' },
+  [Difficulty['Regular High School']]: { name: 'Regular High School' },
+  [Difficulty['Hard High School']]: { name: 'Hard High School' },
+  [Difficulty['National High School']]: { name: 'National High School' },
+  [Difficulty['Easy College']]: { name: 'Easy College' },
+  [Difficulty['Regular College']]: { name: 'Regular College' },
+  [Difficulty['Hard College']]: { name: 'Hard College' },
+  [Difficulty.Open]: { name: 'Open' },
+};
+
+export const TOURNAMENT_MAP = {
+  [Tournament['2020 CALISTO']]: {
+    name: '2020 CALISTO',
     year: 2020,
-    value: Tournament['2020 Oxford Online'],
+    difficulty: Difficulty['Regular High School'],
   },
-  { label: '2020 Terrapin', year: 2020, value: Tournament['2020 Terrapin'] },
-  { label: 'Tree of Clues', year: 2020, value: Tournament['Tree of Clues'] },
-  { label: '2019 ACF Fall', year: 2019, value: Tournament['2019 ACF Fall'] },
-  {
-    label: '2019 ACF Regionals',
+  [Tournament['2020 Oxford Online']]: {
+    name: '2020 Oxford Online',
+    year: 2020,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2020 Terrapin']]: {
+    name: '2020 Terrapin',
+    year: 2020,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['Tree of Clues']]: {
+    name: 'Tree of Clues',
+    year: 2020,
+    difficulty: Difficulty['Hard High School'],
+  },
+  [Tournament['2019 ACF Fall']]: {
+    name: '2019 ACF Fall',
     year: 2019,
-    value: Tournament['2019 ACF Regionals'],
+    difficulty: Difficulty['Easy College'],
   },
-  { label: '2019 BHSAT', year: 2019, value: Tournament['2019 BHSAT'] },
-  {
-    label: '2019 Chicago Open',
+  [Tournament['2019 ACF Regionals']]: {
+    name: '2019 ACF Regionals',
     year: 2019,
-    value: Tournament['2019 Chicago Open'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2019 Early Fall Tournament (EFT)',
+  [Tournament['2019 BHSAT']]: {
+    name: '2019 BHSAT',
     year: 2019,
-    value: Tournament['2019 Early Fall Tournament (EFT)'],
+    difficulty: Difficulty['Hard High School'],
   },
-  { label: '2019 HFT XIV', year: 2019, value: Tournament['2019 HFT XIV'] },
-  { label: '2019 ILLIAC', year: 2019, value: Tournament['2019 ILLIAC'] },
-  { label: '2019 LOGIC', year: 2019, value: Tournament['2019 LOGIC'] },
-  { label: '2019 NASAT', year: 2019, value: Tournament['2019 NASAT'] },
-  { label: '2019 PACE NSC', year: 2019, value: Tournament['2019 PACE NSC'] },
-  { label: '2019 PIANO', year: 2019, value: Tournament['2019 PIANO'] },
-  {
-    label: '2019 Prison Bowl',
+  [Tournament['2019 Chicago Open']]: {
+    name: '2019 Chicago Open',
     year: 2019,
-    value: Tournament['2019 Prison Bowl'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2019 Richard Montgomery Blair Academic Tournament',
+  [Tournament['2019 Early Fall Tournament (EFT)']]: {
+    name: '2019 Early Fall Tournament (EFT)',
     year: 2019,
-    value: Tournament['2019 Richard Montgomery Blair Academic Tournament'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2019 Spartan Housewrite',
+  [Tournament['2019 HFT XIV']]: {
+    name: '2019 HFT XIV',
     year: 2019,
-    value: Tournament['2019 Spartan Housewrite'],
+    difficulty: Difficulty['Hard High School'],
   },
-  { label: '2019 Terrapin', year: 2019, value: Tournament['2019 Terrapin'] },
-  {
-    label: '2019 The Unanswered Question',
+  [Tournament['2019 ILLIAC']]: {
+    name: '2019 ILLIAC',
     year: 2019,
-    value: Tournament['2019 The Unanswered Question'],
+    difficulty: Difficulty['Easy College'],
   },
-  { label: '2018 ACF Fall', year: 2018, value: Tournament['2018 ACF Fall'] },
-  {
-    label: '2018 ACF Nationals',
+  [Tournament['2019 LOGIC']]: {
+    name: '2019 LOGIC',
+    year: 2019,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2019 NASAT']]: {
+    name: '2019 NASAT',
+    year: 2019,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2019 PACE NSC']]: {
+    name: '2019 PACE NSC',
+    year: 2019,
+    difficulty: Difficulty['National High School'],
+  },
+  [Tournament['2019 PIANO']]: {
+    name: '2019 PIANO',
+    year: 2019,
+    difficulty: Difficulty['Hard College'],
+  },
+  [Tournament['2019 Prison Bowl']]: {
+    name: '2019 Prison Bowl',
+    year: 2019,
+    difficulty: Difficulty['National High School'],
+  },
+  [Tournament['2019 Richard Montgomery Blair Academic Tournament']]: {
+    name: '2019 Richard Montgomery Blair Academic Tournament',
+    year: 2019,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2019 Spartan Housewrite']]: {
+    name: '2019 Spartan Housewrite',
+    year: 2019,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2019 Terrapin']]: {
+    name: '2019 Terrapin',
+    year: 2019,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2019 The Unanswered Question']]: {
+    name: '2019 The Unanswered Question',
+    year: 2019,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2018 ACF Fall']]: {
+    name: '2018 ACF Fall',
     year: 2018,
-    value: Tournament['2018 ACF Nationals'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2018 ACF Regionals',
+  [Tournament['2018 ACF Nationals']]: {
+    name: '2018 ACF Nationals',
     year: 2018,
-    value: Tournament['2018 ACF Regionals'],
+    difficulty: Difficulty['Hard College'],
   },
-  { label: '2018 BHSAT', year: 2018, value: Tournament['2018 BHSAT'] },
-  {
-    label: '2018 Cambridge Open',
+  [Tournament['2018 ACF Regionals']]: {
+    name: '2018 ACF Regionals',
     year: 2018,
-    value: Tournament['2018 Cambridge Open'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2018 Chicago Open',
+  [Tournament['2018 BHSAT']]: {
+    name: '2018 BHSAT',
     year: 2018,
-    value: Tournament['2018 Chicago Open'],
+    difficulty: Difficulty['Hard High School'],
   },
-  {
-    label: '2018 Chicago Open Trash',
+  [Tournament['2018 Cambridge Open']]: {
+    name: '2018 Cambridge Open',
     year: 2018,
-    value: Tournament['2018 Chicago Open Trash'],
+    difficulty: Difficulty['Regular College'],
   },
-  { label: '2018 CMST', year: 2018, value: Tournament['2018 CMST'] },
-  {
-    label: '2018 Early Fall Tournament (EFT)',
+  [Tournament['2018 Chicago Open']]: {
+    name: '2018 Chicago Open',
     year: 2018,
-    value: Tournament['2018 Early Fall Tournament (EFT)'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2018 FACTS', year: 2018, value: Tournament['2018 FACTS'] },
-  {
-    label: '2018 Great Lakes Regional Academic Championship (GLRAC)',
+  [Tournament['2018 Chicago Open Trash']]: {
+    name: '2018 Chicago Open Trash',
     year: 2018,
-    value:
-      Tournament['2018 Great Lakes Regional Academic Championship (GLRAC)'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2018 HFT XIII', year: 2018, value: Tournament['2018 HFT XIII'] },
-  {
-    label: '2018 Historature',
+  [Tournament['2018 CMST']]: {
+    name: '2018 CMST',
     year: 2018,
-    value: Tournament['2018 Historature'],
+    difficulty: Difficulty['Hard College'],
   },
-  { label: '2018 HORROR 1', year: 2018, value: Tournament['2018 HORROR 1'] },
-  {
-    label: '2018 IMSAnity 5',
+  [Tournament['2018 Early Fall Tournament (EFT)']]: {
+    name: '2018 Early Fall Tournament (EFT)',
     year: 2018,
-    value: Tournament['2018 IMSAnity 5'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2018 Montgomery Blair Academic Tournament (MBAT)',
+  [Tournament['2018 FACTS']]: {
+    name: '2018 FACTS',
     year: 2018,
-    value: Tournament['2018 Montgomery Blair Academic Tournament (MBAT)'],
+    difficulty: Difficulty['Regular High School'],
   },
-  { label: '2018 NASAT', year: 2018, value: Tournament['2018 NASAT'] },
-  { label: '2018 PACE NSC', year: 2018, value: Tournament['2018 PACE NSC'] },
-  {
-    label: '2018 Penn Bowl',
+  [Tournament['2018 Great Lakes Regional Academic Championship (GLRAC)']]: {
+    name: '2018 Great Lakes Regional Academic Championship (GLRAC)',
     year: 2018,
-    value: Tournament['2018 Penn Bowl'],
+    difficulty: Difficulty['Easy High School'],
   },
-  {
-    label: '2018 Prison Bowl XI',
+  [Tournament['2018 HFT XIII']]: {
+    name: '2018 HFT XIII',
     year: 2018,
-    value: Tournament['2018 Prison Bowl XI'],
+    difficulty: Difficulty['Hard High School'],
   },
-  { label: '2018 RAPTURE', year: 2018, value: Tournament['2018 RAPTURE'] },
-  {
-    label: '2018 Scattergories 2',
+  [Tournament['2018 Historature']]: {
+    name: '2018 Historature',
     year: 2018,
-    value: Tournament['2018 Scattergories 2'],
+    difficulty: Difficulty['Hard College'],
   },
-  { label: '2018 SMT', year: 2018, value: Tournament['2018 SMT'] },
-  {
-    label: '2018 Sun God Invitational',
+  [Tournament['2018 HORROR 1']]: {
+    name: '2018 HORROR 1',
     year: 2018,
-    value: Tournament['2018 Sun God Invitational'],
+    difficulty: Difficulty.Open,
   },
-  { label: 'FILM', year: 2018, value: Tournament.FILM },
-  {
-    label: 'Words and Objects',
+  [Tournament['2018 IMSAnity 5']]: {
+    name: '2018 IMSAnity 5',
     year: 2018,
-    value: Tournament['Words and Objects'],
+    difficulty: Difficulty['National High School'],
   },
-  { label: 'WORLDSTAR', year: 2018, value: Tournament.WORLDSTAR },
-  { label: '2017 ACF Fall', year: 2017, value: Tournament['2017 ACF Fall'] },
-  {
-    label: '2017 ACF Nationals',
+  [Tournament['2018 Montgomery Blair Academic Tournament (MBAT)']]: {
+    name: '2018 Montgomery Blair Academic Tournament (MBAT)',
+    year: 2018,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2018 NASAT']]: {
+    name: '2018 NASAT',
+    year: 2018,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2018 PACE NSC']]: {
+    name: '2018 PACE NSC',
+    year: 2018,
+    difficulty: Difficulty['National High School'],
+  },
+  [Tournament['2018 Penn Bowl']]: {
+    name: '2018 Penn Bowl',
+    year: 2018,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2018 Prison Bowl XI']]: {
+    name: '2018 Prison Bowl XI',
+    year: 2018,
+    difficulty: Difficulty['Hard High School'],
+  },
+  [Tournament['2018 RAPTURE']]: {
+    name: '2018 RAPTURE',
+    year: 2018,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2018 Scattergories 2']]: {
+    name: '2018 Scattergories 2',
+    year: 2018,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2018 SMT']]: {
+    name: '2018 SMT',
+    year: 2018,
+    difficulty: Difficulty['Easy College'],
+  },
+  [Tournament['2018 Sun God Invitational']]: {
+    name: '2018 Sun God Invitational',
+    year: 2018,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament.FILM]: {
+    name: 'FILM',
+    year: 2018,
+    difficulty: Difficulty['Hard College'],
+  },
+  [Tournament['Words and Objects']]: {
+    name: 'Words and Objects',
+    year: 2018,
+    difficulty: Difficulty['Hard College'],
+  },
+  [Tournament.WORLDSTAR]: {
+    name: 'WORLDSTAR',
+    year: 2018,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2017 ACF Fall']]: {
+    name: '2017 ACF Fall',
     year: 2017,
-    value: Tournament['2017 ACF Nationals'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2017 ACF Regionals',
+  [Tournament['2017 ACF Nationals']]: {
+    name: '2017 ACF Nationals',
     year: 2017,
-    value: Tournament['2017 ACF Regionals'],
+    difficulty: Difficulty['Hard College'],
   },
-  { label: '2017 BHSAT', year: 2017, value: Tournament['2017 BHSAT'] },
-  {
-    label: '2017 Chicago Open',
+  [Tournament['2017 ACF Regionals']]: {
+    name: '2017 ACF Regionals',
     year: 2017,
-    value: Tournament['2017 Chicago Open'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2017 Early Fall Tournament (EFT)',
+  [Tournament['2017 BHSAT']]: {
+    name: '2017 BHSAT',
     year: 2017,
-    value: Tournament['2017 Early Fall Tournament (EFT)'],
+    difficulty: Difficulty['Regular High School'],
   },
-  { label: '2017 EMT', year: 2017, value: Tournament['2017 EMT'] },
-  {
-    label: '2017 Fine Arts Common Links',
+  [Tournament['2017 Chicago Open']]: {
+    name: '2017 Chicago Open',
     year: 2017,
-    value: Tournament['2017 Fine Arts Common Links'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2017 FRENCH', year: 2017, value: Tournament['2017 FRENCH'] },
-  {
-    label: '2017 Geography Monstrosity',
+  [Tournament['2017 Early Fall Tournament (EFT)']]: {
+    name: '2017 Early Fall Tournament (EFT)',
     year: 2017,
-    value: Tournament['2017 Geography Monstrosity'],
+    difficulty: Difficulty['Easy College'],
   },
-  { label: '2017 GSAC XXV', year: 2017, value: Tournament['2017 GSAC XXV'] },
-  { label: '2017 HFT XII', year: 2017, value: Tournament['2017 HFT XII'] },
-  {
-    label: '2017 History Bee Nationals',
+  [Tournament['2017 EMT']]: {
+    name: '2017 EMT',
     year: 2017,
-    value: Tournament['2017 History Bee Nationals'],
+    difficulty: Difficulty['Regular College'],
   },
-  { label: "2017 It's Lit", year: 2017, value: Tournament["2017 It's Lit"] },
-  { label: '2017 JAKOB', year: 2017, value: Tournament['2017 JAKOB'] },
-  {
-    label: '2017 Jordaens Visual Arts',
+  [Tournament['2017 Fine Arts Common Links']]: {
+    name: '2017 Fine Arts Common Links',
     year: 2017,
-    value: Tournament['2017 Jordaens Visual Arts'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2017 Letras', year: 2017, value: Tournament['2017 Letras'] },
-  {
-    label: '2017 LIST (Ladue Invitational Spring Tournament) VI',
+  [Tournament['2017 FRENCH']]: {
+    name: '2017 FRENCH',
     year: 2017,
-    value: Tournament['2017 LIST (Ladue Invitational Spring Tournament) VI'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2017 MASSOLIT', year: 2017, value: Tournament['2017 MASSOLIT'] },
-  {
-    label: '2017 Math Monstrosity',
+  [Tournament['2017 Geography Monstrosity']]: {
+    name: '2017 Geography Monstrosity',
     year: 2017,
-    value: Tournament['2017 Math Monstrosity'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2017 NASAT', year: 2017, value: Tournament['2017 NASAT'] },
-  {
-    label: '2017 Naveed Bork Memorial Tournament',
+  [Tournament['2017 GSAC XXV']]: {
+    name: '2017 GSAC XXV',
     year: 2017,
-    value: Tournament['2017 Naveed Bork Memorial Tournament'],
+    difficulty: Difficulty['Hard High School'],
   },
-  { label: '2017 PACE NSC', year: 2017, value: Tournament['2017 PACE NSC'] },
-  {
-    label: '2017 Penn Bowl',
+  [Tournament['2017 HFT XII']]: {
+    name: '2017 HFT XII',
     year: 2017,
-    value: Tournament['2017 Penn Bowl'],
+    difficulty: Difficulty['Hard High School'],
   },
-  {
-    label: '2017 Philly Cheesteak',
+  [Tournament['2017 History Bee Nationals']]: {
+    name: '2017 History Bee Nationals',
     year: 2017,
-    value: Tournament['2017 Philly Cheesteak'],
+    difficulty: Difficulty['National High School'],
   },
-  {
-    label: '2017 Prison Bowl X',
+  [Tournament["2017 It's Lit"]]: {
+    name: "2017 It's Lit",
     year: 2017,
-    value: Tournament['2017 Prison Bowl X'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2017 RMBCT', year: 2017, value: Tournament['2017 RMBCT'] },
-  {
-    label: '2017 Scattergories',
+  [Tournament['2017 JAKOB']]: {
+    name: '2017 JAKOB',
     year: 2017,
-    value: Tournament['2017 Scattergories'],
+    difficulty: Difficulty['Hard College'],
   },
-  {
-    label: '2017 Sivakumar Day Inter-Nationals',
+  [Tournament['2017 Jordaens Visual Arts']]: {
+    name: '2017 Jordaens Visual Arts',
     year: 2017,
-    value: Tournament['2017 Sivakumar Day Inter-Nationals'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2017 (This) Tournament is a Crime',
+  [Tournament['2017 Letras']]: {
+    name: '2017 Letras',
     year: 2017,
-    value: Tournament['2017 (This) Tournament is a Crime'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2017 WAO II', year: 2017, value: Tournament['2017 WAO II'] },
-  { label: '2017 WHAQ II', year: 2017, value: Tournament['2017 WHAQ II'] },
-  { label: '2017 XENOPHON', year: 2017, value: Tournament['2017 XENOPHON'] },
-  { label: 'GRAB BAG', year: 2017, value: Tournament['GRAB BAG'] },
-  {
-    label: '2016 A Bit of Lit',
+  [Tournament['2017 LIST (Ladue Invitational Spring Tournament) VI']]: {
+    name: '2017 LIST (Ladue Invitational Spring Tournament) VI',
+    year: 2017,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2017 MASSOLIT']]: {
+    name: '2017 MASSOLIT',
+    year: 2017,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2017 Math Monstrosity']]: {
+    name: '2017 Math Monstrosity',
+    year: 2017,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2017 NASAT']]: {
+    name: '2017 NASAT',
+    year: 2017,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2017 Naveed Bork Memorial Tournament']]: {
+    name: '2017 Naveed Bork Memorial Tournament',
+    year: 2017,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2017 PACE NSC']]: {
+    name: '2017 PACE NSC',
+    year: 2017,
+    difficulty: Difficulty['National High School'],
+  },
+  [Tournament['2017 Penn Bowl']]: {
+    name: '2017 Penn Bowl',
+    year: 2017,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2017 Philly Cheesteak']]: {
+    name: '2017 Philly Cheesteak',
+    year: 2017,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2017 Prison Bowl X']]: {
+    name: '2017 Prison Bowl X',
+    year: 2017,
+    difficulty: Difficulty['Hard High School'],
+  },
+  [Tournament['2017 RMBCT']]: {
+    name: '2017 RMBCT',
+    year: 2017,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2017 Scattergories']]: {
+    name: '2017 Scattergories',
+    year: 2017,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2017 Sivakumar Day Inter-Nationals']]: {
+    name: '2017 Sivakumar Day Inter-Nationals',
+    year: 2017,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2017 (This) Tournament is a Crime']]: {
+    name: '2017 (This) Tournament is a Crime',
+    year: 2017,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2017 WAO II']]: {
+    name: '2017 WAO II',
+    year: 2017,
+    difficulty: Difficulty['Hard College'],
+  },
+  [Tournament['2017 WHAQ II']]: {
+    name: '2017 WHAQ II',
+    year: 2017,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2017 XENOPHON']]: {
+    name: '2017 XENOPHON',
+    year: 2017,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['GRAB BAG']]: {
+    name: 'GRAB BAG',
+    year: 2017,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2016 A Bit of Lit']]: {
+    name: '2016 A Bit of Lit',
     year: 2016,
-    value: Tournament['2016 A Bit of Lit'],
+    difficulty: Difficulty['Regular High School'],
   },
-  { label: '2016 ACF Fall', year: 2016, value: Tournament['2016 ACF Fall'] },
-  {
-    label: '2016 ACF Nationals',
+  [Tournament['2016 ACF Fall']]: {
+    name: '2016 ACF Fall',
     year: 2016,
-    value: Tournament['2016 ACF Nationals'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2016 ACF Regionals',
+  [Tournament['2016 ACF Nationals']]: {
+    name: '2016 ACF Nationals',
     year: 2016,
-    value: Tournament['2016 ACF Regionals'],
+    difficulty: Difficulty['Hard College'],
   },
-  {
-    label: '2016 ACF Regionals ',
+  [Tournament['2016 ACF Regionals']]: {
+    name: '2016 ACF Regionals',
     year: 2016,
-    value: Tournament['2016 ACF Regionals '],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2016 A Culture of Improvement',
+  [Tournament['2016 ACF Regionals ']]: {
+    name: '2016 ACF Regionals ',
     year: 2016,
-    value: Tournament['2016 A Culture of Improvement'],
+    difficulty: Difficulty['Regular College'],
   },
-  { label: '2016 BHSAT', year: 2016, value: Tournament['2016 BHSAT'] },
-  {
-    label: '2016 Chicago Open',
+  [Tournament['2016 A Culture of Improvement']]: {
+    name: '2016 A Culture of Improvement',
     year: 2016,
-    value: Tournament['2016 Chicago Open'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2016 Christmas Present',
+  [Tournament['2016 BHSAT']]: {
+    name: '2016 BHSAT',
     year: 2016,
-    value: Tournament['2016 Christmas Present'],
+    difficulty: Difficulty['Hard High School'],
   },
-  { label: '2016 CLEAR II', year: 2016, value: Tournament['2016 CLEAR II'] },
-  {
-    label: '2016 Delta Burke',
+  [Tournament['2016 Chicago Open']]: {
+    name: '2016 Chicago Open',
     year: 2016,
-    value: Tournament['2016 Delta Burke'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2016 Early Fall Tournament (EFT)',
+  [Tournament['2016 Christmas Present']]: {
+    name: '2016 Christmas Present',
     year: 2016,
-    value: Tournament['2016 Early Fall Tournament (EFT)'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2016 Geography Monstrosity',
+  [Tournament['2016 CLEAR II']]: {
+    name: '2016 CLEAR II',
     year: 2016,
-    value: Tournament['2016 Geography Monstrosity'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2016 HFT XI', year: 2016, value: Tournament['2016 HFT XI'] },
-  { label: '2016 Listory', year: 2016, value: Tournament['2016 Listory'] },
-  { label: '2016 MLK', year: 2016, value: Tournament['2016 MLK'] },
-  { label: '2016 MUT', year: 2016, value: Tournament['2016 MUT'] },
-  {
-    label: '2016 MYSTERIUM',
+  [Tournament['2016 Delta Burke']]: {
+    name: '2016 Delta Burke',
     year: 2016,
-    value: Tournament['2016 MYSTERIUM'],
+    difficulty: Difficulty['Easy College'],
   },
-  { label: '2016 NASAT', year: 2016, value: Tournament['2016 NASAT'] },
-  { label: '2016 PACE NSC', year: 2016, value: Tournament['2016 PACE NSC'] },
-  {
-    label: '2016 Penn Bowl',
+  [Tournament['2016 Early Fall Tournament (EFT)']]: {
+    name: '2016 Early Fall Tournament (EFT)',
     year: 2016,
-    value: Tournament['2016 Penn Bowl'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2016 Scobol Solo',
+  [Tournament['2016 Geography Monstrosity']]: {
+    name: '2016 Geography Monstrosity',
     year: 2016,
-    value: Tournament['2016 Scobol Solo'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2016 SCOP MS 6',
+  [Tournament['2016 HFT XI']]: {
+    name: '2016 HFT XI',
     year: 2016,
-    value: Tournament['2016 SCOP MS 6'],
+    difficulty: Difficulty['Hard High School'],
   },
-  {
-    label: '"2016 ""stanford housewrite"""',
+  [Tournament['2016 Listory']]: {
+    name: '2016 Listory',
     year: 2016,
-    value: Tournament['"2016 ""stanford housewrite"""'],
+    difficulty: Difficulty['Hard College'],
   },
-  { label: '2016 Terrapin', year: 2016, value: Tournament['2016 Terrapin'] },
-  { label: '2016 WAO', year: 2016, value: Tournament['2016 WAO'] },
-  { label: '2016 WHAQ I', year: 2016, value: Tournament['2016 WHAQ I'] },
-  { label: 'GRAPHIC', year: 2016, value: Tournament.GRAPHIC },
-  { label: '2015 ACF Fall', year: 2015, value: Tournament['2015 ACF Fall'] },
-  {
-    label: '2015 ACF Nationals',
+  [Tournament['2016 MLK']]: {
+    name: '2016 MLK',
+    year: 2016,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2016 MUT']]: {
+    name: '2016 MUT',
+    year: 2016,
+    difficulty: Difficulty['Easy College'],
+  },
+  [Tournament['2016 MYSTERIUM']]: {
+    name: '2016 MYSTERIUM',
+    year: 2016,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2016 NASAT']]: {
+    name: '2016 NASAT',
+    year: 2016,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2016 PACE NSC']]: {
+    name: '2016 PACE NSC',
+    year: 2016,
+    difficulty: Difficulty['National High School'],
+  },
+  [Tournament['2016 Penn Bowl']]: {
+    name: '2016 Penn Bowl',
+    year: 2016,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2016 Scobol Solo']]: {
+    name: '2016 Scobol Solo',
+    year: 2016,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2016 SCOP MS 6']]: {
+    name: '2016 SCOP MS 6',
+    year: 2016,
+    difficulty: Difficulty['Middle School'],
+  },
+  [Tournament['"2016 ""stanford housewrite"""']]: {
+    name: '"2016 ""stanford housewrite"""',
+    year: 2016,
+    difficulty: Difficulty['Hard College'],
+  },
+  [Tournament['2016 Terrapin']]: {
+    name: '2016 Terrapin',
+    year: 2016,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2016 WAO']]: {
+    name: '2016 WAO',
+    year: 2016,
+    difficulty: Difficulty['Hard College'],
+  },
+  [Tournament['2016 WHAQ I']]: {
+    name: '2016 WHAQ I',
+    year: 2016,
+    difficulty: Difficulty['Easy High School'],
+  },
+  [Tournament.GRAPHIC]: {
+    name: 'GRAPHIC',
+    year: 2016,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2015 ACF Fall']]: {
+    name: '2015 ACF Fall',
     year: 2015,
-    value: Tournament['2015 ACF Nationals'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2015 ACF Regionals',
+  [Tournament['2015 ACF Nationals']]: {
+    name: '2015 ACF Nationals',
     year: 2015,
-    value: Tournament['2015 ACF Regionals'],
+    difficulty: Difficulty['Hard College'],
   },
-  {
-    label: '2015 ACF Regionals ',
+  [Tournament['2015 ACF Regionals']]: {
+    name: '2015 ACF Regionals',
     year: 2015,
-    value: Tournament['2015 ACF Regionals '],
+    difficulty: Difficulty['Regular College'],
   },
-  { label: '2015 BASK', year: 2015, value: Tournament['2015 BASK'] },
-  { label: '2015 BHSAT', year: 2015, value: Tournament['2015 BHSAT'] },
-  {
-    label: "2015 BISB (Brookwood Invitational Scholars' Bowl)",
+  [Tournament['2015 ACF Regionals ']]: {
+    name: '2015 ACF Regionals ',
     year: 2015,
-    value: Tournament["2015 BISB (Brookwood Invitational Scholars' Bowl)"],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2015 Chicago Open',
+  [Tournament['2015 BASK']]: {
+    name: '2015 BASK',
     year: 2015,
-    value: Tournament['2015 Chicago Open'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2015 Chicago Open History',
+  [Tournament['2015 BHSAT']]: {
+    name: '2015 BHSAT',
     year: 2015,
-    value: Tournament['2015 Chicago Open History'],
+    difficulty: Difficulty['Hard High School'],
   },
-  {
-    label: '2015 Chicago Open Visual Arts',
+  [Tournament["2015 BISB (Brookwood Invitational Scholars' Bowl)"]]: {
+    name: "2015 BISB (Brookwood Invitational Scholars' Bowl)",
     year: 2015,
-    value: Tournament['2015 Chicago Open Visual Arts'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2015 Claude Shannon Memorial Tournament',
+  [Tournament['2015 Chicago Open']]: {
+    name: '2015 Chicago Open',
     year: 2015,
-    value: Tournament['2015 Claude Shannon Memorial Tournament'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2015 Delta Burke',
+  [Tournament['2015 Chicago Open History']]: {
+    name: '2015 Chicago Open History',
     year: 2015,
-    value: Tournament['2015 Delta Burke'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2015 Geography Monstrosity',
+  [Tournament['2015 Chicago Open Visual Arts']]: {
+    name: '2015 Chicago Open Visual Arts',
     year: 2015,
-    value: Tournament['2015 Geography Monstrosity'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2015 George Oppen',
+  [Tournament['2015 Claude Shannon Memorial Tournament']]: {
+    name: '2015 Claude Shannon Memorial Tournament',
     year: 2015,
-    value: Tournament['2015 George Oppen'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2015 GSAC XXIII',
+  [Tournament['2015 Delta Burke']]: {
+    name: '2015 Delta Burke',
     year: 2015,
-    value: Tournament['2015 GSAC XXIII'],
+    difficulty: Difficulty['Easy College'],
   },
-  { label: '2015 HFT X', year: 2015, value: Tournament['2015 HFT X'] },
-  {
-    label: '2015 Maryland Fall',
+  [Tournament['2015 Geography Monstrosity']]: {
+    name: '2015 Geography Monstrosity',
     year: 2015,
-    value: Tournament['2015 Maryland Fall'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2015 Missouri Open',
+  [Tournament['2015 George Oppen']]: {
+    name: '2015 George Oppen',
     year: 2015,
-    value: Tournament['2015 Missouri Open'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2015 MUT', year: 2015, value: Tournament['2015 MUT'] },
-  { label: '2015 NASAT', year: 2015, value: Tournament['2015 NASAT'] },
-  { label: '2015 NASAT ', year: 2015, value: Tournament['2015 NASAT '] },
-  { label: '2015 PACE NSC', year: 2015, value: Tournament['2015 PACE NSC'] },
-  {
-    label: '2015 Penn Bowl',
+  [Tournament['2015 GSAC XXIII']]: {
+    name: '2015 GSAC XXIII',
     year: 2015,
-    value: Tournament['2015 Penn Bowl'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2015 Prison Bowl VIII',
+  [Tournament['2015 HFT X']]: {
+    name: '2015 HFT X',
     year: 2015,
-    value: Tournament['2015 Prison Bowl VIII'],
+    difficulty: Difficulty['Hard High School'],
   },
-  { label: '2015 RILKE', year: 2015, value: Tournament['2015 RILKE'] },
-  {
-    label: '2015 SCOP MS 5',
+  [Tournament['2015 Maryland Fall']]: {
+    name: '2015 Maryland Fall',
     year: 2015,
-    value: Tournament['2015 SCOP MS 5'],
+    difficulty: Difficulty['Hard High School'],
   },
-  { label: '2015 SHEIKH', year: 2015, value: Tournament['2015 SHEIKH'] },
-  { label: '2015 STIMPY', year: 2015, value: Tournament['2015 STIMPY'] },
-  { label: '2015 VCU Open', year: 2015, value: Tournament['2015 VCU Open'] },
-  { label: '2015 VICO', year: 2015, value: Tournament['2015 VICO'] },
-  {
-    label: '2015 We Have Never Been Modern',
+  [Tournament['2015 Missouri Open']]: {
+    name: '2015 Missouri Open',
     year: 2015,
-    value: Tournament['2015 We Have Never Been Modern'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2014 ACF Fall', year: 2014, value: Tournament['2014 ACF Fall'] },
-  {
-    label: '2014 ACF Fall ',
+  [Tournament['2015 MUT']]: {
+    name: '2015 MUT',
+    year: 2015,
+    difficulty: Difficulty['Easy College'],
+  },
+  [Tournament['2015 NASAT']]: {
+    name: '2015 NASAT',
+    year: 2015,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2015 NASAT ']]: {
+    name: '2015 NASAT ',
+    year: 2015,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2015 PACE NSC']]: {
+    name: '2015 PACE NSC',
+    year: 2015,
+    difficulty: Difficulty['National High School'],
+  },
+  [Tournament['2015 Penn Bowl']]: {
+    name: '2015 Penn Bowl',
+    year: 2015,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2015 Prison Bowl VIII']]: {
+    name: '2015 Prison Bowl VIII',
+    year: 2015,
+    difficulty: Difficulty['Hard High School'],
+  },
+  [Tournament['2015 RILKE']]: {
+    name: '2015 RILKE',
+    year: 2015,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2015 SCOP MS 5']]: {
+    name: '2015 SCOP MS 5',
+    year: 2015,
+    difficulty: Difficulty['Middle School'],
+  },
+  [Tournament['2015 SHEIKH']]: {
+    name: '2015 SHEIKH',
+    year: 2015,
+    difficulty: Difficulty['Hard College'],
+  },
+  [Tournament['2015 STIMPY']]: {
+    name: '2015 STIMPY',
+    year: 2015,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2015 VCU Open']]: {
+    name: '2015 VCU Open',
+    year: 2015,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2015 VICO']]: {
+    name: '2015 VICO',
+    year: 2015,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2015 We Have Never Been Modern']]: {
+    name: '2015 We Have Never Been Modern',
+    year: 2015,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2014 ACF Fall']]: {
+    name: '2014 ACF Fall',
     year: 2014,
-    value: Tournament['2014 ACF Fall '],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2014 ACF Nationals',
+  [Tournament['2014 ACF Fall ']]: {
+    name: '2014 ACF Fall ',
     year: 2014,
-    value: Tournament['2014 ACF Nationals'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2014 ACF Regionals',
+  [Tournament['2014 ACF Nationals']]: {
+    name: '2014 ACF Nationals',
     year: 2014,
-    value: Tournament['2014 ACF Regionals'],
+    difficulty: Difficulty['Hard College'],
   },
-  {
-    label: '2014 ACF Regionals 2014',
+  [Tournament['2014 ACF Regionals']]: {
+    name: '2014 ACF Regionals',
     year: 2014,
-    value: Tournament['2014 ACF Regionals 2014'],
+    difficulty: Difficulty['Regular College'],
   },
-  { label: '2014 BELLOCO', year: 2014, value: Tournament['2014 BELLOCO'] },
-  { label: '2014 BHSAT', year: 2014, value: Tournament['2014 BHSAT'] },
-  {
-    label: '2014 Cane Ridge Revival',
+  [Tournament['2014 ACF Regionals 2014']]: {
+    name: '2014 ACF Regionals 2014',
     year: 2014,
-    value: Tournament['2014 Cane Ridge Revival'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2014 Cheyne American History People',
+  [Tournament['2014 BELLOCO']]: {
+    name: '2014 BELLOCO',
     year: 2014,
-    value: Tournament['2014 Cheyne American History People'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2014 Cheyne American Thought',
+  [Tournament['2014 BHSAT']]: {
+    name: '2014 BHSAT',
     year: 2014,
-    value: Tournament['2014 Cheyne American Thought'],
+    difficulty: Difficulty['Hard High School'],
   },
-  {
-    label: '2014 Chicago Open',
+  [Tournament['2014 Cane Ridge Revival']]: {
+    name: '2014 Cane Ridge Revival',
     year: 2014,
-    value: Tournament['2014 Chicago Open'],
+    difficulty: Difficulty['Hard College'],
   },
-  {
-    label: '2014 College History Bowl',
+  [Tournament['2014 Cheyne American History People']]: {
+    name: '2014 Cheyne American History People',
     year: 2014,
-    value: Tournament['2014 College History Bowl'],
+    difficulty: Difficulty['Regular College'],
   },
-  { label: '2014 DEES', year: 2014, value: Tournament['2014 DEES'] },
-  {
-    label: '2014 Delta Burke',
+  [Tournament['2014 Cheyne American Thought']]: {
+    name: '2014 Cheyne American Thought',
     year: 2014,
-    value: Tournament['2014 Delta Burke'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2014 Geography Monstrosity',
+  [Tournament['2014 Chicago Open']]: {
+    name: '2014 Chicago Open',
     year: 2014,
-    value: Tournament['2014 Geography Monstrosity'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2014 Gorilla Lit',
+  [Tournament['2014 College History Bowl']]: {
+    name: '2014 College History Bowl',
     year: 2014,
-    value: Tournament['2014 Gorilla Lit'],
+    difficulty: Difficulty['Hard College'],
   },
-  { label: '2014 GSAC', year: 2014, value: Tournament['2014 GSAC'] },
-  { label: '2014 ICCS', year: 2014, value: Tournament['2014 ICCS'] },
-  { label: '2014 LIST IV', year: 2014, value: Tournament['2014 LIST IV'] },
-  { label: '2014 Masonic', year: 2014, value: Tournament['2014 Masonic'] },
-  {
-    label: '2014 Mavis Gallant Memorial',
+  [Tournament['2014 DEES']]: {
+    name: '2014 DEES',
     year: 2014,
-    value: Tournament['2014 Mavis Gallant Memorial'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2014 Michigan Fall Tournament',
+  [Tournament['2014 Delta Burke']]: {
+    name: '2014 Delta Burke',
     year: 2014,
-    value: Tournament['2014 Michigan Fall Tournament'],
+    difficulty: Difficulty['Easy College'],
   },
-  { label: '2014 MUT', year: 2014, value: Tournament['2014 MUT'] },
-  { label: '2014 NASAT', year: 2014, value: Tournament['2014 NASAT'] },
-  { label: '2014 NASAT ', year: 2014, value: Tournament['2014 NASAT '] },
-  {
-    label: '2014 New Trier Scobol Solo',
+  [Tournament['2014 Geography Monstrosity']]: {
+    name: '2014 Geography Monstrosity',
     year: 2014,
-    value: Tournament['2014 New Trier Scobol Solo'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2014 PACE NSC', year: 2014, value: Tournament['2014 PACE NSC'] },
-  { label: '2014 Padawan', year: 2014, value: Tournament['2014 Padawan'] },
-  { label: '2014 PADAWAN', year: 2014, value: Tournament['2014 PADAWAN'] },
-  {
-    label: '2014 Penn Bowl',
+  [Tournament['2014 Gorilla Lit']]: {
+    name: '2014 Gorilla Lit',
     year: 2014,
-    value: Tournament['2014 Penn Bowl'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2014 Prison Bowl',
+  [Tournament['2014 GSAC']]: {
+    name: '2014 GSAC',
     year: 2014,
-    value: Tournament['2014 Prison Bowl'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2014 SCOP Novice',
+  [Tournament['2014 ICCS']]: {
+    name: '2014 ICCS',
     year: 2014,
-    value: Tournament['2014 SCOP Novice'],
+    difficulty: Difficulty['Easy College'],
   },
-  { label: '2014 SUBMIT', year: 2014, value: Tournament['2014 SUBMIT'] },
-  { label: '2014 VCU Open', year: 2014, value: Tournament['2014 VCU Open'] },
-  {
-    label: '2014 VCU Open ',
+  [Tournament['2014 LIST IV']]: {
+    name: '2014 LIST IV',
     year: 2014,
-    value: Tournament['2014 VCU Open '],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: 'Lederberg Memorial Science Tournament 2: Daughter Cell',
+  [Tournament['2014 Masonic']]: {
+    name: '2014 Masonic',
     year: 2014,
-    value: Tournament['Lederberg Memorial Science Tournament 2: Daughter Cell'],
+    difficulty: Difficulty['Regular High School'],
   },
-  { label: '2013 ACF Fall', year: 2013, value: Tournament['2013 ACF Fall'] },
-  {
-    label: '2013 ACF Nationals',
+  [Tournament['2014 Mavis Gallant Memorial']]: {
+    name: '2014 Mavis Gallant Memorial',
+    year: 2014,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2014 Michigan Fall Tournament']]: {
+    name: '2014 Michigan Fall Tournament',
+    year: 2014,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2014 MUT']]: {
+    name: '2014 MUT',
+    year: 2014,
+    difficulty: Difficulty['Easy College'],
+  },
+  [Tournament['2014 NASAT']]: {
+    name: '2014 NASAT',
+    year: 2014,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2014 NASAT ']]: {
+    name: '2014 NASAT ',
+    year: 2014,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2014 New Trier Scobol Solo']]: {
+    name: '2014 New Trier Scobol Solo',
+    year: 2014,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2014 PACE NSC']]: {
+    name: '2014 PACE NSC',
+    year: 2014,
+    difficulty: Difficulty['National High School'],
+  },
+  [Tournament['2014 Padawan']]: {
+    name: '2014 Padawan',
+    year: 2014,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2014 PADAWAN']]: {
+    name: '2014 PADAWAN',
+    year: 2014,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2014 Penn Bowl']]: {
+    name: '2014 Penn Bowl',
+    year: 2014,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2014 Prison Bowl']]: {
+    name: '2014 Prison Bowl',
+    year: 2014,
+    difficulty: Difficulty['Hard High School'],
+  },
+  [Tournament['2014 SCOP Novice']]: {
+    name: '2014 SCOP Novice',
+    year: 2014,
+    difficulty: Difficulty['Easy High School'],
+  },
+  [Tournament['2014 SUBMIT']]: {
+    name: '2014 SUBMIT',
+    year: 2014,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2014 VCU Open']]: {
+    name: '2014 VCU Open',
+    year: 2014,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2014 VCU Open ']]: {
+    name: '2014 VCU Open ',
+    year: 2014,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['Lederberg Memorial Science Tournament 2: Daughter Cell']]: {
+    name: 'Lederberg Memorial Science Tournament 2: Daughter Cell',
+    year: 2014,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2013 ACF Fall']]: {
+    name: '2013 ACF Fall',
     year: 2013,
-    value: Tournament['2013 ACF Nationals'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2013 ACF Nationals ',
+  [Tournament['2013 ACF Nationals']]: {
+    name: '2013 ACF Nationals',
     year: 2013,
-    value: Tournament['2013 ACF Nationals '],
+    difficulty: Difficulty['Hard College'],
   },
-  {
-    label: '2013 ACF Regionals',
+  [Tournament['2013 ACF Nationals ']]: {
+    name: '2013 ACF Nationals ',
     year: 2013,
-    value: Tournament['2013 ACF Regionals'],
+    difficulty: Difficulty['Hard College'],
   },
-  {
-    label: '2013 Angels in the Architecture',
+  [Tournament['2013 ACF Regionals']]: {
+    name: '2013 ACF Regionals',
     year: 2013,
-    value: Tournament['2013 Angels in the Architecture'],
+    difficulty: Difficulty['Regular College'],
   },
-  { label: '2013 Arrabal', year: 2013, value: Tournament['2013 Arrabal'] },
-  { label: '2013 BHSAT', year: 2013, value: Tournament['2013 BHSAT'] },
-  {
-    label: '2013 Brookwood Invitational Scholars Bowl',
+  [Tournament['2013 Angels in the Architecture']]: {
+    name: '2013 Angels in the Architecture',
     year: 2013,
-    value: Tournament['2013 Brookwood Invitational Scholars Bowl'],
+    difficulty: Difficulty['Hard College'],
   },
-  {
-    label: '2013 Cheyne American History',
+  [Tournament['2013 Arrabal']]: {
+    name: '2013 Arrabal',
     year: 2013,
-    value: Tournament['2013 Cheyne American History'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2013 Chicago Open',
+  [Tournament['2013 BHSAT']]: {
+    name: '2013 BHSAT',
     year: 2013,
-    value: Tournament['2013 Chicago Open'],
+    difficulty: Difficulty['Hard High School'],
   },
-  {
-    label: '2013 Collaborative MS Tournament',
+  [Tournament['2013 Brookwood Invitational Scholars Bowl']]: {
+    name: '2013 Brookwood Invitational Scholars Bowl',
     year: 2013,
-    value: Tournament['2013 Collaborative MS Tournament'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2013 Collegiate Novice',
+  [Tournament['2013 Cheyne American History']]: {
+    name: '2013 Cheyne American History',
     year: 2013,
-    value: Tournament['2013 Collegiate Novice'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2013 Delta Burke',
+  [Tournament['2013 Chicago Open']]: {
+    name: '2013 Chicago Open',
     year: 2013,
-    value: Tournament['2013 Delta Burke'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2013 Dragoon', year: 2013, value: Tournament['2013 Dragoon'] },
-  { label: '2013 DRAGOON', year: 2013, value: Tournament['2013 DRAGOON'] },
-  {
-    label: '2013 Geography Monstrosity',
+  [Tournament['2013 Collaborative MS Tournament']]: {
+    name: '2013 Collaborative MS Tournament',
     year: 2013,
-    value: Tournament['2013 Geography Monstrosity'],
+    difficulty: Difficulty['Middle School'],
   },
-  { label: '2013 GSAC', year: 2013, value: Tournament['2013 GSAC'] },
-  { label: '2013 JAMES', year: 2013, value: Tournament['2013 JAMES'] },
-  { label: '2013 LIST III', year: 2013, value: Tournament['2013 LIST III'] },
-  {
-    label: '2013 Maggie Walker GSAC',
+  [Tournament['2013 Collegiate Novice']]: {
+    name: '2013 Collegiate Novice',
     year: 2013,
-    value: Tournament['2013 Maggie Walker GSAC'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2013 Michigan Fall Tournament',
+  [Tournament['2013 Delta Burke']]: {
+    name: '2013 Delta Burke',
     year: 2013,
-    value: Tournament['2013 Michigan Fall Tournament'],
+    difficulty: Difficulty['Easy College'],
   },
-  { label: '2013 MUT', year: 2013, value: Tournament['2013 MUT'] },
-  { label: '2013 NASAT', year: 2013, value: Tournament['2013 NASAT'] },
-  { label: '2013 NTSS', year: 2013, value: Tournament['2013 NTSS'] },
-  { label: '2013 PACE NSC', year: 2013, value: Tournament['2013 PACE NSC'] },
-  {
-    label: '2013 Penn Bowl',
+  [Tournament['2013 Dragoon']]: {
+    name: '2013 Dragoon',
     year: 2013,
-    value: Tournament['2013 Penn Bowl'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2013 Prison Bowl',
+  [Tournament['2013 DRAGOON']]: {
+    name: '2013 DRAGOON',
     year: 2013,
-    value: Tournament['2013 Prison Bowl'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: "2013 Schindler's Lit",
+  [Tournament['2013 Geography Monstrosity']]: {
+    name: '2013 Geography Monstrosity',
     year: 2013,
-    value: Tournament["2013 Schindler's Lit"],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2013 Scobol Solo',
+  [Tournament['2013 GSAC']]: {
+    name: '2013 GSAC',
     year: 2013,
-    value: Tournament['2013 Scobol Solo'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2013 SCOP Novice',
+  [Tournament['2013 JAMES']]: {
+    name: '2013 JAMES',
     year: 2013,
-    value: Tournament['2013 SCOP Novice'],
+    difficulty: Difficulty['Regular High School'],
   },
-  { label: '2013 Terrapin', year: 2013, value: Tournament['2013 Terrapin'] },
-  {
-    label: '2013 VCU Closed',
+  [Tournament['2013 LIST III']]: {
+    name: '2013 LIST III',
     year: 2013,
-    value: Tournament['2013 VCU Closed'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2013 VCU Closed ',
+  [Tournament['2013 Maggie Walker GSAC']]: {
+    name: '2013 Maggie Walker GSAC',
     year: 2013,
-    value: Tournament['2013 VCU Closed '],
+    difficulty: Difficulty['Regular High School'],
   },
-  { label: '2013 VCU Open', year: 2013, value: Tournament['2013 VCU Open'] },
-  {
-    label: '2013 Western Invitational Tournament',
+  [Tournament['2013 Michigan Fall Tournament']]: {
+    name: '2013 Michigan Fall Tournament',
     year: 2013,
-    value: Tournament['2013 Western Invitational Tournament'],
+    difficulty: Difficulty['Regular College'],
   },
-  { label: 'Scobol Solo', year: 2013, value: Tournament['Scobol Solo'] },
-  {
-    label: '2012 2012 Penn-ance',
+  [Tournament['2013 MUT']]: {
+    name: '2013 MUT',
+    year: 2013,
+    difficulty: Difficulty['Easy College'],
+  },
+  [Tournament['2013 NASAT']]: {
+    name: '2013 NASAT',
+    year: 2013,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2013 NTSS']]: {
+    name: '2013 NTSS',
+    year: 2013,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2013 PACE NSC']]: {
+    name: '2013 PACE NSC',
+    year: 2013,
+    difficulty: Difficulty['National High School'],
+  },
+  [Tournament['2013 Penn Bowl']]: {
+    name: '2013 Penn Bowl',
+    year: 2013,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2013 Prison Bowl']]: {
+    name: '2013 Prison Bowl',
+    year: 2013,
+    difficulty: Difficulty['Hard High School'],
+  },
+  [Tournament["2013 Schindler's Lit"]]: {
+    name: "2013 Schindler's Lit",
+    year: 2013,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2013 Scobol Solo']]: {
+    name: '2013 Scobol Solo',
+    year: 2013,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2013 SCOP Novice']]: {
+    name: '2013 SCOP Novice',
+    year: 2013,
+    difficulty: Difficulty['Easy High School'],
+  },
+  [Tournament['2013 Terrapin']]: {
+    name: '2013 Terrapin',
+    year: 2013,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2013 VCU Closed']]: {
+    name: '2013 VCU Closed',
+    year: 2013,
+    difficulty: Difficulty['Hard College'],
+  },
+  [Tournament['2013 VCU Closed ']]: {
+    name: '2013 VCU Closed ',
+    year: 2013,
+    difficulty: Difficulty['Hard College'],
+  },
+  [Tournament['2013 VCU Open']]: {
+    name: '2013 VCU Open',
+    year: 2013,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2013 Western Invitational Tournament']]: {
+    name: '2013 Western Invitational Tournament',
+    year: 2013,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['Scobol Solo']]: {
+    name: 'Scobol Solo',
+    year: 2013,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2012 2012 Penn-ance']]: {
+    name: '2012 2012 Penn-ance',
     year: 2012,
-    value: Tournament['2012 2012 Penn-ance'],
+    difficulty: Difficulty['Regular College'],
   },
-  { label: '2012 ACF Fall', year: 2012, value: Tournament['2012 ACF Fall'] },
-  {
-    label: '2012 ACF Nationals',
+  [Tournament['2012 ACF Fall']]: {
+    name: '2012 ACF Fall',
     year: 2012,
-    value: Tournament['2012 ACF Nationals'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2012 ACF Nationals ',
+  [Tournament['2012 ACF Nationals']]: {
+    name: '2012 ACF Nationals',
     year: 2012,
-    value: Tournament['2012 ACF Nationals '],
+    difficulty: Difficulty['Hard College'],
   },
-  {
-    label: '2012 ACF Regionals',
+  [Tournament['2012 ACF Nationals ']]: {
+    name: '2012 ACF Nationals ',
     year: 2012,
-    value: Tournament['2012 ACF Regionals'],
+    difficulty: Difficulty['Hard College'],
   },
-  {
-    label: '2012 ACF Regionals ',
+  [Tournament['2012 ACF Regionals']]: {
+    name: '2012 ACF Regionals',
     year: 2012,
-    value: Tournament['2012 ACF Regionals '],
+    difficulty: Difficulty['Regular College'],
   },
-  { label: '2012 ANFORTAS', year: 2012, value: Tournament['2012 ANFORTAS'] },
-  { label: '2012 BARGE', year: 2012, value: Tournament['2012 BARGE'] },
-  { label: '2012 BHSAT', year: 2012, value: Tournament['2012 BHSAT'] },
-  {
-    label: '2012 Cheyne American History',
+  [Tournament['2012 ACF Regionals ']]: {
+    name: '2012 ACF Regionals ',
     year: 2012,
-    value: Tournament['2012 Cheyne American History'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2012 Chicago Open',
+  [Tournament['2012 ANFORTAS']]: {
+    name: '2012 ANFORTAS',
     year: 2012,
-    value: Tournament['2012 Chicago Open'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2012 Collaborative MS Tournament',
+  [Tournament['2012 BARGE']]: {
+    name: '2012 BARGE',
     year: 2012,
-    value: Tournament['2012 Collaborative MS Tournament'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2012 College History Bowl',
+  [Tournament['2012 BHSAT']]: {
+    name: '2012 BHSAT',
     year: 2012,
-    value: Tournament['2012 College History Bowl'],
+    difficulty: Difficulty['Hard High School'],
   },
-  {
-    label: '2012 Collegiate Novice',
+  [Tournament['2012 Cheyne American History']]: {
+    name: '2012 Cheyne American History',
     year: 2012,
-    value: Tournament['2012 Collegiate Novice'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2012 Delta Burke',
+  [Tournament['2012 Chicago Open']]: {
+    name: '2012 Chicago Open',
     year: 2012,
-    value: Tournament['2012 Delta Burke'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2012 Geography Monstrosity',
+  [Tournament['2012 Collaborative MS Tournament']]: {
+    name: '2012 Collaborative MS Tournament',
     year: 2012,
-    value: Tournament['2012 Geography Monstrosity'],
+    difficulty: Difficulty['Middle School'],
   },
-  {
-    label: '2012 Harvard Fall Tournament',
+  [Tournament['2012 College History Bowl']]: {
+    name: '2012 College History Bowl',
     year: 2012,
-    value: Tournament['2012 Harvard Fall Tournament'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2012 Illinois Fall Tournament',
+  [Tournament['2012 Collegiate Novice']]: {
+    name: '2012 Collegiate Novice',
     year: 2012,
-    value: Tournament['2012 Illinois Fall Tournament'],
+    difficulty: Difficulty['Easy College'],
   },
-  { label: '2012 KABO', year: 2012, value: Tournament['2012 KABO'] },
-  {
-    label: '2012 LIST (Ladue Invitational Spring Tournament)',
+  [Tournament['2012 Delta Burke']]: {
+    name: '2012 Delta Burke',
     year: 2012,
-    value: Tournament['2012 LIST (Ladue Invitational Spring Tournament)'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2012 Maggie Walker GSAC',
+  [Tournament['2012 Geography Monstrosity']]: {
+    name: '2012 Geography Monstrosity',
     year: 2012,
-    value: Tournament['2012 Maggie Walker GSAC'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2012 Minnesota Open',
+  [Tournament['2012 Harvard Fall Tournament']]: {
+    name: '2012 Harvard Fall Tournament',
     year: 2012,
-    value: Tournament['2012 Minnesota Open'],
+    difficulty: Difficulty['Hard High School'],
   },
-  { label: '2012 MUT', year: 2012, value: Tournament['2012 MUT'] },
-  { label: '2012 NASAT', year: 2012, value: Tournament['2012 NASAT'] },
-  { label: '2012 PACE NSC', year: 2012, value: Tournament['2012 PACE NSC'] },
-  {
-    label: '2012 Peaceful Resolution',
+  [Tournament['2012 Illinois Fall Tournament']]: {
+    name: '2012 Illinois Fall Tournament',
     year: 2012,
-    value: Tournament['2012 Peaceful Resolution'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2012 Penn-ance',
+  [Tournament['2012 KABO']]: {
+    name: '2012 KABO',
     year: 2012,
-    value: Tournament['2012 Penn-ance'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2012 Penn Bowl',
+  [Tournament['2012 LIST (Ladue Invitational Spring Tournament)']]: {
+    name: '2012 LIST (Ladue Invitational Spring Tournament)',
     year: 2012,
-    value: Tournament['2012 Penn Bowl'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2012 Prison Bowl',
+  [Tournament['2012 Maggie Walker GSAC']]: {
+    name: '2012 Maggie Walker GSAC',
     year: 2012,
-    value: Tournament['2012 Prison Bowl'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2012 Prison Bowl ',
+  [Tournament['2012 Minnesota Open']]: {
+    name: '2012 Minnesota Open',
     year: 2012,
-    value: Tournament['2012 Prison Bowl '],
+    difficulty: Difficulty.Open,
   },
-  { label: '2012 QUARK', year: 2012, value: Tournament['2012 QUARK'] },
-  { label: '2012 RAVE', year: 2012, value: Tournament['2012 RAVE'] },
-  {
-    label: '2012 SCOP Novice',
+  [Tournament['2012 MUT']]: {
+    name: '2012 MUT',
     year: 2012,
-    value: Tournament['2012 SCOP Novice'],
+    difficulty: Difficulty['Easy College'],
   },
-  { label: '2012 WELD', year: 2012, value: Tournament['2012 WELD'] },
-  { label: '2012 YMIR', year: 2012, value: Tournament['2012 YMIR'] },
-  {
-    label: '2011 2011 Minnesota Open',
+  [Tournament['2012 NASAT']]: {
+    name: '2012 NASAT',
+    year: 2012,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2012 PACE NSC']]: {
+    name: '2012 PACE NSC',
+    year: 2012,
+    difficulty: Difficulty['National High School'],
+  },
+  [Tournament['2012 Peaceful Resolution']]: {
+    name: '2012 Peaceful Resolution',
+    year: 2012,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2012 Penn-ance']]: {
+    name: '2012 Penn-ance',
+    year: 2012,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2012 Penn Bowl']]: {
+    name: '2012 Penn Bowl',
+    year: 2012,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2012 Prison Bowl']]: {
+    name: '2012 Prison Bowl',
+    year: 2012,
+    difficulty: Difficulty['Hard High School'],
+  },
+  [Tournament['2012 Prison Bowl ']]: {
+    name: '2012 Prison Bowl ',
+    year: 2012,
+    difficulty: Difficulty['Hard High School'],
+  },
+  [Tournament['2012 QUARK']]: {
+    name: '2012 QUARK',
+    year: 2012,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2012 RAVE']]: {
+    name: '2012 RAVE',
+    year: 2012,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2012 SCOP Novice']]: {
+    name: '2012 SCOP Novice',
+    year: 2012,
+    difficulty: Difficulty['Easy High School'],
+  },
+  [Tournament['2012 WELD']]: {
+    name: '2012 WELD',
+    year: 2012,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2012 YMIR']]: {
+    name: '2012 YMIR',
+    year: 2012,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2011 2011 Minnesota Open']]: {
+    name: '2011 2011 Minnesota Open',
     year: 2011,
-    value: Tournament['2011 2011 Minnesota Open'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2011 ACF Fall', year: 2011, value: Tournament['2011 ACF Fall'] },
-  {
-    label: '2011 ACF Fall ',
+  [Tournament['2011 ACF Fall']]: {
+    name: '2011 ACF Fall',
     year: 2011,
-    value: Tournament['2011 ACF Fall '],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2011 ACF Nationals',
+  [Tournament['2011 ACF Fall ']]: {
+    name: '2011 ACF Fall ',
     year: 2011,
-    value: Tournament['2011 ACF Nationals'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2011 ACF Regionals',
+  [Tournament['2011 ACF Nationals']]: {
+    name: '2011 ACF Nationals',
     year: 2011,
-    value: Tournament['2011 ACF Regionals'],
+    difficulty: Difficulty['Hard College'],
   },
-  { label: '2011 BHSAT', year: 2011, value: Tournament['2011 BHSAT'] },
-  {
-    label: '2011 Cheyne 1980s American History',
+  [Tournament['2011 ACF Regionals']]: {
+    name: '2011 ACF Regionals',
     year: 2011,
-    value: Tournament['2011 Cheyne 1980s American History'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2011 Cheyne American History',
+  [Tournament['2011 BHSAT']]: {
+    name: '2011 BHSAT',
     year: 2011,
-    value: Tournament['2011 Cheyne American History'],
+    difficulty: Difficulty['Hard High School'],
   },
-  {
-    label: '2011 Chicago Open',
+  [Tournament['2011 Cheyne 1980s American History']]: {
+    name: '2011 Cheyne 1980s American History',
     year: 2011,
-    value: Tournament['2011 Chicago Open'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2011 Chicago Open History',
+  [Tournament['2011 Cheyne American History']]: {
+    name: '2011 Cheyne American History',
     year: 2011,
-    value: Tournament['2011 Chicago Open History'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2011 Collaborative MS Tournament',
+  [Tournament['2011 Chicago Open']]: {
+    name: '2011 Chicago Open',
     year: 2011,
-    value: Tournament['2011 Collaborative MS Tournament'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2011 Collegiate Novice',
+  [Tournament['2011 Chicago Open History']]: {
+    name: '2011 Chicago Open History',
     year: 2011,
-    value: Tournament['2011 Collegiate Novice'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2011 Delta Burke',
+  [Tournament['2011 Collaborative MS Tournament']]: {
+    name: '2011 Collaborative MS Tournament',
     year: 2011,
-    value: Tournament['2011 Delta Burke'],
+    difficulty: Difficulty['Middle School'],
   },
-  {
-    label: '2011 Geography Monstrosity',
+  [Tournament['2011 Collegiate Novice']]: {
+    name: '2011 Collegiate Novice',
     year: 2011,
-    value: Tournament['2011 Geography Monstrosity'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2011 Guerrilla at ICT',
+  [Tournament['2011 Delta Burke']]: {
+    name: '2011 Delta Burke',
     year: 2011,
-    value: Tournament['2011 Guerrilla at ICT'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2011 HSAPQ Colonia 2',
+  [Tournament['2011 Geography Monstrosity']]: {
+    name: '2011 Geography Monstrosity',
     year: 2011,
-    value: Tournament['2011 HSAPQ Colonia 2'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2011 HSAPQ National History Bowl',
+  [Tournament['2011 Guerrilla at ICT']]: {
+    name: '2011 Guerrilla at ICT',
     year: 2011,
-    value: Tournament['2011 HSAPQ National History Bowl'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2011 HSAPQ Tournament 15',
+  [Tournament['2011 HSAPQ Colonia 2']]: {
+    name: '2011 HSAPQ Colonia 2',
     year: 2011,
-    value: Tournament['2011 HSAPQ Tournament 15'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2011 HSAPQ Tournament 16',
+  [Tournament['2011 HSAPQ National History Bowl']]: {
+    name: '2011 HSAPQ National History Bowl',
     year: 2011,
-    value: Tournament['2011 HSAPQ Tournament 16'],
+    difficulty: Difficulty['Hard High School'],
   },
-  {
-    label: '2011 HSAPQ Tournament 17',
+  [Tournament['2011 HSAPQ Tournament 15']]: {
+    name: '2011 HSAPQ Tournament 15',
     year: 2011,
-    value: Tournament['2011 HSAPQ Tournament 17'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2011 HSAPQ VHSL Districts',
+  [Tournament['2011 HSAPQ Tournament 16']]: {
+    name: '2011 HSAPQ Tournament 16',
     year: 2011,
-    value: Tournament['2011 HSAPQ VHSL Districts'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2011 HSAPQ VHSL Regionals',
+  [Tournament['2011 HSAPQ Tournament 17']]: {
+    name: '2011 HSAPQ Tournament 17',
     year: 2011,
-    value: Tournament['2011 HSAPQ VHSL Regionals'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2011 HSAPQ VHSL Regular Season',
+  [Tournament['2011 HSAPQ VHSL Districts']]: {
+    name: '2011 HSAPQ VHSL Districts',
     year: 2011,
-    value: Tournament['2011 HSAPQ VHSL Regular Season'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2011 HSAPQ VHSL States',
+  [Tournament['2011 HSAPQ VHSL Regionals']]: {
+    name: '2011 HSAPQ VHSL Regionals',
     year: 2011,
-    value: Tournament['2011 HSAPQ VHSL States'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2011 Illinois Open',
+  [Tournament['2011 HSAPQ VHSL Regular Season']]: {
+    name: '2011 HSAPQ VHSL Regular Season',
     year: 2011,
-    value: Tournament['2011 Illinois Open'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2011 Illinois Wissenschaftslehre',
+  [Tournament['2011 HSAPQ VHSL States']]: {
+    name: '2011 HSAPQ VHSL States',
     year: 2011,
-    value: Tournament['2011 Illinois Wissenschaftslehre'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2011 Maggie Walker GSAC',
+  [Tournament['2011 Illinois Open']]: {
+    name: '2011 Illinois Open',
     year: 2011,
-    value: Tournament['2011 Maggie Walker GSAC'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2011 MAGNI', year: 2011, value: Tournament['2011 MAGNI'] },
-  {
-    label: '2011 Minnesota Open',
+  [Tournament['2011 Illinois Wissenschaftslehre']]: {
+    name: '2011 Illinois Wissenschaftslehre',
     year: 2011,
-    value: Tournament['2011 Minnesota Open'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2011 Missiles of October',
+  [Tournament['2011 Maggie Walker GSAC']]: {
+    name: '2011 Maggie Walker GSAC',
     year: 2011,
-    value: Tournament['2011 Missiles of October'],
+    difficulty: Difficulty['Regular High School'],
   },
-  { label: '2011 MUT', year: 2011, value: Tournament['2011 MUT'] },
-  { label: '2011 NASAT', year: 2011, value: Tournament['2011 NASAT'] },
-  { label: '2011 PACE NSC', year: 2011, value: Tournament['2011 PACE NSC'] },
-  {
-    label: '2011 Penn Bowl',
+  [Tournament['2011 MAGNI']]: {
+    name: '2011 MAGNI',
     year: 2011,
-    value: Tournament['2011 Penn Bowl'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2011 Prison Bowl',
+  [Tournament['2011 Minnesota Open']]: {
+    name: '2011 Minnesota Open',
     year: 2011,
-    value: Tournament['2011 Prison Bowl'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2011 SACK', year: 2011, value: Tournament['2011 SACK'] },
-  {
-    label: '2011 SCOP Novice',
+  [Tournament['2011 Missiles of October']]: {
+    name: '2011 Missiles of October',
     year: 2011,
-    value: Tournament['2011 SCOP Novice'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2011 St. Anselms and Torrey Pines',
+  [Tournament['2011 MUT']]: {
+    name: '2011 MUT',
     year: 2011,
-    value: Tournament['2011 St. Anselms and Torrey Pines'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2011 Terrapin Invitational',
+  [Tournament['2011 NASAT']]: {
+    name: '2011 NASAT',
     year: 2011,
-    value: Tournament['2011 Terrapin Invitational'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2011 The Bob Loblaw Law Bowl',
+  [Tournament['2011 PACE NSC']]: {
+    name: '2011 PACE NSC',
     year: 2011,
-    value: Tournament['2011 The Bob Loblaw Law Bowl'],
+    difficulty: Difficulty['National High School'],
   },
-  { label: '2011 VCU Open', year: 2011, value: Tournament['2011 VCU Open'] },
-  {
-    label: '2010 2010 ACF Fall',
+  [Tournament['2011 Penn Bowl']]: {
+    name: '2011 Penn Bowl',
+    year: 2011,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2011 Prison Bowl']]: {
+    name: '2011 Prison Bowl',
+    year: 2011,
+    difficulty: Difficulty['Hard High School'],
+  },
+  [Tournament['2011 SACK']]: {
+    name: '2011 SACK',
+    year: 2011,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2011 SCOP Novice']]: {
+    name: '2011 SCOP Novice',
+    year: 2011,
+    difficulty: Difficulty['Easy High School'],
+  },
+  [Tournament['2011 St. Anselms and Torrey Pines']]: {
+    name: '2011 St. Anselms and Torrey Pines',
+    year: 2011,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2011 Terrapin Invitational']]: {
+    name: '2011 Terrapin Invitational',
+    year: 2011,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2011 The Bob Loblaw Law Bowl']]: {
+    name: '2011 The Bob Loblaw Law Bowl',
+    year: 2011,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2011 VCU Open']]: {
+    name: '2011 VCU Open',
+    year: 2011,
+    difficulty: Difficulty['Hard College'],
+  },
+  [Tournament['2010 2010 ACF Fall']]: {
+    name: '2010 2010 ACF Fall',
     year: 2010,
-    value: Tournament['2010 2010 ACF Fall'],
+    difficulty: Difficulty['Easy College'],
   },
-  { label: '2010 ACF Fall', year: 2010, value: Tournament['2010 ACF Fall'] },
-  {
-    label: '2010 ACF Nationals',
+  [Tournament['2010 ACF Fall']]: {
+    name: '2010 ACF Fall',
     year: 2010,
-    value: Tournament['2010 ACF Nationals'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2010 ACF Novice',
+  [Tournament['2010 ACF Nationals']]: {
+    name: '2010 ACF Nationals',
     year: 2010,
-    value: Tournament['2010 ACF Novice'],
+    difficulty: Difficulty['Hard College'],
   },
-  {
-    label: '2010 ACF Regionals',
+  [Tournament['2010 ACF Novice']]: {
+    name: '2010 ACF Novice',
     year: 2010,
-    value: Tournament['2010 ACF Regionals'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2010 ACF Winter',
+  [Tournament['2010 ACF Regionals']]: {
+    name: '2010 ACF Regionals',
     year: 2010,
-    value: Tournament['2010 ACF Winter'],
+    difficulty: Difficulty['Regular College'],
   },
-  { label: '2010 ANGST', year: 2010, value: Tournament['2010 ANGST'] },
-  {
-    label: '2010 BELFAST Arts',
+  [Tournament['2010 ACF Winter']]: {
+    name: '2010 ACF Winter',
     year: 2010,
-    value: Tournament['2010 BELFAST Arts'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2010 Chicago Open',
+  [Tournament['2010 ANGST']]: {
+    name: '2010 ANGST',
     year: 2010,
-    value: Tournament['2010 Chicago Open'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2010 Chicago Open Arts',
+  [Tournament['2010 BELFAST Arts']]: {
+    name: '2010 BELFAST Arts',
     year: 2010,
-    value: Tournament['2010 Chicago Open Arts'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2010 Chicago Open Literature',
+  [Tournament['2010 Chicago Open']]: {
+    name: '2010 Chicago Open',
     year: 2010,
-    value: Tournament['2010 Chicago Open Literature'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2010 Collaborative MS Tournament',
+  [Tournament['2010 Chicago Open Arts']]: {
+    name: '2010 Chicago Open Arts',
     year: 2010,
-    value: Tournament['2010 Collaborative MS Tournament'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2010 Delta Burke',
+  [Tournament['2010 Chicago Open Literature']]: {
+    name: '2010 Chicago Open Literature',
     year: 2010,
-    value: Tournament['2010 Delta Burke'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2010 Early Fall Tournament (EFT)',
+  [Tournament['2010 Collaborative MS Tournament']]: {
+    name: '2010 Collaborative MS Tournament',
     year: 2010,
-    value: Tournament['2010 Early Fall Tournament (EFT)'],
+    difficulty: Difficulty['Middle School'],
   },
-  {
-    label: '2010 Fall Kickoff Tournament',
+  [Tournament['2010 Delta Burke']]: {
+    name: '2010 Delta Burke',
     year: 2010,
-    value: Tournament['2010 Fall Kickoff Tournament'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2010 Fall Novice',
+  [Tournament['2010 Early Fall Tournament (EFT)']]: {
+    name: '2010 Early Fall Tournament (EFT)',
     year: 2010,
-    value: Tournament['2010 Fall Novice'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2010 GDS Ben Cooper Memorial',
+  [Tournament['2010 Fall Kickoff Tournament']]: {
+    name: '2010 Fall Kickoff Tournament',
     year: 2010,
-    value: Tournament['2010 GDS Ben Cooper Memorial'],
+    difficulty: Difficulty['Easy High School'],
   },
-  {
-    label: '2010 Geography Monstrosity 2',
+  [Tournament['2010 Fall Novice']]: {
+    name: '2010 Fall Novice',
     year: 2010,
-    value: Tournament['2010 Geography Monstrosity 2'],
+    difficulty: Difficulty['Easy High School'],
   },
-  {
-    label: '2010 Guerrilla at ICT',
+  [Tournament['2010 GDS Ben Cooper Memorial']]: {
+    name: '2010 GDS Ben Cooper Memorial',
     year: 2010,
-    value: Tournament['2010 Guerrilla at ICT'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2010 Harvard International',
+  [Tournament['2010 Geography Monstrosity 2']]: {
+    name: '2010 Geography Monstrosity 2',
     year: 2010,
-    value: Tournament['2010 Harvard International'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2010 Julius Civilis Classics Tournament',
+  [Tournament['2010 Guerrilla at ICT']]: {
+    name: '2010 Guerrilla at ICT',
     year: 2010,
-    value: Tournament['2010 Julius Civilis Classics Tournament'],
+    difficulty: Difficulty['Hard College'],
   },
-  {
-    label: '2010 Maggie Walker GSAC',
+  [Tournament['2010 Harvard International']]: {
+    name: '2010 Harvard International',
     year: 2010,
-    value: Tournament['2010 Maggie Walker GSAC'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2010 MELD', year: 2010, value: Tournament['2010 MELD'] },
-  {
-    label: '2010 Minnesota Open',
+  [Tournament['2010 Julius Civilis Classics Tournament']]: {
+    name: '2010 Julius Civilis Classics Tournament',
     year: 2010,
-    value: Tournament['2010 Minnesota Open'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2010 MUT', year: 2010, value: Tournament['2010 MUT'] },
-  { label: '2010 NASAT', year: 2010, value: Tournament['2010 NASAT'] },
-  { label: '2010 NTSS', year: 2010, value: Tournament['2010 NTSS'] },
-  { label: '2010 PACE NSC', year: 2010, value: Tournament['2010 PACE NSC'] },
-  {
-    label: '2010 Penn Bowl',
+  [Tournament['2010 Maggie Walker GSAC']]: {
+    name: '2010 Maggie Walker GSAC',
     year: 2010,
-    value: Tournament['2010 Penn Bowl'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2010 Princeton Buzzerfest',
+  [Tournament['2010 MELD']]: {
+    name: '2010 MELD',
     year: 2010,
-    value: Tournament['2010 Princeton Buzzerfest'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2010 Prison Bowl',
+  [Tournament['2010 Minnesota Open']]: {
+    name: '2010 Minnesota Open',
     year: 2010,
-    value: Tournament['2010 Prison Bowl'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2010 SCOP Novice',
+  [Tournament['2010 MUT']]: {
+    name: '2010 MUT',
     year: 2010,
-    value: Tournament['2010 SCOP Novice'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2010 Sun n Fun',
+  [Tournament['2010 NASAT']]: {
+    name: '2010 NASAT',
     year: 2010,
-    value: Tournament['2010 Sun n Fun'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2010 THUNDER II',
+  [Tournament['2010 NTSS']]: {
+    name: '2010 NTSS',
     year: 2010,
-    value: Tournament['2010 THUNDER II'],
+    difficulty: Difficulty['Regular High School'],
   },
-  { label: '2010 TJ NAREN', year: 2010, value: Tournament['2010 TJ NAREN'] },
-  { label: '2010 T-Party', year: 2010, value: Tournament['2010 T-Party'] },
-  {
-    label: '2010 VCU Open (Saturday)',
+  [Tournament['2010 PACE NSC']]: {
+    name: '2010 PACE NSC',
     year: 2010,
-    value: Tournament['2010 VCU Open (Saturday)'],
+    difficulty: Difficulty['National High School'],
   },
-  {
-    label: '2010 VCU Open (Sunday)',
+  [Tournament['2010 Penn Bowl']]: {
+    name: '2010 Penn Bowl',
     year: 2010,
-    value: Tournament['2010 VCU Open (Sunday)'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2010 Wild Kingdom',
+  [Tournament['2010 Princeton Buzzerfest']]: {
+    name: '2010 Princeton Buzzerfest',
     year: 2010,
-    value: Tournament['2010 Wild Kingdom'],
+    difficulty: Difficulty['Regular College'],
   },
-  { label: '2009 ACF Fall', year: 2009, value: Tournament['2009 ACF Fall'] },
-  {
-    label: '2009 ACF Nationals',
+  [Tournament['2010 Prison Bowl']]: {
+    name: '2010 Prison Bowl',
+    year: 2010,
+    difficulty: Difficulty['Hard High School'],
+  },
+  [Tournament['2010 SCOP Novice']]: {
+    name: '2010 SCOP Novice',
+    year: 2010,
+    difficulty: Difficulty['Easy High School'],
+  },
+  [Tournament['2010 Sun n Fun']]: {
+    name: '2010 Sun n Fun',
+    year: 2010,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2010 THUNDER II']]: {
+    name: '2010 THUNDER II',
+    year: 2010,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2010 TJ NAREN']]: {
+    name: '2010 TJ NAREN',
+    year: 2010,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2010 T-Party']]: {
+    name: '2010 T-Party',
+    year: 2010,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2010 VCU Open (Saturday)']]: {
+    name: '2010 VCU Open (Saturday)',
+    year: 2010,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2010 VCU Open (Sunday)']]: {
+    name: '2010 VCU Open (Sunday)',
+    year: 2010,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2010 Wild Kingdom']]: {
+    name: '2010 Wild Kingdom',
+    year: 2010,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2009 ACF Fall']]: {
+    name: '2009 ACF Fall',
     year: 2009,
-    value: Tournament['2009 ACF Nationals'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2009 ACF Regionals',
+  [Tournament['2009 ACF Nationals']]: {
+    name: '2009 ACF Nationals',
     year: 2009,
-    value: Tournament['2009 ACF Regionals'],
+    difficulty: Difficulty['Hard College'],
   },
-  {
-    label: '2009 ACF Winter',
+  [Tournament['2009 ACF Regionals']]: {
+    name: '2009 ACF Regionals',
     year: 2009,
-    value: Tournament['2009 ACF Winter'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2009 ACF Winter ',
+  [Tournament['2009 ACF Winter']]: {
+    name: '2009 ACF Winter',
     year: 2009,
-    value: Tournament['2009 ACF Winter '],
+    difficulty: Difficulty['Regular College'],
   },
-  { label: '2009 BATE', year: 2009, value: Tournament['2009 BATE'] },
-  {
-    label: '2009 Chicago Open',
+  [Tournament['2009 ACF Winter ']]: {
+    name: '2009 ACF Winter ',
     year: 2009,
-    value: Tournament['2009 Chicago Open'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2009 Chicago Open Literature',
+  [Tournament['2009 BATE']]: {
+    name: '2009 BATE',
     year: 2009,
-    value: Tournament['2009 Chicago Open Literature'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2009 Chipola Lit + Fine Arts',
+  [Tournament['2009 Chicago Open']]: {
+    name: '2009 Chicago Open',
     year: 2009,
-    value: Tournament['2009 Chipola Lit + Fine Arts'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2009 DAFT', year: 2009, value: Tournament['2009 DAFT'] },
-  {
-    label: '2009 Fall Kickoff Tournament',
+  [Tournament['2009 Chicago Open Literature']]: {
+    name: '2009 Chicago Open Literature',
     year: 2009,
-    value: Tournament['2009 Fall Kickoff Tournament'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2009 Fall Novice',
+  [Tournament['2009 Chipola Lit + Fine Arts']]: {
+    name: '2009 Chipola Lit + Fine Arts',
     year: 2009,
-    value: Tournament['2009 Fall Novice'],
+    difficulty: Difficulty['Regular College'],
   },
-  { label: '2009 FICHTE', year: 2009, value: Tournament['2009 FICHTE'] },
-  {
-    label: '2009 From Here To Eternity',
+  [Tournament['2009 DAFT']]: {
+    name: '2009 DAFT',
     year: 2009,
-    value: Tournament['2009 From Here To Eternity'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2009 Gaddis II',
+  [Tournament['2009 Fall Kickoff Tournament']]: {
+    name: '2009 Fall Kickoff Tournament',
     year: 2009,
-    value: Tournament['2009 Gaddis II'],
+    difficulty: Difficulty['Easy High School'],
   },
-  {
-    label: '2009 Geography Monstrosity',
+  [Tournament['2009 Fall Novice']]: {
+    name: '2009 Fall Novice',
     year: 2009,
-    value: Tournament['2009 Geography Monstrosity'],
+    difficulty: Difficulty['Easy High School'],
   },
-  { label: '2009 HFT', year: 2009, value: Tournament['2009 HFT'] },
-  {
-    label: '2009 HSAPQ 4Q1',
+  [Tournament['2009 FICHTE']]: {
+    name: '2009 FICHTE',
     year: 2009,
-    value: Tournament['2009 HSAPQ 4Q1'],
+    difficulty: Difficulty['Hard College'],
   },
-  {
-    label: '2009 HSAPQ 4Q2',
+  [Tournament['2009 From Here To Eternity']]: {
+    name: '2009 From Here To Eternity',
     year: 2009,
-    value: Tournament['2009 HSAPQ 4Q2'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2009 HSAPQ NASAT Tryout Set',
+  [Tournament['2009 Gaddis II']]: {
+    name: '2009 Gaddis II',
     year: 2009,
-    value: Tournament['2009 HSAPQ NASAT Tryout Set'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2009 HSAPQ Tournament 10',
+  [Tournament['2009 Geography Monstrosity']]: {
+    name: '2009 Geography Monstrosity',
     year: 2009,
-    value: Tournament['2009 HSAPQ Tournament 10'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2009 HSAPQ Tournament 11',
+  [Tournament['2009 HFT']]: {
+    name: '2009 HFT',
     year: 2009,
-    value: Tournament['2009 HSAPQ Tournament 11'],
+    difficulty: Difficulty['Hard High School'],
   },
-  {
-    label: '2009 HSAPQ Tournament 8',
+  [Tournament['2009 HSAPQ 4Q1']]: {
+    name: '2009 HSAPQ 4Q1',
     year: 2009,
-    value: Tournament['2009 HSAPQ Tournament 8'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2009 HSAPQ Tournament 9',
+  [Tournament['2009 HSAPQ 4Q2']]: {
+    name: '2009 HSAPQ 4Q2',
     year: 2009,
-    value: Tournament['2009 HSAPQ Tournament 9'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2009 Mahfouz Memorial Lit',
+  [Tournament['2009 HSAPQ NASAT Tryout Set']]: {
+    name: '2009 HSAPQ NASAT Tryout Set',
     year: 2009,
-    value: Tournament['2009 Mahfouz Memorial Lit'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2009 Minnesota Open KLEE Fine Arts',
+  [Tournament['2009 HSAPQ Tournament 10']]: {
+    name: '2009 HSAPQ Tournament 10',
     year: 2009,
-    value: Tournament['2009 Minnesota Open KLEE Fine Arts'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2009 Minnesota Open Lit',
+  [Tournament['2009 HSAPQ Tournament 11']]: {
+    name: '2009 HSAPQ Tournament 11',
     year: 2009,
-    value: Tournament['2009 Minnesota Open Lit'],
+    difficulty: Difficulty['Regular High School'],
   },
-  { label: '2009 MUT', year: 2009, value: Tournament['2009 MUT'] },
-  {
-    label: '2009 MW GSAC XVII',
+  [Tournament['2009 HSAPQ Tournament 8']]: {
+    name: '2009 HSAPQ Tournament 8',
     year: 2009,
-    value: Tournament['2009 MW GSAC XVII'],
+    difficulty: Difficulty['Regular High School'],
   },
-  { label: '2009 NTV', year: 2009, value: Tournament['2009 NTV'] },
-  { label: '2009 PACE NSC', year: 2009, value: Tournament['2009 PACE NSC'] },
-  {
-    label: '2009 Prison Bowl',
+  [Tournament['2009 HSAPQ Tournament 9']]: {
+    name: '2009 HSAPQ Tournament 9',
     year: 2009,
-    value: Tournament['2009 Prison Bowl'],
+    difficulty: Difficulty['Regular High School'],
   },
-  { label: '2009 RMP Fest', year: 2009, value: Tournament['2009 RMP Fest'] },
-  {
-    label: '2009 The Experiment II',
+  [Tournament['2009 Mahfouz Memorial Lit']]: {
+    name: '2009 Mahfouz Memorial Lit',
     year: 2009,
-    value: Tournament['2009 The Experiment II'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2009 THUNDER', year: 2009, value: Tournament['2009 THUNDER'] },
-  {
-    label: '2009 Tyrone Slothrop Literature Singles',
+  [Tournament['2009 Minnesota Open KLEE Fine Arts']]: {
+    name: '2009 Minnesota Open KLEE Fine Arts',
     year: 2009,
-    value: Tournament['2009 Tyrone Slothrop Literature Singles'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2009 U. of Georgia CCC',
+  [Tournament['2009 Minnesota Open Lit']]: {
+    name: '2009 Minnesota Open Lit',
     year: 2009,
-    value: Tournament['2009 U. of Georgia CCC'],
+    difficulty: Difficulty.Open,
   },
-  { label: '2009 VCU Open', year: 2009, value: Tournament['2009 VCU Open'] },
-  { label: '2008 ACF Fall', year: 2008, value: Tournament['2008 ACF Fall'] },
-  {
-    label: '2008 ACF Fall ',
+  [Tournament['2009 MUT']]: {
+    name: '2009 MUT',
+    year: 2009,
+    difficulty: Difficulty['Easy College'],
+  },
+  [Tournament['2009 MW GSAC XVII']]: {
+    name: '2009 MW GSAC XVII',
+    year: 2009,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2009 NTV']]: {
+    name: '2009 NTV',
+    year: 2009,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2009 PACE NSC']]: {
+    name: '2009 PACE NSC',
+    year: 2009,
+    difficulty: Difficulty['National High School'],
+  },
+  [Tournament['2009 Prison Bowl']]: {
+    name: '2009 Prison Bowl',
+    year: 2009,
+    difficulty: Difficulty['Hard High School'],
+  },
+  [Tournament['2009 RMP Fest']]: {
+    name: '2009 RMP Fest',
+    year: 2009,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2009 The Experiment II']]: {
+    name: '2009 The Experiment II',
+    year: 2009,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2009 THUNDER']]: {
+    name: '2009 THUNDER',
+    year: 2009,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2009 Tyrone Slothrop Literature Singles']]: {
+    name: '2009 Tyrone Slothrop Literature Singles',
+    year: 2009,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2009 U. of Georgia CCC']]: {
+    name: '2009 U. of Georgia CCC',
+    year: 2009,
+    difficulty: Difficulty['Regular College'],
+  },
+  [Tournament['2009 VCU Open']]: {
+    name: '2009 VCU Open',
+    year: 2009,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2008 ACF Fall']]: {
+    name: '2008 ACF Fall',
     year: 2008,
-    value: Tournament['2008 ACF Fall '],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2008 ACF Nationals',
+  [Tournament['2008 ACF Fall ']]: {
+    name: '2008 ACF Fall ',
     year: 2008,
-    value: Tournament['2008 ACF Nationals'],
+    difficulty: Difficulty['Easy College'],
   },
-  {
-    label: '2008 ACF Regionals',
+  [Tournament['2008 ACF Nationals']]: {
+    name: '2008 ACF Nationals',
     year: 2008,
-    value: Tournament['2008 ACF Regionals'],
+    difficulty: Difficulty['Hard College'],
   },
-  {
-    label: '2008 Chicago Open Literature',
+  [Tournament['2008 ACF Regionals']]: {
+    name: '2008 ACF Regionals',
     year: 2008,
-    value: Tournament['2008 Chicago Open Literature'],
+    difficulty: Difficulty['Regular College'],
   },
-  { label: '2008 Chitin', year: 2008, value: Tournament['2008 Chitin'] },
-  { label: '2008 FICHTE', year: 2008, value: Tournament['2008 FICHTE'] },
-  { label: '2008 Gaddis I', year: 2008, value: Tournament['2008 Gaddis I'] },
-  { label: '2008 HFT', year: 2008, value: Tournament['2008 HFT'] },
-  {
-    label: '2008 HSAPQ 4Q 1',
+  [Tournament['2008 Chicago Open Literature']]: {
+    name: '2008 Chicago Open Literature',
     year: 2008,
-    value: Tournament['2008 HSAPQ 4Q 1'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2008 HSAPQ ACF 1',
+  [Tournament['2008 Chitin']]: {
+    name: '2008 Chitin',
     year: 2008,
-    value: Tournament['2008 HSAPQ ACF 1'],
+    difficulty: Difficulty['Regular High School'],
   },
-  {
-    label: '2008 HSAPQ ACF 2',
+  [Tournament['2008 FICHTE']]: {
+    name: '2008 FICHTE',
     year: 2008,
-    value: Tournament['2008 HSAPQ ACF 2'],
+    difficulty: Difficulty['Hard College'],
   },
-  {
-    label: '2008 HSAPQ ACF 3',
+  [Tournament['2008 Gaddis I']]: {
+    name: '2008 Gaddis I',
     year: 2008,
-    value: Tournament['2008 HSAPQ ACF 3'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2008 HSAPQ NSC 1',
+  [Tournament['2008 HFT']]: {
+    name: '2008 HFT',
     year: 2008,
-    value: Tournament['2008 HSAPQ NSC 1'],
+    difficulty: Difficulty['Hard High School'],
   },
-  {
-    label: '2008 HSAPQ NSC 2',
+  [Tournament['2008 HSAPQ 4Q 1']]: {
+    name: '2008 HSAPQ 4Q 1',
     year: 2008,
-    value: Tournament['2008 HSAPQ NSC 2'],
+    difficulty: Difficulty['Regular High School'],
   },
-  { label: '2008 MUT', year: 2008, value: Tournament['2008 MUT'] },
-  { label: '2008 NNT', year: 2008, value: Tournament['2008 NNT'] },
-  { label: '2008 NTV', year: 2008, value: Tournament['2008 NTV'] },
-  { label: '2008 PACE NSC', year: 2008, value: Tournament['2008 PACE NSC'] },
-  {
-    label: '2008 Prison Bowl',
+  [Tournament['2008 HSAPQ ACF 1']]: {
+    name: '2008 HSAPQ ACF 1',
     year: 2008,
-    value: Tournament['2008 Prison Bowl'],
+    difficulty: Difficulty['Regular High School'],
   },
-  { label: '2008 QuAC I', year: 2008, value: Tournament['2008 QuAC I'] },
-  { label: '2008 RMP Fest', year: 2008, value: Tournament['2008 RMP Fest'] },
-  {
-    label: '2007 ACF Regionals',
+  [Tournament['2008 HSAPQ ACF 2']]: {
+    name: '2008 HSAPQ ACF 2',
+    year: 2008,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2008 HSAPQ ACF 3']]: {
+    name: '2008 HSAPQ ACF 3',
+    year: 2008,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2008 HSAPQ NSC 1']]: {
+    name: '2008 HSAPQ NSC 1',
+    year: 2008,
+    difficulty: Difficulty['National High School'],
+  },
+  [Tournament['2008 HSAPQ NSC 2']]: {
+    name: '2008 HSAPQ NSC 2',
+    year: 2008,
+    difficulty: Difficulty['National High School'],
+  },
+  [Tournament['2008 MUT']]: {
+    name: '2008 MUT',
+    year: 2008,
+    difficulty: Difficulty['Easy College'],
+  },
+  [Tournament['2008 NNT']]: {
+    name: '2008 NNT',
+    year: 2008,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2008 NTV']]: {
+    name: '2008 NTV',
+    year: 2008,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2008 PACE NSC']]: {
+    name: '2008 PACE NSC',
+    year: 2008,
+    difficulty: Difficulty['National High School'],
+  },
+  [Tournament['2008 Prison Bowl']]: {
+    name: '2008 Prison Bowl',
+    year: 2008,
+    difficulty: Difficulty['Hard High School'],
+  },
+  [Tournament['2008 QuAC I']]: {
+    name: '2008 QuAC I',
+    year: 2008,
+    difficulty: Difficulty['Regular High School'],
+  },
+  [Tournament['2008 RMP Fest']]: {
+    name: '2008 RMP Fest',
+    year: 2008,
+    difficulty: Difficulty.Open,
+  },
+  [Tournament['2007 ACF Regionals']]: {
+    name: '2007 ACF Regionals',
     year: 2007,
-    value: Tournament['2007 ACF Regionals'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2007 The Experiment',
+  [Tournament['2007 The Experiment']]: {
+    name: '2007 The Experiment',
     year: 2007,
-    value: Tournament['2007 The Experiment'],
+    difficulty: Difficulty.Open,
   },
-  {
-    label: '2006 ACF Regionals',
+  [Tournament['2006 ACF Regionals']]: {
+    name: '2006 ACF Regionals',
     year: 2006,
-    value: Tournament['2006 ACF Regionals'],
+    difficulty: Difficulty['Regular College'],
   },
-  {
-    label: '2005 Teitler Myth Singles',
+  [Tournament['2005 Teitler Myth Singles']]: {
+    name: '2005 Teitler Myth Singles',
     year: 2005,
-    value: Tournament['2005 Teitler Myth Singles'],
+    difficulty: Difficulty.Open,
   },
-];
+};
 
-type TournamentInfo = { name: string; year: number };
-export const TOURNAMENTS_MAP = TOURNAMENTS.reduce<{
-  [key in Tournament]: TournamentInfo;
-}>(
-  (acc, { value, label, year }) => ({ ...acc, [value]: { name: label, year } }),
-  {} as { [key in Tournament]: TournamentInfo },
-);
+export const CATEGORIES = Object.keys(CATEGORY_MAP).map(
+  Number,
+) as unknown as Category[];
+export const SUBCATEGORIES = Object.keys(SUBCATEGORY_MAP).map(
+  Number,
+) as unknown as Subcategory[];
+export const DIFFICULTIES = Object.keys(DIFFICULTY_MAP).map(
+  Number,
+) as unknown as Difficulty[];
+export const TOURNAMENTS = Object.keys(TOURNAMENT_MAP).map(
+  Number,
+) as unknown as Tournament[];
 
 export const MIN_TOURNAMENT_YEAR = 2005;
 export const MAX_TOURNAMENT_YEAR = 2020;

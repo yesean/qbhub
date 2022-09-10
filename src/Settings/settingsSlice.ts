@@ -20,7 +20,7 @@ import {
   Subcategory,
   Tournament,
 } from '../types/questions';
-import { SUBCATEGORY_MAP, TOURNAMENTS_MAP } from '../utils/constants';
+import { SUBCATEGORY_MAP, TOURNAMENT_MAP } from '../utils/constants';
 import {
   restoreCategories,
   restoreDifficulties,
@@ -64,14 +64,16 @@ const settingsSlice = createSlice({
       // remove subcategories of a newly added category, e.g. adding Science would invalidate Biology since Biology is too strict and would block other Science subcategories
       state.subcategories = state.subcategories.filter(
         (subcategory) =>
-          !state.categories.includes(SUBCATEGORY_MAP[subcategory]),
+          !state.categories.includes(SUBCATEGORY_MAP[subcategory].category),
       );
     },
     updateSubcategories: (state, action) => {
       state.subcategories = action.payload;
       // remove categories of a newly added subcategory, e.g. adding Biology would invalidate Science since Biology is stricter than Science
       const invalidCategories = new Set(
-        state.subcategories.map((subcategory) => SUBCATEGORY_MAP[subcategory]),
+        state.subcategories.map(
+          (subcategory) => SUBCATEGORY_MAP[subcategory].category,
+        ),
       );
       state.categories = state.categories.filter(
         (category) => !invalidCategories.has(category),
@@ -79,6 +81,11 @@ const settingsSlice = createSlice({
     },
     updateDifficulties: (state, action) => {
       state.difficulties = action.payload;
+      state.tournaments = state.tournaments.filter(
+        (tournament) =>
+          state.difficulties.length === 0 ||
+          state.difficulties.includes(TOURNAMENT_MAP[tournament].difficulty),
+      );
     },
     updateTournaments: (state, action) => {
       state.tournaments = action.payload;
@@ -86,7 +93,7 @@ const settingsSlice = createSlice({
     updateFromYear: (state, action) => {
       state.fromYear = action.payload;
       state.tournaments = state.tournaments.filter(
-        (tournament) => TOURNAMENTS_MAP[tournament].year >= state.fromYear,
+        (tournament) => TOURNAMENT_MAP[tournament].year >= state.fromYear,
       );
     },
   },
