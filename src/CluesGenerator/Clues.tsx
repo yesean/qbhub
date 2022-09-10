@@ -1,3 +1,4 @@
+import { DownloadIcon } from '@chakra-ui/icons';
 import {
   Box,
   CircularProgress,
@@ -14,12 +15,16 @@ import { FileDownloadButton } from '../components/buttons';
 import { KeyValueTable } from '../components/tables';
 import { Clue } from '../types/tossups';
 import { toCSV, toJSON } from '../utils/array';
+import { ROUTES } from '../utils/routes';
+import BackButton from './BackButton';
 import {
   CluesGeneratorStatus,
   fetchClues,
   resetStatus,
+  selectAnswer,
   selectCluesGenerator,
 } from './cluesGeneratorSlice';
+import SearchButton from './SearchButton';
 
 const cluesFields = [
   { label: 'Clue', dataKey: 'clue' },
@@ -27,7 +32,7 @@ const cluesFields = [
 ] as const;
 
 const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const { status, clues } = useAppSelector(selectCluesGenerator);
+  const { status, clues, currentQuery } = useAppSelector(selectCluesGenerator);
   const dispatch = useAppDispatch();
   const { answer } = useParams<{ answer: string }>();
   const [CSVLink, setCSVLink] = useState('');
@@ -59,6 +64,7 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   useLayoutEffect(() => {
     dispatch(resetStatus());
+    dispatch(selectAnswer(answer));
     dispatch(fetchClues(answer));
   }, [dispatch, answer]);
 
@@ -120,6 +126,20 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
 
     return (
       <>
+        <Heading
+          as="h2"
+          size="md"
+          mb={4}
+          px={4}
+          textAlign="center"
+          lineHeight="1.5"
+          maxW="600px"
+        >
+          Showing clues for:{' '}
+          <Box as="span" bg="cyan.200" borderRadius="sm" p={1}>
+            {answer}
+          </Box>
+        </Heading>
         <Box w="min(600px, 100%)" h="min(700px, 100%)" mb={4} overflow="auto">
           <KeyValueTable
             data={clues.map((clue) => ({ ...clue, clue: renderClue(clue) }))}
@@ -128,13 +148,34 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
             height={700}
           />
         </Box>
-        <Flex justify="center">
-          <FileDownloadButton href={CSVLink} download={answer} mr={4}>
-            Export CSV
-          </FileDownloadButton>
-          <FileDownloadButton href={JSONLink} download={answer}>
-            Export JSON
-          </FileDownloadButton>
+        <Flex
+          justify="center"
+          overflowX="auto"
+          flexShrink={0}
+          maxW="100%"
+          justifyContent="flex-start"
+        >
+          {currentQuery.length > 0 && (
+            <BackButton
+              label="Results"
+              to={ROUTES.clues.searchResults(currentQuery)}
+              mr={4}
+            />
+          )}
+          <SearchButton label="Search" to={ROUTES.clues.search} mr={4} />
+          <FileDownloadButton
+            href={CSVLink}
+            download={answer}
+            mr={4}
+            label="CSV"
+            icon={<DownloadIcon w={6} h={6} />}
+          />
+          <FileDownloadButton
+            href={JSONLink}
+            download={answer}
+            label="JSON"
+            icon={<DownloadIcon w={6} h={6} />}
+          />
         </Flex>
       </>
     );
