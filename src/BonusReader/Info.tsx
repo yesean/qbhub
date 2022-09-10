@@ -1,6 +1,11 @@
 import { useSelector } from 'react-redux';
 import ReaderInfo from '../components/reader/Info';
-import { Category, Difficulty, Subcategory } from '../types/questions';
+import {
+  Category,
+  Difficulty,
+  Subcategory,
+  Tournament,
+} from '../types/questions';
 import { selectBonusReader } from './bonusReaderSlice';
 
 const Info: React.FC<React.PropsWithChildren<unknown>> = () => {
@@ -11,8 +16,8 @@ const Info: React.FC<React.PropsWithChildren<unknown>> = () => {
   } = useSelector(selectBonusReader);
 
   const text = subcategory
-    ? `${tournament} / ${Difficulty[difficulty]} / ${Category[category]} / ${Subcategory[subcategory]}`
-    : `${tournament} / ${Difficulty[difficulty]} / ${Category[category]}`;
+    ? `${Tournament[tournament]} / ${Difficulty[difficulty]} / ${Category[category]} / ${Subcategory[subcategory]}`
+    : `${Tournament[tournament]} / ${Difficulty[difficulty]} / ${Category[category]}`;
 
   return <ReaderInfo text={text} />;
 };

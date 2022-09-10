@@ -1,4 +1,4 @@
-import { Category, Difficulty, Subcategory } from './questions';
+import { Category, Difficulty, Subcategory, Tournament } from './questions';
 
 export type Bonus = {
   leadin: string;
@@ -6,7 +6,7 @@ export type Bonus = {
   category: Category;
   subcategory: Subcategory;
   difficulty: Difficulty;
-  tournament: string;
+  tournament: Tournament;
   year: number;
   parts: BonusPart[];
 };

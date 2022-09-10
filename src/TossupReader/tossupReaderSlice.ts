@@ -1,6 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../app/store';
-import { Category, Difficulty, Subcategory } from '../types/questions';
+import {
+  Category,
+  Difficulty,
+  Subcategory,
+  Tournament,
+} from '../types/questions';
 import { Tossup, TossupResult, TossupWord } from '../types/tossups';
 import * as fetchUtils from '../utils/fetch';
 import { getTossupWords, getTossupScore, getPowerIndex } from '../utils/reader';
@@ -151,6 +156,11 @@ const tossupReaderSlice = createSlice({
         action.payload.includes(tu.difficulty),
       );
     },
+    filterTossupsByTournament: (state, action: PayloadAction<Tournament[]>) => {
+      state.tossups = state.tossups.filter((tu) =>
+        action.payload.includes(tu.tournament),
+      );
+    },
     filterTossupsByFromYear: (state, action: PayloadAction<number>) => {
       state.tossups = state.tossups.filter((tu) => tu.year >= action.payload);
     },
@@ -187,6 +197,7 @@ export const {
   filterTossupsByCategory,
   filterTossupsBySubcategory,
   filterTossupsByDifficulties,
+  filterTossupsByTournament,
   filterTossupsByFromYear,
 } = tossupReaderSlice.actions;
 

@@ -5,25 +5,34 @@ import {
   filterBonusesByDifficulties,
   filterBonusesByFromYear,
   filterBonusesBySubcategory,
+  filterBonusesByTournament,
 } from '../BonusReader/bonusReaderSlice';
 import {
   filterTossupsByCategory,
   filterTossupsByDifficulties,
   filterTossupsByFromYear,
   filterTossupsBySubcategory,
+  filterTossupsByTournament,
 } from '../TossupReader/tossupReaderSlice';
-import { Category, Difficulty, Subcategory } from '../types/questions';
+import {
+  Category,
+  Difficulty,
+  Subcategory,
+  Tournament,
+} from '../types/questions';
 import {
   restoreCategories,
   restoreDifficulties,
   restoreFromYear,
   restoreReadingSpeed,
   restoreSubcategories,
+  restoreTournaments,
   saveCategories,
   saveDifficulties,
   saveFromYear,
   saveReadingSpeed,
   saveSubcategories,
+  saveTournaments,
 } from '../utils/settings';
 
 const initialState = {
@@ -32,6 +41,7 @@ const initialState = {
   categories: restoreCategories(),
   subcategories: restoreSubcategories(),
   difficulties: restoreDifficulties(),
+  tournaments: restoreTournaments(),
   fromYear: restoreFromYear(),
 };
 
@@ -57,6 +67,9 @@ const settingsSlice = createSlice({
     updateDifficulties: (state, action) => {
       state.difficulties = action.payload;
     },
+    updateTournaments: (state, action) => {
+      state.tournaments = action.payload;
+    },
     updateFromYear: (state, action) => {
       state.fromYear = action.payload;
     },
@@ -67,6 +80,7 @@ export const {
   updateCategories,
   updateSubcategories,
   updateDifficulties,
+  updateTournaments,
   updateFromYear,
   open,
   close,
@@ -77,13 +91,21 @@ const selectReadingSpeed = (state: RootState) => state.settings.readingSpeed;
 const selectCategories = (state: RootState) => state.settings.categories;
 const selectSubcategories = (state: RootState) => state.settings.subcategories;
 const selectDifficulties = (state: RootState) => state.settings.difficulties;
+const selectTournaments = (state: RootState) => state.settings.tournaments;
 const selectFromYear = (state: RootState) => state.settings.fromYear;
 export const selectQuestionSettings = createSelector(
-  [selectCategories, selectSubcategories, selectDifficulties, selectFromYear],
-  (categories, subcategories, difficulties, fromYear) => ({
+  [
+    selectCategories,
+    selectSubcategories,
+    selectDifficulties,
+    selectTournaments,
+    selectFromYear,
+  ],
+  (categories, subcategories, difficulties, tournaments, fromYear) => ({
     categories,
     subcategories,
     difficulties,
+    tournaments,
     fromYear,
   }),
 );
@@ -114,6 +136,14 @@ export const difficultiesSubscription: Subscription<Difficulty[]> = [
     saveDifficulties(difficulties);
     dispatch(filterTossupsByDifficulties(difficulties));
     dispatch(filterBonusesByDifficulties(difficulties));
+  },
+];
+export const tournamentsSubscription: Subscription<Tournament[]> = [
+  selectTournaments,
+  (tournaments: Tournament[], dispatch: AppDispatch) => {
+    saveTournaments(tournaments);
+    dispatch(filterTossupsByTournament(tournaments));
+    dispatch(filterBonusesByTournament(tournaments));
   },
 ];
 export const fromYearSubscription: Subscription<number> = [

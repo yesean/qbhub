@@ -22,7 +22,12 @@ import Select, { OptionsType } from 'react-select';
 import { useAppDispatch } from '../app/hooks';
 import { TealButton } from '../components/buttons';
 import { useKeyboardShortcut } from '../hooks/keyboard';
-import { Category, Difficulty, Subcategory } from '../types/questions';
+import {
+  Category,
+  Difficulty,
+  Subcategory,
+  Tournament,
+} from '../types/questions';
 import {
   CATEGORIES,
   DIFFICULTIES,
@@ -30,6 +35,7 @@ import {
   MIN_TOURNAMENT_YEAR,
   SUBCATEGORIES,
   SUBCATEGORY_MAP,
+  TOURNAMENTS,
 } from '../utils/constants';
 import {
   close,
@@ -39,6 +45,7 @@ import {
   updateFromYear,
   updateReadingSpeed,
   updateSubcategories,
+  updateTournaments,
 } from './settingsSlice';
 
 const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
@@ -47,6 +54,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
     categories,
     subcategories,
     difficulties,
+    tournaments,
     fromYear,
     isOpen,
   } = useSelector(selectSettings);
@@ -101,6 +109,17 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   ) => {
     const newDifficulties = options.map((o) => o.value);
     dispatch(updateDifficulties(newDifficulties));
+  };
+
+  const tournamentsInSelect = tournaments.map((t) => ({
+    value: t,
+    label: Tournament[t],
+  }));
+  const onTournamentsChange = (
+    options: OptionsType<{ label: string; value: Tournament }>,
+  ) => {
+    const newTournaments = options.map((o) => o.value);
+    dispatch(updateTournaments(newTournaments));
   };
 
   const onFromYearChange = (_: any, year: number) => {
@@ -166,6 +185,18 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
               options={DIFFICULTIES}
               value={difficultiesInSelect}
               onChange={onDifficultiesChange}
+            />
+          </Box>
+          <Box mb={4}>
+            <Heading size="sm" mb={2} color="gray.800">
+              Tournaments
+            </Heading>
+            <Select
+              isMulti
+              name="tournaments"
+              options={TOURNAMENTS}
+              value={tournamentsInSelect}
+              onChange={onTournamentsChange}
             />
           </Box>
           <Box>

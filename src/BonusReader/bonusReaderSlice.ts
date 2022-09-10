@@ -1,7 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../app/store';
 import { Bonus, BonusPart, BonusPartResult, BonusResult } from '../types/bonus';
-import { Category, Difficulty, Subcategory } from '../types/questions';
+import {
+  Category,
+  Difficulty,
+  Subcategory,
+  Tournament,
+} from '../types/questions';
 import * as fetchUtils from '../utils/fetch';
 import { getBonusScore } from '../utils/reader';
 
@@ -167,6 +172,11 @@ const bonusReaderSlice = createSlice({
         action.payload.includes(bn.difficulty),
       );
     },
+    filterBonusesByTournament: (state, action: PayloadAction<Tournament[]>) => {
+      state.bonuses = state.bonuses.filter((bn) =>
+        action.payload.includes(bn.tournament),
+      );
+    },
     filterBonusesByFromYear: (state, action: PayloadAction<number>) => {
       state.bonuses = state.bonuses.filter((bn) => bn.year >= action.payload);
     },
@@ -209,6 +219,7 @@ export const {
   filterBonusesByCategory,
   filterBonusesBySubcategory,
   filterBonusesByDifficulties,
+  filterBonusesByTournament,
   filterBonusesByFromYear,
 } = bonusReaderSlice.actions;
 

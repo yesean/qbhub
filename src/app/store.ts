@@ -11,7 +11,8 @@ import settingsReducer, {
   difficultiesSubscription,
   fromYearSubscription,
   readingSpeedSubscription,
-  subcategoriesSubscription
+  subcategoriesSubscription,
+  tournamentsSubscription
 } from '../Settings/settingsSlice';
 import tossupReaderReducer from '../TossupReader/tossupReaderSlice';
 
@@ -57,4 +58,5 @@ observeStore(...readingSpeedSubscription)
 observeStore(...categoriesSubscription)
 observeStore(...subcategoriesSubscription)
 observeStore(...difficultiesSubscription)
+observeStore(...tournamentsSubscription)
 observeStore(...fromYearSubscription)

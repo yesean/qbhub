@@ -1,4 +1,4 @@
-import { Category, Subcategory, Difficulty } from './questions';
+import { Category, Subcategory, Difficulty, Tournament } from './questions';
 
 export type Tossup = {
   text: string;
@@ -9,7 +9,7 @@ export type Tossup = {
   category: Category;
   subcategory: Subcategory;
   difficulty: Difficulty;
-  tournament: string;
+  tournament: Tournament;
   year: number;
 };
 

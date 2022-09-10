@@ -1,6 +1,11 @@
 import axios from 'axios';
 import { Bonus } from '../types/bonus';
-import { Category, Difficulty, Subcategory } from '../types/questions';
+import {
+  Category,
+  Difficulty,
+  Subcategory,
+  Tournament,
+} from '../types/questions';
 import { Tossup, Clue, Answer } from '../types/tossups';
 import { MIN_TOURNAMENT_YEAR } from './constants';
 import logger from './logger';
@@ -22,6 +27,7 @@ type FetchParams = {
   categories?: Category[];
   subcategories?: Subcategory[];
   difficulties?: Difficulty[];
+  tournaments?: Tournament[];
   fromYear?: number;
   text?: string;
   answer?: string;
@@ -33,6 +39,7 @@ const createParams = ({
   categories = [],
   subcategories = [],
   difficulties = [],
+  tournaments = [],
   fromYear = MIN_TOURNAMENT_YEAR,
   text = '',
   answer = '',
@@ -43,6 +50,7 @@ const createParams = ({
     createParamsFromArray('categories', categories),
     createParamsFromArray('subcategories', subcategories),
     createParamsFromArray('difficulties', difficulties),
+    createParamsFromArray('tournaments', tournaments),
     `from=${fromYear}`,
     text.length ? `text=${text}` : '',
     answer.length ? `answer=${answer}` : '',

@@ -7,8 +7,14 @@ import {
   MIN_TOURNAMENT_YEAR,
   READING_SPEED_LS_KEY,
   SUBCATEGORIES_LS_KEY,
+  TOURNAMENTS_LS_KEY,
 } from './constants';
-import { Category, Difficulty, Subcategory } from '../types/questions';
+import {
+  Category,
+  Difficulty,
+  Subcategory,
+  Tournament,
+} from '../types/questions';
 
 const save = (key: string, data: any) =>
   window.localStorage.setItem(key, JSON.stringify(data));
@@ -24,6 +30,9 @@ export const saveSubcategories = (subcategories: Subcategory[]) =>
 
 export const saveDifficulties = (difficulties: Difficulty[]) =>
   save(DIFFICULTIES_LS_KEY, difficulties);
+
+export const saveTournaments = (tournaments: Tournament[]) =>
+  save(TOURNAMENTS_LS_KEY, tournaments);
 
 export const saveFromYear = (from: number) => save(FROM_YEAR_LS_KEY, from);
 
@@ -76,6 +85,16 @@ export const restoreDifficulties = () => {
     return [];
   }
   return JSON.parse(difficulties) as Difficulty[];
+};
+
+export const restoreTournaments = () => {
+  const tournaments = restore(TOURNAMENTS_LS_KEY);
+
+  if (tournaments === null) {
+    saveTournaments([]);
+    return [];
+  }
+  return JSON.parse(tournaments) as Tournament[];
 };
 
 const validateFromYear = (year: number) =>
