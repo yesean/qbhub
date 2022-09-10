@@ -1,5 +1,6 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { Bonus, BonusPart, BonusPartResult } from '../../types/bonus';
+import { TOURNAMENT_MAP } from '../../utils/constants';
 import { getTossupWords, renderQuestion } from '../../utils/reader';
 import { parseHTMLString } from '../../utils/string';
 import { VirtualizedTable, VirtualizedTableColumn } from '../tables';
@@ -60,7 +61,9 @@ const BonusResults: React.FC<React.PropsWithChildren<BonusResultProps>> = ({
       proportion: 3,
       minWidth: 105,
       useForHeight: false,
-      cell: (result) => <Box>{result.bonus.tournament}</Box>,
+      cell: (result) => (
+        <Box>{TOURNAMENT_MAP[result.bonus.tournament].name}</Box>
+      ),
     },
   ];
 

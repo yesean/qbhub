@@ -1,5 +1,6 @@
 import { Box, Text } from '@chakra-ui/react';
 import { TossupResult } from '../../types/tossups';
+import { TOURNAMENT_MAP } from '../../utils/constants';
 import { renderQuestion } from '../../utils/reader';
 import { parseHTMLString } from '../../utils/string';
 import { VirtualizedTable, VirtualizedTableColumn } from '../tables';
@@ -15,7 +16,7 @@ const TossupResults: React.FC<React.PropsWithChildren<TossupResultProps>> = ({
     {
       label: 'Score',
       proportion: 1,
-      minWidth: 40,
+      minWidth: 50,
       useForHeight: false,
       cell: (result) => <Text align="center">{result.score}</Text>,
     },
@@ -59,7 +60,9 @@ const TossupResults: React.FC<React.PropsWithChildren<TossupResultProps>> = ({
       proportion: 3,
       minWidth: 105,
       useForHeight: false,
-      cell: (result) => <Box>{result.tossup.tournament}</Box>,
+      cell: (result) => (
+        <Box>{TOURNAMENT_MAP[result.tossup.tournament].name}</Box>
+      ),
     },
   ];
 

@@ -157,7 +157,7 @@ const VirtualizedTable = <T,>({
           });
         }}
       >
-        <Flex w={maxRowWidth} mb={2}>
+        <Flex w={`max(100%, ${maxRowWidth})`} mb={2}>
           {columns.map(({ label, proportion, minWidth }, i) => (
             <Heading
               size="sm"
