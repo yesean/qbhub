@@ -57,7 +57,7 @@ export const getInitialCategories = () => {
 };
 
 export const getInitialSubcategories = () => {
-  const defaultSubcategories = [Subcategory['Science Computer Science']];
+  const defaultSubcategories: Subcategory[] = [];
   const subcategories = window.localStorage.getItem(SUBCATEGORIES_LS_KEY);
   if (subcategories === null) {
     setInitialSubcategories(defaultSubcategories);
@@ -67,10 +67,7 @@ export const getInitialSubcategories = () => {
 };
 
 export const getInitialDifficulties = () => {
-  const defaultDifficulties = [
-    Difficulty['Easy College'],
-    Difficulty['Regular College'],
-  ];
+  const defaultDifficulties: Difficulty[] = [];
   const difficulties = window.localStorage.getItem(DIFFICULTIES_LS_KEY);
   if (difficulties === null) {
     setInitialDifficulties(defaultDifficulties);
