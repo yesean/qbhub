@@ -5,10 +5,11 @@ import { elementScrollIntoView } from 'seamless-scroll-polyfill';
 import Answer from '../components/reader/Answer';
 import ReaderQuestion from '../components/reader/Question';
 import UserAnswer from '../components/reader/UserAnswer';
+import { useAppDispatch } from '../redux/hooks';
 import { range } from '../utils/array';
 import { getTossupWords } from '../utils/reader';
 import ActiveQuestion from './ActiveQuestion';
-import { ReaderStatus, selectBonusReader } from './bonusReaderSlice';
+import { nextBonus, ReaderStatus, selectBonusReader } from './bonusReaderSlice';
 import Leadin from './Leadin';
 import PreviousQuestion from './PreviousQuestion';
 
@@ -18,11 +19,14 @@ const Container = () => {
     current: { number, bonus, result, part, partResult },
   } = useSelector(selectBonusReader);
   const userAnswerRef = useRef(null);
+  const dispatch = useAppDispatch();
 
   const showLoading = status === ReaderStatus.fetching;
   const showEmpty = status === ReaderStatus.empty;
   const emptyMessage =
-    'No tossups found. Try checking your network connection or tweaking the search parameters.';
+    'No bonuses found. Try checking your network connection or tweaking the search parameters.';
+  const onEmpty = () => dispatch(nextBonus());
+
   const leadinOffset = useMemo(
     () =>
       bonus.formattedLeadin != null
@@ -42,6 +46,7 @@ const Container = () => {
       showLoading={showLoading}
       showEmpty={showEmpty}
       emptyMessage={emptyMessage}
+      onEmpty={onEmpty}
     >
       {number > 1 && (
         <Box mb={1}>

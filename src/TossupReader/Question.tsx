@@ -7,6 +7,7 @@ import { useAppDispatch } from '../redux/hooks';
 import { getTossupWords, renderQuestion } from '../utils/reader';
 import {
   buzz,
+  nextTossup,
   ReaderStatus,
   selectTossupReader,
   setVisible,
@@ -77,17 +78,20 @@ const Question = () => {
 
 const Container = () => {
   const { status } = useSelector(selectTossupReader);
+  const dispatch = useAppDispatch();
 
   const showLoading = status === ReaderStatus.fetching;
   const showEmpty = status === ReaderStatus.empty;
   const emptyMessage =
     'No tossups found. Try checking your network connection or tweaking the search parameters.';
+  const onEmpty = () => dispatch(nextTossup());
 
   return (
     <ReaderQuestion
       showLoading={showLoading}
       showEmpty={showEmpty}
       emptyMessage={emptyMessage}
+      onEmpty={onEmpty}
     >
       <Question />
     </ReaderQuestion>

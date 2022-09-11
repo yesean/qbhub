@@ -86,9 +86,11 @@ export const nextBonus = createAsyncThunk<
   {
     condition: (_, { getState }) => {
       const { bonusReader } = getState();
-      return [ReaderStatus.idle, ReaderStatus.judged].includes(
-        bonusReader.status,
-      );
+      return [
+        ReaderStatus.idle,
+        ReaderStatus.judged,
+        ReaderStatus.empty,
+      ].includes(bonusReader.status);
     },
   },
 );

@@ -79,9 +79,11 @@ export const nextTossup = createAsyncThunk<
   {
     condition: (_, { getState }) => {
       const { tossupReader } = getState();
-      return [ReaderStatus.idle, ReaderStatus.judged].includes(
-        tossupReader.status,
-      );
+      return [
+        ReaderStatus.idle,
+        ReaderStatus.judged,
+        ReaderStatus.empty,
+      ].includes(tossupReader.status);
     },
   },
 );

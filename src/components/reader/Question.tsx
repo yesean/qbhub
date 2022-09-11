@@ -1,15 +1,24 @@
-import { Center, CircularProgress, Container } from '@chakra-ui/react';
+import { RepeatIcon } from '@chakra-ui/icons';
+import {
+  Center,
+  CircularProgress,
+  Container,
+  Flex,
+  IconButton,
+} from '@chakra-ui/react';
 
 type QuestionProps = {
   showLoading: boolean;
   showEmpty: boolean;
   emptyMessage: string;
+  onEmpty: () => void;
 };
 
 const Question: React.FC<React.PropsWithChildren<QuestionProps>> = ({
   showLoading,
   showEmpty,
   emptyMessage,
+  onEmpty,
   children,
 }) => {
   const render = () => {
@@ -23,9 +32,18 @@ const Question: React.FC<React.PropsWithChildren<QuestionProps>> = ({
 
     if (showEmpty) {
       return (
-        <Container bg="gray.100" p={4} borderRadius="md">
-          {emptyMessage}
-        </Container>
+        <>
+          <Container bg="gray.100" p={4} borderRadius="md" mb={4}>
+            {emptyMessage}
+          </Container>
+          <Flex justify="center">
+            <IconButton
+              aria-label="Try Again"
+              icon={<RepeatIcon />}
+              onClick={onEmpty}
+            />
+          </Flex>
+        </>
       );
     }
 
