@@ -28,29 +28,32 @@ const replaceKbd = (strings: TemplateStringsArray, ...keys: string[]) => {
 export const headers = [
   {
     label: 'What is QBHub?',
-    text: replaceLinks`QBHub is a ${{
+    text: replaceLinks`QBHub is a suite of digital tools that leverage the web and computing power for studying and playing ${{
       label: 'Quizbowl',
       href: 'https://www.naqt.com/about/quiz-bowl.html',
-    }} platform that provides a collection of useful tools for studying and playing quizbowl. It was built with a focus on rich functionality combined with a clean, beautiful design language.`,
+    }}. Each tool is built with a focus on rich functionality combined with a pleasant user interface.`,
   },
   {
     label: 'Tools 🛠',
     subheaders: [
       {
         label: 'Tossup Reader',
-        text: 'A fully featured tossup reader with powers and prompts. Keeps track of score and a detailed history of buzzes + stats. The tossups can be dynamically filtered by question settings (such as category or difficulty).',
+        text: 'A fully featured tossup reader with powers, prompts, configurable reading speed, and automated judging. Keeps track of score along with a detailed history of buzzes + stats. The tossup question filters can be precisely configured by Difficulty, Category, Tournament, etc. You can think of it as Protobowl + QuizDB questions and filters + looks and feels much nicer. Excellent on mobile too.',
       },
       {
         label: 'Bonus Reader',
-        text: 'A fully featured bonus reader that keeps track of score and a detailed history of questions + stats. Just like the Tossup Reader, but for bonuses.',
+        text: 'Like the Tossup Reader, but for bonuses.',
       },
       {
         label: 'Frequency List',
-        text: 'Retrieves commonly asked answerlines, sorted by frequency. Useful for scoping out "canon" or common topics for a particular subject or difficulty level. The answers can be dynamically filtered by question settings (such as category or difficulty).',
+        text: replaceLinks`Dynamically retrieves tossup answerlines, sorted by frequency. Like the Tossup Reader, the pool of answerlines can be precisely filtered. Useful for scoping out the ${{
+          label: 'canon',
+          href: 'https://www.qbwiki.com/wiki/Canon',
+        }} of a particular subject or difficulty level.`,
       },
       {
-        label: 'Clues Generator',
-        text: 'Retrieves commonly used clues for a given answerline, sorted by relevance. Useful for identifying important/need-to-know clues about a particular topic. The clues can be dynamically filtered by question settings (such as category or difficulty).',
+        label: 'Clue Generator',
+        text: 'Dynamically retrieves commonly used clues for a given answerline, sorted by relevance. Like the Tossup Reader, the pool of clues can be precisely filtered. Useful for identifying important/need-to-know clues about a particular topic.',
       },
     ],
   },
@@ -58,20 +61,24 @@ export const headers = [
     label: 'Features 🚀',
     subheaders: [
       {
-        label: 'Global Question Filtering',
-        text: replaceKbd`Each tool features the same extensive question filtering that allows you to read college difficulty Biology/History tossups, obtain the most common high school Fine Arts answerlines, get all high school/college clues for entropy, and so many more possibilities. This allows you to tailor the tools towards your subject specialty and difficulty level. The question settings are persisted across all the tools and can be changed at any time by clicking the Settings button in the top right or pressing the ${'s'} key.`,
+        label: 'Powerful Question Filtering',
+        text: replaceKbd`Questions can be filtered by Category, Subcategory, Difficulty, and Tournament. If you've used QuizDB, the options will feel very familiar and on top of that, QBHub also adds an additional From Year filter, which allows you to select questions only written after 2015, for example. This can be pretty handy as some of the older questions can be a bit outdated at this point. These filters are shared across all of the tools, including the Frequency List and Clue Generator. This means you can search for the top high school History answerlines or even discover the most relevant collegiate clues for Pablo Neruda (which might be different from the top high school clues). The fine granularity allows you to tailor the tools towards your subject specialty and difficulty level. The question settings are saved between sessions and can be changed at any time by clicking the Settings button or pressing the ${'s'} key.`,
       },
       {
-        label: 'Purposeful UI',
-        text: 'QBHub strives for simplicity and ease of use. We try to be purposeful in our design language, opting for practicality and common use cases.',
+        label: 'Intelligent Filters',
+        text: 'Besides customizability, the question filters work together to build your desired settings as quickly as possible. Selecting one option will automatically validate and restrict other options to avoid any contradictions. For instance, if you currently have the Science Category and you select the Biology Subcategory, QBHub will automatically remove the Science Category filter, as it understands you want to narrow your subject matter. Similarly, selecting a Category will automatically remove its corresponding Subcategories, as in this case, it knows you are trying to broaden your search. Other filters do similar things, for example, the Date and Difficulty filter will both automatically restrict the possible tournaments you can select. All of this together allows you to throw together a complex filter at any time with minimal effort.',
+      },
+      {
+        label: 'Clean, Simple Design Language',
+        text: 'QBHub focuses on simplicity and ease of use. Rather than providing a million configuration options and overloading the user with information, we try to be purposeful in our design language, opting for practicality and common use cases.',
       },
       {
         label: 'Mobile Friendly',
-        text: 'Usability on phones and smaller screen sizes was a top priority, so tools should look and work great on phones!',
+        text: 'Mobile devices and smaller screen sizes are a top priority, so every tool should look just as stunning and functional on phones!',
       },
       {
         label: 'Keyboard Navigation',
-        text: replaceKbd`Each tool provides keyboard shortcuts for convenience and power users. For example, the reader shamelessly follows Protobowl's shortcuts, using ${'space'} to buzz and ${'n'} to continue. Global keyboard shortcuts are provided for navigating through the entire site and between tools. Shortcuts for each tool can be found by pressing the Info button in the bottom right or pressing the ${'?'} key. We value web accessibility and following WCAG guidelines.`,
+        text: replaceKbd`Some tasks are just more convenient with a few keypresses and we agree! Each tool provides keyboard shortcuts for better ergonomics and increased usability. The Question Reader has shortcuts for buzzing and advancing question, the Frequency List pages can be pressed through, the Settings modal can be toggled and edited without ever having to touch the mouse, and you can even toggle between the Tools themselves. All active keyboard shortcuts are always available by either pressing the ${'?'} key or clicking Info button in the bottom right.`,
       },
       {
         label: 'Dark Mode',
@@ -81,34 +88,40 @@ export const headers = [
   },
   {
     label: 'Motivation ⚛',
-    text: replaceLinks`With the compilation of the QuizDB database, there was potential for useful features but the existing Quizbowl resources lacked what I envisioned. QuizDB is an excellent question browser but lacks interactivity, Protobowl has a great question reader but lacks packet selection and has a clunky interface, and other sites seemed similarly lacking in various regards. The amount of technology-driven QB tooling felt lacking, especially when you consider the huge amount of data and computional power that exists today. Prior to QBHub, I developed a few text processing utilities that I wanted to port to a more accessible interface like the web. More importantly, QBHub seemed like a fun project to try out some new technologies (Redux, ChakraUI) and polish my web dev skills. Originally, QBHub was planned to be a simple tossup reader with a ${{
-      label: 'typings.gg-like',
+    text: replaceLinks`When ${{
+      label: 'QuizDB',
+      href: 'https://www.quizdb.org/',
+    }} was first released, I knew there was potential for many useful features but the existing Quizbowl resources were all lacking in some way. There were: no bonus readers, a few random hand-compiled frequency lists, and not much data-backed tooling. QuizDB is an excellent question viewer but lacks interactivity. Protobowl is a fun question reader but lacks packet selection, has a clunky interface, and can be quite buggy at times. Other sites were similarly lackluster due to bugginess, limited features, or a less attractive interface. As a result, I decided to try and satisfy these demands myself, with a goal of building a feature-rich question reader that was still clean and visually appealing. Another goal I had was to leverage the web and modern computing to generate valuable information from large datasets, that if done manually, would be much more difficult. And at the very least, QBHub seemed like a fun way of trying out some new technologies (Redux, ChakraUI) and polishing my web dev skills. QBHub was originally planned to be a tossup reader with a ${{
+      label: 'typings.gg',
       href: 'https://typings.gg/',
-    }} interface, but the more I worked on it, the more I enjoyed it. As a result, I began adding more features, eventually morphing QBHub into what it is now.`,
+    }}-like interface, but the more I worked on it, the more I enjoyed and believed in it. As time went on, I added more features, eventually morphing QBHub into what it is now.`,
   },
   {
     label: 'FAQ 💭',
     subheaders: [
       {
         label: 'What are the generated clues?',
-        text: replaceLinks`Using some statistical NLP techniques and lots of data, we parse tossups into clues and score the clues amongst themselves by relevancy. While these generated clues aren't perfect and won't fully replace traditional studying methods, the clues are a very good heuristic for identifying important/popular concepts and more importantly, pointing someone in the right direction, especially if they are totally new to a topic. More details can be found ${{
+        text: replaceLinks`Using statistical NLP and lots of data, we parse tossups into clues and score the clues amongst themselves by relevancy. While these generated clues aren't perfect and won't fully replace traditional studying methods, they are a really good heuristic for identifying important/popular concepts and more importantly, pointing someone in the right direction, especially if they are totally new to a topic. More details can be found ${{
           label: 'here',
           href: 'https://github.com/yesean/qbhub-server#generating-clues-experimental',
         }}.`,
       },
       {
         label: 'Why was my answer marked incorrect?',
-        text: replaceLinks`We try our best to parse all of the acceptable answers from an answerline, but it isn’t perfect. We mainly follow the ${{
+        text: replaceLinks`We try our best to figure out all of the acceptable answers from an answerline, but parsing answerlines is hard. We mainly follow the ${{
           label: 'ACF guidelines',
           href: 'https://acf-quizbowl.com/packet-submission-checklist.pdf',
-        }}, but many answerlines (especially from older packets) use different formats and in general, answerlines can be tricky to parse and occasionally answers may be missed.`,
+        }}, but many answerlines, especially from older packets, use different formats and have confusing wordings that trip up the parser. Determining all acceptable and promptable answers can be tricky (even for a human moderator sometimes!), so we simply accept the occasional miss and try to be right for the most part. Also, accounting for typos in user inputs is another challenging task, but luckily there are already some ${{
+          label: 'robust methods',
+          href: 'https://www.wikiwand.com/en/String_metric',
+        }} of dealing with this (QBHub uses the Dice coefficient for string comparison).`,
       },
       {
         label: 'Why wasn’t my answer prompted?',
         text: 'Same as above.',
       },
       {
-        label: 'Will there be a multiplayer version of the Tossup reader?',
+        label: 'Will there be a multiplayer version of the Question Readers?',
         text: replaceLinks`Probably not, QBHub is intended to be a personal studying tool. A multiplayer reader isn't really in line with the goals of this site and would be better suited for in-person packet reading. Plus, there are already some pretty good options out there: ${{
           label: 'Protobowl',
           href: 'https://protobowl.com/',
@@ -118,11 +131,11 @@ export const headers = [
         }}.`,
       },
       {
-        label: 'What is QBHub built with?',
-        text: replaceLinks`We use ${{
+        label: 'What is the QBHub tech stack?',
+        text: replaceLinks`The UI is built with ${{
           label: 'React',
           href: 'https://reactjs.org/',
-        }} to build the UI, with components provided by ${{
+        }} + ${{
           label: 'Chakra UI',
           href: 'https://chakra-ui.com/',
         }}. The backend is powered by ${{
@@ -136,20 +149,20 @@ export const headers = [
       {
         label: 'Where are the questions from?',
         text: replaceLinks`Thanks to the amazing work from QuizDB and Quinterest, ${{
-          label: 'their database table',
+          label: 'their public database',
           href: 'https://s3.console.aws.amazon.com/s3/buckets/quizdb-public/?region=us-east-1&tab=objects',
-        }} provides an enormous collection of questions, correctly tagged and labeled. We utilize the QuizDB question bank and add some extra metadata, to help power tools like the Clue Generator.`,
+        }} provides an enormous collection of questions, correctly tagged and labeled. We self-host the latest QuizDB archive with some additional self-added metadata, to help power some of the more advanced tools like the Frequency List and Clue Generator.`,
       },
       {
         label: 'Can I get a copy of the database?',
-        text: replaceLinks`Sure! A copy of the modified QuizDB PostgreSQL dump can be found ${{
-          label: 'here',
+        text: replaceLinks`Sure! ${{
+          label: 'Here',
           href: 'https://www.dropbox.com/sh/5jiw5isl5bbk1b5/AAAnsj4Pl9ZYhgY9NYtccT3Ta?dl=0',
-        }}.`,
+        }} is a copy of the latest modified QuizDB PostgreSQL dump.`,
       },
       {
         label: "What's next for QBHub?",
-        text: replaceLinks`The biggest things that come to mind are adding dark mode support and adding more analytics to the question readers. I think having advanced stats and data visualizations for tossups and bonuses would be pretty cool. There's also some boring dev stuff too like cleaning up code, polishing up documentation, improving the build system, etc. And if you have any suggestions, please open a ${{
+        text: replaceLinks`The biggest things that come to mind are adding dark mode support and adding more analytics to the question readers. I think having more advanced stats and data visualizations for tossups and bonuses would be pretty cool. There's also some boring dev stuff too like cleaning up code, polishing up documentation, improving the build system, etc. And if you have any suggestions, please open a ${{
           label: 'GitHub issue',
           href: 'https://github.com/yesean/qbhub-client/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=',
         }} or fill out the ${{
@@ -161,15 +174,15 @@ export const headers = [
   },
   {
     label: 'Contributing 🤝',
-    text: replaceLinks`Contributions are welcome! If you want to file an issue, open a PR, or just browse the source code, here is the ${{
+    text: replaceLinks`Contributions are welcome! If you want to file an issue, open a PR, or browse the source code, the ${{
       label: 'UI',
       href: 'https:github.com/yesean/qbhub-client',
     }} and ${{
       label: 'backend',
       href: 'https://github.com/yesean/qbhub-server',
-    }}. The documentation isn't the best, but feel free to reach out on the form and I'll be happy to go over it. Lastly, if you enjoyed using QBHub, you can show your support by ${{
+    }} are all open sourced on GitHub. The documentation is always improving, but feel free to reach out on the form and I'll be happy to discuss anything QBHub related, like app architecture or how a feature was implemented. If coding isn't your thing, but you still enjoyed using QBHub, you can show your support by ${{
       label: 'buying me a coffee',
       href: 'https://www.buymeacoffee.com/qbhub',
-    }}! As much I love doing it, maintaining and developing this site requires a lot of time and effort, and on top of that, renting a server costs money. Your contributions mean a lot and go towards making this site even more amazing!`,
+    }}! As much I love doing it, maintaining and developing this site as a college student requires a lot of time and effort, and on top of that, renting a server costs money. Any contribution would mean a lot and go a long way towards making QBHub even more amazing!`,
   },
 ];
