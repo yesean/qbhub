@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import {
   Box,
   Button,
@@ -9,16 +10,12 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Slider,
   SliderFilledTrack,
   SliderThumb,
   SliderTrack,
 } from '@chakra-ui/react';
+import { CSSObject } from '@emotion/react';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import Select, { OptionsType } from 'react-select';
@@ -37,7 +34,6 @@ import {
   CATEGORY_MAP,
   DIFFICULTIES,
   DIFFICULTY_MAP,
-  MAX_TOURNAMENT_YEAR,
   MIN_TOURNAMENT_YEAR,
   SUBCATEGORIES,
   SUBCATEGORY_MAP,
@@ -54,6 +50,7 @@ import {
   updateSubcategories,
   updateTournaments,
 } from './settingsSlice';
+import YearInput from './YearInput';
 
 const toSelect =
   <T extends QuestionParameter, U extends { name: string }>(
@@ -132,13 +129,19 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
     dispatch(updateFromYear(year));
   };
 
+  // prevent select dropdown from getting overlapped, especially on mobile
+  const selectMenuProps = {
+    menuPortalTarget: document.body,
+    styles: { menuPortal: (base: CSSObject) => ({ ...base, zIndex: 9999 }) },
+  };
+
   const resetFromYear = () => dispatch(updateFromYear(MIN_TOURNAMENT_YEAR));
   return (
     <Modal isOpen={isOpen} onClose={closeModal} size="6xl" isCentered>
       <ModalOverlay />
       <ModalContent m={4} maxW="600px" maxH="max(75vh, 600px)">
         <ModalHeader>Settings</ModalHeader>
-        <ModalBody>
+        <ModalBody overflow="auto">
           <Box mb={4}>
             <Heading size="sm" mb={2} color="gray.800">
               Reading Speed
@@ -168,6 +171,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
               options={categoriesForSelect}
               value={categoriesInSelect}
               onChange={onCategoriesChange}
+              {...selectMenuProps}
             />
           </Box>
           <Box mb={4}>
@@ -180,6 +184,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
               options={subcategoriesForSelect}
               value={subcategoriesInSelect}
               onChange={onSubcategoriesChange}
+              {...selectMenuProps}
             />
           </Box>
           <Box mb={4}>
@@ -192,6 +197,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
               options={difficultiesForSelect}
               value={difficultiesInSelect}
               onChange={onDifficultiesChange}
+              {...selectMenuProps}
             />
           </Box>
           <Box mb={4}>
@@ -204,6 +210,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
               options={filteredTournamentsForSelect}
               value={tournamentsInSelect}
               onChange={onTournamentsChange}
+              {...selectMenuProps}
             />
           </Box>
           <Box>
@@ -211,21 +218,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
               From Year
             </Heading>
             <Flex gap={4}>
-              <NumberInput
-                value={fromYear}
-                onChange={onFromYearChange}
-                step={1}
-                min={MIN_TOURNAMENT_YEAR}
-                max={MAX_TOURNAMENT_YEAR}
-                w="20%"
-                allowMouseWheel
-              >
-                <NumberInputField textAlign="center" />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
+              <YearInput value={fromYear} onChange={onFromYearChange} />
               <Button onClick={resetFromYear}>All Years</Button>
             </Flex>
           </Box>
