@@ -80,6 +80,9 @@ export const getBonuses = async (questionFilters: QuestionFilters) => {
   );
   const bonusIds = bonuses.map(({ id }) => id);
 
+  // if no bonuses are found, stop
+  if (bonusIds.length === 0) return [];
+
   // query bonus_parts
   const [bonusPartsQuery, bonusPartsValues] = new QueryBuilder()
     .select(bonusPartsColumns)
