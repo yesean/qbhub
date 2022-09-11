@@ -15,7 +15,7 @@ const Question: React.FC<React.PropsWithChildren<QuestionProps>> = ({
   const render = () => {
     if (showLoading) {
       return (
-        <Center>
+        <Center mb={8}>
           <CircularProgress isIndeterminate color="cyan.100" />
         </Center>
       );
