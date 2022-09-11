@@ -57,11 +57,15 @@ export const getPowerIndex = (tossupWords: TossupWord[]) => {
 /**
  * Calculate tossup score based on buzz.
  */
-export const getTossupScore = (isCorrect: boolean, isInPower: boolean) => {
+export const getTossupScore = (
+  isCorrect: boolean,
+  isInPower: boolean,
+  didBuzzAtEnd: boolean,
+) => {
   if (isCorrect) {
     return isInPower ? TossupScore.power : TossupScore.ten;
   }
-  return TossupScore.neg;
+  return didBuzzAtEnd ? TossupScore.incorrect : TossupScore.neg;
 };
 
 export const getBonusScore = (results: BonusPartResult[]) => {

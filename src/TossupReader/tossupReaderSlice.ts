@@ -124,6 +124,7 @@ const tossupReaderSlice = createSlice({
         const score = getTossupScore(
           action.payload.isCorrect,
           state.current.buzzIndex <= state.current.powerIndex,
+          state.current.buzzIndex === state.current.tossupWords.length - 1,
         );
         state.current.result = {
           ...action.payload,
