@@ -1,7 +1,7 @@
 import { Flex, Input } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useAppDispatch } from '../app/hooks';
+import { useAppDispatch } from '../redux/hooks';
 import { RouterLinkButton } from '../components/buttons';
 import { ROUTES } from '../utils/routes';
 import { setQuery } from './cluesGeneratorSlice';

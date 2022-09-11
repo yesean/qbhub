@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { useAppDispatch } from '../../app/hooks';
+import { useAppDispatch } from '../../redux/hooks';
 import { ROUTES } from '../../utils/routes';
 import { TealButton } from '../buttons';
 import { close, selectInfoModal } from './infoModalSlice';

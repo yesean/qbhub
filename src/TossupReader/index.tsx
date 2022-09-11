@@ -1,7 +1,7 @@
 import { Flex } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useAppDispatch } from '../app/hooks';
+import { useAppDispatch } from '../redux/hooks';
 import Progress from '../components/reader/Progress';
 import { JudgeResult } from '../types/tossups';
 import logger from '../utils/logger';
@@ -58,7 +58,7 @@ const TossupReader = () => {
         const isCorrect = judgeResult === JudgeResult.correct;
         logger.info(
           `User answer "${userAnswer}" is ${
-            isCorrect ? `correct` : 'incorrect'
+            isCorrect ? 'correct' : 'incorrect'
           }.`,
         );
         dispatch(

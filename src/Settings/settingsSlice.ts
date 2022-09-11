@@ -1,5 +1,5 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
-import type { AppDispatch, RootState, Subscription } from '../app/store';
+import type { AppDispatch, RootState, Subscription } from '../redux/store';
 import {
   filterBonusesByCategory,
   filterBonusesByDifficulties,

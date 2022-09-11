@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { RootState } from '../app/store';
+import type { RootState } from '../redux/store';
 import { Bonus, BonusPart, BonusPartResult, BonusResult } from '../types/bonus';
 import {
   Category,

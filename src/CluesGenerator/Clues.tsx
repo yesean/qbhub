@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { FileDownloadButton } from '../components/buttons';
 import { KeyValueTable } from '../components/tables';
 import { Clue } from '../types/tossups';

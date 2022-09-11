@@ -9,7 +9,7 @@ import {
 import { useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink, useParams } from 'react-router-dom';
-import { useAppDispatch } from '../app/hooks';
+import { useAppDispatch } from '../redux/hooks';
 import { KeyValueTable } from '../components/tables';
 import { ROUTES } from '../utils/routes';
 import {

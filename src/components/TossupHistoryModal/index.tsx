@@ -14,7 +14,7 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
-import { useAppDispatch } from '../../app/hooks';
+import { useAppDispatch } from '../../redux/hooks';
 import { selectTossupReader } from '../../TossupReader/tossupReaderSlice';
 import { TossupScore } from '../../types/tossups';
 import { TealButton } from '../buttons';

@@ -1,7 +1,7 @@
 import { HamburgerIcon, SettingsIcon, TimeIcon } from '@chakra-ui/icons';
 import { Box, Flex, Heading, IconButton } from '@chakra-ui/react';
 import { useLocation } from 'react-router-dom';
-import { useAppDispatch } from '../../app/hooks';
+import { useAppDispatch } from '../../redux/hooks';
 import { open as openSettings } from '../../Settings/settingsSlice';
 import { ROUTES } from '../../utils/routes';
 import { open as openHamburgerMenu } from '../HamburgerMenu/hamburgerMenuSlice';

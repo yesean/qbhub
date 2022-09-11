@@ -2,7 +2,7 @@ import { Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
-import { useAppDispatch } from './app/hooks';
+import { useAppDispatch } from './redux/hooks';
 import Body from './components/Body';
 import BonusHistoryModal from './components/BonusHistoryModal';
 import Footer from './components/Footer';

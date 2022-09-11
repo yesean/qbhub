@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';
 import ReaderQuestion from '../components/reader/Question';
 import { useReader } from '../hooks/reader';
+import { useAppDispatch } from '../redux/hooks';
 import { getTossupWords, renderQuestion } from '../utils/reader';
 import {
   buzz,
@@ -21,7 +22,7 @@ const Question = () => {
       tossupWords,
     },
   } = useSelector(selectTossupReader);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const words = useMemo(
     () => getTossupWords(formattedText).map(({ word }) => word),

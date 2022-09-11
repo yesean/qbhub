@@ -1,7 +1,7 @@
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 import { Flex, Heading, Icon, IconButton, Link } from '@chakra-ui/react';
 import { AiFillGithub } from 'react-icons/ai';
-import { useAppDispatch } from '../../app/hooks';
+import { useAppDispatch } from '../../redux/hooks';
 import { open } from '../InfoModal/infoModalSlice';
 import { ReactComponent as Donate } from '../../static/donate.svg';
 
