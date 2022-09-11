@@ -40,6 +40,7 @@ import {
   TOURNAMENTS,
   TOURNAMENT_MAP,
 } from '../utils/constants';
+import { validateFromYear } from '../utils/settings';
 import {
   close,
   selectSettings,
@@ -126,6 +127,8 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   };
 
   const onFromYearChange = (_: any, year: number) => {
+    if (!validateFromYear(year)) return;
+
     dispatch(updateFromYear(year));
   };
 

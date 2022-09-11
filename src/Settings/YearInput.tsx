@@ -14,6 +14,7 @@ const YearInput = ({ value, onChange }: YearInputProps) => {
       max: MAX_TOURNAMENT_YEAR,
       value,
       onChange,
+      allowMouseWheel: true,
     });
 
   const inc = getIncrementButtonProps();
@@ -23,7 +24,7 @@ const YearInput = ({ value, onChange }: YearInputProps) => {
   return (
     <HStack w={44}>
       <Button {...dec}>-</Button>
-      <Input textAlign="center" {...input} />
+      <Input {...input} textAlign="center" />
       <Button {...inc}>+</Button>
     </HStack>
   );

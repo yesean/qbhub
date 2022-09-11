@@ -97,7 +97,7 @@ export const restoreTournaments = () => {
   return JSON.parse(tournaments) as Tournament[];
 };
 
-const validateFromYear = (year: number) =>
+export const validateFromYear = (year: number) =>
   year >= MIN_TOURNAMENT_YEAR && year <= MAX_TOURNAMENT_YEAR;
 
 export const restoreFromYear = () => {
