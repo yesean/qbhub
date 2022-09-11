@@ -1,3 +1,5 @@
+import { getRand } from './number';
+
 /**
  * checks if arrays have the same elements
  * assumes the two arrays only have unique elements
@@ -22,6 +24,11 @@ export const getUnique = <T>(arr: T[]) => [...new Set(arr)];
  * Concatenate arrays.
  */
 export const combine = <T>(...arrs: T[][]) => arrs.flat();
+
+/**
+ * Get a random array element.
+ */
+export const random = <T>(arr: T[]) => arr[getRand(arr.length)];
 
 /**
  * Create ranged sequences, similar to Python's `range`.

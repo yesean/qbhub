@@ -1,7 +1,16 @@
 import { useSelector } from 'react-redux';
 import ReaderResult from '../components/reader/Result';
 import { TossupScore } from '../types/tossups';
+import { random } from '../utils/array';
 import { ReaderStatus, selectTossupReader } from './tossupReaderSlice';
+
+const messages = {
+  prompt: ['Prompt!'],
+  power: ['🎉  Power!  🥳', '🎉  Fifteen!  🥳'],
+  ten: ['Ten!', 'Correct!'],
+  neg: ['Neg.', 'Incorrect.', 'Minus Five.'],
+  other: ['Incorrect.'],
+};
 
 const Result: React.FC<React.PropsWithChildren<unknown>> = () => {
   const {
@@ -12,11 +21,11 @@ const Result: React.FC<React.PropsWithChildren<unknown>> = () => {
   } = useSelector(selectTossupReader);
 
   let text;
-  if (status === ReaderStatus.prompting) text = 'Prompt!';
-  else if (score === TossupScore.power) text = '🎉  Power!  🥳';
-  else if (score === TossupScore.ten) text = 'Ten!';
-  else if (score === TossupScore.neg) text = 'Neg!';
-  else text = 'Incorrect.';
+  if (status === ReaderStatus.prompting) text = random(messages.prompt);
+  else if (score === TossupScore.power) text = random(messages.power);
+  else if (score === TossupScore.ten) text = random(messages.ten);
+  else if (score === TossupScore.neg) text = random(messages.neg);
+  else text = random(messages.other);
 
   return <ReaderResult text={text} />;
 };
