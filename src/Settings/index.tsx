@@ -1,5 +1,7 @@
 import {
   Box,
+  Button,
+  Flex,
   Heading,
   Modal,
   ModalBody,
@@ -130,6 +132,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
     dispatch(updateFromYear(year));
   };
 
+  const resetFromYear = () => dispatch(updateFromYear(MIN_TOURNAMENT_YEAR));
   return (
     <Modal isOpen={isOpen} onClose={closeModal} size="6xl" isCentered>
       <ModalOverlay />
@@ -207,19 +210,24 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
             <Heading size="sm" mb={2} color="gray.800">
               From Year
             </Heading>
-            <NumberInput
-              value={fromYear}
-              onChange={onFromYearChange}
-              step={1}
-              min={MIN_TOURNAMENT_YEAR}
-              max={MAX_TOURNAMENT_YEAR}
-            >
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
+            <Flex gap={4}>
+              <NumberInput
+                value={fromYear}
+                onChange={onFromYearChange}
+                step={1}
+                min={MIN_TOURNAMENT_YEAR}
+                max={MAX_TOURNAMENT_YEAR}
+                w="20%"
+                allowMouseWheel
+              >
+                <NumberInputField textAlign="center" />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+              <Button onClick={resetFromYear}>All Years</Button>
+            </Flex>
           </Box>
         </ModalBody>
         <ModalFooter>
