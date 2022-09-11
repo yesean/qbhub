@@ -8,8 +8,8 @@ const messages = {
   prompt: ['Prompt!'],
   power: ['🎉  Power!  🥳', '🎉  Fifteen!  🥳'],
   ten: ['Ten!', 'Correct!'],
-  neg: ['Neg.', 'Incorrect.', 'Minus Five.'],
-  other: ['Incorrect.'],
+  neg: ['Neg.', 'Minus Five.'],
+  other: ['Incorrect.', 'No Penalty.'],
 };
 
 const Result: React.FC<React.PropsWithChildren<unknown>> = () => {
