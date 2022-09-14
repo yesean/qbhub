@@ -23,6 +23,7 @@ import {
   getWordsBetweenTags,
   multipleLastIndexOf,
   normalizeSpacing,
+  parseHTMLString,
   removeFirstNames,
 } from './string';
 
@@ -127,7 +128,7 @@ export const renderQuestion = (
         visibility={i <= visible ? 'visible' : 'hidden'}
         fontWeight={w.bold ? 'bold' : 'normal'}
       >
-        {`${w.word} `}
+        {parseHTMLString(w.word)}{' '}
       </Text>
       {renderBell(i === buzz)}
     </Fragment>
