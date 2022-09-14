@@ -66,15 +66,23 @@ export const useReader = (words: string[], startImmediately = true) => {
     setVisibleIndex(words.length);
   }, [pause, words.length]);
 
-  const visible = shuffledWords
-    .slice(0, visibleIndex + 1)
-    .map(({ original }) => original);
-  const hidden = shuffledWords
-    .slice(visibleIndex + 1)
-    .map(({ shuffled }) => shuffled);
+  const visible = useMemo(
+    () =>
+      shuffledWords.slice(0, visibleIndex + 1).map(({ original }) => original),
+    [shuffledWords, visibleIndex],
+  );
+  const hidden = useMemo(
+    () => shuffledWords.slice(visibleIndex + 1).map(({ shuffled }) => shuffled),
+    [shuffledWords, visibleIndex],
+  );
+
+  const displayWords = useMemo(
+    () => [...visible, ...hidden],
+    [hidden, visible],
+  );
 
   return {
-    displayWords: [...visible, ...hidden],
+    displayWords,
     visibleIndex,
     pause,
     resume,

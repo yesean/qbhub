@@ -60,22 +60,31 @@ const Leadin = ({ setIsLeadinFinished }: LeadinProps) => {
     elementScrollIntoView(visibleRef.current, { block: 'center' });
   }, [visibleIndex, buzzIndex, status]);
 
-  const shuffledQuestionWords = displayWords.map((word) => ({
-    word,
-    bold: false,
-  }));
+  const shuffledQuestionWords = useMemo(
+    () =>
+      displayWords.map((word) => ({
+        word,
+        bold: false,
+      })),
+    [displayWords],
+  );
 
-  return (
-    <Box>
-      <b>BONUS:</b>{' '}
-      {renderQuestion(
+  const renderedQuestion = useMemo(
+    () =>
+      renderQuestion(
         shuffledQuestionWords,
         {
           visible: visibleIndex,
           buzz: buzzIndex,
         },
         visibleRef,
-      )}
+      ),
+    [buzzIndex, shuffledQuestionWords, visibleIndex],
+  );
+
+  return (
+    <Box>
+      <b>BONUS:</b> {renderedQuestion}
     </Box>
   );
 };
@@ -143,12 +152,26 @@ const ActiveQuestion = () => {
     elementScrollIntoView(visibleRef.current, { block: 'center' });
   }, [visibleIndex, buzzIndex, status]);
 
-  const shuffledQuestionWords = displayWords.map((word) => ({
-    word,
-    bold: false,
-  }));
+  const shuffledQuestionWords = useMemo(
+    () =>
+      displayWords.map((word) => ({
+        word,
+        bold: false,
+      })),
+    [displayWords],
+  );
 
-  const adjustedBuzzIndex = hasLeadin ? buzzIndex - leadinOffset : buzzIndex;
+  const renderedQuestion = useMemo(() => {
+    const adjustedBuzzIndex = hasLeadin ? buzzIndex - leadinOffset : buzzIndex;
+    return renderQuestion(
+      shuffledQuestionWords,
+      {
+        visible: visibleIndex,
+        buzz: adjustedBuzzIndex,
+      },
+      visibleRef,
+    );
+  }, [buzzIndex, hasLeadin, leadinOffset, shuffledQuestionWords, visibleIndex]);
 
   return (
     <>
@@ -158,14 +181,7 @@ const ActiveQuestion = () => {
           <b>[10]</b>{' '}
         </>
       )}
-      {renderQuestion(
-        shuffledQuestionWords,
-        {
-          visible: visibleIndex,
-          buzz: adjustedBuzzIndex,
-        },
-        visibleRef,
-      )}
+      {renderedQuestion}
     </>
   );
 };

@@ -57,23 +57,29 @@ const Question = () => {
     elementScrollIntoView(visibleRef.current, { block: 'center' });
   }, [visibleIndex, buzzIndex, status]);
 
-  const shuffledTossupWords = displayWords.map((word, i) => ({
-    word,
-    bold: tossupWords[i].bold,
-  }));
+  const shuffledTossupWords = useMemo(
+    () =>
+      displayWords.map((word, i) => ({
+        word,
+        bold: tossupWords[i].bold,
+      })),
+    [displayWords, tossupWords],
+  );
 
-  return (
-    <>
-      {renderQuestion(
+  const renderedQuestion = useMemo(
+    () =>
+      renderQuestion(
         shuffledTossupWords,
         {
           visible: visibleIndex,
           buzz: buzzIndex,
         },
         visibleRef,
-      )}
-    </>
+      ),
+    [buzzIndex, shuffledTossupWords, visibleIndex],
   );
+
+  return <>{renderedQuestion}</>;
 };
 
 const Container = () => {
