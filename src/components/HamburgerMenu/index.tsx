@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import { useAppDispatch } from '../../redux/hooks';
 import { ROUTES } from '../../utils/routes';
-import { selectHamburgerMenu, close } from './hamburgerMenuSlice';
+import { close, selectHamburgerMenu } from './hamburgerMenuSlice';
 
 const links = [
   { name: 'Tossup Reader', href: ROUTES.reader.tossup },

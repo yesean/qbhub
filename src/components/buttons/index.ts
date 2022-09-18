@@ -1,7 +1,6 @@
-export { default as TealButton } from './TealButton';
 export {
   default as FileDownloadButton,
-  type FileDownloadButtonProps
+  type FileDownloadButtonProps,
 } from './FileDownloadButton';
 export {
   default as RouterLinkButton,
@@ -11,3 +10,4 @@ export {
   default as RouterLinkIconButton,
   type RouterLinkIconButtonProps,
 } from './RouterLinkIconButton';
+export { default as TealButton } from './TealButton';

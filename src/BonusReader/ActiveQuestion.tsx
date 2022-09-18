@@ -2,8 +2,8 @@ import { Box } from '@chakra-ui/react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';
-import { useAppDispatch } from '../redux/hooks';
 import { useReader } from '../hooks/reader';
+import { useAppDispatch } from '../redux/hooks';
 import { getTossupWords, renderQuestion } from '../utils/reader';
 import {
   buzz,

@@ -1,11 +1,11 @@
 import { Center } from '@chakra-ui/react';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import About from '../../About';
+import BonusReader from '../../BonusReader';
 import CluesGenerator from '../../CluesGenerator';
 import FrequencyList from '../../FrequencyList';
 import TossupReader from '../../TossupReader';
-import About from '../../About';
 import { ROUTES } from '../../utils/routes';
-import BonusReader from '../../BonusReader';
 
 const Body: React.FC<React.PropsWithChildren<unknown>> = () => (
   <Center flexDir="column" overflow="auto" flex={1} px={3}>

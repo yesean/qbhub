@@ -2,8 +2,8 @@ import { InfoOutlineIcon } from '@chakra-ui/icons';
 import { Flex, Heading, Icon, IconButton, Link } from '@chakra-ui/react';
 import { AiFillGithub } from 'react-icons/ai';
 import { useAppDispatch } from '../../redux/hooks';
-import { open } from '../InfoModal/infoModalSlice';
 import { ReactComponent as Donate } from '../../static/donate.svg';
+import { open } from '../InfoModal/infoModalSlice';
 
 const Footer: React.FC<React.PropsWithChildren<unknown>> = () => {
   const dispatch = useAppDispatch();

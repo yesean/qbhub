@@ -9,9 +9,9 @@ import {
 import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
-import { useAppDispatch } from '../redux/hooks';
 import { KeyValueTable } from '../components/tables';
 import { useKeyboardShortcut } from '../hooks/keyboard';
+import { useAppDispatch } from '../redux/hooks';
 import { selectSettings } from '../Settings/settingsSlice';
 import { Answer } from '../types/tossups';
 import { ROUTES } from '../utils/routes';

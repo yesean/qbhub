@@ -1,5 +1,4 @@
 import { Box } from '@chakra-ui/react';
-import React from 'react';
 import Answer from '../components/reader/Answer';
 import UserAnswer from '../components/reader/UserAnswer';
 import { BonusPart, BonusPartResult } from '../types/bonus';

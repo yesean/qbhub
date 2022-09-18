@@ -8,7 +8,7 @@ import {
 } from '../types/questions';
 import { Tossup, TossupResult, TossupWord } from '../types/tossups';
 import * as fetchUtils from '../utils/fetch';
-import { getTossupWords, getTossupScore, getPowerIndex } from '../utils/reader';
+import { getPowerIndex, getTossupScore, getTossupWords } from '../utils/reader';
 
 export enum ReaderStatus {
   idle,

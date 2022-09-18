@@ -1,4 +1,10 @@
 import {
+  Category,
+  Difficulty,
+  Subcategory,
+  Tournament,
+} from '../types/questions';
+import {
   CATEGORIES_LS_KEY,
   DEFAULT_READING_SPEED,
   DIFFICULTIES_LS_KEY,
@@ -9,12 +15,6 @@ import {
   SUBCATEGORIES_LS_KEY,
   TOURNAMENTS_LS_KEY,
 } from './constants';
-import {
-  Category,
-  Difficulty,
-  Subcategory,
-  Tournament,
-} from '../types/questions';
 
 const save = (key: string, data: any) =>
   window.localStorage.setItem(key, JSON.stringify(data));

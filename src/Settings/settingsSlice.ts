@@ -1,5 +1,4 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
-import type { AppDispatch, RootState, Subscription } from '../redux/store';
 import {
   filterBonusesByCategory,
   filterBonusesByDifficulties,
@@ -7,6 +6,7 @@ import {
   filterBonusesBySubcategory,
   filterBonusesByTournament,
 } from '../BonusReader/bonusReaderSlice';
+import type { AppDispatch, RootState, Subscription } from '../redux/store';
 import {
   filterTossupsByCategory,
   filterTossupsByDifficulties,

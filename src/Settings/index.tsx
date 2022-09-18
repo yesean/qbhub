@@ -19,9 +19,9 @@ import { CSSObject } from '@emotion/react';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import Select, { OptionsType } from 'react-select';
-import { useAppDispatch } from '../redux/hooks';
 import { TealButton } from '../components/buttons';
 import { useKeyboardShortcut } from '../hooks/keyboard';
+import { useAppDispatch } from '../redux/hooks';
 import {
   Category,
   Difficulty,

@@ -2,9 +2,9 @@ import { Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
-import { useAppDispatch } from './redux/hooks';
 import Body from './components/Body';
 import BonusHistoryModal from './components/BonusHistoryModal';
+import { open as openBonusHistory } from './components/BonusHistoryModal/bonusHistoryModalSlice';
 import Footer from './components/Footer';
 import HamburgerMenu from './components/HamburgerMenu';
 import Header from './components/Header';
@@ -12,9 +12,9 @@ import InfoModal from './components/InfoModal';
 import { open as openInfo } from './components/InfoModal/infoModalSlice';
 import TossupHistoryModal from './components/TossupHistoryModal';
 import { open as openTossupHistory } from './components/TossupHistoryModal/tossupHistoryModalSlice';
-import { open as openBonusHistory } from './components/BonusHistoryModal/bonusHistoryModalSlice';
 import { reset } from './FrequencyList/frequencyListSlice';
 import { useKeyboardShortcut } from './hooks/keyboard';
+import { useAppDispatch } from './redux/hooks';
 import SettingsModal from './Settings';
 import {
   open as openSettings,

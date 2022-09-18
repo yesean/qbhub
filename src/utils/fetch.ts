@@ -6,7 +6,7 @@ import {
   Subcategory,
   Tournament,
 } from '../types/questions';
-import { Tossup, Clue, Answer } from '../types/tossups';
+import { Answer, Clue, Tossup } from '../types/tossups';
 import { MIN_TOURNAMENT_YEAR } from './constants';
 import logger from './logger';
 import { cleanTossupText, normalizeTags } from './string';

@@ -12,7 +12,7 @@ import settingsReducer, {
   fromYearSubscription,
   readingSpeedSubscription,
   subcategoriesSubscription,
-  tournamentsSubscription
+  tournamentsSubscription,
 } from '../Settings/settingsSlice';
 import tossupReaderReducer from '../TossupReader/tossupReaderSlice';
 
@@ -54,9 +54,9 @@ export const observeStore = <T>(
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type Subscription<T> = Parameters<typeof observeStore<T>>;
 
-observeStore(...readingSpeedSubscription)
-observeStore(...categoriesSubscription)
-observeStore(...subcategoriesSubscription)
-observeStore(...difficultiesSubscription)
-observeStore(...tournamentsSubscription)
-observeStore(...fromYearSubscription)
+observeStore(...readingSpeedSubscription);
+observeStore(...categoriesSubscription);
+observeStore(...subcategoriesSubscription);
+observeStore(...difficultiesSubscription);
+observeStore(...tournamentsSubscription);
+observeStore(...fromYearSubscription);

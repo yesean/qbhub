@@ -16,8 +16,8 @@ import {
 } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { useAppDispatch } from '../../redux/hooks';
 import { selectBonusReader } from '../../BonusReader/bonusReaderSlice';
+import { useAppDispatch } from '../../redux/hooks';
 import { BonusScore } from '../../types/bonus';
 import { TealButton } from '../buttons';
 import { close, selectBonusHistoryModal } from './bonusHistoryModalSlice';

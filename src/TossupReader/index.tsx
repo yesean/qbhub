@@ -1,8 +1,8 @@
 import { Flex } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useAppDispatch } from '../redux/hooks';
 import Progress from '../components/reader/Progress';
+import { useAppDispatch } from '../redux/hooks';
 import { JudgeResult } from '../types/tossups';
 import logger from '../utils/logger';
 import { Judge, normalizeAnswer } from '../utils/reader';
