@@ -18,5 +18,7 @@ const send = createPinoBrowserSend({
       : (process.env.REACT_APP_LOGFLARE_CLIENT_PROD_ID as string),
 });
 
-const logger = pino({ browser: { asObject: true, transmit: { send } } });
+const logger = pino({
+  browser: { asObject: true, transmit: { send }, disabled: true },
+});
 export default logger.child(browserInfo);
