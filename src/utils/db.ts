@@ -1,13 +1,14 @@
 import { Client } from 'pg';
 import { Column, Order, Parameter, QuestionFilterOptions } from '../types/db';
 import { QuestionFilters, QuestionParameters } from '../types/controller';
+import { PG } from './env';
 
 // connect to postgresql database
 export const client = new Client({
-  user: process.env.PGUSER,
-  host: process.env.PGHOST,
-  database: process.env.PGDATABASE,
-  port: Number(process.env.PGPORT),
+  user: PG.user,
+  host: PG.host,
+  database: PG.database,
+  port: PG.port,
 });
 client.connect();
 

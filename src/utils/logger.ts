@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-const shouldLog = process.env.NODE_ENV === 'development';
+import { isDev } from './env';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ignore = (..._: any[]) => {};
@@ -20,6 +20,6 @@ const error = (...params: any[]) => {
 };
 
 export default {
-  info: shouldLog ? info : ignore,
+  info: isDev ? info : ignore,
   error,
 };
