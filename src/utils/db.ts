@@ -8,6 +8,7 @@ export const client = new Client({
   user: PG.user,
   host: PG.host,
   database: PG.database,
+  password: PG.password,
   port: PG.port,
 });
 client.connect();
