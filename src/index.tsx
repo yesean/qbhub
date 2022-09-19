@@ -10,6 +10,9 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { store } from './redux/store';
 import theme from './theme';
+import pino from './utils/pino';
+
+pino.info('page_load');
 
 ReactDOM.render(
   <React.StrictMode>
