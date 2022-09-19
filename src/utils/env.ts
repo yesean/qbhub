@@ -5,10 +5,3 @@ export const LOGFLARE = {
   serverProdID: process.env.LOGFLARE_SERVER_PROD_ID,
   serverDevID: process.env.LOGFLARE_SERVER_DEV_ID,
 };
-export const PG = {
-  user: process.env.PGUSER,
-  host: process.env.PGHOST,
-  database: process.env.PGDATABASE,
-  password: process.env.password,
-  port: Number(process.env.PGPORT),
-};

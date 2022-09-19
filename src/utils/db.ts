@@ -1,16 +1,9 @@
 import { Client } from 'pg';
 import { Column, Order, Parameter, QuestionFilterOptions } from '../types/db';
 import { QuestionFilters, QuestionParameters } from '../types/controller';
-import { PG } from './env';
 
 // connect to postgresql database
-export const client = new Client({
-  user: PG.user,
-  host: PG.host,
-  database: PG.database,
-  password: PG.password,
-  port: PG.port,
-});
+export const client = new Client();
 client.connect();
 
 // helper functions for sql syntax
