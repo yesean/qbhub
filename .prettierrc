@@ -12,6 +12,6 @@
   "proseWrap": "always",
   "htmlWhitespaceSensitivity": "css",
   "endOfLine": "lf",
-  "pluginSearchDirs": ["./node_modules/"],
+  "pluginSearchDirs": ["node_modules"],
   "plugins": ["prettier-plugin-organize-imports"]
 }
