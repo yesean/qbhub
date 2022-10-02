@@ -5,6 +5,7 @@
   "main": "index.js",
   "author": "Sean Ye",
   "license": "MIT",
+  "private": true,
   "workspaces": [
     "packages/*"
   ]
