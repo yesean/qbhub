@@ -8,14 +8,12 @@
   },
   "scripts": {
     "start": "node -r dotenv/config dist/index.js",
+    "dev": "NODE_ENV=development nodemon --watch 'src/**/*.ts' --exec ts-node -r dotenv/config src/index.ts",
+    "compile": "tsc",
+    "build": "yarn lint && yarn compile",
     "clean": "rm -rf dist",
-    "build:ui": "cd ../client && yarn build && cp -r build ../server && cd ../server",
-    "build:server": "tsc",
-    "build": "yarn clean && yarn build:server && yarn build:ui",
-    "deploy": "scp -r {dist,build} qbhub:~/qbhub-server/ && ssh qbhub 'cd ~/qbhub-server && git pull && yarn install && pm2 restart qbhub'",
-    "deploy:full": "yarn build && yarn deploy",
-    "lint": "eslint ./src --ext .ts,.tsx",
-    "dev": "NODE_ENV=development nodemon --watch 'src/**/*.ts' --exec ts-node -r dotenv/config src/index.ts"
+    "lint": "eslint --ext .ts,.tsx src",
+    "format": "prettier --write src"
   },
   "dependencies": {
     "compromise": "14.5.0",

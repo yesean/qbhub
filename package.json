@@ -8,5 +8,12 @@
   "private": true,
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "scripts": {
+    "lint": "yarn workspaces run lint",
+    "format": "yarn workspaces run format",
+    "build": "yarn workspaces run build",
+    "deploy": "scp -r {dist,build} qbhub:~/qbhub-server/ && ssh qbhub 'cd ~/qbhub-server && git pull && yarn install && pm2 restart qbhub'",
+    "deploy:full": "yarn build && yarn deploy"
+  }
 }
