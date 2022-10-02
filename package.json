@@ -1,0 +1,11 @@
+{
+  "name": "qbhub",
+  "version": "1.0.0",
+  "description": "Quizbowl Meets Automation",
+  "main": "index.js",
+  "author": "Sean Ye",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ]
+}
