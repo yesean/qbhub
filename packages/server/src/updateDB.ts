@@ -1,10 +1,11 @@
+/* eslint-disable no-console */
 /**
  * Mainly used for creating normalized answers in the `normalized_answer` field
  * in the tossups table. May have other utilities in the future.
  */
 
-import { Client } from 'pg';
 import nlp from 'compromise';
+import { Client } from 'pg';
 
 type RegexReplace = [RegExp, string];
 const between: RegexReplace = [/\(.*\)|\[.*|<.*>|&lt;.*&gt;.*/g, ''];
