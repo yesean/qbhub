@@ -1,8 +1,8 @@
-import { BonusPart, Tossup, Bonus, BonusParts } from '../types/controller';
+import { Bonus, BonusPart, BonusParts, Tossup } from '../types/controller';
 import {
-  Tossup as DBTossup,
-  BonusPart as DBBonusPart,
   Bonus as DBBonus,
+  BonusPart as DBBonusPart,
+  Tossup as DBTossup,
 } from '../types/db';
 
 export const transformTossup = (tossup: DBTossup): Tossup => ({
@@ -18,10 +18,7 @@ export const transformTossup = (tossup: DBTossup): Tossup => ({
   year: tossup.year,
 });
 
-export const transformBonus = (
-  bonus: DBBonus,
-  parts: BonusParts,
-): Bonus => ({
+export const transformBonus = (bonus: DBBonus, parts: BonusParts): Bonus => ({
   id: bonus.id,
   leadin: bonus.leadin,
   formattedLeadin: bonus.formatted_leadin,

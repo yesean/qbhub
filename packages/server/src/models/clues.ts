@@ -1,9 +1,9 @@
-import { TABLES } from '../utils/constants';
 import { QuestionFilters } from '../types/controller';
-import { client, QueryBuilder } from '../utils/db';
-import logger from '../utils/logger';
 import { PlainTossup } from '../types/db';
 import { getAllClues, getUniqueClues } from '../utils/clues';
+import { TABLES } from '../utils/constants';
+import { client, QueryBuilder } from '../utils/db';
+import logger from '../utils/logger';
 
 const columns = [
   { name: TABLES.tossups.columns.text },

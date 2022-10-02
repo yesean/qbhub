@@ -1,5 +1,5 @@
-import { Freq, Order } from '../types/db';
 import { QuestionFilters } from '../types/controller';
+import { Freq, Order } from '../types/db';
 import { TABLES } from '../utils/constants';
 import { client, QueryBuilder } from '../utils/db';
 import logger from '../utils/logger';

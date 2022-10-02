@@ -1,5 +1,5 @@
-import _nlp from 'compromise/three';
 import stats from 'compromise-stats';
+import _nlp from 'compromise/three';
 import { PlainTossup } from 'db';
 import { Bag, ClueBagMap } from '../types/clues';
 import { Clue, ClueResult } from '../types/controller';
