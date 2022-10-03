@@ -92,12 +92,19 @@ export const getWordsBetweenTags = (text: string, t: string) =>
  * Remove first names from full names.
  * e.g. Michael Jordan went to Larry Bird's house => Jordan went to Bird's house
  */
-export const removeFirstNames = (s: string) =>
-  nlp(s)
-    .replace('[#FirstName+] #LastName', (name: any) =>
-      name.match('#LastName')[0].text(),
+export const removeFirstNames = (s: string) => {
+  const firstNameReduction = nlp(s)
+    .replace('#FirstName+ #LastName', (name: any) =>
+      name.matchOne('#LastName').text(),
     )
     .text();
+  const personReduction = nlp(s)
+    .replace('#Person+ #Person', (name: any) =>
+      name.match('#Person').out('array').at(-1),
+    )
+    .text();
+  return [firstNameReduction, personReduction];
+};
 
 /**
  * Similar to String.prototype.lastIndexOf but accepts multiple values, stopping

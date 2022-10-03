@@ -237,7 +237,7 @@ export const parseAcceptableAnswers = (answerline: string): string[] => {
   ];
 
   let allAnswers = combine(boldAnswers, answers);
-  const answersWithoutFirstNames = allAnswers.map(removeFirstNames);
+  const answersWithoutFirstNames = allAnswers.flatMap(removeFirstNames);
   allAnswers = combine(allAnswers, answersWithoutFirstNames)
     .map(normalizeAnswer)
     .filter(emptyStringFilter);
