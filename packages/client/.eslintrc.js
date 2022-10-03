@@ -12,6 +12,7 @@ module.exports = {
     'no-param-reassign': 'off',
     quotes: ['error', 'single', { avoidEscape: true }],
     'react/react-in-jsx-scope': 'off',
+    'react/function-component-definition': 'off',
     'react/prop-types': 'off',
     'react/require-default-props': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],

@@ -118,7 +118,7 @@ export const renderQuestion = (
     return null;
   };
 
-  return words.map((w, i) => (
+  return <>{words.map((w, i) => (
     <Fragment key={`${w}${i}`}>
       <Text
         /* eslint react/no-array-index-key: "off" */
@@ -132,7 +132,7 @@ export const renderQuestion = (
       </Text>
       {renderBell(i === buzz)}
     </Fragment>
-  ));
+  ))}</>;
 };
 
 /**

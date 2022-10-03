@@ -10,6 +10,30 @@ type BonusResultProps = {
   results: BonusPartRowResult[];
 };
 
+const cells: { [key: string]: (result: BonusPartRowResult) => JSX.Element } = {
+  part: ({ number }) => <Text align="center">{number}</Text>,
+  input: ({ userAnswer }) => (
+    <Box textAlign="center" overflowWrap="break-word">
+      {userAnswer || '<no answer>'}
+    </Box>
+  ),
+  answer: ({ part: { formattedAnswer } }) => (
+    <Box textAlign="center" overflowWrap="break-word">
+      {parseHTMLString(formattedAnswer)}
+    </Box>
+  ),
+  question: ({ part: { formattedText }, buzzIndex }) => (
+    <Flex flexWrap="wrap">
+      {renderQuestion(getTossupWords(formattedText), {
+        buzz: buzzIndex,
+      })}
+    </Flex>
+  ),
+  tournament: ({ bonus: { tournament } }) => (
+    <Box>{TOURNAMENT_MAP[tournament].name}</Box>
+  ),
+}
+
 const BonusResults: React.FC<React.PropsWithChildren<BonusResultProps>> = ({
   results,
 }) => {
@@ -19,51 +43,35 @@ const BonusResults: React.FC<React.PropsWithChildren<BonusResultProps>> = ({
       proportion: 1,
       minWidth: 40,
       useForHeight: false,
-      cell: (result) => <Text align="center">{result.number}</Text>,
+      cell: cells.part,
     },
     {
       label: 'Input',
       proportion: 1,
       minWidth: 120,
       useForHeight: false,
-      cell: (result) => (
-        <Box textAlign="center" overflowWrap="break-word">
-          {result.userAnswer || '<no answer>'}
-        </Box>
-      ),
+      cell: cells.input,
     },
     {
       label: 'Answer',
       proportion: 2,
       minWidth: 120,
       useForHeight: true,
-      cell: (result) => (
-        <Box textAlign="center" overflowWrap="break-word">
-          {parseHTMLString(result.part.formattedAnswer)}
-        </Box>
-      ),
+      cell: cells.answer,
     },
     {
       label: 'Question',
       proportion: 4,
       minWidth: 150,
       useForHeight: true,
-      cell: (result) => (
-        <Flex flexWrap="wrap">
-          {renderQuestion(getTossupWords(result.part.formattedText), {
-            buzz: result.buzzIndex,
-          })}
-        </Flex>
-      ),
+      cell: cells.question,
     },
     {
       label: 'Tournament',
       proportion: 3,
       minWidth: 105,
       useForHeight: false,
-      cell: (result) => (
-        <Box>{TOURNAMENT_MAP[result.bonus.tournament].name}</Box>
-      ),
+      cell: cells.tournament,
     },
   ];
 

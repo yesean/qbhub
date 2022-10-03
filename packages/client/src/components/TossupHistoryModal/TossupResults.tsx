@@ -9,6 +9,31 @@ type TossupResultProps = {
   results: TossupResult[];
 };
 
+
+const cells: { [key: string]: (result: TossupResult) => JSX.Element } = {
+  score: ({ score }) => <Text align="center">{score}</Text>,
+  input: ({ userAnswer }) => (
+    <Box textAlign="center" overflowWrap="break-word">
+      {userAnswer || '<no answer>'}
+    </Box>
+  ),
+  answer: ({ tossup: { formattedAnswer } }) => (
+    <Box textAlign="center" overflowWrap="break-word">
+      {parseHTMLString(formattedAnswer)}
+    </Box>
+  ),
+  question: ({ words, buzzIndex }) => (
+    <Box>
+      {renderQuestion(words, {
+        buzz: buzzIndex,
+      })}
+    </Box>
+  ),
+  tournament: ({ tossup: { tournament } }) => (
+    <Box>{TOURNAMENT_MAP[tournament].name}</Box>
+  ),
+}
+
 const TossupResults: React.FC<React.PropsWithChildren<TossupResultProps>> = ({
   results,
 }) => {
@@ -18,51 +43,35 @@ const TossupResults: React.FC<React.PropsWithChildren<TossupResultProps>> = ({
       proportion: 1,
       minWidth: 50,
       useForHeight: false,
-      cell: (result) => <Text align="center">{result.score}</Text>,
+      cell: cells.score,
     },
     {
       label: 'Input',
       proportion: 1,
       minWidth: 120,
       useForHeight: false,
-      cell: (result) => (
-        <Box textAlign="center" overflowWrap="break-word">
-          {result.userAnswer || '<no answer>'}
-        </Box>
-      ),
+      cell: cells.input,
     },
     {
       label: 'Answer',
       proportion: 2,
       minWidth: 120,
       useForHeight: true,
-      cell: (result) => (
-        <Box textAlign="center" overflowWrap="break-word">
-          {parseHTMLString(result.tossup.formattedAnswer)}
-        </Box>
-      ),
+      cell: cells.answer,
     },
     {
       label: 'Question',
       proportion: 4,
       minWidth: 150,
       useForHeight: true,
-      cell: (result) => (
-        <Box>
-          {renderQuestion(result.words, {
-            buzz: result.buzzIndex,
-          })}
-        </Box>
-      ),
+      cell: cells.question,
     },
     {
       label: 'Tournament',
       proportion: 3,
       minWidth: 105,
       useForHeight: false,
-      cell: (result) => (
-        <Box>{TOURNAMENT_MAP[result.tossup.tournament].name}</Box>
-      ),
+      cell: cells.tournament,
     },
   ];
 

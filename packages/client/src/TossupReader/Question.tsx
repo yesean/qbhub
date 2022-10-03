@@ -79,7 +79,7 @@ const Question = () => {
     [buzzIndex, shuffledTossupWords, visibleIndex],
   );
 
-  return <>{renderedQuestion}</>;
+  return renderedQuestion;
 };
 
 const Container = () => {
