@@ -18,7 +18,7 @@ import {
 import { CSSObject } from '@emotion/react';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import Select, { OptionsType } from 'react-select';
+import Select, { Options } from 'react-select';
 import { TealButton } from '../components/buttons';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import { useAppDispatch } from '../redux/hooks';
@@ -57,11 +57,11 @@ const toSelect =
   <T extends QuestionParameter, U extends { name: string }>(
     map: Record<T, U>,
   ) =>
-  (key: T) => ({
-    label: map[key].name,
-    value: key,
-    data: map[key],
-  });
+    (key: T) => ({
+      label: map[key].name,
+      value: key,
+      data: map[key],
+    });
 
 const categoriesForSelect = CATEGORIES.map(toSelect(CATEGORY_MAP));
 const subcategoriesForSelect = SUBCATEGORIES.map(toSelect(SUBCATEGORY_MAP));
@@ -87,7 +87,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   const categoriesInSelect = categories.map(toSelect(CATEGORY_MAP));
   const onCategoriesChange = (
-    options: OptionsType<{ label: string; value: Category }>,
+    options: Options<{ label: string; value: Category }>,
   ) => {
     const newCategories = options.map((o) => o.value);
     dispatch(updateCategories(newCategories));
@@ -95,7 +95,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   const subcategoriesInSelect = subcategories.map(toSelect(SUBCATEGORY_MAP));
   const onSubcategoriesChange = (
-    options: OptionsType<{ label: string; value: Subcategory }>,
+    options: Options<{ label: string; value: Subcategory }>,
   ) => {
     const newSubcategories = options.map((o) => o.value);
     dispatch(updateSubcategories(newSubcategories));
@@ -103,7 +103,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   const difficultiesInSelect = difficulties.map(toSelect(DIFFICULTY_MAP));
   const onDifficultiesChange = (
-    options: OptionsType<{ label: string; value: Difficulty }>,
+    options: Options<{ label: string; value: Difficulty }>,
   ) => {
     const newDifficulties = options.map((o) => o.value);
     dispatch(updateDifficulties(newDifficulties));
@@ -120,7 +120,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   );
   const tournamentsInSelect = tournaments.map(toSelect(TOURNAMENT_MAP));
   const onTournamentsChange = (
-    options: OptionsType<{ label: string; value: Tournament }>,
+    options: Options<{ label: string; value: Tournament }>,
   ) => {
     const newTournaments = options.map((o) => o.value);
     dispatch(updateTournaments(newTournaments));

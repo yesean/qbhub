@@ -30,7 +30,9 @@ const answersFields = [
 const Answers: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { answers, status } = useSelector(selectCluesGenerator);
   const dispatch = useAppDispatch();
-  const { answer: answerParam } = useParams<{ answer: string }>();
+  const { answer: answerParam } = useParams<{ answer: string }>() as {
+    answer: string;
+  };
 
   useLayoutEffect(() => {
     dispatch(resetStatus());

@@ -1,7 +1,7 @@
 import { Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Body from './components/Body';
 import BonusHistoryModal from './components/BonusHistoryModal';
 import { open as openBonusHistory } from './components/BonusHistoryModal/bonusHistoryModalSlice';
@@ -23,7 +23,7 @@ import {
 import { ROUTES } from './utils/routes';
 
 const App: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { pathname } = useLocation();
   const dispatch = useAppDispatch();
   const questionSettings = useSelector(selectQuestionSettings);
@@ -48,11 +48,11 @@ const App: React.FC<React.PropsWithChildren<unknown>> = () => {
   const predicate = (e: KeyboardEvent) => e.target === document.body;
   useKeyboardShortcut('?', () => dispatch(openInfo()), predicate);
   useKeyboardShortcut('s', () => dispatch(openSettings()), predicate);
-  useKeyboardShortcut('1', () => history.push(ROUTES.reader.tossup), predicate);
-  useKeyboardShortcut('2', () => history.push(ROUTES.reader.bonus), predicate);
-  useKeyboardShortcut('3', () => history.push(ROUTES.freq.root), predicate);
-  useKeyboardShortcut('4', () => history.push(ROUTES.clues.search), predicate);
-  useKeyboardShortcut('5', () => history.push(ROUTES.about.root), predicate);
+  useKeyboardShortcut('1', () => navigate(ROUTES.reader.tossup), predicate);
+  useKeyboardShortcut('2', () => navigate(ROUTES.reader.bonus), predicate);
+  useKeyboardShortcut('3', () => navigate(ROUTES.freq.root), predicate);
+  useKeyboardShortcut('4', () => navigate(ROUTES.clues.search), predicate);
+  useKeyboardShortcut('5', () => navigate(ROUTES.about.root), predicate);
   const isReaderActive = pathname.startsWith(ROUTES.reader.root);
   const isTossupReaderActive = pathname.startsWith(ROUTES.reader.tossup);
   const customPredicate = (e: KeyboardEvent) => predicate(e) && isReaderActive;

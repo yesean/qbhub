@@ -1,6 +1,6 @@
 import { Flex, Input } from '@chakra-ui/react';
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { RouterLinkButton } from '../components/buttons';
 import { useAppDispatch } from '../redux/hooks';
 import { ROUTES } from '../utils/routes';
@@ -8,7 +8,7 @@ import { setQuery } from './cluesGeneratorSlice';
 
 const Search: React.FC<React.PropsWithChildren<unknown>> = () => {
   const [search, setSearch] = useState('');
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,7 +17,7 @@ const Search: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   const submitSearch = async () => {
     dispatch(setQuery(search));
-    history.push(ROUTES.clues.searchResults(search));
+    navigate(ROUTES.clues.searchResults(search));
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

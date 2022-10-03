@@ -34,7 +34,7 @@ const cluesFields = [
 const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { status, clues, currentQuery } = useAppSelector(selectCluesGenerator);
   const dispatch = useAppDispatch();
-  const { answer } = useParams<{ answer: string }>();
+  const { answer } = useParams<{ answer: string }>() as { answer: string };
   const [CSVLink, setCSVLink] = useState('');
   const [JSONLink, setJSONLink] = useState('');
 

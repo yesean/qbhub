@@ -4,7 +4,7 @@ import '@fontsource/inter/500.css';
 import '@fontsource/inter/700.css';
 import '@fontsource/raleway/700.css';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
@@ -14,7 +14,8 @@ import pino from './utils/pino';
 
 pino.info('page_load');
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root') as HTMLElement);
+root.render(
   <React.StrictMode>
     <Provider store={store}>
       <ChakraProvider theme={theme}>
@@ -24,5 +25,4 @@ ReactDOM.render(
       </ChakraProvider>
     </Provider>
   </React.StrictMode>,
-  document.getElementById('root'),
 );
