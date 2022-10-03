@@ -93,6 +93,7 @@ const tossupReaderSlice = createSlice({
   initialState,
   reducers: {
     buzz: (state) => {
+      console.log('buzzing');
       if (state.status === ReaderStatus.reading) {
         state.status = ReaderStatus.answering;
         state.current.buzzIndex = state.current.visibleIndex;

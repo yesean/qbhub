@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectSettings } from '../Settings/settingsSlice';
 import { getReadingTimeoutDelay } from '../utils/settings';
@@ -20,7 +20,11 @@ export const useReader = (words: string[], startImmediately = true) => {
   const { readingSpeed } = useSelector(selectSettings);
   const [visibleIndex, setVisibleIndex] = useState(-1);
   const [incrementId, setIncrementId] = useState<NodeJS.Timeout | null>(null);
-  const [shouldRead, setShouldRead] = useState(startImmediately);
+  const shouldRead = useRef(startImmediately);
+
+  const setShouldRead = useCallback((value: boolean) => {
+    shouldRead.current = value;
+  }, []);
 
   const readingDelay = useMemo(
     () => getReadingTimeoutDelay(readingSpeed),
@@ -37,34 +41,43 @@ export const useReader = (words: string[], startImmediately = true) => {
 
   // periodically reveal words
   useEffect(() => {
-    if (visibleIndex < words.length - 1 && incrementId === null && shouldRead) {
+    if (
+      visibleIndex < words.length - 1 &&
+      incrementId === null &&
+      shouldRead.current
+    ) {
       const id = setTimeout(() => {
-        setVisibleIndex((index) => index + 1);
+        console.log({ shouldRead: shouldRead.current });
+        if (shouldRead.current) {
+          console.log('moving visible index');
+          setVisibleIndex((index) => index + 1);
+        }
         setIncrementId(null);
       }, readingDelay);
       setIncrementId(id);
     }
-  }, [incrementId, readingDelay, shouldRead, visibleIndex, words.length]);
+  }, [incrementId, readingDelay, visibleIndex, words.length]);
 
   // pause reading
   const pause = useCallback(() => {
+    console.log('pausing, setting shouldRead to false');
     setShouldRead(false);
     // clear any pending updates
     if (incrementId) {
       clearTimeout(incrementId);
       setIncrementId(null);
     }
-  }, [incrementId]);
+  }, [incrementId, setShouldRead]);
 
   const resume = useCallback(() => {
     setShouldRead(true);
-  }, []);
+  }, [setShouldRead]);
 
   // reveal text
   const reveal = useCallback(() => {
-    pause();
+    // pause();
     setVisibleIndex(words.length);
-  }, [pause, words.length]);
+  }, [words.length]);
 
   const visible = useMemo(
     () =>

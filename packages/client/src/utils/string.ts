@@ -99,7 +99,7 @@ export const removeFirstNames = (s: string) => {
     )
     .text();
   const personReduction = nlp(s)
-    .replace('#Person+ #Person', (name: any) =>
+    .replace('#Person+', (name: any) =>
       name.match('#Person').out('array').at(-1),
     )
     .text();

@@ -34,7 +34,7 @@ const Question = () => {
   // pause reading when answering
   useEffect(() => {
     if (status === ReaderStatus.answering) pause();
-  }, [pause, status]);
+  }, [pause, status, visibleIndex]);
 
   // update visible index
   useEffect(() => {
@@ -78,6 +78,9 @@ const Question = () => {
       ),
     [buzzIndex, shuffledTossupWords, visibleIndex],
   );
+  useEffect(() => {
+    console.log(`revealing: ${shuffledTossupWords[visibleIndex]?.word}`);
+  }, [shuffledTossupWords, visibleIndex]);
 
   return renderedQuestion;
 };
