@@ -32,7 +32,7 @@ const cells: { [key: string]: (result: BonusPartRowResult) => JSX.Element } = {
   tournament: ({ bonus: { tournament } }) => (
     <Box>{TOURNAMENT_MAP[tournament].name}</Box>
   ),
-}
+};
 
 const BonusResults: React.FC<React.PropsWithChildren<BonusResultProps>> = ({
   results,

@@ -9,7 +9,6 @@ type TossupResultProps = {
   results: TossupResult[];
 };
 
-
 const cells: { [key: string]: (result: TossupResult) => JSX.Element } = {
   score: ({ score }) => <Text align="center">{score}</Text>,
   input: ({ userAnswer }) => (
@@ -32,7 +31,7 @@ const cells: { [key: string]: (result: TossupResult) => JSX.Element } = {
   tournament: ({ tossup: { tournament } }) => (
     <Box>{TOURNAMENT_MAP[tournament].name}</Box>
   ),
-}
+};
 
 const TossupResults: React.FC<React.PropsWithChildren<TossupResultProps>> = ({
   results,

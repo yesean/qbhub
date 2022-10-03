@@ -57,11 +57,11 @@ const toSelect =
   <T extends QuestionParameter, U extends { name: string }>(
     map: Record<T, U>,
   ) =>
-    (key: T) => ({
-      label: map[key].name,
-      value: key,
-      data: map[key],
-    });
+  (key: T) => ({
+    label: map[key].name,
+    value: key,
+    data: map[key],
+  });
 
 const categoriesForSelect = CATEGORIES.map(toSelect(CATEGORY_MAP));
 const subcategoriesForSelect = SUBCATEGORIES.map(toSelect(SUBCATEGORY_MAP));

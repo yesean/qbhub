@@ -118,21 +118,25 @@ export const renderQuestion = (
     return null;
   };
 
-  return <>{words.map((w, i) => (
-    <Fragment key={`${w}${i}`}>
-      <Text
-        /* eslint react/no-array-index-key: "off" */
-        ref={i === visible ? visibleRef : undefined}
-        display="inline-block"
-        whiteSpace="break-spaces"
-        visibility={i <= visible ? 'visible' : 'hidden'}
-        fontWeight={w.bold ? 'bold' : 'normal'}
-      >
-        {parseHTMLString(w.word)}{' '}
-      </Text>
-      {renderBell(i === buzz)}
-    </Fragment>
-  ))}</>;
+  return (
+    <>
+      {words.map((w, i) => (
+        <Fragment key={`${w}${i}`}>
+          <Text
+            /* eslint react/no-array-index-key: "off" */
+            ref={i === visible ? visibleRef : undefined}
+            display="inline-block"
+            whiteSpace="break-spaces"
+            visibility={i <= visible ? 'visible' : 'hidden'}
+            fontWeight={w.bold ? 'bold' : 'normal'}
+          >
+            {parseHTMLString(w.word)}{' '}
+          </Text>
+          {renderBell(i === buzz)}
+        </Fragment>
+      ))}
+    </>
+  );
 };
 
 /**
