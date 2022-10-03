@@ -1,6 +1,5 @@
 module.exports = {
   extends: [
-    'react-app',
     'react-app/jest',
     'airbnb',
     'airbnb/hooks',
@@ -8,14 +7,14 @@ module.exports = {
     'prettier',
   ],
   rules: {
-    'import/prefer-default-export': 'off',
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     'no-param-reassign': 'off',
     quotes: ['error', 'single', { avoidEscape: true }],
-    'react/react-in-jsx-scope': 'off',
     'react/function-component-definition': 'off',
     'react/prop-types': 'off',
+    'react/react-in-jsx-scope': 'off',
     'react/require-default-props': 'off',
-    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    'import/prefer-default-export': 'off',
   },
   ignorePatterns: ['.eslintrc.js'],
   parserOptions: {
