@@ -10,11 +10,12 @@ import { shuffle } from '../utils/string';
  * shuffles the words which aren't visible. The shuffling is to prevent cheating
  * by inspecting the DOM, though it would only be a concern if QBHub offered
  * a multiplayer version reader.
- * @returns {string[]} words The words to display, visible + shuffled words.
- * @returns {number} visibleIndex Index of last visible word.
- * @returns {Function} pause Callback to pause reading.
- * @returns {Function} resume Callback to resume reading.
- * @returns {Function} reveal Callback to reveal all words.
+ *
+ * @returns words        The words to display, visible + shuffled words.
+ *          visibleIndex Index of last visible word.
+ *          pause        Callback to pause reading.
+ *          resume       Callback to resume reading.
+ *          reveal       Callback to reveal all words.
  */
 export const useReader = (words: string[], startImmediately = true) => {
   const { readingSpeed } = useSelector(selectSettings);
