@@ -31,17 +31,15 @@ const Leadin = ({ setIsLeadinFinished }: LeadinProps) => {
     () => getTossupWords(formattedLeadin).map(({ word }) => word),
     [formattedLeadin],
   );
-  const { displayWords, visibleIndex, pause, reveal } = useReader(words, true);
+  const { displayWords, visibleIndex, pause, reveal } = useReader(words, {
+    startImmediately: true,
+    onVisibleChange: (index) => dispatch(setVisible(index)),
+  });
 
   // pause reading when answering
   useEffect(() => {
     if (status === ReaderStatus.answering) pause();
   }, [pause, status]);
-
-  // update visible index
-  useEffect(() => {
-    if (status === ReaderStatus.reading) dispatch(setVisible(visibleIndex));
-  }, [dispatch, status, visibleIndex]);
 
   // reveal rest of tossup
   useEffect(() => {
@@ -115,20 +113,17 @@ const ActiveQuestion = () => {
   );
   const { displayWords, visibleIndex, pause, resume, reveal } = useReader(
     words,
-    false,
+    {
+      startImmediately: false,
+      onVisibleChange: (index) =>
+        dispatch(setVisible(hasLeadin ? leadinOffset + index : index)),
+    },
   );
 
   // begin reading nonleadin, if leadin doesn't exist or is finished already
   useEffect(() => {
     if (isLeadinFinished) resume();
   }, [hasLeadin, isLeadinFinished, resume]);
-
-  // update visible index
-  useEffect(() => {
-    dispatch(
-      setVisible(hasLeadin ? leadinOffset + visibleIndex : visibleIndex),
-    );
-  }, [dispatch, hasLeadin, leadinOffset, visibleIndex]);
 
   // pause reading when answering
   useEffect(() => {

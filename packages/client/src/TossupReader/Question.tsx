@@ -29,17 +29,14 @@ const Question = () => {
     () => getTossupWords(formattedText).map(({ word }) => word),
     [formattedText],
   );
-  const { displayWords, visibleIndex, pause, reveal } = useReader(words);
+  const { displayWords, visibleIndex, pause, reveal } = useReader(words, {
+    onVisibleChange: (index) => dispatch(setVisible(index)),
+  });
 
   // pause reading when answering
   useEffect(() => {
     if (status === ReaderStatus.answering) pause();
   }, [pause, status, visibleIndex]);
-
-  // update visible index
-  useEffect(() => {
-    if (status === ReaderStatus.reading) dispatch(setVisible(visibleIndex));
-  }, [dispatch, status, visibleIndex]);
 
   // reveal rest of tossup
   useEffect(() => {
@@ -78,9 +75,6 @@ const Question = () => {
       ),
     [buzzIndex, shuffledTossupWords, visibleIndex],
   );
-  useEffect(() => {
-    console.log(`revealing: ${shuffledTossupWords[visibleIndex]?.word}`);
-  }, [shuffledTossupWords, visibleIndex]);
 
   return renderedQuestion;
 };

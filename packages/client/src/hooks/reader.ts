@@ -4,6 +4,11 @@ import { selectSettings } from '../Settings/settingsSlice';
 import { getReadingTimeoutDelay } from '../utils/settings';
 import { shuffle } from '../utils/string';
 
+type ReaderOptions = {
+  startImmediately?: boolean;
+  onVisibleChange?: (index: number) => void;
+};
+
 /**
  * Custom hook for reading text at a certain reading rate (time/word).
  * Uses an incrementing index to keep track of the last visible word, and
@@ -17,7 +22,13 @@ import { shuffle } from '../utils/string';
  *          resume       Callback to resume reading.
  *          reveal       Callback to reveal all words.
  */
-export const useReader = (words: string[], startImmediately = true) => {
+export const useReader = (
+  words: string[],
+  {
+    startImmediately = true,
+    onVisibleChange = () => {},
+  }: ReaderOptions = {} as ReaderOptions,
+) => {
   const { readingSpeed } = useSelector(selectSettings);
   const [visibleIndex, setVisibleIndex] = useState(-1);
   const [incrementId, setIncrementId] = useState<NodeJS.Timeout | null>(null);
@@ -48,20 +59,18 @@ export const useReader = (words: string[], startImmediately = true) => {
       shouldRead.current
     ) {
       const id = setTimeout(() => {
-        console.log({ shouldRead: shouldRead.current });
         if (shouldRead.current) {
-          console.log('moving visible index');
-          setVisibleIndex((index) => index + 1);
+          onVisibleChange(visibleIndex + 1);
+          setVisibleIndex(visibleIndex + 1);
         }
         setIncrementId(null);
       }, readingDelay);
       setIncrementId(id);
     }
-  }, [incrementId, readingDelay, visibleIndex, words.length]);
+  }, [incrementId, onVisibleChange, readingDelay, visibleIndex, words.length]);
 
   // pause reading
   const pause = useCallback(() => {
-    console.log('pausing, setting shouldRead to false');
     setShouldRead(false);
     // clear any pending updates
     if (incrementId) {
