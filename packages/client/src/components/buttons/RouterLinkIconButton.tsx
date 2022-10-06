@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { Box, Link, LinkProps } from '@chakra-ui/react';
-import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { BaseIconButtonProps } from './base';
 

@@ -1,5 +1,4 @@
 import { Link, LinkProps } from '@chakra-ui/react';
-import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { BaseButtonProps } from './base';
 

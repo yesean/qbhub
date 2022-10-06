@@ -1,8 +1,8 @@
 import stats from 'compromise-stats';
 import _nlp from 'compromise/three';
-import { PlainTossup } from 'db';
 import { Bag, ClueBagMap } from '../types/clues';
 import { Clue, ClueResult } from '../types/controller';
+import { PlainTossup } from '../types/db';
 import { each, max, shuffle, sum, unique } from './array';
 import logger from './logger';
 import { round } from './number';
@@ -237,11 +237,11 @@ const combineClues = (
     const cluesCopy = [...clues];
 
     // get clue with best match
-    const bestClueIdx = similarClues.reduce(max((e) => clueScores.get(e)));
+    const bestClueIdx = similarClues.reduce(max((e) => clueScores.get(e)!));
     const bestClueScore = clueScores.get(bestClueIdx);
     const matches = similarClues.slice(1).map((i) => ({
       ...cluesCopy[i],
-      score: round(clueScores.get(i), 2),
+      score: round(clueScores.get(i)!, 2),
     }));
     uniqueClues.push({
       ...queryClue,

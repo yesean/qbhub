@@ -358,7 +358,7 @@ export class QueryBuilder {
     return this.addCommand(`OFFSET ${this.register(n)}`);
   }
 
-  limit(n: number | null) {
+  limit(n: number) {
     return this.addCommand(`LIMIT ${this.register(n)}`);
   }
 

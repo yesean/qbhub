@@ -106,7 +106,7 @@ export const getBonuses = async (questionFilters: QuestionFilters) => {
     (acc, bonusPart) => {
       const { bonus_id: bonusId } = bonusPart;
       if (acc.has(bonusId)) {
-        acc.get(bonusId).push(transformBonusPart(bonusPart));
+        acc.get(bonusId)!.push(transformBonusPart(bonusPart));
       } else {
         acc.set(bonusId, [transformBonusPart(bonusPart)]);
       }

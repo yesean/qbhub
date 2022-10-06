@@ -1,6 +1,11 @@
-import { Category, Difficulty, Subcategory, Tournament } from 'questions';
 import { SortOption } from '../types/controller';
 import { QueryStringParsingError } from '../types/errors';
+import {
+  Category,
+  Difficulty,
+  Subcategory,
+  Tournament,
+} from '../types/questions';
 import {
   MAX_LIMIT,
   MAX_TOURNAMENT_YEAR,

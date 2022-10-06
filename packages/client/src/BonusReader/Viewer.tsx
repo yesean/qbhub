@@ -1,5 +1,5 @@
 import { Box, Divider } from '@chakra-ui/react';
-import React, { useEffect, useMemo, useRef } from 'react';
+import { Fragment, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';
 import Answer from '../components/reader/Answer';
@@ -57,14 +57,14 @@ const Container = () => {
         </Box>
       )}
       {range(1, number).map((num, i) => (
-        <React.Fragment key={num}>
+        <Fragment key={num}>
           <PreviousQuestion
             leadinOffset={leadinOffset}
             part={bonus.parts[i]}
             partResult={result.parts[i]}
           />
           <Divider borderColor="gray.300" mb={4} />
-        </React.Fragment>
+        </Fragment>
       ))}
       <Box>
         <ActiveQuestion key={number} />

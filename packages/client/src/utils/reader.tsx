@@ -2,7 +2,7 @@ import { BellIcon } from '@chakra-ui/icons';
 import { Container, Text } from '@chakra-ui/react';
 import nlp from 'compromise';
 import { Fragment } from 'react';
-import ss from 'string-similarity';
+import { findBestMatch } from 'string-similarity';
 import { BonusPartResult, BonusScore } from '../types/bonus';
 import { JudgeResult, TossupScore, TossupWord } from '../types/tossups';
 import { combine, emptyStringFilter, getUnique } from './array';
@@ -289,7 +289,7 @@ const checkAnswer = (userAnswer: string, answers: string[]) => {
       bestMatchIndex: -1,
     };
 
-  return ss.findBestMatch(userAnswer, answers);
+  return findBestMatch(userAnswer, answers);
 };
 
 /**

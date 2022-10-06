@@ -3,7 +3,7 @@ import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '@fontsource/inter/700.css';
 import '@fontsource/raleway/700.css';
-import React from 'react';
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
@@ -16,7 +16,7 @@ pino.info('page_load');
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
 root.render(
-  <React.StrictMode>
+  <StrictMode>
     <Provider store={store}>
       <ChakraProvider theme={theme}>
         <BrowserRouter>
@@ -24,5 +24,5 @@ root.render(
         </BrowserRouter>
       </ChakraProvider>
     </Provider>
-  </React.StrictMode>,
+  </StrictMode>,
 );
