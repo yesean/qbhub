@@ -11,6 +11,5 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "resolveJsonModule": true
-  },
-  "include": ["src"]
+  }
 }
