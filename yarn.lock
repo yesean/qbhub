@@ -15099,6 +15099,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"types@workspace:packages/types":
+  version: 0.0.0-use.local
+  resolution: "types@workspace:packages/types"
+  languageName: unknown
+  linkType: soft
+
 "typescript@npm:4.8.4":
   version: 4.8.4
   resolution: "typescript@npm:4.8.4"
