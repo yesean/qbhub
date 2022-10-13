@@ -1,5 +1,5 @@
 import nlp from 'compromise';
-import { sanitize } from 'dompurify';
+import DOMPurify from 'dompurify';
 import { toWords } from 'number-to-words';
 import ReactHTMLParser from 'react-html-parser';
 import { getRand } from './number';
@@ -50,7 +50,8 @@ export const cleanTossupText = (text: string) =>
 /**
  * Sanitize and parse string into JSX.
  */
-export const parseHTMLString = (s: string) => ReactHTMLParser(sanitize(s));
+export const parseHTMLString = (s: string) =>
+  ReactHTMLParser(DOMPurify.sanitize(s));
 
 /**
  * Check if string is numeric.

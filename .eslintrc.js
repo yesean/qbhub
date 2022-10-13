@@ -1,11 +1,5 @@
 module.exports = {
-  extends: [
-    'react-app/jest',
-    'airbnb',
-    'airbnb/hooks',
-    'airbnb-typescript',
-    'prettier',
-  ],
+  extends: ['airbnb', 'airbnb/hooks', 'airbnb-typescript', 'prettier'],
   rules: {
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     'no-param-reassign': 'off',
@@ -16,7 +10,7 @@ module.exports = {
     'react/require-default-props': 'off',
     'import/prefer-default-export': 'off',
   },
-  ignorePatterns: ['.eslintrc.js'],
+  ignorePatterns: ['.eslintrc.js', 'vite.config.ts'],
   parserOptions: {
     project: './tsconfig.json',
   },

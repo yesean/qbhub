@@ -1,0 +1,22 @@
+import react from '@vitejs/plugin-react';
+import visualizer from 'rollup-plugin-visualizer';
+import { defineConfig } from 'vite';
+import svgr from 'vite-plugin-svgr';
+
+export default defineConfig({
+  plugins: [react(), svgr(), visualizer()],
+  server: {
+    port: 3000,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+      },
+    },
+  },
+  build: {
+    outDir: 'build',
+  },
+  preview: {
+    port: 5000,
+  },
+});

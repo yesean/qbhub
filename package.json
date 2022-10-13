@@ -10,7 +10,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "concurrently \"yarn workspace server run dev\" \"yarn workspace client run start\"",
+    "dev": "yarn workspaces foreach -pvi run dev",
     "start": "yarn workspace server run start",
     "lint": "yarn workspaces foreach -pv run lint",
     "format": "yarn workspaces foreach -pv run format",
@@ -18,8 +18,5 @@
     "deploy": "scp -r packages/server/{dist,build} qbhub:~/qbhub && ssh qbhub 'cd ~/qbhub && git pull && yarn install && pm2 restart qbhub'",
     "deploy:full": "yarn build && yarn deploy"
   },
-  "packageManager": "yarn@3.2.3",
-  "devDependencies": {
-    "concurrently": "7.4.0"
-  }
+  "packageManager": "yarn@3.2.3"
 }
