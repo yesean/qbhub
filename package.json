@@ -12,9 +12,9 @@
   "scripts": {
     "dev": "yarn workspaces foreach -pvi run dev",
     "start": "yarn workspace server run start",
-    "lint": "yarn workspaces foreach -pv run lint",
-    "format": "yarn workspaces foreach -pv run format",
-    "build": "yarn workspaces foreach -pv run build && cp -r packages/client/build packages/server",
+    "lint": "yarn workspaces foreach -pvi run lint",
+    "format": "yarn workspaces foreach -pvi run format",
+    "build": "yarn workspaces foreach -pvi run build && cp -r packages/client/build packages/server",
     "deploy": "scp -r packages/server/{dist,build} qbhub:~/qbhub && ssh qbhub 'cd ~/qbhub && git pull && yarn install && pm2 restart qbhub'",
     "deploy:full": "yarn build && yarn deploy"
   },
