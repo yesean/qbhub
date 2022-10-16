@@ -48,12 +48,14 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
   }, [status]);
 
   const buzz = useCallback(() => {
+    if (status !== ReaderStatus.reading) return;
+
     if (inputRef?.current != null) {
       inputRef.current.disabled = false;
       inputRef.current.focus();
     }
     dispatch(buzzAction());
-  }, [dispatch]);
+  }, [dispatch, status]);
   const submitInput = useCallback(() => submit(input), [input, submit]);
   const next = useCallback(() => dispatch(nextTossupAction()), [dispatch]);
 
