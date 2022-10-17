@@ -219,6 +219,9 @@ export const parseAcceptableAnswers = (answerline: string): string[] => {
   // remove tags since they are not needed anymore
   normalizedAnswer = remove(normalizedAnswer, anyTag);
 
+  // convert html entities to unicode
+  normalizedAnswer = parseHTMLString(normalizedAnswer)[0] as unknown as string;
+
   // parse acceptable answers, roughly based on acf guidelines
   const primaryAnswer = /^(.*?)(?:$|(?:\[| or ).*)/g; // first answer up to '[' or EOL
   const acceptableAnswers =
