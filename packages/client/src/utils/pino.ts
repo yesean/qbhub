@@ -1,6 +1,6 @@
+import { createPinoBrowserSend } from '@seanye/pino-logflare';
 import { detect } from 'detect-browser';
 import pino from 'pino';
-import { createPinoBrowserSend } from 'pino-logflare';
 
 const browser = detect();
 export const browserInfo = {
