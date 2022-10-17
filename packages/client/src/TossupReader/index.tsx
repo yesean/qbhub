@@ -64,7 +64,7 @@ const TossupReader = () => {
         dispatch(
           submitAnswer({
             isCorrect,
-            userAnswer,
+            userAnswer: input,
           }),
         );
       }

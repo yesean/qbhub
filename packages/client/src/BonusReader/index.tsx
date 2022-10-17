@@ -63,7 +63,7 @@ const BonusReader: React.FC<React.PropsWithChildren<unknown>> = () => {
         dispatch(
           submitAnswer({
             isCorrect,
-            userAnswer,
+            userAnswer: input,
           }),
         );
       }
