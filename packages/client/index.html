@@ -24,12 +24,12 @@
 
     <!-- add node polyfills -->
     <script type="module">
-      import process from 'process';
       import { Buffer } from 'buffer';
+      import process from 'process';
 
       window.global = globalThis;
-      window.process = process;
       window.Buffer = Buffer;
+      window.process = process;
     </script>
 
     <!-- bootstrap Vite application -->
