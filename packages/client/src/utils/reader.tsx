@@ -1,6 +1,6 @@
 import { BellIcon } from '@chakra-ui/icons';
 import { Container, Text } from '@chakra-ui/react';
-import nlp from 'compromise';
+import { deburr } from 'lodash-es';
 import { Fragment } from 'react';
 import { findBestMatch } from 'string-similarity';
 import { BonusPartResult, BonusScore } from '../types/bonus';
@@ -157,9 +157,7 @@ const cleanAnswerline = (s: string) =>
 export const normalizeAnswer = (s: string) =>
   normalizeSpacing(
     removeNonAlphanumeric(
-      convertNumberToWords(
-        nlp(s).normalize('light').text().replaceAll(quotes, ''),
-      ).toLowerCase(),
+      convertNumberToWords(deburr(s).replaceAll(quotes, '')).toLowerCase(),
     ),
   );
 

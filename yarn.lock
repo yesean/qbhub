@@ -2371,6 +2371,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash-es@npm:^4.17.6":
+  version: 4.17.6
+  resolution: "@types/lodash-es@npm:4.17.6"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 9bd239dd525086e278821949ce12fbdd4f100a060fed9323fc7ad5661113e1641f28a7ebab617230ed3474680d8f4de705c1928b48252bb684be6ec9eed715db
+  languageName: node
+  linkType: hard
+
 "@types/lodash.mergewith@npm:4.6.6":
   version: 4.6.6
   resolution: "@types/lodash.mergewith@npm:4.6.6"
@@ -3311,6 +3320,7 @@ __metadata:
     "@testing-library/user-event": ^14.4.3
     "@types/dompurify": ^2.3.4
     "@types/jest": ^29.1.2
+    "@types/lodash-es": ^4.17.6
     "@types/node": ^18.8.0
     "@types/number-to-words": ^1.2.1
     "@types/react": ^18.0.21
@@ -3336,6 +3346,7 @@ __metadata:
     eslint-plugin-react: 7.31.8
     eslint-plugin-react-hooks: 4.6.0
     framer-motion: 7.5.1
+    lodash-es: ^4.17.21
     number-to-words: 1.2.4
     pino: 8.6.1
     prettier: 2.7.1
@@ -5719,6 +5730,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash-es@npm:^4.17.21":
+  version: 4.17.21
+  resolution: "lodash-es@npm:4.17.21"
+  checksum: 05cbffad6e2adbb331a4e16fbd826e7faee403a1a04873b82b42c0f22090f280839f85b95393f487c1303c8a3d2a010048bf06151a6cbe03eee4d388fb0a12d2
+  languageName: node
+  linkType: hard
+
 "lodash.merge@npm:^4.6.2":
   version: 4.6.2
   resolution: "lodash.merge@npm:4.6.2"
@@ -6509,7 +6527,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino-logflare@npm:^0.3.12":
+"pino-logflare@npm:0.3.12":
   version: 0.3.12
   resolution: "pino-logflare@npm:0.3.12"
   dependencies:
@@ -7486,7 +7504,7 @@ __metadata:
     nodemon: 2.0.20
     pg: 8.8.0
     pino-http: 8.2.1
-    pino-logflare: ^0.3.12
+    pino-logflare: 0.3.12
     prettier: 2.7.1
     ts-node: 10.9.1
     typescript: 4.8.4

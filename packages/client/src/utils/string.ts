@@ -1,4 +1,4 @@
-import nlp from 'compromise';
+import nlp from 'compromise/two';
 import DOMPurify from 'dompurify';
 import { toWords } from 'number-to-words';
 import ReactHTMLParser from 'react-html-parser';
