@@ -13,10 +13,10 @@ import {
 } from './bonusReaderSlice';
 
 type LeadinProps = {
-  setIsLeadinFinished: React.Dispatch<React.SetStateAction<boolean>>;
+  onFinish: () => void;
 };
 
-const Leadin = ({ setIsLeadinFinished }: LeadinProps) => {
+const Leadin = ({ onFinish }: LeadinProps) => {
   const visibleRef = useRef<HTMLParagraphElement>(null);
   const {
     status,
@@ -49,8 +49,8 @@ const Leadin = ({ setIsLeadinFinished }: LeadinProps) => {
 
   // buzz at the end of the tossup
   useEffect(() => {
-    if (visibleIndex === displayWords.length - 1) setIsLeadinFinished(true);
-  }, [displayWords.length, setIsLeadinFinished, visibleIndex]);
+    if (visibleIndex === displayWords.length - 1) onFinish();
+  }, [displayWords.length, onFinish, visibleIndex]);
 
   useEffect(() => {
     if (visibleRef.current === null) return;
@@ -170,7 +170,7 @@ const ActiveQuestion = () => {
 
   return (
     <>
-      {hasLeadin && <Leadin setIsLeadinFinished={setIsLeadinFinished} />}
+      {hasLeadin && <Leadin onFinish={() => setIsLeadinFinished(true)} />}
       {isLeadinFinished && (
         <>
           <b>[10]</b>{' '}
