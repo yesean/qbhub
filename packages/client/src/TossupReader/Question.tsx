@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';
 import ReaderQuestion from '../components/reader/Question';
-import { useReader } from '../hooks/reader';
+import { useReader } from '../hooks/useReader';
 import { useAppDispatch } from '../redux/hooks';
 import { getTossupWords, renderQuestion } from '../utils/reader';
 import {
