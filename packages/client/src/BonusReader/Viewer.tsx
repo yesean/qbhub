@@ -6,14 +6,19 @@ import Answer from '../components/reader/Answer';
 import ReaderQuestion from '../components/reader/Question';
 import UserAnswer from '../components/reader/UserAnswer';
 import { useAppDispatch } from '../redux/hooks';
+import { ReaderStatus } from '../types/reader';
 import { range } from '../utils/array';
 import { getTossupWords } from '../utils/reader';
 import ActiveQuestion from './ActiveQuestion';
-import { nextBonus, ReaderStatus, selectBonusReader } from './bonusReaderSlice';
+import { nextBonus, selectBonusReader } from './bonusReaderSlice';
 import Leadin from './Leadin';
 import PreviousQuestion from './PreviousQuestion';
 
-const Container = () => {
+type Props = {
+  setBuzz: React.Dispatch<React.SetStateAction<() => void>>;
+};
+
+const Container = ({ setBuzz }: Props) => {
   const {
     status,
     current: { number, bonus, result, part, partResult },
@@ -67,7 +72,8 @@ const Container = () => {
         </Fragment>
       ))}
       <Box>
-        <ActiveQuestion key={number} />
+        {/* use key prop to unmount ActiveQuestion to reset useReader */}
+        <ActiveQuestion key={number} setBuzz={setBuzz} />
       </Box>
       {[ReaderStatus.partialJudged, ReaderStatus.judged].includes(status) && (
         <Box mt={1} py={1}>

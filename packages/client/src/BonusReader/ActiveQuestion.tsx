@@ -1,134 +1,107 @@
-import { Box } from '@chakra-ui/react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Box, Text } from '@chakra-ui/react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import { useSelector } from 'react-redux';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';
+import FormattedQuestion from '../components/reader/FormattedQuestion';
 import { useReader } from '../hooks/useReader';
 import { useAppDispatch } from '../redux/hooks';
-import { getTossupWords, renderQuestion } from '../utils/reader';
-import {
-  buzz,
-  ReaderStatus,
-  selectBonusReader,
-  setVisible,
-} from './bonusReaderSlice';
+import { ReaderStatus } from '../types/reader';
+import { TossupWord } from '../types/tossups';
+import { getTossupWords } from '../utils/reader';
+import { buzz as buzzAction, selectBonusReader } from './bonusReaderSlice';
 
-type LeadinProps = {
-  onFinish: () => void;
+type SectionProps = {
+  prefix: string;
+  words: TossupWord[];
+  buzzIndex: number;
+  visibleIndex: number;
+  visibleRef: React.RefObject<HTMLParagraphElement>;
 };
 
-const Leadin = ({ onFinish }: LeadinProps) => {
-  const visibleRef = useRef<HTMLParagraphElement>(null);
-  const {
-    status,
-    current: {
-      buzzIndex,
-      bonus: { formattedLeadin },
-    },
-  } = useSelector(selectBonusReader);
-  const dispatch = useAppDispatch();
-
-  const words = useMemo(
-    () => getTossupWords(formattedLeadin).map(({ word }) => word),
-    [formattedLeadin],
-  );
-  const { displayWords, visibleIndex, pause, reveal } = useReader(words, {
-    startImmediately: true,
-    onVisibleChange: (index) => dispatch(setVisible(index)),
-  });
-
-  // pause reading when answering
+const Section = ({
+  prefix,
+  words,
+  buzzIndex,
+  visibleIndex,
+  visibleRef,
+}: SectionProps) => {
   useEffect(() => {
-    if (status === ReaderStatus.answering) pause();
-  }, [pause, status]);
-
-  // reveal rest of tossup
-  useEffect(() => {
-    if ([ReaderStatus.judged, ReaderStatus.partialJudged].includes(status))
-      reveal();
-  }, [reveal, status]);
-
-  // buzz at the end of the tossup
-  useEffect(() => {
-    if (visibleIndex === displayWords.length - 1) onFinish();
-  }, [displayWords.length, onFinish, visibleIndex]);
-
-  useEffect(() => {
-    if (visibleRef.current === null) return;
+    if (
+      visibleRef.current === null ||
+      visibleIndex < 0 ||
+      visibleIndex > words.length - 1
+    )
+      return;
 
     elementScrollIntoView(visibleRef.current, { block: 'center' });
-  }, [visibleIndex, buzzIndex, status]);
-
-  const shuffledQuestionWords = useMemo(
-    () =>
-      displayWords.map((word) => ({
-        word,
-        bold: false,
-      })),
-    [displayWords],
-  );
-
-  const renderedQuestion = useMemo(
-    () =>
-      renderQuestion(
-        shuffledQuestionWords,
-        {
-          visible: visibleIndex,
-          buzz: buzzIndex,
-        },
-        visibleRef,
-      ),
-    [buzzIndex, shuffledQuestionWords, visibleIndex],
-  );
+  }, [visibleIndex, visibleRef, words.length]);
 
   return (
     <Box>
-      <b>BONUS:</b> {renderedQuestion}
+      <Text
+        display="inline-block"
+        visibility={visibleIndex < 0 ? 'hidden' : 'visible'}
+        fontWeight="bold"
+      >
+        {prefix}
+      </Text>{' '}
+      <FormattedQuestion
+        words={words}
+        indices={{ visible: visibleIndex, buzz: buzzIndex }}
+        visibleRef={visibleRef}
+      />
     </Box>
   );
 };
 
-const ActiveQuestion = () => {
+// map word for FormattedQuestion
+const transformWord = (word: string) => ({ word, bold: false });
+
+type ActiveQuestionProps = {
+  setBuzz: React.Dispatch<React.SetStateAction<() => void>>;
+};
+
+const ActiveQuestion = ({ setBuzz }: ActiveQuestionProps) => {
   const visibleRef = useRef<HTMLParagraphElement>(null);
   const {
     status,
     current: {
       buzzIndex,
-      part: { formattedText },
       bonus: { formattedLeadin },
+      part: { formattedText },
       number,
     },
   } = useSelector(selectBonusReader);
   const dispatch = useAppDispatch();
 
-  const hasLeadin = number === 1;
-  const leadinOffset = useMemo(
-    () => getTossupWords(formattedLeadin).length,
-    [formattedLeadin],
-  );
-  const [isLeadinFinished, setIsLeadinFinished] = useState(!hasLeadin);
+  const { hasLeadin, leadinOffset, words } = useMemo(() => {
+    const leadin = getTossupWords(formattedLeadin);
+    const text = getTossupWords(formattedText);
+    const combinedWords = number === 1 ? [...leadin, ...text] : text;
 
-  const words = useMemo(
-    () => getTossupWords(formattedText).map(({ word }) => word),
-    [formattedText],
-  );
-  const { displayWords, visibleIndex, pause, resume, reveal } = useReader(
-    words,
-    {
-      startImmediately: false,
-      onVisibleChange: (index) =>
-        dispatch(setVisible(hasLeadin ? leadinOffset + index : index)),
-    },
-  );
+    return {
+      hasLeadin: number === 1,
+      leadinOffset: leadin.length,
+      words: combinedWords.map(({ word }) => word),
+    };
+  }, [formattedLeadin, formattedText, number]);
 
-  // begin reading nonleadin, if leadin doesn't exist or is finished already
-  useEffect(() => {
-    if (isLeadinFinished) resume();
-  }, [hasLeadin, isLeadinFinished, resume]);
+  const { buzz, reveal, displayWords, visibleIndex } = useReader(words, {
+    onBuzz: useCallback(
+      (index: number) => dispatch(buzzAction(index)),
+      [dispatch],
+    ),
+  });
 
-  // pause reading when answering
-  useEffect(() => {
-    if (status === ReaderStatus.answering) pause();
-  }, [pause, status]);
+  useLayoutEffect(() => {
+    setBuzz(() => buzz);
+  }, [buzz, setBuzz]);
 
   // reveal rest of tossup
   useEffect(() => {
@@ -136,47 +109,48 @@ const ActiveQuestion = () => {
       reveal();
   }, [reveal, status]);
 
-  // buzz at the end of the tossup
-  useEffect(() => {
-    if (visibleIndex === displayWords.length - 1) dispatch(buzz());
-  }, [dispatch, visibleIndex, displayWords.length]);
-
-  useEffect(() => {
-    if (visibleRef.current === null) return;
-
-    elementScrollIntoView(visibleRef.current, { block: 'center' });
-  }, [visibleIndex, buzzIndex, status]);
-
   const shuffledQuestionWords = useMemo(
-    () =>
-      displayWords.map((word) => ({
-        word,
-        bold: false,
-      })),
+    () => displayWords.map(transformWord),
     [displayWords],
   );
 
-  const renderedQuestion = useMemo(() => {
-    const adjustedBuzzIndex = hasLeadin ? buzzIndex - leadinOffset : buzzIndex;
-    return renderQuestion(
-      shuffledQuestionWords,
-      {
-        visible: visibleIndex,
-        buzz: adjustedBuzzIndex,
-      },
-      visibleRef,
+  const leadinWords = useMemo(
+    () => shuffledQuestionWords.slice(0, leadinOffset),
+    [leadinOffset, shuffledQuestionWords],
+  );
+  const remainingWords = useMemo(
+    () => shuffledQuestionWords.slice(leadinOffset),
+    [leadinOffset, shuffledQuestionWords],
+  );
+
+  if (!hasLeadin) {
+    return (
+      <Section
+        prefix="[10]"
+        words={shuffledQuestionWords}
+        buzzIndex={buzzIndex}
+        visibleIndex={visibleIndex}
+        visibleRef={visibleRef}
+      />
     );
-  }, [buzzIndex, hasLeadin, leadinOffset, shuffledQuestionWords, visibleIndex]);
+  }
 
   return (
     <>
-      {hasLeadin && <Leadin onFinish={() => setIsLeadinFinished(true)} />}
-      {isLeadinFinished && (
-        <>
-          <b>[10]</b>{' '}
-        </>
-      )}
-      {renderedQuestion}
+      <Section
+        prefix="BONUS:"
+        words={leadinWords}
+        buzzIndex={buzzIndex}
+        visibleIndex={visibleIndex}
+        visibleRef={visibleRef}
+      />
+      <Section
+        prefix="[10]"
+        words={remainingWords}
+        buzzIndex={buzzIndex - leadinOffset}
+        visibleIndex={visibleIndex - leadinOffset}
+        visibleRef={visibleRef}
+      />
     </>
   );
 };

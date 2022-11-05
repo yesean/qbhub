@@ -1,19 +1,29 @@
-import { useEffect, useMemo, useRef } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import { useSelector } from 'react-redux';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';
+import FormattedQuestion from '../components/reader/FormattedQuestion';
 import ReaderQuestion from '../components/reader/Question';
 import { useReader } from '../hooks/useReader';
 import { useAppDispatch } from '../redux/hooks';
-import { getTossupWords, renderQuestion } from '../utils/reader';
+import { ReaderStatus } from '../types/reader';
+import { getTossupWords } from '../utils/reader';
 import {
-  buzz,
+  buzz as buzzAction,
   nextTossup,
-  ReaderStatus,
   selectTossupReader,
-  setVisible,
 } from './tossupReaderSlice';
 
-const Question = () => {
+type QuestionProps = {
+  setBuzz: React.Dispatch<React.SetStateAction<() => void>>;
+};
+
+const Question = ({ setBuzz }: QuestionProps) => {
   const visibleRef = useRef<HTMLParagraphElement>(null);
   const {
     status,
@@ -29,24 +39,21 @@ const Question = () => {
     () => getTossupWords(formattedText).map(({ word }) => word),
     [formattedText],
   );
-  const { displayWords, visibleIndex, pause, reveal } = useReader(words, {
-    onVisibleChange: (index) => dispatch(setVisible(index)),
+  const { buzz, reveal, displayWords, visibleIndex } = useReader(words, {
+    onBuzz: useCallback(
+      (index: number) => dispatch(buzzAction(index)),
+      [dispatch],
+    ),
   });
 
-  // pause reading when answering
-  useEffect(() => {
-    if (status === ReaderStatus.answering) pause();
-  }, [pause, status, visibleIndex]);
+  useLayoutEffect(() => {
+    setBuzz(() => buzz);
+  }, [buzz, setBuzz]);
 
   // reveal rest of tossup
   useEffect(() => {
     if (status === ReaderStatus.judged) reveal();
   }, [reveal, status]);
-
-  // buzz at the end of the tossup
-  useEffect(() => {
-    if (visibleIndex === displayWords.length - 1) dispatch(buzz());
-  }, [dispatch, visibleIndex, displayWords.length]);
 
   useEffect(() => {
     if (visibleRef.current === null) return;
@@ -63,23 +70,23 @@ const Question = () => {
     [displayWords, tossupWords],
   );
 
-  const renderedQuestion = useMemo(
-    () =>
-      renderQuestion(
-        shuffledTossupWords,
-        {
-          visible: visibleIndex,
-          buzz: buzzIndex,
-        },
-        visibleRef,
-      ),
-    [buzzIndex, shuffledTossupWords, visibleIndex],
+  return (
+    <FormattedQuestion
+      words={shuffledTossupWords}
+      indices={{
+        visible: visibleIndex,
+        buzz: buzzIndex,
+      }}
+      visibleRef={visibleRef}
+    />
   );
-
-  return renderedQuestion;
 };
 
-const Container = () => {
+type ContainerProps = {
+  setBuzz: React.Dispatch<React.SetStateAction<() => void>>;
+};
+
+const Container = ({ setBuzz }: ContainerProps) => {
   const { status } = useSelector(selectTossupReader);
   const dispatch = useAppDispatch();
 
@@ -96,7 +103,7 @@ const Container = () => {
       emptyMessage={emptyMessage}
       onEmpty={onEmpty}
     >
-      <Question />
+      <Question setBuzz={setBuzz} />
     </ReaderQuestion>
   );
 };

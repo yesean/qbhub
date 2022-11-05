@@ -7,19 +7,9 @@ import {
   Subcategory,
   Tournament,
 } from '../types/questions';
+import { ReaderStatus } from '../types/reader';
 import * as fetchUtils from '../utils/fetch';
 import { getBonusScore } from '../utils/reader';
-
-export enum ReaderStatus {
-  idle,
-  fetching,
-  reading,
-  answering,
-  partialJudged,
-  prompting,
-  judged,
-  empty,
-}
 
 type BonusReaderState = {
   status: ReaderStatus;
@@ -33,7 +23,6 @@ type BonusReaderState = {
     bonus: Bonus;
     result: BonusResult;
     buzzIndex: number;
-    visibleIndex: number;
   };
 };
 
@@ -53,7 +42,6 @@ const initialState: BonusReaderState = {
       bonus: {} as Bonus,
     },
     buzzIndex: -1,
-    visibleIndex: -1,
   },
 };
 
@@ -99,10 +87,10 @@ const bonusReaderSlice = createSlice({
   name: 'bonusReader',
   initialState,
   reducers: {
-    buzz: (state) => {
+    buzz: (state, action: PayloadAction<number>) => {
       if (state.status === ReaderStatus.reading) {
         state.status = ReaderStatus.answering;
-        state.current.buzzIndex = state.current.visibleIndex;
+        state.current.buzzIndex = action.payload;
       }
     },
     prompt: (state) => {
@@ -112,12 +100,8 @@ const bonusReaderSlice = createSlice({
         state.status = ReaderStatus.prompting;
       }
     },
-    setVisible: (state, action: PayloadAction<number>) => {
-      state.current.visibleIndex = action.payload;
-    },
     nextBonusPart: (state) => {
       state.current.buzzIndex = initialState.current.buzzIndex;
-      state.current.visibleIndex = initialState.current.visibleIndex;
       state.current.partResult = initialState.current.partResult;
       state.current.number += 1;
       state.current.part = state.current.bonus.parts[state.current.number - 1];
@@ -215,7 +199,6 @@ const bonusReaderSlice = createSlice({
 export const {
   buzz,
   prompt,
-  setVisible,
   submitAnswer,
   nextBonusPart,
   filterBonusesByCategory,

@@ -65,6 +65,7 @@ export const fetchTossups = async (params: FetchParams): Promise<Tossup[]> => {
     logger.info('Fetching tossups.');
     const { data } = await axios.get<Tossup[]>(url);
     const tossups = data.map((tu) => ({
+      id: tu.id,
       text: cleanTossupText(tu.text),
       answer: tu.answer,
       formattedText: cleanTossupText(tu.formattedText),
@@ -83,13 +84,14 @@ export const fetchTossups = async (params: FetchParams): Promise<Tossup[]> => {
   }
 };
 
-export const fetchBonuses = async (params: FetchParams) => {
+export const fetchBonuses = async (params: FetchParams): Promise<Bonus[]> => {
   const url = addParams(BONUS_URL, createParams(params));
 
   try {
     logger.info('Fetching bonuses.');
     const { data } = await axios.get<Bonus[]>(url);
     const bonuses = data.map((bn) => ({
+      id: bn.id,
       leadin: bn.leadin,
       formattedLeadin: normalizeTags(bn.formattedLeadin),
       category: bn.category,

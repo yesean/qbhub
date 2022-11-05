@@ -6,19 +6,10 @@ import {
   Subcategory,
   Tournament,
 } from '../types/questions';
+import { ReaderStatus } from '../types/reader';
 import { Tossup, TossupResult, TossupWord } from '../types/tossups';
 import * as fetchUtils from '../utils/fetch';
 import { getPowerIndex, getTossupScore, getTossupWords } from '../utils/reader';
-
-export enum ReaderStatus {
-  idle,
-  fetching,
-  reading,
-  answering,
-  prompting,
-  judged,
-  empty,
-}
 
 type TossupReaderState = {
   status: ReaderStatus;
@@ -29,7 +20,6 @@ type TossupReaderState = {
     tossup: Tossup;
     result: TossupResult;
     buzzIndex: number;
-    visibleIndex: number;
     powerIndex: number;
     tossupWords: TossupWord[];
   };
@@ -43,7 +33,6 @@ const initialState: TossupReaderState = {
   current: {
     tossup: {} as Tossup,
     result: {} as TossupResult,
-    visibleIndex: -1,
     buzzIndex: -1,
     powerIndex: -1,
     tossupWords: [],
@@ -92,10 +81,10 @@ const tossupReaderSlice = createSlice({
   name: 'tossupReader',
   initialState,
   reducers: {
-    buzz: (state) => {
+    buzz: (state, action: PayloadAction<number>) => {
       if (state.status === ReaderStatus.reading) {
         state.status = ReaderStatus.answering;
-        state.current.buzzIndex = state.current.visibleIndex;
+        state.current.buzzIndex = action.payload;
       }
     },
     prompt: (state) => {
@@ -104,9 +93,6 @@ const tossupReaderSlice = createSlice({
       ) {
         state.status = ReaderStatus.prompting;
       }
-    },
-    setVisible: (state, action: PayloadAction<number>) => {
-      state.current.visibleIndex = action.payload;
     },
     submitAnswer: (
       state,
@@ -195,7 +181,6 @@ const tossupReaderSlice = createSlice({
 export const {
   buzz,
   prompt,
-  setVisible,
   submitAnswer,
   filterTossupsByCategory,
   filterTossupsBySubcategory,

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectSettings } from '../Settings/settingsSlice';
 import { getReadingTimeoutDelay } from '../utils/settings';
@@ -6,7 +6,9 @@ import { shuffle } from '../utils/string';
 
 type ReaderOptions = {
   startImmediately?: boolean;
-  onVisibleChange?: (index: number) => void;
+  autoBuzz?: boolean;
+  onFinish?: () => void;
+  onBuzz?: (index: number) => void;
 };
 
 /**
@@ -26,17 +28,15 @@ export const useReader = (
   words: string[],
   {
     startImmediately = true,
-    onVisibleChange = () => {},
+    autoBuzz = true,
+    onFinish = () => {},
+    onBuzz = () => {},
   }: ReaderOptions = {} as ReaderOptions,
 ) => {
   const { readingSpeed } = useSelector(selectSettings);
   const [visibleIndex, setVisibleIndex] = useState(-1);
   const [incrementId, setIncrementId] = useState<NodeJS.Timeout | null>(null);
-  const shouldRead = useRef(startImmediately);
-
-  const setShouldRead = useCallback((value: boolean) => {
-    shouldRead.current = value;
-  }, []);
+  const [isPaused, setIsPaused] = useState(!startImmediately);
 
   const readingDelay = useMemo(
     () => getReadingTimeoutDelay(readingSpeed),
@@ -51,64 +51,87 @@ export const useReader = (
     [words],
   );
 
-  // periodically reveal words
-  useEffect(() => {
-    if (
-      visibleIndex < words.length - 1 &&
-      incrementId === null &&
-      shouldRead.current
-    ) {
-      const id = setTimeout(() => {
-        if (shouldRead.current) {
-          onVisibleChange(visibleIndex + 1);
-          setVisibleIndex(visibleIndex + 1);
-        }
-        setIncrementId(null);
-      }, readingDelay);
-      setIncrementId(id);
-    }
-  }, [incrementId, onVisibleChange, readingDelay, visibleIndex, words.length]);
+  const lastIndex = useMemo(() => words.length - 1, [words.length]);
 
   // pause reading
   const pause = useCallback(() => {
-    setShouldRead(false);
+    setIsPaused(true);
     // clear any pending updates
     if (incrementId) {
       clearTimeout(incrementId);
       setIncrementId(null);
     }
-  }, [incrementId, setShouldRead]);
+  }, [incrementId, setIsPaused]);
+
+  const buzz = useCallback(() => {
+    pause();
+    onBuzz(visibleIndex);
+  }, [onBuzz, pause, visibleIndex]);
 
   const resume = useCallback(() => {
-    setShouldRead(true);
-  }, [setShouldRead]);
+    setIsPaused(true);
+  }, [setIsPaused]);
 
   // reveal text
   const reveal = useCallback(() => {
-    // pause();
     setVisibleIndex(words.length);
   }, [words.length]);
 
-  const visible = useMemo(
-    () =>
-      shuffledWords.slice(0, visibleIndex + 1).map(({ original }) => original),
-    [shuffledWords, visibleIndex],
-  );
-  const hidden = useMemo(
-    () => shuffledWords.slice(visibleIndex + 1).map(({ shuffled }) => shuffled),
-    [shuffledWords, visibleIndex],
-  );
+  const reset = useCallback(() => {
+    setVisibleIndex(-1);
+    setIncrementId(null);
+    setIsPaused(false);
+  }, []);
 
   const displayWords = useMemo(
-    () => [...visible, ...hidden],
-    [hidden, visible],
+    () =>
+      shuffledWords.map(({ original, shuffled }, i) =>
+        i <= visibleIndex ? original : shuffled,
+      ),
+    [shuffledWords, visibleIndex],
   );
 
-  return {
-    displayWords,
-    visibleIndex,
-    pause,
-    resume,
-    reveal,
-  };
+  // periodically reveal words
+  useEffect(() => {
+    let id: NodeJS.Timeout | null = null;
+    const tick = () => {
+      id = setTimeout(() => {
+        if (visibleIndex < lastIndex && !isPaused) {
+          setVisibleIndex(visibleIndex + 1);
+          setIncrementId(null);
+          tick();
+        }
+      }, readingDelay);
+      setIncrementId(id);
+    };
+    tick();
+
+    return () => {
+      if (id != null) clearTimeout(id);
+    };
+  }, [isPaused, lastIndex, readingDelay, visibleIndex]);
+
+  useEffect(() => {
+    if (visibleIndex === lastIndex) {
+      if (autoBuzz) {
+        buzz();
+      } else {
+        pause();
+      }
+      onFinish();
+    }
+  }, [autoBuzz, buzz, lastIndex, onFinish, pause, visibleIndex]);
+
+  return useMemo(
+    () => ({
+      displayWords,
+      visibleIndex,
+      buzz,
+      pause,
+      resume,
+      reveal,
+      reset,
+    }),
+    [buzz, displayWords, pause, reset, resume, reveal, visibleIndex],
+  );
 };

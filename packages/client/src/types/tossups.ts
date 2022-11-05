@@ -1,6 +1,7 @@
 import { Category, Difficulty, Subcategory, Tournament } from './questions';
 
 export type Tossup = {
+  id: number;
   text: string;
   answer: string;
   formattedText: string;

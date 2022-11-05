@@ -1,8 +1,9 @@
 import { useSelector } from 'react-redux';
 import ReaderResult from '../components/reader/Result';
+import { ReaderStatus } from '../types/reader';
 import { TossupScore } from '../types/tossups';
 import { random } from '../utils/array';
-import { ReaderStatus, selectTossupReader } from './tossupReaderSlice';
+import { selectTossupReader } from './tossupReaderSlice';
 
 const messages = {
   prompt: ['Prompt!'],

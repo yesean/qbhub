@@ -1,8 +1,9 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { Bonus, BonusPart, BonusPartResult } from '../../types/bonus';
 import { TOURNAMENT_MAP } from '../../utils/constants';
-import { getTossupWords, renderQuestion } from '../../utils/reader';
+import { getTossupWords } from '../../utils/reader';
 import { parseHTMLString } from '../../utils/string';
+import FormattedQuestion from '../reader/FormattedQuestion';
 import { VirtualizedTable, VirtualizedTableColumn } from '../tables';
 
 type BonusPartRowResult = BonusPartResult & { bonus: Bonus; part: BonusPart };
@@ -24,9 +25,10 @@ const cells: { [key: string]: (result: BonusPartRowResult) => JSX.Element } = {
   ),
   question: ({ part: { formattedText }, buzzIndex }) => (
     <Flex flexWrap="wrap">
-      {renderQuestion(getTossupWords(formattedText), {
-        buzz: buzzIndex,
-      })}
+      <FormattedQuestion
+        words={getTossupWords(formattedText)}
+        indices={{ buzz: buzzIndex }}
+      />
     </Flex>
   ),
   tournament: ({ bonus: { tournament } }) => (

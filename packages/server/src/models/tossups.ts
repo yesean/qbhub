@@ -6,6 +6,7 @@ import logger from '../utils/logger';
 import { transformTossup } from '../utils/model';
 
 const columns = [
+  { name: TABLES.tossups.columns.id },
   { name: TABLES.tossups.columns.text },
   { name: TABLES.tossups.columns.answer },
   { name: TABLES.tossups.columns.formattedText },

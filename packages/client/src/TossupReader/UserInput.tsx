@@ -4,10 +4,10 @@ import ReaderUserInput from '../components/reader/UserInput';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import { useAppDispatch } from '../redux/hooks';
 import { selectSettings } from '../Settings/settingsSlice';
+import { ReaderStatus } from '../types/reader';
+import { getInputBorderColor } from '../utils/reader';
 import {
-  buzz as buzzAction,
   nextTossup as nextTossupAction,
-  ReaderStatus,
   selectIsAnswering,
   selectTossupReader,
 } from './tossupReaderSlice';
@@ -25,10 +25,12 @@ const buttonTexts = new Map([
 type UserInputProps = {
   progress: number;
   submit: (s: string) => void;
+  buzz: () => void;
 };
 const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
   progress,
   submit,
+  buzz,
 }) => {
   const {
     status,
@@ -40,24 +42,28 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
   const dispatch = useAppDispatch();
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const isReading = status === ReaderStatus.reading;
+
   // clear input on new tossup
   useEffect(() => {
-    if (status === ReaderStatus.reading) {
+    if (isReading) {
       setInput('');
     }
-  }, [status]);
+  }, [isReading]);
 
-  const buzz = useCallback(() => {
-    if (status !== ReaderStatus.reading) return;
-
+  const focusInput = () => {
     if (inputRef?.current != null) {
       inputRef.current.disabled = false;
       inputRef.current.focus();
     }
-    dispatch(buzzAction());
-  }, [dispatch, status]);
+  };
+
+  const buzzWrapper = () => {
+    focusInput();
+    buzz();
+  };
   const submitInput = useCallback(() => submit(input), [input, submit]);
-  const next = useCallback(() => dispatch(nextTossupAction()), [dispatch]);
+  const next = () => dispatch(nextTossupAction());
 
   // add different button behavior depending on the status
   let onClick;
@@ -67,7 +73,7 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
       onClick = next;
       break;
     case ReaderStatus.reading:
-      onClick = buzz;
+      onClick = buzzWrapper;
       break;
     case ReaderStatus.answering:
       onClick = submitInput;
@@ -78,7 +84,7 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
 
   // add keyboard shortcuts
   useKeyboardShortcut('n', next, () => !settings.isOpen);
-  useKeyboardShortcut(' ', buzz, () => !settings.isOpen);
+  useKeyboardShortcut(' ', buzzWrapper, () => !settings.isOpen && isReading);
   useKeyboardShortcut('Enter', submitInput, () => !settings.isOpen);
 
   // submit user answer when timer ends
@@ -87,12 +93,6 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
       submitInput();
     }
   }, [isAnswering, progress, submitInput]);
-
-  // default, correct answer, incorrect answer
-  let borderColor;
-  if (status !== ReaderStatus.judged) borderColor = 'gray.300';
-  else if (result.isCorrect) borderColor = 'green.400';
-  else borderColor = 'red.400';
 
   return (
     <ReaderUserInput
@@ -104,7 +104,7 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
       submit={submitInput}
       shouldSubmit={progress === 0}
       disabled={!isAnswering}
-      borderColor={borderColor}
+      borderColor={getInputBorderColor(status, result)}
       showBorder={status === ReaderStatus.judged}
       showInput={status !== ReaderStatus.idle}
       inputRef={inputRef}

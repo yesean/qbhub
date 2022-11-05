@@ -1,6 +1,7 @@
 import { Category, Difficulty, Subcategory, Tournament } from './questions';
 
 export type Bonus = {
+  id: number;
   leadin: string;
   formattedLeadin: string;
   category: Category;

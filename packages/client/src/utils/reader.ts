@@ -1,9 +1,7 @@
-import { BellIcon } from '@chakra-ui/icons';
-import { Container, Text } from '@chakra-ui/react';
 import { deburr } from 'lodash-es';
-import { Fragment } from 'react';
 import { findBestMatch } from 'string-similarity';
 import { BonusPartResult, BonusScore } from '../types/bonus';
+import { ReaderStatus } from '../types/reader';
 import { JudgeResult, TossupScore, TossupWord } from '../types/tossups';
 import { combine, emptyStringFilter, getUnique } from './array';
 import logger from './logger';
@@ -88,58 +86,6 @@ export const getBonusScore = (results: BonusPartResult[]) => {
 };
 
 /**
- * Render a question given its reading position. Display the buzz symbol if
- * specified.
- */
-export const renderQuestion = (
-  words: { word: string; bold: boolean }[],
-  indices?: { visible?: number; buzz?: number },
-  visibleRef?: React.RefObject<HTMLParagraphElement>,
-) => {
-  const { visible = words.length, buzz = -1 } = indices ?? {};
-  const renderBell = (shouldRender: boolean) => {
-    if (shouldRender) {
-      return (
-        <Container
-          color="cyan.500"
-          m={0}
-          p={0}
-          w="auto"
-          display="inline-flex"
-          alignItems="center"
-          whiteSpace="pre"
-          verticalAlign="bottom"
-        >
-          <BellIcon w={4} h={4} />
-          <Text display="inline"> </Text>
-        </Container>
-      );
-    }
-    return null;
-  };
-
-  return (
-    <>
-      {words.map((w, i) => (
-        <Fragment key={`${w}${i}`}>
-          <Text
-            /* eslint react/no-array-index-key: "off" */
-            ref={i === visible ? visibleRef : undefined}
-            display="inline-block"
-            whiteSpace="break-spaces"
-            visibility={i <= visible ? 'visible' : 'hidden'}
-            fontWeight={w.bold ? 'bold' : 'normal'}
-          >
-            {parseHTMLString(w.word)}{' '}
-          </Text>
-          {renderBell(i === buzz)}
-        </Fragment>
-      ))}
-    </>
-  );
-};
-
-/**
  * Clean a tossup answerline for parsing.
  */
 const cleanAnswerline = (s: string) =>
@@ -220,7 +166,8 @@ export const parseAcceptableAnswers = (answerline: string): string[] => {
   normalizedAnswer = remove(normalizedAnswer, anyTag);
 
   // convert html entities to unicode
-  normalizedAnswer = parseHTMLString(normalizedAnswer)[0] as unknown as string;
+  normalizedAnswer = (parseHTMLString(normalizedAnswer)[0] ??
+    '') as unknown as string;
 
   // parse acceptable answers, roughly based on acf guidelines
   const primaryAnswer = /^(.*?)(?:$|(?:\[| or ).*)/g; // first answer up to '[' or EOL
@@ -274,6 +221,15 @@ export const parsePromptableAnswers = (answer: string) => {
     .filter(emptyStringFilter);
 
   return getUnique(allAnswers);
+};
+
+export const getInputBorderColor = (
+  status: ReaderStatus,
+  result: { isCorrect: boolean },
+) => {
+  if (status !== ReaderStatus.judged) return 'gray.300';
+  if (result.isCorrect) return 'green.400';
+  return 'red.400';
 };
 
 /**

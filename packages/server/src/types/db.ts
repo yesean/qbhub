@@ -17,6 +17,7 @@ export type QuestionFilterOptions = {
 };
 
 export type Tossup = {
+  id: number;
   text: string;
   answer: string;
   formatted_text: string;

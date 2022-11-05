@@ -1,8 +1,8 @@
 import { Box, Text } from '@chakra-ui/react';
 import { TossupResult } from '../../types/tossups';
 import { TOURNAMENT_MAP } from '../../utils/constants';
-import { renderQuestion } from '../../utils/reader';
 import { parseHTMLString } from '../../utils/string';
+import FormattedQuestion from '../reader/FormattedQuestion';
 import { VirtualizedTable, VirtualizedTableColumn } from '../tables';
 
 type TossupResultProps = {
@@ -23,9 +23,7 @@ const cells: { [key: string]: (result: TossupResult) => JSX.Element } = {
   ),
   question: ({ words, buzzIndex }) => (
     <Box>
-      {renderQuestion(words, {
-        buzz: buzzIndex,
-      })}
+      <FormattedQuestion words={words} indices={{ buzz: buzzIndex }} />
     </Box>
   ),
   tournament: ({ tossup: { tournament } }) => (
