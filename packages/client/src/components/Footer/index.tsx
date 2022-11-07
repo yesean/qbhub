@@ -36,12 +36,7 @@ const Footer: React.FC<React.PropsWithChildren<unknown>> = () => {
         aria-label="github link"
         bg="white"
         icon={
-          <Link
-            href="https://github.com/seanye24/qbhub-client"
-            isExternal
-            w={6}
-            h={6}
-          >
+          <Link href="https://github.com/yesean/qbhub" isExternal w={6} h={6}>
             <Icon w="100%" h="100%" as={AiFillGithub} />{' '}
           </Link>
         }
