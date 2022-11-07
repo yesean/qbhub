@@ -103,7 +103,7 @@ export const headers = [
         label: 'What are the generated clues?',
         text: replaceLinks`Using statistical NLP and lots of data, we parse tossups into clues and score the clues amongst themselves by relevancy. While these generated clues aren't perfect and won't fully replace traditional studying methods, they are a really good heuristic for identifying important/popular concepts and more importantly, pointing someone in the right direction, especially if they are totally new to a topic. More details can be found ${{
           label: 'here',
-          href: 'https://github.com/yesean/qbhub-server#generating-clues-experimental',
+          href: 'https://github.com/yesean/qbhub/tree/main/packages/server#generating-clues-experimental',
         }}.`,
       },
       {
@@ -164,7 +164,7 @@ export const headers = [
         label: "What's next for QBHub?",
         text: replaceLinks`The biggest things that come to mind are adding dark mode support and adding more analytics to the question readers. I think having more advanced stats and data visualizations for tossups and bonuses would be pretty cool. There's also some boring dev stuff too like cleaning up code, polishing up documentation, improving the build system, etc. And if you have any suggestions, please open a ${{
           label: 'GitHub issue',
-          href: 'https://github.com/yesean/qbhub-client/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=',
+          href: 'https://github.com/yesean/qbhub/issues/new/choose',
         }} or fill out the ${{
           label: 'feedback form',
           href: 'https://docs.google.com/forms/d/e/1FAIpQLSfmLBEXd_p_j_t8M7qvGGC5fC5_B0a0DKCWy6K7YWjOyHA7Hg/viewform?usp=sf_link',
@@ -174,13 +174,10 @@ export const headers = [
   },
   {
     label: 'Contributing 🤝',
-    text: replaceLinks`Contributions are welcome! If you want to file an issue, open a PR, or browse the source code, the ${{
-      label: 'UI',
-      href: 'https:github.com/yesean/qbhub-client',
-    }} and ${{
-      label: 'backend',
-      href: 'https://github.com/yesean/qbhub-server',
-    }} are all open sourced on GitHub. The documentation is always improving, but feel free to reach out on the form and I'll be happy to discuss anything QBHub related, like app architecture or how a feature was implemented. If coding isn't your thing, but you still enjoyed using QBHub, you can show your support by ${{
+    text: replaceLinks`Contributions are welcome! If you want to file an issue, open a PR, or browse the source code, ${{
+      label: 'QBHub',
+      href: 'https:github.com/yesean/qbhub',
+    }} is fully open source. The documentation is always improving, but feel free to reach out on the form and I'll be happy to discuss anything QBHub related, like app architecture or how a feature was implemented. If coding isn't your thing, but you still enjoyed using QBHub, you can show your support by ${{
       label: 'buying me a coffee',
       href: 'https://www.buymeacoffee.com/qbhub',
     }}! As much I love doing it, maintaining and developing this site as a college student requires a lot of time and effort, and on top of that, renting a server costs money. Any contribution would mean a lot and go a long way towards making QBHub even more amazing!`,
