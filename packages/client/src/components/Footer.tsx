@@ -1,14 +1,16 @@
-import { InfoOutlineIcon } from '@chakra-ui/icons';
+import { InfoOutlineIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
 import { Flex, Heading, Icon, IconButton, Link } from '@chakra-ui/react';
 import { AiFillGithub } from 'react-icons/ai';
-import { useAppDispatch } from '../../redux/hooks';
-import { ReactComponent as Donate } from '../../static/donate.svg';
-import { open } from '../InfoModal/infoModalSlice';
+import { useAppDispatch } from '../redux/hooks';
+import { ReactComponent as Donate } from '../static/donate.svg';
+import { open as openInfoModalAction } from './InfoModal/infoModalSlice';
+import { open as openUpdatesModalAction } from './UpdatesModal/updatesModalSlice';
 
 const Footer: React.FC<React.PropsWithChildren<unknown>> = () => {
   const dispatch = useAppDispatch();
 
-  const openModal = () => dispatch(open());
+  const openInfoModal = () => dispatch(openInfoModalAction());
+  const openUpdatesModal = () => dispatch(openUpdatesModalAction());
 
   return (
     <Flex align="center" justify="center" p={3}>
@@ -43,10 +45,17 @@ const Footer: React.FC<React.PropsWithChildren<unknown>> = () => {
       />
       <IconButton
         position="absolute"
-        right={3}
+        left={4}
         aria-label="keyboard shortcuts"
-        onClick={openModal}
+        onClick={openUpdatesModal}
         icon={<InfoOutlineIcon />}
+      />
+      <IconButton
+        position="absolute"
+        right={4}
+        aria-label="keyboard shortcuts"
+        onClick={openInfoModal}
+        icon={<QuestionOutlineIcon />}
       />
     </Flex>
   );

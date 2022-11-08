@@ -12,6 +12,7 @@ import InfoModal from './components/InfoModal';
 import { open as openInfo } from './components/InfoModal/infoModalSlice';
 import TossupHistoryModal from './components/TossupHistoryModal';
 import { open as openTossupHistory } from './components/TossupHistoryModal/tossupHistoryModalSlice';
+import UpdatesModal from './components/UpdatesModal';
 import { reset } from './FrequencyList/frequencyListSlice';
 import { useKeyboardShortcut } from './hooks/keyboard';
 import { useAppDispatch } from './redux/hooks';
@@ -73,6 +74,7 @@ const App: React.FC<React.PropsWithChildren<unknown>> = () => {
         <Footer />
       </Flex>
       <SettingsModal />
+      <UpdatesModal />
       <InfoModal />
       <HamburgerMenu />
       <TossupHistoryModal />

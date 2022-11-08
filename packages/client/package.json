@@ -46,6 +46,7 @@
     "@types/dompurify": "^2.3.4",
     "@types/jest": "^29.1.2",
     "@types/lodash-es": "^4.17.6",
+    "@types/mdx": "^2.0.3",
     "@types/node": "^18.8.0",
     "@types/number-to-words": "^1.2.1",
     "@types/react": "^18.0.21",

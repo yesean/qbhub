@@ -5,6 +5,7 @@ import bonusHistoryModalReducer from '../components/BonusHistoryModal/bonusHisto
 import hamburgerMenuReducer from '../components/HamburgerMenu/hamburgerMenuSlice';
 import infoModalReducer from '../components/InfoModal/infoModalSlice';
 import tossupHistoryModalReducer from '../components/TossupHistoryModal/tossupHistoryModalSlice';
+import updatesModalReducer from '../components/UpdatesModal/updatesModalSlice';
 import frequencyListReducer from '../FrequencyList/frequencyListSlice';
 import settingsReducer, {
   categoriesSubscription,
@@ -23,6 +24,7 @@ export const store = configureStore({
     settings: settingsReducer,
     frequencyList: frequencyListReducer,
     cluesGenerator: cluesGeneatorReducer,
+    updatesModal: updatesModalReducer,
     infoModal: infoModalReducer,
     tossupHistoryModal: tossupHistoryModalReducer,
     bonusHistoryModal: bonusHistoryModalReducer,
