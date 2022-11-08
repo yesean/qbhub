@@ -11,7 +11,7 @@ const About = () => {
     if (subheaders !== undefined) {
       content = subheaders.map((sub) => (
         <Box key={sub.label} mb={4}>
-          <Heading size="md" pos="relative" color="gray.600">
+          <Heading size="md" pos="relative" color="gray.700">
             <Text pos="absolute" left="-1rem">
               •
             </Text>
