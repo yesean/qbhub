@@ -1,1 +1,56 @@
-### 11/7
+import { IconButton } from '@chakra-ui/react';
+import { BellIcon, InfoOutlineIcon } from '@chakra-ui/icons';
+import { Box } from '@chakra-ui/react';
+
+export const Bell = () => {
+  return <BellIcon color="cyan.500" w={4} h={4} />;
+};
+
+export const InfoButton = () => (
+  <IconButton aria-label="keyboard shortcuts" icon={<InfoOutlineIcon />} />
+);
+
+<Box mb={8}>
+## November 8, 2022
+
+- ### Bug Fixes
+
+  Bonus Reader and Clue Generator have been fixed! These pages broke during a
+  package upgrade and unfortunately, I got wrapped up in school/work stuff. So
+  sorry about the inconvenience. There was also an issue with the positioning of
+  the rendered bell icon <Bell /> when buzzing that should be fixed as well.
+
+- ### Shared Monorepo
+  The old client and server codebases have been merged into a
+  [monorepo](https://github.com/yesean/qbhub). It's not that important for end
+  users, but the monorepo, along with some upgrades to the build tooling,
+  simplifies a lot of things, which means new features should be pushed faster
+  now!
+- ### Updates Modal
+  A brand new **Updates** page! This page will periodically announce new QBHub
+  features and updates as well as upcoming goals for the future releases. This
+  page will only automatically open whenever a new update is released, but can
+  be accessed anytime by clicking the <InfoButton /> button in the bottom left
+  corner.
+
+</Box>
+
+<Box>
+## Upcoming
+
+- ### Error Reporting System
+
+Users would be able to report bugs or submit feature requests, including
+question specific errors (formatting issues, incorrect labels). This lets bugs
+like the frozen Bonus Reader get discovered and resolved as soon as possible!
+For the time being, you can still leave comments on
+[this Google Form](https://docs.google.com/forms/d/e/1FAIpQLSfmLBEXd_p_j_t8M7qvGGC5fC5_B0a0DKCWy6K7YWjOyHA7Hg/viewform?usp=sf_link).
+
+- ### Advanced Stats
+
+In-depth stats and graphs (per category, celerity, etc) to give a detailed
+overview of a playing session and to be able to identify strengths and
+weaknesses in gameplay. This was actually one of my original goals for QBHub, it
+got put aside for more important things.
+
+</Box>

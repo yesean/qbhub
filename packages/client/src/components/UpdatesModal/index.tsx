@@ -1,5 +1,7 @@
 import {
+  Container,
   Heading,
+  Link,
   Modal,
   ModalBody,
   ModalContent,
@@ -7,31 +9,28 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
+import { MDXComponents } from 'mdx/types';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { TealButton } from '../buttons';
 import Content from './updates.mdx';
 import { close, selectUpdatesModal } from './updatesModalSlice';
 
-const mdxComponents = {
-  h1: ({ children }) => (
-    <Heading as="h1" size="xl">
-      {children}
-    </Heading>
-  ),
+const mdxComponents: MDXComponents = {
   h2: ({ children }) => (
-    <Heading as="h2" size="lg">
+    <Heading as="h2" size="md" mb={2}>
       {children}
     </Heading>
   ),
   h3: ({ children }) => (
-    <Heading as="h3" size="md">
+    <Heading as="h3" size="sm" color="gray.700">
       {children}
     </Heading>
   ),
-  h4: ({ children }) => (
-    <Heading as="h4" size="sm">
+  a: ({ children, ...props }) => (
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    <Link color="cyan.600" isExternal {...props}>
       {children}
-    </Heading>
+    </Link>
   ),
 };
 
@@ -50,9 +49,15 @@ const Updates = () => {
     >
       <ModalOverlay />
       <ModalContent m={4} maxW="600px" maxH="max(75vh, 600px)">
-        <ModalHeader color="black">Updates 🚀</ModalHeader>
+        <ModalHeader color="black">
+          <Heading as="h1" size="xl" textAlign="center">
+            Updates 🚀
+          </Heading>
+        </ModalHeader>
         <ModalBody pt={0} display="flex" flexDirection="column">
-          <Content components={mdxComponents} />
+          <Container px={6}>
+            <Content components={mdxComponents} />
+          </Container>
         </ModalBody>
         <ModalFooter>
           <TealButton mr={3} onClick={closeModal}>
