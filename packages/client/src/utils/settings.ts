@@ -5,114 +5,47 @@ import {
   Tournament,
 } from '../types/questions';
 import {
-  CATEGORIES_LS_KEY,
   DEFAULT_READING_SPEED,
-  DIFFICULTIES_LS_KEY,
-  FROM_YEAR_LS_KEY,
+  localStorageKeys as keys,
   MAX_TOURNAMENT_YEAR,
   MIN_TOURNAMENT_YEAR,
-  READING_SPEED_LS_KEY,
-  SUBCATEGORIES_LS_KEY,
-  TOURNAMENTS_LS_KEY,
 } from './constants';
+import { buildRestore, buildSave } from './storage';
 
-const save = (key: string, data: any) =>
-  window.localStorage.setItem(key, JSON.stringify(data));
+export const saveReadingSpeed = buildSave<number>(keys.READING_SPEED);
+export const saveCategories = buildSave<Category[]>(keys.CATEGORIES);
+export const saveSubcategories = buildSave<Subcategory[]>(keys.SUBCATEGORIES);
+export const saveDifficulties = buildSave<Difficulty[]>(keys.DIFFICULTIES);
+export const saveTournaments = buildSave<Tournament[]>(keys.TOURNAMENTS);
+export const saveFromYear = buildSave<number>(keys.FROM_YEAR);
 
-export const saveReadingSpeed = (speed: number) =>
-  save(READING_SPEED_LS_KEY, speed);
-
-export const saveCategories = (categories: Category[]) =>
-  save(CATEGORIES_LS_KEY, categories);
-
-export const saveSubcategories = (subcategories: Subcategory[]) =>
-  save(SUBCATEGORIES_LS_KEY, subcategories);
-
-export const saveDifficulties = (difficulties: Difficulty[]) =>
-  save(DIFFICULTIES_LS_KEY, difficulties);
-
-export const saveTournaments = (tournaments: Tournament[]) =>
-  save(TOURNAMENTS_LS_KEY, tournaments);
-
-export const saveFromYear = (from: number) => save(FROM_YEAR_LS_KEY, from);
-
-const restore = (key: string) => window.localStorage.getItem(key);
-
-const validateReadingSpeed = (speed: number) =>
-  speed >= 0 && speed <= 100 && speed % 5 === 0;
-
-export const restoreReadingSpeed = () => {
-  const speed = restore(READING_SPEED_LS_KEY);
-  const parsedSpeed = Number(speed);
-
-  const isInvalid =
-    speed === null ||
-    Number.isNaN(parsedSpeed) ||
-    !validateReadingSpeed(parsedSpeed);
-  if (isInvalid) {
-    saveReadingSpeed(DEFAULT_READING_SPEED);
-    return DEFAULT_READING_SPEED;
-  }
-
-  return parsedSpeed;
-};
-
-export const restoreCategories = () => {
-  const categories = restore(CATEGORIES_LS_KEY);
-
-  if (categories === null) {
-    saveCategories([]);
-    return [];
-  }
-  return JSON.parse(categories) as Category[];
-};
-
-export const restoreSubcategories = () => {
-  const subcategories = restore(SUBCATEGORIES_LS_KEY);
-
-  if (subcategories === null) {
-    saveSubcategories([]);
-    return [];
-  }
-  return JSON.parse(subcategories) as Subcategory[];
-};
-
-export const restoreDifficulties = () => {
-  const difficulties = restore(DIFFICULTIES_LS_KEY);
-
-  if (difficulties === null) {
-    saveDifficulties([]);
-    return [];
-  }
-  return JSON.parse(difficulties) as Difficulty[];
-};
-
-export const restoreTournaments = () => {
-  const tournaments = restore(TOURNAMENTS_LS_KEY);
-
-  if (tournaments === null) {
-    saveTournaments([]);
-    return [];
-  }
-  return JSON.parse(tournaments) as Tournament[];
-};
-
+const validateReadingSpeed = (s: number) => s >= 0 && s <= 100 && s % 5 === 0;
 export const validateFromYear = (year: number) =>
   year >= MIN_TOURNAMENT_YEAR && year <= MAX_TOURNAMENT_YEAR;
 
-export const restoreFromYear = () => {
-  const year = restore(FROM_YEAR_LS_KEY);
-  const parsedYear = Number(year);
-
-  const isInvalid =
-    year === null || Number.isNaN(parsedYear) || !validateFromYear(parsedYear);
-  if (isInvalid) {
-    saveFromYear(MIN_TOURNAMENT_YEAR);
-    return MIN_TOURNAMENT_YEAR;
-  }
-
-  return parsedYear;
-};
+export const restoreCategories = buildRestore<Category[]>(keys.CATEGORIES, []);
+export const restoreSubcategories = buildRestore<Subcategory[]>(
+  keys.SUBCATEGORIES,
+  [],
+);
+export const restoreDifficulties = buildRestore<Difficulty[]>(
+  keys.DIFFICULTIES,
+  [],
+);
+export const restoreTournaments = buildRestore<Tournament[]>(
+  keys.TOURNAMENTS,
+  [],
+);
+export const restoreReadingSpeed = buildRestore<number>(
+  keys.READING_SPEED,
+  DEFAULT_READING_SPEED,
+  (d: string) => !Number.isNaN(Number(d)) && validateReadingSpeed(Number(d)),
+);
+export const restoreFromYear = buildRestore<number>(
+  keys.FROM_YEAR,
+  MIN_TOURNAMENT_YEAR,
+  (d: string) => !Number.isNaN(Number(d)) && validateFromYear(Number(d)),
+);
 
 /**
  * Convert speed from percentage into a timeout delay.
