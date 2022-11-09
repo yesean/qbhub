@@ -1,12 +1,6 @@
 import {
   Heading,
   Kbd,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Table,
   Tbody,
   Td,
@@ -19,7 +13,7 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { useAppDispatch } from '../../redux/hooks';
 import { ROUTES } from '../../utils/routes';
-import { TealButton } from '../buttons';
+import Modal from '../Modal';
 import { close, selectInfoModal } from './infoModalSlice';
 
 type Shortcut = {
@@ -99,7 +93,7 @@ const freqShortcuts = [
 
 const InfoModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { pathname } = useLocation();
-  const infoModal = useSelector(selectInfoModal);
+  const { isOpen } = useSelector(selectInfoModal);
   const dispatch = useAppDispatch();
 
   const closeModal = () => dispatch(close());
@@ -160,29 +154,12 @@ const InfoModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   };
 
   return (
-    <Modal
-      isOpen={infoModal.isOpen}
-      onClose={closeModal}
-      size="6xl"
-      scrollBehavior="inside"
-      isCentered
-    >
-      <ModalOverlay />
-      <ModalContent m={4} maxW="600px" maxH="max(75vh, 600px)">
-        <ModalHeader color="black">Info</ModalHeader>
-        <ModalBody pt={0} display="flex" flexDirection="column">
-          {renderLocalShortcuts()}
-          <Heading size="sm" color="gray.800">
-            Global Shortcuts
-          </Heading>
-          {renderTable(globalShortcuts)}
-        </ModalBody>
-        <ModalFooter>
-          <TealButton mr={3} onClick={closeModal}>
-            Done
-          </TealButton>
-        </ModalFooter>
-      </ModalContent>
+    <Modal isOpen={isOpen} closeModal={closeModal} title="Info">
+      {renderLocalShortcuts()}
+      <Heading size="sm" color="gray.800">
+        Global Shortcuts
+      </Heading>
+      {renderTable(globalShortcuts)}
     </Modal>
   );
 };

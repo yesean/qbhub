@@ -4,12 +4,6 @@ import {
   Button,
   Flex,
   Heading,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Slider,
   SliderFilledTrack,
   SliderThumb,
@@ -19,7 +13,7 @@ import { CSSObject } from '@emotion/react';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import Select, { Options } from 'react-select';
-import { TealButton } from '../components/buttons';
+import Modal from '../components/Modal';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import { useAppDispatch } from '../redux/hooks';
 import {
@@ -139,99 +133,89 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   };
 
   const resetFromYear = () => dispatch(updateFromYear(MIN_TOURNAMENT_YEAR));
+
   return (
-    <Modal isOpen={isOpen} onClose={closeModal} size="6xl" isCentered>
-      <ModalOverlay />
-      <ModalContent m={4} maxW="600px" maxH="max(75vh, 600px)">
-        <ModalHeader>Settings</ModalHeader>
-        <ModalBody overflow="auto">
-          <Box mb={4}>
-            <Heading size="sm" mb={2} color="gray.800">
-              Reading Speed
-            </Heading>
-            <Slider
-              aria-label="tossup reading speed"
-              colorScheme="cyan"
-              min={0}
-              max={100}
-              step={5}
-              defaultValue={readingSpeed}
-              onChange={onReadingSpeedChange}
-            >
-              <SliderTrack>
-                <SliderFilledTrack />
-              </SliderTrack>
-              <SliderThumb bg="gray.500" />
-            </Slider>
-          </Box>
-          <Box mb={4}>
-            <Heading size="sm" mb={2} color="gray.800">
-              Category
-            </Heading>
-            <Select
-              isMulti
-              name="categories"
-              options={categoriesForSelect}
-              value={categoriesInSelect}
-              onChange={onCategoriesChange}
-              {...selectMenuProps}
-            />
-          </Box>
-          <Box mb={4}>
-            <Heading size="sm" mb={2} color="gray.800">
-              Subcategory
-            </Heading>
-            <Select
-              isMulti
-              name="subcategories"
-              options={subcategoriesForSelect}
-              value={subcategoriesInSelect}
-              onChange={onSubcategoriesChange}
-              {...selectMenuProps}
-            />
-          </Box>
-          <Box mb={4}>
-            <Heading size="sm" mb={2} color="gray.800">
-              Difficulty
-            </Heading>
-            <Select
-              isMulti
-              name="difficulties"
-              options={difficultiesForSelect}
-              value={difficultiesInSelect}
-              onChange={onDifficultiesChange}
-              {...selectMenuProps}
-            />
-          </Box>
-          <Box mb={4}>
-            <Heading size="sm" mb={2} color="gray.800">
-              Tournaments
-            </Heading>
-            <Select
-              isMulti
-              name="tournaments"
-              options={filteredTournamentsForSelect}
-              value={tournamentsInSelect}
-              onChange={onTournamentsChange}
-              {...selectMenuProps}
-            />
-          </Box>
-          <Box>
-            <Heading size="sm" mb={2} color="gray.800">
-              From Year
-            </Heading>
-            <Flex gap={4}>
-              <YearInput value={fromYear} onChange={onFromYearChange} />
-              <Button onClick={resetFromYear}>All Years</Button>
-            </Flex>
-          </Box>
-        </ModalBody>
-        <ModalFooter>
-          <TealButton mr={3} onClick={closeModal}>
-            Done
-          </TealButton>
-        </ModalFooter>
-      </ModalContent>
+    <Modal isOpen={isOpen} closeModal={closeModal} title="Settings">
+      <Box mb={4}>
+        <Heading size="sm" mb={2} color="gray.800">
+          Reading Speed
+        </Heading>
+        <Slider
+          aria-label="tossup reading speed"
+          colorScheme="cyan"
+          min={0}
+          max={100}
+          step={5}
+          defaultValue={readingSpeed}
+          onChange={onReadingSpeedChange}
+        >
+          <SliderTrack>
+            <SliderFilledTrack />
+          </SliderTrack>
+          <SliderThumb bg="gray.500" />
+        </Slider>
+      </Box>
+      <Box mb={4}>
+        <Heading size="sm" mb={2} color="gray.800">
+          Category
+        </Heading>
+        <Select
+          isMulti
+          name="categories"
+          options={categoriesForSelect}
+          value={categoriesInSelect}
+          onChange={onCategoriesChange}
+          {...selectMenuProps}
+        />
+      </Box>
+      <Box mb={4}>
+        <Heading size="sm" mb={2} color="gray.800">
+          Subcategory
+        </Heading>
+        <Select
+          isMulti
+          name="subcategories"
+          options={subcategoriesForSelect}
+          value={subcategoriesInSelect}
+          onChange={onSubcategoriesChange}
+          {...selectMenuProps}
+        />
+      </Box>
+      <Box mb={4}>
+        <Heading size="sm" mb={2} color="gray.800">
+          Difficulty
+        </Heading>
+        <Select
+          isMulti
+          name="difficulties"
+          options={difficultiesForSelect}
+          value={difficultiesInSelect}
+          onChange={onDifficultiesChange}
+          {...selectMenuProps}
+        />
+      </Box>
+      <Box mb={4}>
+        <Heading size="sm" mb={2} color="gray.800">
+          Tournaments
+        </Heading>
+        <Select
+          isMulti
+          name="tournaments"
+          options={filteredTournamentsForSelect}
+          value={tournamentsInSelect}
+          onChange={onTournamentsChange}
+          {...selectMenuProps}
+        />
+      </Box>
+      <Box>
+        <Heading size="sm" mb={2} color="gray.800">
+          From Year
+        </Heading>
+        <Flex gap={4}>
+          <YearInput value={fromYear} onChange={onFromYearChange} />
+          <Button onClick={resetFromYear}>All Years</Button>
+        </Flex>
+      </Box>
     </Modal>
   );
 };
