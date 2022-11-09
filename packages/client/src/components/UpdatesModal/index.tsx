@@ -1,17 +1,7 @@
-import {
-  Container,
-  Heading,
-  Link,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-} from '@chakra-ui/react';
+import { Box, Heading, Link } from '@chakra-ui/react';
 import { MDXComponents } from 'mdx/types';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { TealButton } from '../buttons';
+import Modal from '../Modal';
 import Content from './updates.mdx';
 import { close, selectUpdatesModal } from './updatesModalSlice';
 
@@ -32,6 +22,16 @@ const mdxComponents: MDXComponents = {
       {children}
     </Link>
   ),
+  ul: ({ children }) => (
+    <Box ml={6} mb={2}>
+      <ul>{children}</ul>
+    </Box>
+  ),
+  p: ({ children }) => (
+    <Box mb={2}>
+      <p>{children}</p>
+    </Box>
+  ),
 };
 
 const Updates = () => {
@@ -40,31 +40,8 @@ const Updates = () => {
   const closeModal = () => dispatch(close());
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={closeModal}
-      size="6xl"
-      scrollBehavior="inside"
-      isCentered
-    >
-      <ModalOverlay />
-      <ModalContent m={4} maxW="600px" maxH="max(75vh, 600px)">
-        <ModalHeader color="black">
-          <Heading as="h1" size="xl" textAlign="center">
-            Updates 🚀
-          </Heading>
-        </ModalHeader>
-        <ModalBody pt={0} display="flex" flexDirection="column">
-          <Container px={6}>
-            <Content components={mdxComponents} />
-          </Container>
-        </ModalBody>
-        <ModalFooter>
-          <TealButton mr={3} onClick={closeModal}>
-            Done
-          </TealButton>
-        </ModalFooter>
-      </ModalContent>
+    <Modal isOpen={isOpen} closeModal={closeModal} title="Updates 🚀">
+      <Content components={mdxComponents} />
     </Modal>
   );
 };
