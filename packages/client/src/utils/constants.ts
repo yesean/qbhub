@@ -2779,4 +2779,5 @@ export const localStorageKeys = {
   DIFFICULTIES: 'difficulties',
   TOURNAMENTS: 'tournaments',
   FROM_YEAR: 'from_year',
+  LAST_SEEN_UPDATE: 'last_seen_update',
 };
