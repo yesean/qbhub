@@ -1,5 +1,5 @@
 import { Flex } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Body from './components/Body';
@@ -15,6 +15,7 @@ import { open as openTossupHistory } from './components/TossupHistoryModal/tossu
 import UpdatesModal from './components/UpdatesModal';
 import { reset } from './FrequencyList/frequencyListSlice';
 import { useKeyboardShortcut } from './hooks/keyboard';
+import usePageHeight from './hooks/usePageHeight';
 import { useAppDispatch } from './redux/hooks';
 import SettingsModal from './Settings';
 import {
@@ -28,22 +29,12 @@ const App: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { pathname } = useLocation();
   const dispatch = useAppDispatch();
   const questionSettings = useSelector(selectQuestionSettings);
-  const [pageHeight, setPageHeight] = useState(window.innerHeight);
+  const pageHeight = usePageHeight();
 
   // if question settings change, reset freq to initial state
   useEffect(() => {
     dispatch(reset());
   }, [dispatch, questionSettings]);
-
-  useEffect(() => {
-    const resize = () => {
-      setPageHeight(window.innerHeight);
-    };
-    window.addEventListener('resize', resize);
-    return () => {
-      window.removeEventListener('resize', resize);
-    };
-  }, []);
 
   // add global keyboard shortcuts
   const predicate = (e: KeyboardEvent) => e.target === document.body;
