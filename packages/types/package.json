@@ -1,4 +1,11 @@
 {
-  "name": "types",
-  "packageManager": "yarn@3.2.3"
+  "name": "@qbhub/types",
+  "main": "dist/index.js",
+  "packageManager": "yarn@3.2.3",
+  "devDependencies": {
+    "typescript": "^4.8.4"
+  },
+  "scripts": {
+    "clean": "rm -rf dist tsconfig.tsbuildinfo"
+  }
 }
