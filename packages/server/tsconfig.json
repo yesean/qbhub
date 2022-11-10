@@ -4,5 +4,6 @@
     "module": "commonjs",
     "outDir": "dist"
   },
-  "include": ["src"]
+  "include": ["src"],
+  "references": [{ "path": "../types" }]
 }

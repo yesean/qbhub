@@ -10,6 +10,13 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
-    "resolveJsonModule": true
-  }
+    "resolveJsonModule": true,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "paths": {
+      "@yesean/types": ["./packages/types/src"]
+    }
+  },
+  "references": [{ "path": "./packages/types" }]
 }
