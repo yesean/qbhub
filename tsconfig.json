@@ -10,6 +10,11 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "composite": true,
+    "declarationMap": true,
+    "paths": {
+      "@qbhub/types": ["./packages/types/src"]
+    }
   }
 }
