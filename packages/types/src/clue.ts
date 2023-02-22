@@ -1,8 +1,9 @@
+import { Tournament } from './tournament';
+
 export type Clue = {
-  clue: string;
+  text: string;
   sentence: string;
-  tournament: string;
-  score: number;
+  tournament: Tournament;
 };
 
 export type MatchedClue = Clue & { score: number };
