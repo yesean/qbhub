@@ -1,6 +1,7 @@
 {
   "name": "@qbhub/types",
   "main": "dist/index.js",
+  "module": "src/index.ts",
   "packageManager": "yarn@3.2.3",
   "devDependencies": {
     "typescript": "^4.8.4"

@@ -10,6 +10,7 @@
     "@emotion/styled": "^11.10.4",
     "@fontsource/inter": "^4.5.13",
     "@fontsource/raleway": "^4.5.11",
+    "@qbhub/types": "workspace:^",
     "@reduxjs/toolkit": "^1.8.5",
     "@seanye/pino-logflare": "^0.4.1",
     "@testing-library/jest-dom": "^5.16.5",
@@ -72,9 +73,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "yarn lint && vite build",
     "preview": "vite preview",
-    "lint": "eslint --ext .ts,.tsx src",
+    "lint": "tsc --build && tsc && eslint --ext .ts,.tsx src",
     "format": "prettier --write src"
   }
 }
