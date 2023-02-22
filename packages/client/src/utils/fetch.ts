@@ -1,12 +1,14 @@
-import axios from 'axios';
-import { Bonus } from '../types/bonus';
 import {
+  Bonus,
   Category,
   Difficulty,
+  FrequencyListEntry,
+  SelectedClue,
   Subcategory,
+  Tossup,
   Tournament,
-} from '../types/questions';
-import { Answer, Clue, Tossup } from '../types/tossups';
+} from '@qbhub/types';
+import axios from 'axios';
 import { MIN_TOURNAMENT_YEAR } from './constants';
 import logger from './logger';
 import { cleanTossupText, normalizeTags } from './string';
@@ -112,12 +114,14 @@ export const fetchBonuses = async (params: FetchParams): Promise<Bonus[]> => {
   }
 };
 
-export const fetchFreq = async (params: FetchParams): Promise<Answer[]> => {
+export const fetchFreq = async (
+  params: FetchParams,
+): Promise<FrequencyListEntry[]> => {
   const url = addParams(FREQ_URL, createParams(params));
 
   try {
     logger.info('Fetching frequency list.');
-    const { data } = await axios.get<Answer[]>(url);
+    const { data } = await axios.get<FrequencyListEntry[]>(url);
     logger.info('Received frequency list.');
     return data;
   } catch (err) {
@@ -125,12 +129,14 @@ export const fetchFreq = async (params: FetchParams): Promise<Answer[]> => {
   }
 };
 
-export const fetchAnswers = async (params: FetchParams): Promise<Answer[]> => {
+export const fetchAnswers = async (
+  params: FetchParams,
+): Promise<FrequencyListEntry[]> => {
   const url = addParams(FREQ_URL, createParams(params));
 
   try {
     logger.info('Fetching answers.');
-    const { data } = await axios.get<Answer[]>(url);
+    const { data } = await axios.get<FrequencyListEntry[]>(url);
     logger.info('Received answers.');
     return data;
   } catch (err) {
@@ -138,12 +144,14 @@ export const fetchAnswers = async (params: FetchParams): Promise<Answer[]> => {
   }
 };
 
-export const fetchClues = async (params: FetchParams): Promise<Clue[]> => {
+export const fetchClues = async (
+  params: FetchParams,
+): Promise<SelectedClue[]> => {
   const url = addParams(CLUES_URL, createParams(params));
 
   try {
     logger.info('Fetching clues.');
-    const { data } = await axios.get<Clue[]>(url);
+    const { data } = await axios.get<SelectedClue[]>(url);
     logger.info('Received clues.');
     return data;
   } catch (err) {

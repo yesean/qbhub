@@ -1,8 +1,8 @@
+import { TossupScore } from '@qbhub/types';
 import { useSelector } from 'react-redux';
 import ReaderResult from '../components/reader/Result';
-import { ReaderStatus } from '../types/reader';
-import { TossupScore } from '../types/tossups';
 import { random } from '../utils/array';
+import { ReaderStatus } from '../utils/reader';
 import { selectTossupReader } from './tossupReaderSlice';
 
 const messages = {

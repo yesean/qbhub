@@ -11,8 +11,7 @@ import FormattedQuestion from '../components/reader/FormattedQuestion';
 import ReaderQuestion from '../components/reader/Question';
 import { useReader } from '../hooks/useReader';
 import { useAppDispatch } from '../redux/hooks';
-import { ReaderStatus } from '../types/reader';
-import { getTossupWords } from '../utils/reader';
+import { getTossupWords, ReaderStatus } from '../utils/reader';
 import {
   buzz as buzzAction,
   nextTossup,

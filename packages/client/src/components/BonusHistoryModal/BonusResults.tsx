@@ -1,5 +1,5 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
-import { Bonus, BonusPart, BonusPartResult } from '../../types/bonus';
+import { Bonus, BonusPart, BonusPartResult } from '@qbhub/types';
 import { TOURNAMENT_MAP } from '../../utils/constants';
 import { getTossupWords } from '../../utils/reader';
 import { parseHTMLString } from '../../utils/string';

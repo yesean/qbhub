@@ -1,9 +1,4 @@
-import {
-  Category,
-  Difficulty,
-  Subcategory,
-  Tournament,
-} from '../types/questions';
+import { Category, Difficulty, Subcategory, Tournament } from '@qbhub/types';
 import {
   DEFAULT_READING_SPEED,
   localStorageKeys as keys,

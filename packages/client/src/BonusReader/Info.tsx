@@ -1,11 +1,6 @@
+import { Category, Difficulty, Subcategory, Tournament } from '@qbhub/types';
 import { useSelector } from 'react-redux';
 import ReaderInfo from '../components/reader/Info';
-import {
-  Category,
-  Difficulty,
-  Subcategory,
-  Tournament,
-} from '../types/questions';
 import { selectBonusReader } from './bonusReaderSlice';
 
 const Info: React.FC<React.PropsWithChildren<unknown>> = () => {

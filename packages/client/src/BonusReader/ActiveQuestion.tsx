@@ -1,4 +1,5 @@
 import { Box, Text } from '@chakra-ui/react';
+import { TossupWord } from '@qbhub/types';
 import {
   useCallback,
   useEffect,
@@ -11,9 +12,7 @@ import { elementScrollIntoView } from 'seamless-scroll-polyfill';
 import FormattedQuestion from '../components/reader/FormattedQuestion';
 import { useReader } from '../hooks/useReader';
 import { useAppDispatch } from '../redux/hooks';
-import { ReaderStatus } from '../types/reader';
-import { TossupWord } from '../types/tossups';
-import { getTossupWords } from '../utils/reader';
+import { getTossupWords, ReaderStatus } from '../utils/reader';
 import { buzz as buzzAction, selectBonusReader } from './bonusReaderSlice';
 
 type SectionProps = {

@@ -8,12 +8,12 @@ import {
   Text,
   Tooltip,
 } from '@chakra-ui/react';
+import { SelectedClue } from '@qbhub/types';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { FileDownloadButton } from '../components/buttons';
 import { KeyValueTable } from '../components/tables';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { Clue } from '../types/tossups';
 import { toCSV, toJSON } from '../utils/array';
 import { ROUTES } from '../utils/routes';
 import BackButton from './BackButton';
@@ -41,7 +41,7 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
   useEffect(() => {
     const cluesCSV = clues
       .filter((clue) => clue.score > 0)
-      .map((clue) => [clue.clue, answer, clue.sentence]);
+      .map((clue) => [clue.text, answer, clue.sentence]);
     const url = toCSV(cluesCSV);
     setCSVLink(url);
 
@@ -68,8 +68,8 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
     dispatch(fetchClues(answer));
   }, [dispatch, answer]);
 
-  const renderTooltip = (clue: Clue) => {
-    const startIndex = clue.sentence.indexOf(clue.clue);
+  const renderTooltip = (clue: SelectedClue) => {
+    const startIndex = clue.sentence.indexOf(clue.text);
     if (startIndex === -1) {
       return (
         <>
@@ -87,16 +87,16 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
         </Heading>
         <Text display="inline">{clue.sentence.substring(0, startIndex)}</Text>
         <Text display="inline" as="mark" bgColor="#fffea9">
-          {clue.sentence.substring(startIndex, startIndex + clue.clue.length)}
+          {clue.sentence.substring(startIndex, startIndex + clue.text.length)}
         </Text>
         <Text display="inline">
-          {clue.sentence.substring(startIndex + clue.clue.length)}
+          {clue.sentence.substring(startIndex + clue.text.length)}
         </Text>
       </>
     );
   };
 
-  const renderClue = (clue: Clue) => (
+  const renderClue = (clue: SelectedClue) => (
     <Tooltip
       hasArrow
       placement="top"
@@ -104,7 +104,7 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
       borderRadius="5px"
       p={2}
     >
-      <Text>{clue.clue}</Text>
+      <Text>{clue.text}</Text>
     </Tooltip>
   );
 
