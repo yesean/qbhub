@@ -18,5 +18,6 @@ module.exports = {
   ignorePatterns: ['.eslintrc.js', 'vite.config.ts'],
   parserOptions: {
     project: './tsconfig.json',
+    tsconfigRootDir: __dirname,
   },
 };
