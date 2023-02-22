@@ -12,7 +12,7 @@
     "compile": "tsc --build",
     "build": "yarn lint && yarn compile",
     "clean": "rm -rf dist",
-    "lint": "eslint --ext .ts,.tsx src",
+    "lint": "tsc --build && tsc --noEmit && eslint --ext .ts,.tsx src",
     "format": "prettier --write src"
   },
   "dependencies": {
