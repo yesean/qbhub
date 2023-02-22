@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import Progress from '../components/reader/Progress';
 import useJudge from '../hooks/useJudge';
 import { useAppDispatch } from '../redux/hooks';
-import { ReaderStatus } from '../types/reader';
+import { ReaderStatus } from '../utils/reader';
 import {
   prompt,
   selectBonusReader,

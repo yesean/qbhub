@@ -14,11 +14,11 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
+import { BonusScore } from '@qbhub/types';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { selectBonusReader } from '../../BonusReader/bonusReaderSlice';
 import { useAppDispatch } from '../../redux/hooks';
-import { BonusScore } from '../../types/bonus';
 import { TealButton } from '../buttons';
 import { close, selectBonusHistoryModal } from './bonusHistoryModalSlice';
 import BonusResults from './BonusResults';

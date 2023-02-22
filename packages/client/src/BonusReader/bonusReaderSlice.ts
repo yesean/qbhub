@@ -1,15 +1,17 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { RootState } from '../redux/store';
-import { Bonus, BonusPart, BonusPartResult, BonusResult } from '../types/bonus';
 import {
+  Bonus,
+  BonusPart,
+  BonusPartResult,
+  BonusResult,
   Category,
   Difficulty,
   Subcategory,
   Tournament,
-} from '../types/questions';
-import { ReaderStatus } from '../types/reader';
+} from '@qbhub/types';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { RootState } from '../redux/store';
 import * as fetchUtils from '../utils/fetch';
-import { getBonusScore } from '../utils/reader';
+import { getBonusScore, ReaderStatus } from '../utils/reader';
 
 type BonusReaderState = {
   status: ReaderStatus;
@@ -146,8 +148,10 @@ const bonusReaderSlice = createSlice({
       state,
       action: PayloadAction<Subcategory[]>,
     ) => {
-      state.bonuses = state.bonuses.filter((bn) =>
-        action.payload.includes(bn.subcategory),
+      state.bonuses = state.bonuses.filter(
+        (bn) =>
+          bn.subcategory !== undefined &&
+          action.payload.includes(bn.subcategory),
       );
     },
     filterBonusesByDifficulties: (

@@ -1,6 +1,6 @@
+import { FrequencyListEntry } from '@qbhub/types';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { RootState } from '../redux/store';
-import { Answer } from '../types/tossups';
 import * as fetchUtils from '../utils/fetch';
 import logger from '../utils/logger';
 
@@ -21,8 +21,8 @@ export enum FreqStatus {
 type FrequencyListState = {
   status: FreqStatus;
   fetchStatus: FreqFetchStatus;
-  results: Answer[];
-  page: Answer[];
+  results: FrequencyListEntry[];
+  page: FrequencyListEntry[];
   offset: number;
 };
 
@@ -35,7 +35,7 @@ const initialState: FrequencyListState = {
 };
 
 export const fetchPages = createAsyncThunk<
-  Answer[],
+  FrequencyListEntry[],
   number,
   { state: RootState }
 >(

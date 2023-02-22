@@ -1,8 +1,11 @@
+import {
+  BonusPartResult,
+  BonusScore,
+  TossupScore,
+  TossupWord,
+} from '@qbhub/types';
 import { deburr } from 'lodash-es';
 import { findBestMatch } from 'string-similarity';
-import { BonusPartResult, BonusScore } from '../types/bonus';
-import { ReaderStatus } from '../types/reader';
-import { JudgeResult, TossupScore, TossupWord } from '../types/tossups';
 import { combine, emptyStringFilter, getUnique } from './array';
 import logger from './logger';
 import {
@@ -25,6 +28,22 @@ import {
   removeFirstNames,
 } from './string';
 
+export enum ReaderStatus {
+  idle,
+  fetching,
+  reading,
+  answering,
+  partialJudged,
+  prompting,
+  judged,
+  empty,
+}
+
+export enum JudgeResult {
+  correct,
+  incorrect,
+  prompt,
+}
 /**
  * Get words from string without any tags.
  * e.g. I <strong>love</strong> dogs => [I, love, dogs]

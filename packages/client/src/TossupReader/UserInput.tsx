@@ -4,8 +4,7 @@ import ReaderUserInput from '../components/reader/UserInput';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import { useAppDispatch } from '../redux/hooks';
 import { selectSettings } from '../Settings/settingsSlice';
-import { ReaderStatus } from '../types/reader';
-import { getInputBorderColor } from '../utils/reader';
+import { getInputBorderColor, ReaderStatus } from '../utils/reader';
 import {
   nextTossup as nextTossupAction,
   selectIsAnswering,
