@@ -1,4 +1,4 @@
-export type FrequencyListAnswer = {
+export type FrequencyListEntry = {
   answer: string;
   frequency: string;
 };

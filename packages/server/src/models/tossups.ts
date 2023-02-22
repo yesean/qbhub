@@ -1,4 +1,4 @@
-import { QuestionFilters, SortOption } from '../types/controller';
+import { QuestionParameters, SortOption } from '@qbhub/types';
 import { Order, Tossup } from '../types/db';
 import { TABLES } from '../utils/constants';
 import { client, QueryBuilder } from '../utils/db';
@@ -22,7 +22,7 @@ const columns = [
 /**
  * Retrieves and formats tossups from the database.
  */
-export const getTossups = async (questionFilters: QuestionFilters) => {
+export const getTossups = async (questionFilters: QuestionParameters) => {
   const order: Order = [
     {
       name: TABLES.tournaments.columns.year,

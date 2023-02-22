@@ -1,4 +1,4 @@
-import { QuestionFilters } from '../types/controller';
+import { QuestionParameters } from '@qbhub/types';
 import {
   parseAnswer,
   parseCategories,
@@ -19,7 +19,7 @@ import {
 const parseQuestionFilters = (
   q: qs.ParsedQs,
   { answer = false, limit = false },
-): QuestionFilters => ({
+): QuestionParameters => ({
   categories: parseCategories(q),
   subcategories: parseSubcategories(q),
   difficulties: parseDifficulties(q),

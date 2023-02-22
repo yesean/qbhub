@@ -1,3 +1,5 @@
+import { Tournament } from '@qbhub/types';
+
 export type Parameter = string | number;
 
 export type Column = {
@@ -26,7 +28,7 @@ export type Tossup = {
   category: number;
   subcategory: number | null;
   difficulty: number;
-  tournament: string;
+  tournament: number;
   year: number;
 };
 
@@ -37,7 +39,7 @@ export type Bonus = {
   category: number;
   subcategory: number | null;
   difficulty: number;
-  tournament: string;
+  tournament: number;
   year: number;
 };
 
@@ -50,14 +52,9 @@ export type BonusPart = {
   number: number;
 };
 
-export type Freq = {
-  answer: string;
-  frequency: number;
-};
-
 // stripped down version of `Tossup` used for clues processing
 export type PlainTossup = {
   text: string;
   answer: string; // uses normalized_answer
-  tournament: string;
+  tournament: Tournament;
 };
