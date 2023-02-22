@@ -19,12 +19,6 @@ export type QuestionContentParameters = {
   answer: string;
 };
 
-export enum SortOption {
-  random = 'random',
-  latest = 'latest',
-  earliest = 'earliest',
-}
-
 export type QuestionQueryParameters = {
   sort: SortOption;
   from: number;
@@ -32,6 +26,12 @@ export type QuestionQueryParameters = {
   offset: number;
   limit: number;
 };
+
+export enum SortOption {
+  random = 'random',
+  latest = 'latest',
+  earliest = 'earliest',
+}
 
 export type QuestionParameters = QuestionContentParameters &
   QuestionQueryParameters;
