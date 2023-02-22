@@ -14,7 +14,7 @@
     "composite": true,
     "declarationMap": true,
     "paths": {
-      "@qbhub/types": ["./packages/types/src"]
+      "@qbhub/types": ["./packages/types"]
     }
   }
 }
