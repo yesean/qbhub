@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "@qbhub/server",
   "version": "1.0.0",
   "author": "Sean Ye <seanye24@gmail.com>",
   "license": "MIT",
