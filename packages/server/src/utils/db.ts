@@ -1,5 +1,5 @@
+import { QuestionParameters } from '@qbhub/types';
 import { Client } from 'pg';
-import { QuestionFilters, QuestionParameters } from '../types/controller';
 import { Column, Order, Parameter, QuestionFilterOptions } from '../types/db';
 
 // connect to postgresql database
@@ -131,7 +131,7 @@ export const getAnswerCondition = (
  * Build `where` condition for filtering by start year.
  */
 export const getFromCondition = (
-  questionParameters: QuestionFilters,
+  questionParameters: QuestionParameters,
   addArg: (arg: Parameter) => string,
 ) => {
   const { from } = questionParameters;
@@ -143,7 +143,7 @@ export const getFromCondition = (
  * Build `where` condition for filtering by end year.
  */
 export const getUntilCondition = (
-  questionParameters: QuestionFilters,
+  questionParameters: QuestionParameters,
   addArg: (arg: Parameter) => string,
 ) => {
   const { until } = questionParameters;
@@ -170,7 +170,7 @@ export const getPrimaryKeyBonusCondition = (
  * Builds the `where` condition to filter tossups.
  */
 export const getTossupCondition = (
-  questionFilters: QuestionFilters,
+  questionFilters: QuestionParameters,
   addArg: (arg: Parameter) => string,
   options: QuestionFilterOptions,
 ) => {
@@ -208,7 +208,7 @@ export const getTossupCondition = (
  * Builds the `where` condition to filter bonuses.
  */
 export const getBonusesCondition = (
-  questionFilters: QuestionFilters,
+  questionFilters: QuestionParameters,
   addArg: (arg: Parameter) => string,
 ) => {
   const combinedCategoriesCondition = getCombinedCategoriesCondition(
@@ -309,7 +309,7 @@ export class QueryBuilder {
   }
 
   filterTossups(
-    questionFilters: QuestionFilters,
+    questionFilters: QuestionParameters,
     options: QuestionFilterOptions = {},
   ) {
     const command = getTossupCondition(
@@ -320,7 +320,7 @@ export class QueryBuilder {
     return this.addCommand(`WHERE ${command}`);
   }
 
-  filterBonuses(questionFilters: QuestionFilters) {
+  filterBonuses(questionFilters: QuestionParameters) {
     const command = getBonusesCondition(
       questionFilters,
       this.register.bind(this),
