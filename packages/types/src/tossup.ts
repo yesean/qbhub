@@ -4,13 +4,14 @@ import { Subcategory } from './subcategory';
 import { Tournament } from './tournament';
 
 export type Tossup = {
+  id: number;
   text: string;
   answer: string;
   formattedText: string;
   formattedAnswer: string;
   normalizedAnswer: string;
   category: Category;
-  subcategory: Subcategory;
+  subcategory?: Subcategory;
   difficulty: Difficulty;
   tournament: Tournament;
   year: number;
