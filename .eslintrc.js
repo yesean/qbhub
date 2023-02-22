@@ -2,6 +2,11 @@ module.exports = {
   extends: ['airbnb', 'airbnb/hooks', 'airbnb-typescript', 'prettier'],
   rules: {
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/lines-between-class-members': [
+      'error',
+      'always',
+      { exceptAfterSingleLine: true },
+    ],
     'no-param-reassign': 'off',
     quotes: ['error', 'single', { avoidEscape: true }],
     'react/function-component-definition': 'off',
