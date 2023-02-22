@@ -10,19 +10,19 @@ import {
   SliderTrack,
 } from '@chakra-ui/react';
 import { CSSObject } from '@emotion/react';
+import {
+  Category,
+  Difficulty,
+  SelectableQuestionParameter,
+  Subcategory,
+  Tournament,
+} from '@qbhub/types';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import Select, { Options } from 'react-select';
 import Modal from '../components/Modal';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import { useAppDispatch } from '../redux/hooks';
-import {
-  Category,
-  Difficulty,
-  QuestionParameter,
-  Subcategory,
-  Tournament,
-} from '../types/questions';
 import {
   CATEGORIES,
   CATEGORY_MAP,
@@ -48,7 +48,7 @@ import {
 import YearInput from './YearInput';
 
 const toSelect =
-  <T extends QuestionParameter, U extends { name: string }>(
+  <T extends SelectableQuestionParameter, U extends { name: string }>(
     map: Record<T, U>,
   ) =>
   (key: T) => ({

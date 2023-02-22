@@ -13,10 +13,10 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
+import { TossupScore } from '@qbhub/types';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../redux/hooks';
 import { selectTossupReader } from '../../TossupReader/tossupReaderSlice';
-import { TossupScore } from '../../types/tossups';
 import { TealButton } from '../buttons';
 import { close, selectTossupHistoryModal } from './tossupHistoryModalSlice';
 import TossupResults from './TossupResults';

@@ -1,15 +1,21 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { RootState } from '../redux/store';
 import {
   Category,
   Difficulty,
   Subcategory,
+  Tossup,
+  TossupResult,
+  TossupWord,
   Tournament,
-} from '../types/questions';
-import { ReaderStatus } from '../types/reader';
-import { Tossup, TossupResult, TossupWord } from '../types/tossups';
+} from '@qbhub/types';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { RootState } from '../redux/store';
 import * as fetchUtils from '../utils/fetch';
-import { getPowerIndex, getTossupScore, getTossupWords } from '../utils/reader';
+import {
+  getPowerIndex,
+  getTossupScore,
+  getTossupWords,
+  ReaderStatus,
+} from '../utils/reader';
 
 type TossupReaderState = {
   status: ReaderStatus;
@@ -133,8 +139,10 @@ const tossupReaderSlice = createSlice({
       state,
       action: PayloadAction<Subcategory[]>,
     ) => {
-      state.tossups = state.tossups.filter((tu) =>
-        action.payload.includes(tu.subcategory),
+      state.tossups = state.tossups.filter(
+        (tu) =>
+          tu.subcategory !== undefined &&
+          action.payload.includes(tu.subcategory),
       );
     },
     filterTossupsByDifficulties: (

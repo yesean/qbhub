@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { JudgeResult } from '../types/tossups';
 import logger from '../utils/logger';
-import { Judge, normalizeAnswer } from '../utils/reader';
+import { Judge, JudgeResult, normalizeAnswer } from '../utils/reader';
 
 const useJudge = (
   answer: string,

@@ -1,8 +1,8 @@
+import { BonusScore } from '@qbhub/types';
 import { useSelector } from 'react-redux';
 import ReaderResult from '../components/reader/Result';
-import { BonusScore } from '../types/bonus';
-import { ReaderStatus } from '../types/reader';
 import { random } from '../utils/array';
+import { ReaderStatus } from '../utils/reader';
 import { selectBonusReader } from './bonusReaderSlice';
 
 const messages = {

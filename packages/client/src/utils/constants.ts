@@ -1,10 +1,10 @@
 import {
   Category,
   Difficulty,
-  QuestionParameter,
+  SelectableQuestionParameter,
   Subcategory,
   Tournament,
-} from '../types/questions';
+} from '@qbhub/types';
 
 const CATEGORY_DATA = [
   { key: Category['Current Events'], name: 'Current Events' },
@@ -2721,7 +2721,7 @@ const TOURNAMENT_DATA = [
   },
 ];
 
-const dataReducer = <T extends { key: QuestionParameter }>(
+const dataReducer = <T extends { key: SelectableQuestionParameter }>(
   acc: { [key in T['key']]: Omit<T, 'key'> },
   { key, ...data }: T,
 ) => ({

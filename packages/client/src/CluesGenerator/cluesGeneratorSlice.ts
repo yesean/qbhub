@@ -1,6 +1,6 @@
+import { FrequencyListEntry, SelectedClue } from '@qbhub/types';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../redux/store';
-import { Answer, Clue } from '../types/tossups';
 import * as fetchUtils from '../utils/fetch';
 
 const FETCH_LIMIT = 200;
@@ -13,8 +13,8 @@ export enum CluesGeneratorStatus {
 
 type CluesGeneratorSlice = {
   status: CluesGeneratorStatus;
-  clues: Clue[];
-  answers: Answer[];
+  clues: SelectedClue[];
+  answers: FrequencyListEntry[];
   selectedAnswer: string;
   currentQuery: string;
 };
@@ -28,7 +28,7 @@ const initialState: CluesGeneratorSlice = {
 };
 
 export const fetchAnswers = createAsyncThunk<
-  Answer[],
+  FrequencyListEntry[],
   string,
   { state: RootState }
 >(
@@ -49,7 +49,7 @@ export const fetchAnswers = createAsyncThunk<
   },
 );
 export const fetchClues = createAsyncThunk<
-  Clue[],
+  SelectedClue[],
   string,
   { state: RootState }
 >(

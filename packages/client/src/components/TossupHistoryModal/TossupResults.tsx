@@ -1,5 +1,5 @@
 import { Box, Text } from '@chakra-ui/react';
-import { TossupResult } from '../../types/tossups';
+import { TossupResult } from '@qbhub/types';
 import { TOURNAMENT_MAP } from '../../utils/constants';
 import { parseHTMLString } from '../../utils/string';
 import FormattedQuestion from '../reader/FormattedQuestion';

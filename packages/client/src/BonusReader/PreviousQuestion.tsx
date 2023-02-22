@@ -1,8 +1,8 @@
 import { Box } from '@chakra-ui/react';
+import { BonusPart, BonusPartResult } from '@qbhub/types';
 import Answer from '../components/reader/Answer';
 import FormattedQuestion from '../components/reader/FormattedQuestion';
 import UserAnswer from '../components/reader/UserAnswer';
-import { BonusPart, BonusPartResult } from '../types/bonus';
 import { getTossupWords } from '../utils/reader';
 
 type PreviousQuestionProps = {

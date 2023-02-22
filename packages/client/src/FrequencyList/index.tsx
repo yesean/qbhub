@@ -6,6 +6,7 @@ import {
   Link,
   Text,
 } from '@chakra-ui/react';
+import { FrequencyListEntry } from '@qbhub/types';
 import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
@@ -13,7 +14,6 @@ import { KeyValueTable } from '../components/tables';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import { useAppDispatch } from '../redux/hooks';
 import { selectSettings } from '../Settings/settingsSlice';
-import { Answer } from '../types/tossups';
 import { ROUTES } from '../utils/routes';
 import {
   fetchPages,
@@ -69,7 +69,7 @@ const FrequencyList: React.FC<React.PropsWithChildren<unknown>> = () => {
         </Text>
       );
     }
-    const renderAnswer = (answer: Answer) => (
+    const renderAnswer = (answer: FrequencyListEntry) => (
       <Link as={RouterLink} to={ROUTES.clues.display(answer.answer)}>
         {answer.answer}
       </Link>

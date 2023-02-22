@@ -1,3 +1,4 @@
+import { Category, Difficulty, Subcategory, Tournament } from '@qbhub/types';
 import { createSelector, createSlice } from '@reduxjs/toolkit';
 import {
   filterBonusesByCategory,
@@ -14,12 +15,6 @@ import {
   filterTossupsBySubcategory,
   filterTossupsByTournament,
 } from '../TossupReader/tossupReaderSlice';
-import {
-  Category,
-  Difficulty,
-  Subcategory,
-  Tournament,
-} from '../types/questions';
 import { SUBCATEGORY_MAP, TOURNAMENT_MAP } from '../utils/constants';
 import {
   restoreCategories,
