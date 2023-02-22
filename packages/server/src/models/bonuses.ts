@@ -1,9 +1,4 @@
-import {
-  BonusPart,
-  BonusParts,
-  QuestionFilters,
-  SortOption,
-} from '../types/controller';
+import { BonusPart, QuestionParameters, SortOption } from '@qbhub/types';
 import { Bonus as DBBonus, BonusPart as DBBonusPart, Order } from '../types/db';
 import { TABLES } from '../utils/constants';
 import { client, QueryBuilder } from '../utils/db';
@@ -41,7 +36,7 @@ const bonusPartsOrder: Order = [
  *  1. Retrieve the bonuses from the `bonuses` table. (only metadata)
  *  2. Retrieve all of the bonusParts from the `bonus_parts` table (actual content) that match the bonuses from step 1.
  */
-export const getBonuses = async (questionFilters: QuestionFilters) => {
+export const getBonuses = async (questionFilters: QuestionParameters) => {
   const bonusesOrder: Order = [
     {
       name: TABLES.tournaments.columns.year,
@@ -117,7 +112,7 @@ export const getBonuses = async (questionFilters: QuestionFilters) => {
 
   // combine bonuses with bonus parts
   const transformedBonuses = bonuses.map((bonus) =>
-    transformBonus(bonus, bonusPartsMap.get(bonus.id) as BonusParts),
+    transformBonus(bonus, bonusPartsMap.get(bonus.id) as BonusPart[]),
   );
 
   return transformedBonuses;

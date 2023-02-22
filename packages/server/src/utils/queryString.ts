@@ -1,11 +1,11 @@
-import { SortOption } from '../types/controller';
-import { QueryStringParsingError } from '../types/errors';
 import {
   Category,
   Difficulty,
+  SortOption,
   Subcategory,
   Tournament,
-} from '../types/questions';
+} from '@qbhub/types';
+import { QueryStringParsingError } from '../types/errors';
 import {
   MAX_LIMIT,
   MAX_TOURNAMENT_YEAR,

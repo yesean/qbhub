@@ -1,7 +1,6 @@
+import { Bag, Clue, ClueBagMap, SelectedClue } from '@qbhub/types';
 import stats from 'compromise-stats';
 import _nlp from 'compromise/three';
-import { Bag, ClueBagMap } from '../types/clues';
-import { Clue, ClueResult } from '../types/controller';
 import { PlainTossup } from '../types/db';
 import { each, max, shuffle, sum, unique } from './array';
 import logger from './logger';
@@ -70,9 +69,9 @@ export const getAllClues = (tossups: PlainTossup[]): Clue[] => {
         .map((sentence) => {
           const normalizedSentence = normalizeClue(sentence);
           return getClauses(sentence).map((clause) => {
-            const clue = normalizeClue(clause);
+            const clueText = normalizeClue(clause);
             return {
-              clue,
+              text: clueText,
               sentence: normalizedSentence,
               tournament,
             };
@@ -83,7 +82,7 @@ export const getAllClues = (tossups: PlainTossup[]): Clue[] => {
     })
     .flat();
   const uniqueClues = allClues.reduce<[Clue[], Set<string>]>(
-    unique<Clue>((clue) => clue.clue),
+    unique<Clue>((clue) => clue.text),
     [[], new Set()],
   )[0];
   return shuffle(uniqueClues);
@@ -123,7 +122,7 @@ const getBag = (clue: string) => {
  * Gets a ClueBagMap from an array of clues, mapping each clue to its bag.
  */
 const getClueBagMap = (clues: Clue[]) =>
-  clues.map(({ clue }) => clue).reduce<ClueBagMap>(each(getBag), {});
+  clues.map(({ text }) => text).reduce<ClueBagMap>(each(getBag), {});
 
 /**
  * Gets a bag of words model from a collection of clues. The term
@@ -147,7 +146,7 @@ const getCorpusBag = (clueBagMap: ClueBagMap) =>
  * Remove a clue from the corpus bag.
  */
 const removeClue = (clue: Clue, clueBagMap: ClueBagMap, corpusBag: Bag) => {
-  const words = Object.keys(clueBagMap[clue.clue]);
+  const words = Object.keys(clueBagMap[clue.text]);
   words.forEach((word) => {
     corpusBag[word] -= 1;
   });
@@ -181,7 +180,7 @@ const scoreWord = (
   clueBagMap: ClueBagMap,
   corpusBag: Bag,
   numClues: number,
-) => tfIdf(word, clueBagMap[clue.clue], corpusBag, numClues);
+) => tfIdf(word, clueBagMap[clue.text], corpusBag, numClues);
 
 /**
  * Scores a clue against a clue and the corpus.
@@ -193,7 +192,7 @@ const scoreClue = (
   corpusBag: Bag,
   numClues: number,
 ) => {
-  const words = Object.keys(clueBagMap[queryClue.clue]);
+  const words = Object.keys(clueBagMap[queryClue.text]);
   const score = words
     .map((word) => scoreWord(word, baseClue, clueBagMap, corpusBag, numClues))
     .reduce(sum());
@@ -207,8 +206,8 @@ const combineClues = (
   clues: Clue[],
   clueBagMap: ClueBagMap,
   corpusBag: Bag,
-): ClueResult[] => {
-  const uniqueClues: ClueResult[] = [];
+): SelectedClue[] => {
+  const uniqueClues: SelectedClue[] = [];
   while (clues.length > 0) {
     // ideally, tf > 2.5 and idf < 6
     const [NUM_TERMS, TF, DF, IDF_WEIGHT] = [2.5, 1, 6, 1];
@@ -247,7 +246,7 @@ const combineClues = (
       ...queryClue,
       score: bestClueScore,
       matches,
-    } as ClueResult);
+    } as SelectedClue);
 
     // remove similar clues
     similarClues.forEach((idx) =>
@@ -272,8 +271,8 @@ export const getUniqueClues = (clues: Clue[]) => {
   // remove useless clues
   logger.info('Removing useless clues.');
   clues = clues.filter((clue) => {
-    if (Object.keys(clueBagMap[clue.clue]).length === 0) {
-      delete clueBagMap[clue.clue];
+    if (Object.keys(clueBagMap[clue.text]).length === 0) {
+      delete clueBagMap[clue.text];
       return false;
     }
     return true;

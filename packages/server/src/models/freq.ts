@@ -1,5 +1,5 @@
-import { QuestionFilters } from '../types/controller';
-import { Freq, Order } from '../types/db';
+import { FrequencyListEntry, QuestionParameters } from '@qbhub/types';
+import { Order } from '../types/db';
 import { TABLES } from '../utils/constants';
 import { client, QueryBuilder } from '../utils/db';
 import logger from '../utils/logger';
@@ -16,7 +16,7 @@ const columnOrder: Order = [
 /**
  * Retrieves and formats answers sorted by frequency from the database.
  */
-export const getFreq = async (questionFilters: QuestionFilters) => {
+export const getFreq = async (questionFilters: QuestionParameters) => {
   const [query, values] = new QueryBuilder()
     .select(columns)
     .from(TABLES.tossups.name)
@@ -39,6 +39,6 @@ export const getFreq = async (questionFilters: QuestionFilters) => {
     'Parameters:',
     Object.entries(values).map((e) => [Number(e[0]) + 1, e[1]]),
   );
-  const { rows: freq } = await client.query<Freq>(query, values);
+  const { rows: freq } = await client.query<FrequencyListEntry>(query, values);
   return freq;
 };
