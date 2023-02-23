@@ -29,28 +29,38 @@ const Bell = ({ shouldDisplay }: { shouldDisplay: boolean }) => {
   );
 };
 
+let [prevTime, prevVisible]: [number | null, number | null] = [null, null];
 const FormattedQuestion = ({
   words,
   indices: { visible = words.length, buzz = -1 } = {},
   visibleRef,
-}: Props) => (
-  <>
-    {words.map((w, i) => (
-      // eslint-disable-next-line react/no-array-index-key
-      <Fragment key={`${w}${i}`}>
-        <Text
-          ref={i === visible ? visibleRef : undefined}
-          display="inline-block"
-          whiteSpace="break-spaces"
-          visibility={i <= visible ? 'visible' : 'hidden'}
-          fontWeight={w.bold ? 'bold' : 'normal'}
-        >
-          {parseHTMLString(w.word)}{' '}
-        </Text>
-        <Bell shouldDisplay={i === buzz} />
-      </Fragment>
-    ))}
-  </>
-);
+}: Props) => {
+  if (visible !== prevVisible) {
+    const time = Date.now();
+    const elapsed = prevTime == null ? null : time - prevTime;
+    console.table({ visible, elapsed, time });
+    [prevTime, prevVisible] = [time, visible];
+  }
+
+  return (
+    <>
+      {words.map((w, i) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <Fragment key={`${w}${i}`}>
+          <Text
+            ref={i === visible ? visibleRef : undefined}
+            display="inline-block"
+            whiteSpace="break-spaces"
+            visibility={i <= visible ? 'visible' : 'hidden'}
+            fontWeight={w.bold ? 'bold' : 'normal'}
+          >
+            {parseHTMLString(w.word)}{' '}
+          </Text>
+          <Bell shouldDisplay={i === buzz} />
+        </Fragment>
+      ))}
+    </>
+  );
+};
 
 export default FormattedQuestion;
