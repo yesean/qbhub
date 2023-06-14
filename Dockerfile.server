@@ -1,0 +1,16 @@
+FROM node:18
+WORKDIR /usr/src/app
+
+# set yarn version
+RUN yarn set version stable
+
+# copy src
+COPY . .
+
+# install dependencies
+RUN yarn workspace @qbhub/types install
+RUN yarn workspace @qbhub/server install
+RUN yarn cache clean
+
+EXPOSE 3001
+CMD [ "yarn", "start", "--no-daemon" ]
