@@ -1,0 +1,13 @@
+version: '3.9'
+services:
+  nodeserver:
+    build:
+      dockerfile: Dockerfile.server
+    ports:
+      - '3001:3001'
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile.nginx
+    ports:
+      - '80:80'
