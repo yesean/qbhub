@@ -18,5 +18,5 @@
     "deploy": "scp -r packages/server/{dist,build} qbhub:~/qbhub/packages/server && ssh qbhub 'cd ~/qbhub && git pull && yarn install && pm2 restart qbhub-beta'",
     "deploy:full": "yarn build && yarn deploy"
   },
-  "packageManager": "yarn@3.2.3"
+  "packageManager": "yarn@3.6.0"
 }
