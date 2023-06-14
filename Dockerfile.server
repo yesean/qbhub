@@ -13,4 +13,4 @@ RUN yarn workspace @qbhub/server install
 RUN yarn cache clean
 
 EXPOSE 3001
-CMD [ "yarn", "start", "--no-daemon" ]
+CMD [ "yarn", "start" ]
