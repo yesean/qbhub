@@ -7,7 +7,7 @@
     "node": ">=8.10.0"
   },
   "scripts": {
-    "start": "pm2 start pm2.config.js",
+    "start": "pm2 start pm2.config.js --no-daemon",
     "dev": "NODE_ENV=development nodemon --watch 'src/**/*.ts' --exec ts-node -r dotenv/config src/index.ts",
     "compile": "tsc --build",
     "build": "yarn lint && yarn compile",
