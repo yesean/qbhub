@@ -4,10 +4,19 @@ services:
     build:
       dockerfile: Dockerfile.server
     ports:
-      - '3001:3001'
+      - 3001:3001
   nginx:
     restart: always
     build:
       dockerfile: Dockerfile.nginx
     ports:
-      - '80:80'
+      - 80:80
+      - 443:443
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
