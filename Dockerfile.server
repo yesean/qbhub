@@ -1,6 +1,9 @@
 FROM node:18
 WORKDIR /usr/src/app
 
+# install dependencies
+RUN apt-get update && apt-get install -y wait-for-it
+
 # set yarn version
 RUN yarn set version stable
 
@@ -13,4 +16,4 @@ RUN yarn workspace @qbhub/server install
 RUN yarn cache clean
 
 EXPOSE 3001
-CMD [ "yarn", "start" ]
+CMD [ "wait-for-it", "--timeout=0", "postgres:5432", "--", "yarn", "start" ]
