@@ -1,6 +1,7 @@
 version: '3.9'
 services:
   postgres:
+    image: seanye24/qbhub-postgres
     restart: always
     build:
       dockerfile: Dockerfile.postgres
@@ -11,6 +12,7 @@ services:
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
   node:
+    image: seanye24/qbhub-node
     depends_on:
       - postgres
     build:
@@ -18,6 +20,7 @@ services:
     ports:
       - ${NODE_PORT}:${NODE_PORT}
   nginx:
+    image: seanye24/qbhub-nginx
     depends_on:
       - node
     restart: always
