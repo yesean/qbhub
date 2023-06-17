@@ -10,7 +10,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "yarn workspaces foreach -pvi run dev",
+    "dev": "env $(cat .env) yarn workspaces foreach -pvi run dev",
     "start": "yarn workspace @qbhub/server run start",
     "lint": "yarn workspaces foreach -pvi run lint",
     "format": "yarn workspaces foreach -pvi run format",

@@ -1,9 +1,16 @@
 import { QuestionParameters } from '@qbhub/types';
 import { Client } from 'pg';
 import { Column, Order, Parameter, QuestionFilterOptions } from '../types/db';
+import { POSTGRES } from './env';
 
 // connect to postgresql database
-export const client = new Client();
+export const client = new Client({
+  host: POSTGRES.host,
+  database: POSTGRES.database,
+  user: POSTGRES.user,
+  password: POSTGRES.password,
+  port: POSTGRES.port,
+});
 client.connect();
 
 // helper functions for sql syntax
