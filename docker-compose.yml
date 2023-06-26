@@ -38,7 +38,5 @@ services:
       - ./data/certbot/conf:/etc/letsencrypt
   certbot:
     image: certbot/certbot
-    ports:
-      - 80:80
     volumes:
       - ./data/certbot/conf:/etc/letsencrypt
