@@ -11,7 +11,7 @@ services:
         - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     env_file: .env
     ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+      - ${PGPORT}:${PGPORT}
   node:
     image: seanye24/qbhub-node
     depends_on:
