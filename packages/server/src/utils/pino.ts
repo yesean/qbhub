@@ -1,10 +1,10 @@
 import pino from 'pino-http';
 import { createWriteStream } from 'pino-logflare';
-import { isDev, LOGFLARE } from './env';
+import { env, isDev } from './env';
 
 const stream = createWriteStream({
-  apiKey: LOGFLARE.apiKey,
-  sourceToken: isDev ? LOGFLARE.serverDevID : LOGFLARE.serverProdID,
+  apiKey: env.logflare.apiKey,
+  sourceToken: isDev ? env.logflare.serverDevID : env.logflare.serverProdID,
 });
 
 export default pino({ stream });
