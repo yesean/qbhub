@@ -1,5 +1,3 @@
-node_modules
-
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -8,6 +6,8 @@ node_modules
 !.yarn/sdks
 !.yarn/versions
 
+.env*
+node_modules
 stats.html
 tsconfig.tsbuildinfo
 packages/client
