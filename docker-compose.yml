@@ -5,6 +5,7 @@ services:
     restart: always
     build:
       dockerfile: Dockerfile.postgres
+      context: .
       args:
         - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
         - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
@@ -17,6 +18,8 @@ services:
       - postgres
     build:
       dockerfile: Dockerfile.node
+      context: .
+    env_file: .env
     ports:
       - ${NODE_PORT}:${NODE_PORT}
   nginx:
@@ -26,6 +29,7 @@ services:
     restart: always
     build:
       dockerfile: Dockerfile.nginx
+      context: .
     ports:
       - 80:80
       - 443:443
