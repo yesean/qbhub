@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import { isDev } from './env';
+import * as env from './env';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ignore = (..._: any[]) => {};
@@ -20,6 +20,6 @@ const error = (...params: any[]) => {
 };
 
 export default {
-  info: isDev ? info : ignore,
+  info: env.isDev ? info : ignore,
   error,
 };

@@ -5,12 +5,10 @@ function v(key: string): string {
   return process.env[key] as string;
 }
 
-export const { NODE_PORT } = process.env;
+export const nodePort = process.env.NODE_PORT;
 export const isDev = process.env.NODE_ENV === 'development';
-export const env = {
-  logflare: {
-    apiKey: v('LOGFLARE_API_KEY'),
-    serverProdID: v('LOGFLARE_SERVER_PROD_ID'),
-    serverDevID: v('LOGFLARE_SERVER_DEV_ID'),
-  },
+export const logflare = {
+  apiKey: v('LOGFLARE_API_KEY'),
+  prodID: v('LOGFLARE_SERVER_PROD_ID'),
+  devID: v('LOGFLARE_SERVER_DEV_ID'),
 };
