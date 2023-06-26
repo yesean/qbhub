@@ -5,7 +5,7 @@ import bonusesRouter from './controllers/bonuses';
 import cluesRouter from './controllers/clues';
 import freqRouter from './controllers/freq';
 import tossupsRouter from './controllers/tossups';
-import { NODE_PORT } from './utils/env';
+import * as env from './utils/env';
 import logger from './utils/logger';
 import pino from './utils/pino';
 
@@ -23,6 +23,6 @@ app.get('*', (_, res) =>
   res.sendFile(path.join(__dirname, '..', 'build', 'index.html')),
 );
 
-app.listen(NODE_PORT, () => {
-  logger.info(`App is running on PORT ${NODE_PORT}.`);
+app.listen(env.nodePort, () => {
+  logger.info(`App is running on PORT ${env.nodePort}.`);
 });
