@@ -1,0 +1,52 @@
+name: deploy
+on: workflow_dispatch
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: create .env file
+        run: |
+          touch .env
+          echo AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }} >> .env
+          echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> .env
+          echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env
+          echo PGHOST=${{ secrets.PGHOST }} >> .env
+          echo PGDATABASE=${{ secrets.PGDATABASE }} >> .env
+          echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> .env
+          echo PGUSER=${{ secrets.PGUSER }} >> .env
+          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
+          echo PGPASSWORD=${{ secrets.PGPASSWORD }} >> .env
+          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+          echo PGPORT=${{ secrets.PGPORT }} >> .env
+          echo NGINX_HOST=${{ secrets.NGINX_HOST }} >> .env
+          echo NODE_HOST=${{ secrets.NODE_HOST }} >> .env
+          echo NODE_PORT=${{ secrets.NODE_PORT }} >> .env
+          echo LOGFLARE_API_KEY=${{ secrets.LOGFLARE_API_KEY }} >> .env
+          echo LOGFLARE_SERVER_DEV_ID=${{ secrets.LOGFLARE_SERVER_DEV_ID }} >> .env
+          echo LOGFLARE_SERVER_PROD_ID=${{ secrets.LOGFLARE_SERVER_PROD_ID }} >> .env
+          echo DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }} >> .env
+          echo DOCKERHUB_TOKEN=${{ secrets.DOCKERHUB_TOKEN }} >> .env
+
+      - name: copy files
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USERNAME }}
+          key: ${{ secrets.DO_KEY }}
+          source: 'docker-compose.yml,.env'
+          target: '~'
+
+      - name: deploy containers
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USERNAME }}
+          key: ${{ secrets.DO_KEY }}
+          script: |
+            docker compose down
+            docker compose pull
+            docker system prune --force
+            docker compose up --detach
