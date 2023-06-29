@@ -48,7 +48,6 @@ jobs:
           echo LOGFLARE_SERVER_PROD_ID=${{ secrets.LOGFLARE_SERVER_PROD_ID }} >> .env
           echo DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }} >> .env
           echo DOCKERHUB_TOKEN=${{ secrets.DOCKERHUB_TOKEN }} >> .env
-          cat .env
 
       - name: build docker images
         run: docker-compose build
