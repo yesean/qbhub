@@ -5,8 +5,12 @@ ARG AWS_SECRET_ACCESS_KEY
 ENV AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
 ENV AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 
-# install dependencies
-RUN apt-get update && apt-get install -y awscli
+# install system dependencies
+RUN apt-get update && apt-get install -y \
+    --no-install-recommends \
+    awscli \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# download db dump
+# download sql dump
 RUN aws s3 cp s3://qbhub/qbhub.sql /docker-entrypoint-initdb.d
