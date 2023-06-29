@@ -4,7 +4,7 @@ import * as env from './env';
 
 const stream = createWriteStream({
   apiKey: env.logflare.apiKey,
-  sourceToken: env.isDev ? env.logflare.devID : env.logflare.prodID,
+  sourceToken: env.logflare.sourceToken,
 });
 
 export default pino({ stream });
