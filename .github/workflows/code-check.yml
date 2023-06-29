@@ -1,5 +1,10 @@
-name: static-analysis
+name: code-check
 on: push
+
+env:
+  LOGFLARE_API_KEY: ${{ secrets.LOGFLARE_API_KEY }}
+  LOGFLARE_CLIENT_PROD_ID: ${{ secrets.LOGFLARE_CLIENT_PROD_ID }}
+
 jobs:
   code-check:
     runs-on: ubuntu-latest

@@ -1,7 +1,7 @@
-name: deploy
+name: deploy-to-digitalocean
 on: workflow_dispatch
 jobs:
-  deploy:
+  deploy-to-digitalocean:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -10,9 +10,6 @@ jobs:
       - name: create .env file
         run: |
           touch .env
-          echo AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }} >> .env
-          echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> .env
-          echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env
           echo PGHOST=${{ secrets.PGHOST }} >> .env
           echo PGDATABASE=${{ secrets.PGDATABASE }} >> .env
           echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> .env
@@ -25,10 +22,7 @@ jobs:
           echo NODE_HOST=${{ secrets.NODE_HOST }} >> .env
           echo NODE_PORT=${{ secrets.NODE_PORT }} >> .env
           echo LOGFLARE_API_KEY=${{ secrets.LOGFLARE_API_KEY }} >> .env
-          echo LOGFLARE_SERVER_DEV_ID=${{ secrets.LOGFLARE_SERVER_DEV_ID }} >> .env
           echo LOGFLARE_SERVER_PROD_ID=${{ secrets.LOGFLARE_SERVER_PROD_ID }} >> .env
-          echo DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }} >> .env
-          echo DOCKERHUB_TOKEN=${{ secrets.DOCKERHUB_TOKEN }} >> .env
 
       - name: copy files
         uses: appleboy/scp-action@v0.1.4
