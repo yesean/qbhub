@@ -1,4 +1,4 @@
-name: deploy-to-digitalocean
+name: deploy-beta
 on: workflow_dispatch
 jobs:
   deploy-beta:
