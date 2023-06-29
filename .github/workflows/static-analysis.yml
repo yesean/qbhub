@@ -1,7 +1,7 @@
 name: static-analysis
 on: push
 jobs:
-  lint-and-format:
+  code-check:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -15,8 +15,11 @@ jobs:
       - name: install dependencies
         run: yarn install
 
-      - name: lint files
+      - name: lint check
         run: yarn lint
 
-      - name: check formatting
+      - name: formatting check
         run: npx prettier --check packages/*/src/*.{ts,tsx}
+
+      - name: build check
+        run: yarn build

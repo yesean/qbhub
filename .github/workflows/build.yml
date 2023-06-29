@@ -1,7 +1,12 @@
-name: build-and-deploy
-on: push
+name: build
+on:
+  push:
+    branches: [main]
+  issues:
+    types: [opened]
+
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
