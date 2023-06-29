@@ -11,11 +11,8 @@ export const browserInfo = {
 };
 
 const send = createPinoBrowserSend({
-  apiKey: import.meta.env.VITE_LOGFLARE_API_KEY as string,
-  sourceToken:
-    import.meta.env.NODE_ENV === 'development'
-      ? (import.meta.env.VITE_LOGFLARE_CLIENT_DEV_ID as string)
-      : (import.meta.env.VITE_LOGFLARE_CLIENT_PROD_ID as string),
+  apiKey: LOGFLARE_API_KEY,
+  sourceToken: LOGFLARE_SOURCE_TOKEN,
 });
 
 const logger = pino({
