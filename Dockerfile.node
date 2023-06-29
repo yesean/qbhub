@@ -1,19 +1,19 @@
 FROM node:18
 WORKDIR /usr/src/app
 
-# install dependencies
-RUN apt-get update && apt-get install -y wait-for-it
+# install system dependencies
+RUN apt-get update && apt-get install -y \
+    --no-install-recommends \
+    wait-for-it \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# set yarn version
+# install project dependencies
 RUN yarn set version stable
-
-# copy src
 COPY . .
-
-# install dependencies
-RUN yarn workspace @qbhub/types install
-RUN yarn workspace @qbhub/server install
-RUN yarn cache clean
+RUN yarn workspace @qbhub/types install \
+    && yarn workspace @qbhub/server install \
+    && yarn cache clean
 
 EXPOSE 3001
-CMD [ "wait-for-it", "--timeout=0", "postgres:5432", "--", "yarn", "start" ]
+CMD ["wait-for-it", "--timeout=0", "postgres:5432", "--", "yarn", "start"]
