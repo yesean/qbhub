@@ -6,8 +6,6 @@ on:
     types: [opened]
 
 env:
-  LOGFLARE_API_KEY: ${{ secrets.LOGFLARE_API_KEY }}
-  LOGFLARE_CLIENT_PROD_ID: ${{ secrets.LOGFLARE_CLIENT_PROD_ID }}
   AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

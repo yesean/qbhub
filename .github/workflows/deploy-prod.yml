@@ -21,8 +21,6 @@ jobs:
           echo NGINX_HOST=${{ secrets.NGINX_HOST }} >> .env
           echo NODE_HOST=${{ secrets.NODE_HOST }} >> .env
           echo NODE_PORT=${{ secrets.NODE_PORT }} >> .env
-          echo LOGFLARE_API_KEY=${{ secrets.LOGFLARE_API_KEY }} >> .env
-          echo LOGFLARE_SERVER_PROD_ID=${{ secrets.LOGFLARE_SERVER_PROD_ID }} >> .env
 
       - name: copy files
         uses: appleboy/scp-action@v0.1.4

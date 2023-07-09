@@ -7,10 +7,8 @@ import freqRouter from './controllers/freq';
 import tossupsRouter from './controllers/tossups';
 import * as env from './utils/env';
 import logger from './utils/logger';
-import pino from './utils/pino';
 
 const app = express();
-app.use(pino);
 app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, '..', 'build')));
