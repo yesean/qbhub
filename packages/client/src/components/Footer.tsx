@@ -30,7 +30,7 @@ const Footer: React.FC<React.PropsWithChildren<unknown>> = () => {
       />
       <Heading textAlign="center" fontWeight="bold" size="sm" mx={2}>
         Created by{' '}
-        <Link href="https://seanye.me" color="cyan.600" isExternal>
+        <Link href="https://sye.dev" color="cyan.600" isExternal>
           Sean Ye
         </Link>
       </Heading>
