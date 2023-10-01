@@ -36,4 +36,12 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/conf:/etc/letsencrypt # to serve TLS certs from
+      - ./data/certbot/www:/var/www/certbot # to serve ACME challenges from
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt # to save TLS certs to
+      - ./data/certbot/www:/var/www/certbot # to save ACME challenges to
+    profiles:
+      - certbot
