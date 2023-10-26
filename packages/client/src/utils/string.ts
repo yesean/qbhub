@@ -93,17 +93,17 @@ export const getWordsBetweenTags = (text: string, t: string) =>
  * e.g. Michael Jordan went to Larry Bird's house => Jordan went to Bird's house
  */
 export const removeFirstNames = (s: string) => {
-  const firstNameReduction = nlp(s)
-    .replace('#FirstName+ #LastName', (name: any) =>
-      name.matchOne('#LastName').text(),
-    )
-    .text();
-  const personReduction = nlp(s)
-    .replace('#Person+', (name: any) =>
-      name.match('#Person').out('array').at(-1),
-    )
-    .text();
-  return [firstNameReduction, personReduction];
+  const firstNameReduction = nlp(s);
+  firstNameReduction.replace('#FirstName+ #LastName', (name: any) =>
+    name.matchOne('#LastName').text(),
+  );
+
+  const personReduction = nlp(s);
+  personReduction.replace('#Person+', (name: any) =>
+    name.match('#Person').out('array').at(-1),
+  );
+
+  return [firstNameReduction.text(), personReduction.text()];
 };
 
 /**
