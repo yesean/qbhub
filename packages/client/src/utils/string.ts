@@ -1,5 +1,5 @@
 import nlp from 'compromise/two';
-import DOMPurify from 'dompurify';
+import DOMPurify from 'isomorphic-dompurify';
 import { toWords } from 'number-to-words';
 import ReactHTMLParser from 'react-html-parser';
 import { getRand } from './number';

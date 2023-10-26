@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import { parseAcceptableAnswers, parsePromptableAnswers } from './reader';
 
 const acceptableAnswerlines = [
@@ -104,7 +105,7 @@ const acceptableAnswerlines = [
 
 describe('Parsing acceptable answers', () => {
   acceptableAnswerlines.forEach(({ answerline, answers }) => {
-    test('testing answerline', () => {
+    it('testing answerline', ({ expect }) => {
       const correctAnswers = parseAcceptableAnswers(answerline);
       expect(correctAnswers).toEqual(answers);
     });
@@ -212,7 +213,7 @@ const promptableAnswerlines = [
 
 describe('Parsing promptable answers', () => {
   promptableAnswerlines.forEach(({ answerline, answers }) => {
-    test('testing answerline', () => {
+    it('testing answerline', ({ expect }) => {
       const promptableAnswers = parsePromptableAnswers(answerline);
       expect(promptableAnswers).toEqual(answers);
     });

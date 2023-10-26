@@ -12,14 +12,13 @@
     "@fontsource/raleway": "^4.5.11",
     "@qbhub/types": "workspace:^",
     "@reduxjs/toolkit": "^1.8.5",
-    "@testing-library/jest-dom": "^5.16.5",
     "@vitejs/plugin-react": "^2.1.0",
     "axios": "0.27.2",
     "buffer": "^6.0.3",
     "compromise": "14.5.0",
     "detect-browser": "5.3.0",
-    "dompurify": "2.4.0",
     "framer-motion": "7.5.1",
+    "isomorphic-dompurify": "^1.9.0",
     "lodash-es": "^4.17.21",
     "number-to-words": "1.2.4",
     "process": "^0.11.10",
@@ -42,8 +41,6 @@
     "@mdx-js/rollup": "^2.1.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
-    "@types/dompurify": "^2.3.4",
-    "@types/jest": "^29.1.2",
     "@types/lodash-es": "^4.17.6",
     "@types/mdx": "^2.0.3",
     "@types/node": "^18.8.0",
@@ -67,13 +64,15 @@
     "prettier": "2.7.1",
     "prettier-plugin-organize-imports": "3.1.1",
     "rollup-plugin-visualizer": "^5.8.2",
-    "typescript": "4.8.4"
+    "typescript": "4.8.4",
+    "vitest": "^0.34.6"
   },
   "scripts": {
     "dev": "vite",
     "build": "yarn lint && vite build",
     "preview": "vite preview",
     "lint": "tsc --build && tsc && eslint --ext .ts,.tsx src",
-    "format": "prettier --write src"
+    "format": "prettier --write src",
+    "test": "vitest"
   }
 }
