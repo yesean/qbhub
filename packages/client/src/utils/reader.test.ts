@@ -70,7 +70,6 @@ const acceptableAnswerlines = [
       'william the bastard',
       'william i the bad',
       'william ii the good',
-      'ii the good',
     ],
   },
   {
@@ -80,6 +79,7 @@ const acceptableAnswerlines = [
       'john dos passos',
       'john roderigo dos passos',
       'dos passos',
+      'passos',
       'roderigo dos passos',
     ],
   },
