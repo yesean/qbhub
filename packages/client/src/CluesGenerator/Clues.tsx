@@ -1,4 +1,3 @@
-import { DownloadIcon } from '@chakra-ui/icons';
 import {
   Box,
   CircularProgress,
@@ -10,12 +9,12 @@ import {
 } from '@chakra-ui/react';
 import { SelectedClue } from '@qbhub/types';
 import { useEffect, useLayoutEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { FileDownloadButton } from '../components/buttons';
 import { KeyValueTable } from '../components/tables';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { toCSV, toJSON } from '../utils/array';
-import { ROUTES } from '../utils/routes';
+import { ROUTES, useGetClueSearchURL } from '../utils/routes';
 import BackButton from './BackButton';
 import {
   CluesGeneratorStatus,
@@ -34,7 +33,9 @@ const cluesFields = [
 const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { status, clues, currentQuery } = useAppSelector(selectCluesGenerator);
   const dispatch = useAppDispatch();
-  const { answer } = useParams<{ answer: string }>() as { answer: string };
+  const getClueSearchURL = useGetClueSearchURL();
+  const [searchParams] = useSearchParams();
+  const answer = searchParams.get('answer') as string;
   const [CSVLink, setCSVLink] = useState('');
   const [JSONLink, setJSONLink] = useState('');
 
@@ -108,80 +109,70 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
     </Tooltip>
   );
 
-  const render = () => {
-    if (status !== CluesGeneratorStatus.loaded) {
-      return <CircularProgress isIndeterminate color="cyan" />;
-    }
+  if (status !== CluesGeneratorStatus.loaded) {
+    return <CircularProgress isIndeterminate color="cyan" />;
+  }
 
-    if (clues.length === 0) {
-      return (
-        <Container bg="gray.100" p={4} borderRadius="md">
-          <Text>
-            No clues found for <strong>{answer}</strong>. Try checking your
-            network connection or tweaking the search parameters.
-          </Text>
-        </Container>
-      );
-    }
-
+  if (clues.length === 0) {
     return (
-      <>
-        <Heading
-          as="h2"
-          size="md"
-          mb={4}
-          px={4}
-          textAlign="center"
-          lineHeight="1.5"
-          maxW="600px"
-        >
-          Showing clues for:{' '}
-          <Box as="span" bg="cyan.200" borderRadius="sm" p={1}>
-            {answer}
-          </Box>
-        </Heading>
-        <Box w="min(600px, 100%)" h="min(700px, 100%)" mb={4} overflow="auto">
-          <KeyValueTable
-            data={clues.map((clue) => ({ ...clue, clue: renderClue(clue) }))}
-            headers={cluesFields}
-            width={600}
-            height={700}
-          />
-        </Box>
-        <Flex
-          justify="center"
-          overflowX="auto"
-          flexShrink={0}
-          maxW="100%"
-          justifyContent="flex-start"
-        >
-          {currentQuery.length > 0 && (
-            <BackButton
-              label="Results"
-              to={ROUTES.clues.searchResults(currentQuery)}
-              mr={4}
-            />
-          )}
-          <SearchButton label="Search" to={ROUTES.clues.search} mr={4} />
-          <FileDownloadButton
-            href={CSVLink}
-            download={answer}
-            mr={4}
-            label="CSV"
-            icon={<DownloadIcon w={6} h={6} />}
-          />
-          <FileDownloadButton
-            href={JSONLink}
-            download={answer}
-            label="JSON"
-            icon={<DownloadIcon w={6} h={6} />}
-          />
-        </Flex>
-      </>
+      <Container bg="gray.100" p={4} borderRadius="md">
+        <Text>
+          No clues found for <strong>{answer}</strong>. Try checking your
+          network connection or tweaking the search parameters.
+        </Text>
+      </Container>
     );
-  };
+  }
 
-  return render();
+  return (
+    <>
+      <Heading
+        as="h2"
+        size="md"
+        mb={4}
+        px={4}
+        textAlign="center"
+        lineHeight="1.5"
+        maxW="600px"
+      >
+        Showing clues for:{' '}
+        <Box as="span" bg="cyan.200" borderRadius="sm" p={1}>
+          {answer}
+        </Box>
+      </Heading>
+      <Box w="min(600px, 100%)" h="min(700px, 100%)" mb={4} overflow="auto">
+        <KeyValueTable
+          data={clues.map((clue) => ({ ...clue, clue: renderClue(clue) }))}
+          headers={cluesFields}
+          width={600}
+          height={700}
+        />
+      </Box>
+      <Flex
+        justify="center"
+        overflowX="auto"
+        flexShrink={0}
+        maxW="100%"
+        justifyContent="flex-start"
+      >
+        {currentQuery.length > 0 && (
+          <BackButton
+            label="Results"
+            to={getClueSearchURL(currentQuery)}
+            mr={4}
+          />
+        )}
+        <SearchButton label="Search" to={ROUTES.clue.search} mr={4} />
+        <FileDownloadButton
+          href={CSVLink}
+          download={answer}
+          mr={4}
+          label="CSV"
+        />
+        <FileDownloadButton href={JSONLink} download={answer} label="JSON" />
+      </Flex>
+    </>
+  );
 };
 
 export default Clues;

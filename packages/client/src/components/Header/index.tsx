@@ -19,9 +19,13 @@ const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   // only render history icon on reader pages
   const renderQuestionHistory = () => {
-    if (!pathname.startsWith(ROUTES.reader.root)) return null;
+    if (
+      !pathname.startsWith(ROUTES.tossupReader) ||
+      !pathname.startsWith(ROUTES.bonusReader)
+    )
+      return null;
 
-    const isTossupReaderActive = pathname.startsWith(ROUTES.reader.tossup);
+    const isTossupReaderActive = pathname.startsWith(ROUTES.tossupReader);
     return (
       <IconButton
         aria-label="Tossup history"
