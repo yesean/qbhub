@@ -1,8 +1,8 @@
 import { InfoOutlineIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
-import { Flex, Heading, Icon, IconButton, Link } from '@chakra-ui/react';
-import { AiFillGithub } from 'react-icons/ai';
+import { Flex, Heading, IconButton, Link } from '@chakra-ui/react';
 import { useAppDispatch } from '../redux/hooks';
-import { ReactComponent as Donate } from '../static/donate.svg';
+import { ReactComponent as Donate } from '../static/coffee.svg';
+import { ReactComponent as Github } from '../static/github.svg';
 import { open as openInfoModalAction } from './InfoModal/infoModalSlice';
 import { open as openUpdatesModalAction } from './UpdatesModal/updatesModalSlice';
 
@@ -38,8 +38,8 @@ const Footer: React.FC<React.PropsWithChildren<unknown>> = () => {
         aria-label="github link"
         bg="white"
         icon={
-          <Link href="https://github.com/yesean/qbhub" isExternal w={6} h={6}>
-            <Icon w="100%" h="100%" as={AiFillGithub} />{' '}
+          <Link href="https://github.com/yesean/qbhub" isExternal w={5} h={5}>
+            <Github width="100%" height="100%" />
           </Link>
         }
       />
