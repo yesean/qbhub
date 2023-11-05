@@ -7,16 +7,19 @@ import Search from './CluesGenerator/Search';
 import Layout from './components/Layout';
 import FrequencyList from './FrequencyList';
 import KeyboardShortcutProvider from './providers/KeyboardShortcutProvider';
+import ModalProvider from './providers/ModalProvider';
 import TossupReader from './TossupReader';
 
 export default createBrowserRouter([
   {
     element: (
-      <KeyboardShortcutProvider>
-        <Layout>
-          <Outlet />
-        </Layout>
-      </KeyboardShortcutProvider>
+      <ModalProvider>
+        <KeyboardShortcutProvider>
+          <Layout>
+            <Outlet />
+          </Layout>
+        </KeyboardShortcutProvider>
+      </ModalProvider>
     ),
     children: [
       {
