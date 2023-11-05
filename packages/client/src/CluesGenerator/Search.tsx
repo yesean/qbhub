@@ -1,15 +1,17 @@
 import { Flex, Input } from '@chakra-ui/react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { RouterLinkButton } from '../components/buttons';
 import { useAppDispatch } from '../redux/hooks';
-import { ROUTES } from '../utils/routes';
+import { useGetClueSearchURL } from '../utils/routes';
+import Answers from './Answers';
 import { setQuery } from './cluesGeneratorSlice';
 
 const Search: React.FC<React.PropsWithChildren<unknown>> = () => {
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const getClueSearchURL = useGetClueSearchURL();
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -17,7 +19,7 @@ const Search: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   const submitSearch = async () => {
     dispatch(setQuery(search));
-    navigate(ROUTES.clues.searchResults(search));
+    navigate(getClueSearchURL(search));
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -36,7 +38,7 @@ const Search: React.FC<React.PropsWithChildren<unknown>> = () => {
         mr={4}
       />
       <RouterLinkButton
-        to={ROUTES.clues.searchResults(search)}
+        to={getClueSearchURL(search)}
         onClick={() => dispatch(setQuery(search))}
         label="Search"
         h={10}
@@ -45,4 +47,9 @@ const Search: React.FC<React.PropsWithChildren<unknown>> = () => {
   );
 };
 
-export default Search;
+export default () => {
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get('query');
+
+  return query == null ? <Search /> : <Answers />;
+};

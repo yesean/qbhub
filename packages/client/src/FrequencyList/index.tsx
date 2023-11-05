@@ -14,7 +14,7 @@ import { KeyValueTable } from '../components/tables';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import { useAppDispatch } from '../redux/hooks';
 import { selectSettings } from '../Settings/settingsSlice';
-import { ROUTES } from '../utils/routes';
+import { useGetClueDisplayURL } from '../utils/routes';
 import {
   fetchPages,
   FreqStatus,
@@ -33,6 +33,7 @@ const FrequencyList: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { page, offset, status } = useSelector(selectFrequencyList);
   const settings = useSelector(selectSettings);
   const dispatch = useAppDispatch();
+  const getClueDisplayURL = useGetClueDisplayURL();
 
   // in initial state, fetch freq
   useEffect(() => {
@@ -70,7 +71,7 @@ const FrequencyList: React.FC<React.PropsWithChildren<unknown>> = () => {
       );
     }
     const renderAnswer = (answer: FrequencyListEntry) => (
-      <Link as={RouterLink} to={ROUTES.clues.display(answer.answer)}>
+      <Link as={RouterLink} to={getClueDisplayURL(answer.answer)}>
         {answer.answer}
       </Link>
     );

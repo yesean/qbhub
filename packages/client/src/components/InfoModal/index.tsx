@@ -134,7 +134,10 @@ const InfoModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   );
 
   const renderLocalShortcuts = () => {
-    if (pathname.startsWith(ROUTES.reader.root)) {
+    if (
+      pathname.startsWith(ROUTES.tossupReader) ||
+      pathname.startsWith(ROUTES.bonusReader)
+    ) {
       return (
         <>
           <Heading size="sm">Reader Shortcuts</Heading>
@@ -142,7 +145,7 @@ const InfoModal: React.FC<React.PropsWithChildren<unknown>> = () => {
         </>
       );
     }
-    if (pathname.startsWith(ROUTES.freq.root)) {
+    if (pathname.startsWith(ROUTES.frequencyList)) {
       return (
         <>
           <Heading size="sm">Frequency List Shortcuts</Heading>

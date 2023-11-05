@@ -14,11 +14,11 @@ import { ROUTES } from '../../utils/routes';
 import { close, selectHamburgerMenu } from './hamburgerMenuSlice';
 
 const links = [
-  { name: 'Tossup Reader', href: ROUTES.reader.tossup },
-  { name: 'Bonus Reader', href: ROUTES.reader.bonus },
-  { name: 'Frequency List', href: ROUTES.freq.root },
-  { name: 'Clues Generator', href: ROUTES.clues.search },
-  { name: 'About', href: ROUTES.about.root },
+  { name: 'Tossup Reader', href: ROUTES.tossupReader },
+  { name: 'Bonus Reader', href: ROUTES.bonusReader },
+  { name: 'Frequency List', href: ROUTES.frequencyList },
+  { name: 'Clues Generator', href: ROUTES.clue.search },
+  { name: 'About', href: ROUTES.about },
 ];
 
 const HamburgerMenu: React.FC<React.PropsWithChildren<unknown>> = () => {

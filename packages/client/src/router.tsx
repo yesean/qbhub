@@ -1,7 +1,6 @@
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 import About from './About';
 import BonusReader from './BonusReader';
-import Answers from './CluesGenerator/Answers';
 import Clues from './CluesGenerator/Clues';
 import Search from './CluesGenerator/Search';
 import Layout from './components/Layout';
@@ -9,6 +8,7 @@ import FrequencyList from './FrequencyList';
 import KeyboardShortcutProvider from './providers/KeyboardShortcutProvider';
 import ModalProvider from './providers/ModalProvider';
 import TossupReader from './TossupReader';
+import { ROUTES } from './utils/routes';
 
 export default createBrowserRouter([
   {
@@ -23,36 +23,27 @@ export default createBrowserRouter([
     ),
     children: [
       {
-        path: 'tossup',
+        path: ROUTES.tossupReader,
         element: <TossupReader />,
       },
       {
-        path: 'bonus',
+        path: ROUTES.bonusReader,
         element: <BonusReader />,
       },
       {
-        path: 'frequency',
+        path: ROUTES.frequencyList,
         element: <FrequencyList />,
       },
       {
-        path: 'clue',
-        children: [
-          {
-            index: true,
-            element: <Search />,
-          },
-          {
-            path: 'search/:answer',
-            element: <Answers />,
-          },
-          {
-            path: 'display/:answer',
-            element: <Clues />,
-          },
-        ],
+        path: ROUTES.clue.search,
+        element: <Search />,
       },
       {
-        path: 'about',
+        path: ROUTES.clue.display,
+        element: <Clues />,
+      },
+      {
+        path: ROUTES.about,
         element: <About />,
       },
     ],

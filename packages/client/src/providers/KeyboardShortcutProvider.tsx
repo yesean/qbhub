@@ -32,13 +32,15 @@ export default ({ children }: Props) => {
   const predicate = (e: KeyboardEvent) => e.target === document.body;
   useKeyboardShortcut('?', () => dispatch(openInfo()), predicate);
   useKeyboardShortcut('s', () => dispatch(openSettings()), predicate);
-  useKeyboardShortcut('1', () => navigate(ROUTES.reader.tossup), predicate);
-  useKeyboardShortcut('2', () => navigate(ROUTES.reader.bonus), predicate);
-  useKeyboardShortcut('3', () => navigate(ROUTES.freq.root), predicate);
-  useKeyboardShortcut('4', () => navigate(ROUTES.clues.search), predicate);
-  useKeyboardShortcut('5', () => navigate(ROUTES.about.root), predicate);
-  const isReaderActive = pathname.startsWith(ROUTES.reader.root);
-  const isTossupReaderActive = pathname.startsWith(ROUTES.reader.tossup);
+  useKeyboardShortcut('1', () => navigate(ROUTES.tossupReader), predicate);
+  useKeyboardShortcut('2', () => navigate(ROUTES.bonusReader), predicate);
+  useKeyboardShortcut('3', () => navigate(ROUTES.frequencyList), predicate);
+  useKeyboardShortcut('4', () => navigate(ROUTES.clue.search), predicate);
+  useKeyboardShortcut('5', () => navigate(ROUTES.about), predicate);
+  const isReaderActive =
+    pathname.startsWith(ROUTES.tossupReader) ||
+    pathname.startsWith(ROUTES.bonusReader);
+  const isTossupReaderActive = pathname.startsWith(ROUTES.tossupReader);
   const customPredicate = (e: KeyboardEvent) => predicate(e) && isReaderActive;
   useKeyboardShortcut(
     'h',
