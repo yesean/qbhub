@@ -1,17 +1,16 @@
 export const ROUTES = {
   reader: {
-    root: '/reader',
-    tossup: '/reader/tossup',
-    bonus: '/reader/bonus',
+    root: '/tossup',
+    tossup: '/tossup',
+    bonus: '/bonus',
   },
   freq: {
-    root: '/freq',
+    root: '/frequency',
   },
   clues: {
-    root: '/clues',
-    search: '/clues/search',
-    searchResults: (answer: string) => `/clues/search/${answer}`,
-    display: (answer: string) => `/clues/display/${answer}`,
+    search: '/clue',
+    searchResults: (answer: string) => `/clue/search/${answer}`,
+    display: (answer: string) => `/clue/display/${answer}`,
   },
   about: {
     root: '/about',
