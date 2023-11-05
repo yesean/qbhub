@@ -9,6 +9,6 @@ export default ({ to, ...rest }: Omit<RouterLinkIconButtonProps, 'icon'>) => (
     // eslint-disable-next-line react/jsx-props-no-spreading
     {...rest}
     to={to}
-    icon={<ArrowBackIcon w={6} h={6} />}
+    icon={<ArrowBackIcon w={4} h={4} mr={1} />}
   />
 );
