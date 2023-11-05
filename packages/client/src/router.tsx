@@ -6,14 +6,17 @@ import Clues from './CluesGenerator/Clues';
 import Search from './CluesGenerator/Search';
 import Layout from './components/Layout';
 import FrequencyList from './FrequencyList';
+import KeyboardShortcutProvider from './providers/KeyboardShortcutProvider';
 import TossupReader from './TossupReader';
 
 export default createBrowserRouter([
   {
     element: (
-      <Layout>
-        <Outlet />
-      </Layout>
+      <KeyboardShortcutProvider>
+        <Layout>
+          <Outlet />
+        </Layout>
+      </KeyboardShortcutProvider>
     ),
     children: [
       {
