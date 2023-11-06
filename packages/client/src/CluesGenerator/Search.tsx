@@ -29,13 +29,12 @@ const Search: React.FC<React.PropsWithChildren<unknown>> = () => {
   };
 
   return (
-    <Flex>
+    <Flex gap={4}>
       <Input
         value={search}
         onChange={onInputChange}
         onKeyDown={onKeyDown}
         placeholder="Search for an answerline!"
-        mr={4}
       />
       <RouterLinkButton
         to={getClueSearchURL(search)}

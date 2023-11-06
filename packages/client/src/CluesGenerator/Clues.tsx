@@ -125,11 +125,17 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
   }
 
   return (
-    <>
+    <Flex
+      gap={4}
+      direction="column"
+      w="100%"
+      h="100%"
+      justify="center"
+      align="center"
+    >
       <Heading
         as="h2"
         size="md"
-        mb={4}
         px={4}
         textAlign="center"
         lineHeight="1.5"
@@ -140,7 +146,7 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
           {answer}
         </Box>
       </Heading>
-      <Box w="min(600px, 100%)" h="min(700px, 100%)" mb={4} overflow="auto">
+      <Box w="min(600px, 100%)" h="min(700px, 100%)" overflow="auto">
         <KeyValueTable
           data={clues.map((clue) => ({ ...clue, clue: renderClue(clue) }))}
           headers={cluesFields}
@@ -152,6 +158,7 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
         justify="center"
         overflowX="auto"
         flexShrink={0}
+        gap={4}
         maxW="100%"
         justifyContent="flex-start"
       >
@@ -159,7 +166,6 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
           <RouterLinkButton
             label="Results"
             to={getClueSearchURL(currentQuery)}
-            mr={4}
             leftIcon={<ArrowBackIcon w={4} h={4} />}
             variant="secondary"
           />
@@ -167,19 +173,13 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
         <RouterLinkButton
           label="Search"
           to={ROUTES.clue.search}
-          mr={4}
           leftIcon={<SearchIcon w={4} h={4} />}
           variant="secondary"
         />
-        <FileDownloadButton
-          href={CSVLink}
-          download={answer}
-          mr={4}
-          label="CSV"
-        />
+        <FileDownloadButton href={CSVLink} download={answer} label="CSV" />
         <FileDownloadButton href={JSONLink} download={answer} label="JSON" />
       </Flex>
-    </>
+    </Flex>
   );
 };
 
