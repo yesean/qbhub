@@ -1,3 +1,4 @@
+import { ArrowBackIcon, SearchIcon } from '@chakra-ui/icons';
 import {
   Box,
   CircularProgress,
@@ -10,12 +11,12 @@ import {
 import { SelectedClue } from '@qbhub/types';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { FileDownloadButton } from '../components/buttons';
+import FileDownloadButton from '../components/buttons/FileDownloadButton';
+import RouterLinkButton from '../components/buttons/RouterLinkButton';
 import { KeyValueTable } from '../components/tables';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { toCSV, toJSON } from '../utils/array';
 import { ROUTES, useGetClueSearchURL } from '../utils/routes';
-import BackButton from './BackButton';
 import {
   CluesGeneratorStatus,
   fetchClues,
@@ -23,7 +24,6 @@ import {
   selectAnswer,
   selectCluesGenerator,
 } from './cluesGeneratorSlice';
-import SearchButton from './SearchButton';
 
 const cluesFields = [
   { label: 'Clue', dataKey: 'clue' },
@@ -156,13 +156,21 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
         justifyContent="flex-start"
       >
         {currentQuery.length > 0 && (
-          <BackButton
+          <RouterLinkButton
             label="Results"
             to={getClueSearchURL(currentQuery)}
             mr={4}
+            leftIcon={<ArrowBackIcon w={4} h={4} />}
+            variant="secondary"
           />
         )}
-        <SearchButton label="Search" to={ROUTES.clue.search} mr={4} />
+        <RouterLinkButton
+          label="Search"
+          to={ROUTES.clue.search}
+          mr={4}
+          leftIcon={<SearchIcon w={4} h={4} />}
+          variant="secondary"
+        />
         <FileDownloadButton
           href={CSVLink}
           download={answer}
