@@ -113,17 +113,6 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
     return <CircularProgress isIndeterminate color="cyan" />;
   }
 
-  if (clues.length === 0) {
-    return (
-      <Container bg="gray.100" p={4} borderRadius="md">
-        <Text>
-          No clues found for <strong>{answer}</strong>. Try checking your
-          network connection or tweaking the search parameters.
-        </Text>
-      </Container>
-    );
-  }
-
   return (
     <Flex
       gap={4}
@@ -133,54 +122,85 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
       justify="center"
       align="center"
     >
-      <Heading
-        as="h2"
-        size="md"
-        px={4}
-        textAlign="center"
-        lineHeight="1.5"
-        maxW="600px"
-      >
-        Showing clues for:{' '}
-        <Box as="span" bg="cyan.200" borderRadius="sm" p={1}>
-          {answer}
-        </Box>
-      </Heading>
-      <Box w="min(600px, 100%)" h="min(700px, 100%)" overflow="auto">
-        <KeyValueTable
-          data={clues.map((clue) => ({ ...clue, clue: renderClue(clue) }))}
-          headers={cluesFields}
-          width={600}
-          height={700}
-        />
-      </Box>
-      <Flex
-        justify="center"
-        overflowX="auto"
-        flexShrink={0}
-        gap={4}
-        maxW="100%"
-        justifyContent="flex-start"
-      >
-        {currentQuery.length > 0 && (
-          <RouterLinkButton
-            label="Results"
-            to={getClueSearchURL(currentQuery)}
-            leftIcon={<ArrowBackIcon w={4} h={4} />}
-            variant="secondary"
-          />
-        )}
-        <RouterLinkButton
-          label="Search"
-          to={ROUTES.clue.search}
-          leftIcon={<SearchIcon w={4} h={4} />}
-          variant="secondary"
-        />
-        <FileDownloadButton href={CSVLink} download={answer} label="CSV" />
-        <FileDownloadButton href={JSONLink} download={answer} label="JSON" />
-      </Flex>
+      {clues.length === 0 ? (
+        <EmptyResults answer={answer} />
+      ) : (
+        <>
+          <Heading
+            as="h2"
+            size="md"
+            px={4}
+            textAlign="center"
+            lineHeight="1.5"
+            maxW="600px"
+          >
+            Showing clues for:{' '}
+            <Box as="span" bg="cyan.200" borderRadius="sm" p={1}>
+              {answer}
+            </Box>
+          </Heading>
+          <Box w="min(600px, 100%)" h="min(700px, 100%)" overflow="auto">
+            <KeyValueTable
+              data={clues.map((clue) => ({ ...clue, clue: renderClue(clue) }))}
+              headers={cluesFields}
+              width={600}
+              height={700}
+            />
+          </Box>
+          <Flex
+            justify="center"
+            overflowX="auto"
+            flexShrink={0}
+            gap={4}
+            maxW="100%"
+            justifyContent="flex-start"
+          >
+            {currentQuery.length > 0 && (
+              <RouterLinkButton
+                label="Results"
+                to={getClueSearchURL(currentQuery)}
+                leftIcon={<ArrowBackIcon w={4} h={4} />}
+                variant="secondary"
+              />
+            )}
+            <RouterLinkButton
+              label="Search"
+              to={ROUTES.clue.search}
+              leftIcon={<SearchIcon w={4} h={4} />}
+              variant="secondary"
+            />
+            <FileDownloadButton href={CSVLink} download={answer} label="CSV" />
+            <FileDownloadButton
+              href={JSONLink}
+              download={answer}
+              label="JSON"
+            />
+          </Flex>
+        </>
+      )}
     </Flex>
   );
 };
+
+type EmptyResultsProps = { answer: string };
+
+function EmptyResults({ answer }: EmptyResultsProps) {
+  return (
+    <>
+      <Container bg="gray.100" p={4} borderRadius="md">
+        <Text>
+          No clues found for <strong>{answer}</strong>. Try checking your
+          network connection or tweaking the search parameters.
+        </Text>
+      </Container>
+      <RouterLinkButton
+        label="Search"
+        to={ROUTES.clue.search}
+        leftIcon={<SearchIcon w={4} h={4} />}
+        variant="secondary"
+      />
+    </>
+  );
+}
 
 export default Clues;
