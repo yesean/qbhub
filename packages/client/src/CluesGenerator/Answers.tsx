@@ -1,7 +1,9 @@
+import { SearchIcon } from '@chakra-ui/icons';
 import {
   Box,
   CircularProgress,
   Container,
+  Flex,
   Heading,
   Link,
   Text,
@@ -9,6 +11,7 @@ import {
 import { useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
+import RouterLinkButton from '../components/buttons/RouterLinkButton';
 import { KeyValueTable } from '../components/tables';
 import { useAppDispatch } from '../redux/hooks';
 import { ROUTES, useGetClueDisplayURL } from '../utils/routes';
@@ -20,7 +23,6 @@ import {
   selectCluesGenerator,
   setQuery,
 } from './cluesGeneratorSlice';
-import SearchButton from './SearchButton';
 
 const answersFields = [
   { label: 'Answer', dataKey: 'answer' },
@@ -40,78 +42,91 @@ const Answers: React.FC<React.PropsWithChildren<unknown>> = () => {
     dispatch(fetchAnswers(query));
   }, [query, dispatch]);
 
-  const createLink = (answer: string) => (
-    <Link
-      as={RouterLink}
-      to={getClueDisplayURL(answer)}
-      onClick={() => dispatch(selectAnswer(answer))}
-    >
-      {answer}
-    </Link>
-  );
-
   if (status !== CluesGeneratorStatus.loaded) {
     return <CircularProgress isIndeterminate color="cyan" />;
   }
 
-  if (answers.length === 0) {
-    return (
-      <>
-        <Container
-          bg="gray.100"
-          p={4}
-          borderRadius="md"
-          maxH="100%"
-          overflow="auto"
-        >
-          <Text maxH="100%">
-            No answerlines matching <strong>{query}</strong>. Try checking your
-            network connection or tweaking the search parameters.
-          </Text>
-        </Container>
-        <SearchButton
-          label="Search"
-          to={ROUTES.clue.search}
-          mt={4}
-          flexShrink={0}
-        />
-      </>
-    );
-  }
+  return (
+    <Flex
+      w="100%"
+      h="100%"
+      gap={4}
+      direction="column"
+      justify="center"
+      align="center"
+    >
+      {answers.length === 0 ? (
+        <EmptyResults query={query} />
+      ) : (
+        <>
+          <Heading
+            as="h2"
+            size="md"
+            px={4}
+            textAlign="center"
+            lineHeight="1.5"
+            maxW="600px"
+          >
+            Showing answerlines similar to:{' '}
+            <Box as="span" bg="cyan.200" borderRadius="sm" p={1}>
+              {query}
+            </Box>
+          </Heading>
+          <KeyValueTable
+            data={answers.map((answer) => ({
+              ...answer,
+              answer: (
+                <Link
+                  as={RouterLink}
+                  to={getClueDisplayURL(answer.answer)}
+                  onClick={() => dispatch(selectAnswer(answer.answer))}
+                >
+                  {answer.answer}
+                </Link>
+              ),
+            }))}
+            headers={answersFields}
+            width={600}
+            height={700}
+          />
+          <RouterLinkButton
+            flexShrink={0}
+            label="Search"
+            to={ROUTES.clue.search}
+            leftIcon={<SearchIcon w={4} h={4} />}
+            variant="secondary"
+          />
+        </>
+      )}
+    </Flex>
+  );
+};
 
+type EmptyResultsProps = { query: string };
+
+function EmptyResults({ query }: EmptyResultsProps) {
   return (
     <>
-      <Heading
-        as="h2"
-        size="md"
-        mb={4}
-        px={4}
-        textAlign="center"
-        lineHeight="1.5"
-        maxW="600px"
+      <Container
+        bg="gray.100"
+        p={4}
+        borderRadius="md"
+        maxH="100%"
+        overflow="auto"
       >
-        Showing answerlines similar to:{' '}
-        <Box as="span" bg="cyan.200" borderRadius="sm" p={1}>
-          {query}
-        </Box>
-      </Heading>
-      <KeyValueTable
-        data={answers.map((answer) => ({
-          ...answer,
-          answer: createLink(answer.answer),
-        }))}
-        headers={answersFields}
-        width={600}
-        height={700}
-      />
-      <SearchButton
+        <Text maxH="100%">
+          No answerlines matching <strong>{query}</strong>. Try checking your
+          network connection or tweaking the search parameters.
+        </Text>
+      </Container>
+      <RouterLinkButton
         label="Search"
         to={ROUTES.clue.search}
-        mt={4}
-        flexShrink={0}
+        leftIcon={<SearchIcon w={4} h={4} />}
+        variant="secondary"
       />
     </>
   );
-};
+}
 
 export default Answers;

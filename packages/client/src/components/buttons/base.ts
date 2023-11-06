@@ -8,7 +8,7 @@ const ButtonLayoutProps = {
   fontWeight: 'semibold',
 };
 
-export const BaseButtonProps = {
+export const PrimaryButton = {
   ...ButtonLayoutProps,
   bg: 'cyan.400',
   color: 'gray.50',
@@ -18,7 +18,7 @@ export const BaseButtonProps = {
   },
 };
 
-export const BaseIconButtonProps = {
+export const SecondaryButton = {
   ...ButtonLayoutProps,
   bg: 'gray.100',
   _hover: {

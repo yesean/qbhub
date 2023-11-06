@@ -7,6 +7,7 @@ module.exports = {
       'always',
       { exceptAfterSingleLine: true },
     ],
+    '@typescript-eslint/no-use-before-define': ['error', { functions: false }],
     'no-param-reassign': 'off',
     quotes: ['error', 'single', { avoidEscape: true }],
     'react/function-component-definition': 'off',
