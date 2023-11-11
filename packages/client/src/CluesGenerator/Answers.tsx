@@ -10,11 +10,14 @@ import {
 } from '@chakra-ui/react';
 import { useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Link as RouterLink, useSearchParams } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import RouterLinkButton from '../components/buttons/RouterLinkButton';
 import { KeyValueTable } from '../components/tables';
 import { useAppDispatch } from '../redux/hooks';
-import { ROUTES, useGetClueDisplayURL } from '../utils/routes';
+import {
+  useClueDisplayRouteContext,
+  useClueSearchRouteContext,
+} from '../utils/routes';
 import {
   CluesGeneratorStatus,
   fetchAnswers,
@@ -32,9 +35,9 @@ const answersFields = [
 const Answers: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { answers, status } = useSelector(selectCluesGenerator);
   const dispatch = useAppDispatch();
-  const [searchParams] = useSearchParams();
-  const query = searchParams.get('query') as string;
-  const getClueDisplayURL = useGetClueDisplayURL();
+  const { params, getURL: getClueSearchURL } = useClueSearchRouteContext();
+  const { getURL: getClueDisplayURL } = useClueDisplayRouteContext();
+  const query = params.query as string;
 
   useLayoutEffect(() => {
     dispatch(resetStatus());
@@ -78,7 +81,7 @@ const Answers: React.FC<React.PropsWithChildren<unknown>> = () => {
               answer: (
                 <Link
                   as={RouterLink}
-                  to={getClueDisplayURL(answer.answer)}
+                  to={getClueDisplayURL({ answer: answer.answer })}
                   onClick={() => dispatch(selectAnswer(answer.answer))}
                 >
                   {answer.answer}
@@ -92,7 +95,7 @@ const Answers: React.FC<React.PropsWithChildren<unknown>> = () => {
           <RouterLinkButton
             flexShrink={0}
             label="Search"
-            to={ROUTES.clue.search}
+            to={getClueSearchURL({ query: undefined })}
             leftIcon={<SearchIcon w={4} h={4} />}
             variant="secondary"
           />
@@ -105,6 +108,8 @@ const Answers: React.FC<React.PropsWithChildren<unknown>> = () => {
 type EmptyResultsProps = { query: string };
 
 function EmptyResults({ query }: EmptyResultsProps) {
+  const { getURL } = useClueSearchRouteContext();
+
   return (
     <>
       <Container
@@ -121,7 +126,7 @@ function EmptyResults({ query }: EmptyResultsProps) {
       </Container>
       <RouterLinkButton
         label="Search"
-        to={ROUTES.clue.search}
+        to={getURL({ query: undefined })}
         leftIcon={<SearchIcon w={4} h={4} />}
         variant="secondary"
       />

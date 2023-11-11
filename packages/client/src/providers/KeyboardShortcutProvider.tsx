@@ -1,9 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { open as openBonusHistory } from '../components/BonusHistoryModal/bonusHistoryModalSlice';
+import { useNavigate } from 'react-router-dom';
 import { open as openInfo } from '../components/InfoModal/infoModalSlice';
-import { open as openTossupHistory } from '../components/TossupHistoryModal/tossupHistoryModalSlice';
 import { reset } from '../FrequencyList/frequencyListSlice';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import { useAppDispatch } from '../redux/hooks';
@@ -11,7 +9,7 @@ import {
   open as openSettings,
   selectQuestionSettings,
 } from '../Settings/settingsSlice';
-import { ROUTES } from '../utils/routes';
+import { useGetURL } from '../utils/routes';
 
 type Props = {
   children: JSX.Element;
@@ -19,9 +17,15 @@ type Props = {
 
 export default ({ children }: Props) => {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
   const dispatch = useAppDispatch();
   const questionSettings = useSelector(selectQuestionSettings);
+  const {
+    getTossupReaderURL,
+    getBonusReaderURL,
+    getFrequencyListURL,
+    getClueSearchURL,
+    getAboutURL,
+  } = useGetURL();
 
   // if question settings change, reset freq to initial state
   useEffect(() => {
@@ -32,24 +36,11 @@ export default ({ children }: Props) => {
   const predicate = (e: KeyboardEvent) => e.target === document.body;
   useKeyboardShortcut('?', () => dispatch(openInfo()), predicate);
   useKeyboardShortcut('s', () => dispatch(openSettings()), predicate);
-  useKeyboardShortcut('1', () => navigate(ROUTES.tossupReader), predicate);
-  useKeyboardShortcut('2', () => navigate(ROUTES.bonusReader), predicate);
-  useKeyboardShortcut('3', () => navigate(ROUTES.frequencyList), predicate);
-  useKeyboardShortcut('4', () => navigate(ROUTES.clue.search), predicate);
-  useKeyboardShortcut('5', () => navigate(ROUTES.about), predicate);
-  const isReaderActive =
-    pathname.startsWith(ROUTES.tossupReader) ||
-    pathname.startsWith(ROUTES.bonusReader);
-  const isTossupReaderActive = pathname.startsWith(ROUTES.tossupReader);
-  const customPredicate = (e: KeyboardEvent) => predicate(e) && isReaderActive;
-  useKeyboardShortcut(
-    'h',
-    () =>
-      isTossupReaderActive
-        ? dispatch(openTossupHistory())
-        : dispatch(openBonusHistory()),
-    customPredicate,
-  );
+  useKeyboardShortcut('1', () => navigate(getTossupReaderURL()), predicate);
+  useKeyboardShortcut('2', () => navigate(getBonusReaderURL()), predicate);
+  useKeyboardShortcut('3', () => navigate(getFrequencyListURL()), predicate);
+  useKeyboardShortcut('4', () => navigate(getClueSearchURL()), predicate);
+  useKeyboardShortcut('5', () => navigate(getAboutURL()), predicate);
 
   return children;
 };
