@@ -3,7 +3,7 @@ import { Box, Flex, Heading, IconButton } from '@chakra-ui/react';
 import { useLocation } from 'react-router-dom';
 import { useAppDispatch } from '../../redux/hooks';
 import { open as openSettings } from '../../Settings/settingsSlice';
-import { ROUTES } from '../../utils/routes';
+import { isInReader, isInTossupReader } from '../../utils/routes';
 import { open as openBonusHistory } from '../BonusHistoryModal/bonusHistoryModalSlice';
 import { open as openHamburgerMenu } from '../HamburgerMenu/hamburgerMenuSlice';
 import { open as openTossupHistory } from '../TossupHistoryModal/tossupHistoryModalSlice';
@@ -19,13 +19,9 @@ const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   // only render history icon on reader pages
   const renderQuestionHistory = () => {
-    if (
-      !pathname.startsWith(ROUTES.tossupReader) ||
-      !pathname.startsWith(ROUTES.bonusReader)
-    )
-      return null;
+    if (!isInReader(pathname)) return null;
 
-    const isTossupReaderActive = pathname.startsWith(ROUTES.tossupReader);
+    const isTossupReaderActive = isInTossupReader(pathname);
     return (
       <IconButton
         aria-label="Tossup history"

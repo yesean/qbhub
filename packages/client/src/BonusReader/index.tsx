@@ -1,7 +1,9 @@
 import { Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { open as openBonusHistory } from '../components/BonusHistoryModal/bonusHistoryModalSlice';
 import Progress from '../components/reader/Progress';
+import { useKeyboardShortcut } from '../hooks/keyboard';
 import useJudge from '../hooks/useJudge';
 import { useAppDispatch } from '../redux/hooks';
 import { ReaderStatus } from '../utils/reader';
@@ -41,6 +43,8 @@ const BonusReader: React.FC<React.PropsWithChildren<unknown>> = () => {
       setProgress(100);
     }
   }, [formattedAnswer, status]);
+
+  useKeyboardShortcut('h', () => dispatch(openBonusHistory()));
 
   const renderInfo = () =>
     ![ReaderStatus.idle, ReaderStatus.fetching, ReaderStatus.empty].includes(

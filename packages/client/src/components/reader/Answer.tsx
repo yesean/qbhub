@@ -1,6 +1,6 @@
 import { Link, Text } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
-import { useGetClueSearchURL } from '../../utils/routes';
+import { useGetURL } from '../../utils/routes';
 import { parseHTMLString } from '../../utils/string';
 
 type AnswerProps = {
@@ -12,7 +12,7 @@ const Answer: React.FC<React.PropsWithChildren<AnswerProps>> = ({
   text,
   query,
 }) => {
-  const getClueSearchURL = useGetClueSearchURL();
+  const { getClueDisplayURL } = useGetURL();
 
   const renderAnswer = () => {
     if (query === undefined) {
@@ -20,7 +20,7 @@ const Answer: React.FC<React.PropsWithChildren<AnswerProps>> = ({
     }
 
     return (
-      <Link as={RouterLink} to={getClueSearchURL(query)}>
+      <Link as={RouterLink} to={getClueDisplayURL({ answer: text })}>
         {parseHTMLString(text)}
       </Link>
     );

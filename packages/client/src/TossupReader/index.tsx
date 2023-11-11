@@ -2,6 +2,8 @@ import { Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Progress from '../components/reader/Progress';
+import { open as openTossupHistory } from '../components/TossupHistoryModal/tossupHistoryModalSlice';
+import { useKeyboardShortcut } from '../hooks/keyboard';
 import useJudge from '../hooks/useJudge';
 import { useAppDispatch } from '../redux/hooks';
 import { ReaderStatus } from '../utils/reader';
@@ -42,6 +44,8 @@ const TossupReader = () => {
       setProgress(100);
     }
   }, [status, formattedAnswer]);
+
+  useKeyboardShortcut('h', () => dispatch(openTossupHistory()));
 
   const renderInfo = () =>
     ![ReaderStatus.idle, ReaderStatus.fetching, ReaderStatus.empty].includes(

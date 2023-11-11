@@ -10,19 +10,27 @@ import {
 import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import { useAppDispatch } from '../../redux/hooks';
-import { ROUTES } from '../../utils/routes';
+import {
+  getAboutURL,
+  getBonusReaderURL,
+  getClueSearchURL,
+  getFrequencyListURL,
+  getTossupReaderURL,
+  useRouteContext,
+} from '../../utils/routes';
 import { close, selectHamburgerMenu } from './hamburgerMenuSlice';
 
 const links = [
-  { name: 'Tossup Reader', href: ROUTES.tossupReader },
-  { name: 'Bonus Reader', href: ROUTES.bonusReader },
-  { name: 'Frequency List', href: ROUTES.frequencyList },
-  { name: 'Clues Generator', href: ROUTES.clue.search },
-  { name: 'About', href: ROUTES.about },
+  { name: 'Tossup Reader', getURL: getTossupReaderURL },
+  { name: 'Bonus Reader', getURL: getBonusReaderURL },
+  { name: 'Frequency List', getURL: getFrequencyListURL },
+  { name: 'Clues Generator', getURL: getClueSearchURL },
+  { name: 'About', getURL: getAboutURL },
 ];
 
 const HamburgerMenu: React.FC<React.PropsWithChildren<unknown>> = () => {
   const dispatch = useAppDispatch();
+  const { params } = useRouteContext();
   const { isOpen } = useSelector(selectHamburgerMenu);
 
   const closeMenu = () => dispatch(close());
@@ -33,11 +41,11 @@ const HamburgerMenu: React.FC<React.PropsWithChildren<unknown>> = () => {
       <DrawerContent>
         <Flex direction="column" align="center" p={4}>
           <CloseButton size="lg" onClick={closeMenu} mb={4} />
-          {links.map(({ name, href }) => (
+          {links.map(({ name, getURL }) => (
             <Link
               key={name}
               as={RouterLink}
-              to={href}
+              to={getURL(params)}
               p={4}
               w="100%"
               textAlign="center"

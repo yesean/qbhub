@@ -12,7 +12,7 @@ import {
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { useAppDispatch } from '../../redux/hooks';
-import { ROUTES } from '../../utils/routes';
+import { isInFrequencyList, isInReader } from '../../utils/routes';
 import Modal from '../Modal';
 import { close, selectInfoModal } from './infoModalSlice';
 
@@ -134,10 +134,7 @@ const InfoModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   );
 
   const renderLocalShortcuts = () => {
-    if (
-      pathname.startsWith(ROUTES.tossupReader) ||
-      pathname.startsWith(ROUTES.bonusReader)
-    ) {
+    if (isInReader(pathname)) {
       return (
         <>
           <Heading size="sm">Reader Shortcuts</Heading>
@@ -145,7 +142,7 @@ const InfoModal: React.FC<React.PropsWithChildren<unknown>> = () => {
         </>
       );
     }
-    if (pathname.startsWith(ROUTES.frequencyList)) {
+    if (isInFrequencyList(pathname)) {
       return (
         <>
           <Heading size="sm">Frequency List Shortcuts</Heading>
