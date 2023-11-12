@@ -11,7 +11,7 @@ const Search: React.FC<React.PropsWithChildren<unknown>> = () => {
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { getURL } = useClueSearchRouteContext();
+  const { getURL: getClueSearchURL } = useClueSearchRouteContext();
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -19,7 +19,7 @@ const Search: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   const submitSearch = async () => {
     dispatch(setQuery(search));
-    navigate(getURL({ query: search }));
+    navigate(getClueSearchURL({ query: search }));
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -37,7 +37,7 @@ const Search: React.FC<React.PropsWithChildren<unknown>> = () => {
         placeholder="Search for an answerline!"
       />
       <RouterLinkButton
-        to={getURL({ query: search })}
+        to={getClueSearchURL({ query: search })}
         onClick={() => dispatch(setQuery(search))}
         label="Search"
         h={10}
