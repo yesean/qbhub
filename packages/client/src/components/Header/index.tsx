@@ -1,16 +1,15 @@
 import { HamburgerIcon, SettingsIcon, TimeIcon } from '@chakra-ui/icons';
 import { Box, Flex, Heading, IconButton } from '@chakra-ui/react';
-import { useLocation } from 'react-router-dom';
 import { useAppDispatch } from '../../redux/hooks';
 import { open as openSettings } from '../../Settings/settingsSlice';
-import { isInReader, isInTossupReader } from '../../utils/routes';
+import { usePage } from '../../utils/routes';
 import { open as openBonusHistory } from '../BonusHistoryModal/bonusHistoryModalSlice';
 import { open as openHamburgerMenu } from '../HamburgerMenu/hamburgerMenuSlice';
 import { open as openTossupHistory } from '../TossupHistoryModal/tossupHistoryModalSlice';
 
 const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
   const dispatch = useAppDispatch();
-  const { pathname } = useLocation();
+  const page = usePage();
 
   const openTossupHistoryModal = () => dispatch(openTossupHistory());
   const openBonusHistoryModal = () => dispatch(openBonusHistory());
@@ -19,16 +18,15 @@ const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   // only render history icon on reader pages
   const renderQuestionHistory = () => {
-    if (!isInReader(pathname)) return null;
+    if (!page.isReader) return null;
 
-    const isTossupReaderActive = isInTossupReader(pathname);
     return (
       <IconButton
         aria-label="Tossup history"
         icon={<TimeIcon boxSize={6} />}
         size="lg"
         onClick={
-          isTossupReaderActive ? openTossupHistoryModal : openBonusHistoryModal
+          page.isTossupReader ? openTossupHistoryModal : openBonusHistoryModal
         }
         mr={4}
       />

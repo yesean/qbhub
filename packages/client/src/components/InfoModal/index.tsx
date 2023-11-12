@@ -10,9 +10,8 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
 import { useAppDispatch } from '../../redux/hooks';
-import { isInFrequencyList, isInReader } from '../../utils/routes';
+import { usePage } from '../../utils/routes';
 import Modal from '../Modal';
 import { close, selectInfoModal } from './infoModalSlice';
 
@@ -92,9 +91,9 @@ const freqShortcuts = [
 ];
 
 const InfoModal: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const { pathname } = useLocation();
   const { isOpen } = useSelector(selectInfoModal);
   const dispatch = useAppDispatch();
+  const page = usePage();
 
   const closeModal = () => dispatch(close());
 
@@ -134,7 +133,7 @@ const InfoModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   );
 
   const renderLocalShortcuts = () => {
-    if (isInReader(pathname)) {
+    if (page.isReader) {
       return (
         <>
           <Heading size="sm">Reader Shortcuts</Heading>
@@ -142,7 +141,7 @@ const InfoModal: React.FC<React.PropsWithChildren<unknown>> = () => {
         </>
       );
     }
-    if (isInFrequencyList(pathname)) {
+    if (page.isFrequencyList) {
       return (
         <>
           <Heading size="sm">Frequency List Shortcuts</Heading>
