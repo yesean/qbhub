@@ -108,7 +108,7 @@ const Answers: React.FC<React.PropsWithChildren<unknown>> = () => {
 type EmptyResultsProps = { query: string };
 
 function EmptyResults({ query }: EmptyResultsProps) {
-  const { getURL } = useClueSearchRouteContext();
+  const { getURL: getClueSearchURL } = useClueSearchRouteContext();
 
   return (
     <>
@@ -126,7 +126,7 @@ function EmptyResults({ query }: EmptyResultsProps) {
       </Container>
       <RouterLinkButton
         label="Search"
-        to={getURL({ query: undefined })}
+        to={getClueSearchURL({ query: undefined })}
         leftIcon={<SearchIcon w={4} h={4} />}
         variant="secondary"
       />
