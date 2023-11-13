@@ -14,6 +14,36 @@ export const saveDifficulties = buildSave<Difficulty[]>(keys.DIFFICULTIES);
 export const saveTournaments = buildSave<Tournament[]>(keys.TOURNAMENTS);
 export const saveFromYear = buildSave<number>(keys.FROM_YEAR);
 
+export type Settings = {
+  readingSpeed: number;
+  categories: Category[];
+  subcategories: Subcategory[];
+  difficulties: Difficulty[];
+  tournaments: Tournament[];
+  fromYear: number;
+};
+
+export const saveSettings = (settings: Partial<Settings>) => {
+  if (settings.readingSpeed != null) {
+    saveReadingSpeed(settings.readingSpeed);
+  }
+  if (settings.categories != null) {
+    saveCategories(settings.categories);
+  }
+  if (settings.subcategories != null) {
+    saveSubcategories(settings.subcategories);
+  }
+  if (settings.difficulties != null) {
+    saveDifficulties(settings.difficulties);
+  }
+  if (settings.tournaments != null) {
+    saveTournaments(settings.tournaments);
+  }
+  if (settings.fromYear != null) {
+    saveFromYear(settings.fromYear);
+  }
+};
+
 const validateReadingSpeed = (s: number) => s >= 0 && s <= 100 && s % 5 === 0;
 export const validateFromYear = (year: number) =>
   year >= MIN_TOURNAMENT_YEAR && year <= MAX_TOURNAMENT_YEAR;
