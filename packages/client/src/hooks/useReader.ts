@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { selectSettings } from '../Settings/settingsSlice';
+import { selectSettings } from '../SettingsModal/settingsSlice';
 import { getReadingTimeoutDelay } from '../utils/settings';
 import { shuffle } from '../utils/string';
 

@@ -8,7 +8,7 @@ import { useAppDispatch } from '../redux/hooks';
 import {
   open as openSettings,
   selectQuestionSettings,
-} from '../Settings/settingsSlice';
+} from '../SettingsModal/settingsSlice';
 import { useGetURL } from '../utils/routes';
 
 type Props = {

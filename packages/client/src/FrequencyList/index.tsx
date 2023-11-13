@@ -13,7 +13,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { KeyValueTable } from '../components/tables';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import { useAppDispatch } from '../redux/hooks';
-import { selectSettings } from '../Settings/settingsSlice';
+import { selectSettings } from '../SettingsModal/settingsSlice';
 import { useGetURL } from '../utils/routes';
 import {
   fetchPages,

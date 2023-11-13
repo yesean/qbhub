@@ -14,7 +14,7 @@ import settingsReducer, {
   readingSpeedSubscription,
   subcategoriesSubscription,
   tournamentsSubscription,
-} from '../Settings/settingsSlice';
+} from '../SettingsModal/settingsSlice';
 import tossupReaderReducer from '../TossupReader/tossupReaderSlice';
 
 export const store = configureStore({
