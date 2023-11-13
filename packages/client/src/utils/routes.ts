@@ -12,6 +12,7 @@ import {
 } from 'use-query-params';
 
 const SETTINGS_SEARCH_PARAMS = {
+  readingSpeed: NumberParam,
   categories: DelimitedNumericArrayParam,
   subcategories: DelimitedNumericArrayParam,
   difficulties: DelimitedNumericArrayParam,
