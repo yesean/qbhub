@@ -16,7 +16,7 @@ import {
   getClueSearchURL,
   getFrequencyListURL,
   getTossupReaderURL,
-  useRouteContext,
+  useGlobalQueryParams,
 } from '../../utils/routes';
 import { close, selectHamburgerMenu } from './hamburgerMenuSlice';
 
@@ -30,7 +30,7 @@ const links = [
 
 const HamburgerMenu: React.FC<React.PropsWithChildren<unknown>> = () => {
   const dispatch = useAppDispatch();
-  const { params } = useRouteContext();
+  const [params] = useGlobalQueryParams();
   const { isOpen } = useSelector(selectHamburgerMenu);
 
   const closeMenu = () => dispatch(close());

@@ -96,10 +96,6 @@ export const getClueSearchURL = buildGetURL(ROUTES.clue.search);
 export const getClueDisplayURL = buildGetURL(ROUTES.clue.display);
 export const getAboutURL = buildGetURL(ROUTES.about);
 
-export const useRouteContext = buildUseRouteContext({
-  path: '/',
-  searchParams: SETTINGS_SEARCH_PARAMS,
-});
 export const useTossupReaderRouteContext = buildUseRouteContext(
   ROUTES.tossupReader,
 );
@@ -117,8 +113,11 @@ export const useClueDisplayRouteContext = buildUseRouteContext(
 );
 export const useAboutRouteContext = buildUseRouteContext(ROUTES.about);
 
+export const useGlobalQueryParams = () =>
+  useQueryParams(SETTINGS_SEARCH_PARAMS);
+
 export const useGetURL = () => {
-  const { params } = useRouteContext();
+  const [params] = useGlobalQueryParams();
 
   return useMemo(
     () => ({
