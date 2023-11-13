@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import ReaderUserInput from '../components/reader/UserInput';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import { useAppDispatch } from '../redux/hooks';
-import { selectSettings } from '../Settings/settingsSlice';
+import { selectSettings } from '../SettingsModal/settingsSlice';
 import { getInputBorderColor, ReaderStatus } from '../utils/reader';
 import {
   nextTossup as nextTossupAction,

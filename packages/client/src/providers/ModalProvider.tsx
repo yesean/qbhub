@@ -3,7 +3,7 @@ import HamburgerMenu from '../components/HamburgerMenu';
 import InfoModal from '../components/InfoModal';
 import TossupHistoryModal from '../components/TossupHistoryModal';
 import UpdatesModal from '../components/UpdatesModal';
-import SettingsModal from '../Settings';
+import SettingsModal from '../SettingsModal';
 
 type Props = {
   children: JSX.Element;
