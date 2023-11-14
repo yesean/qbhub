@@ -64,3 +64,6 @@ export const toJSON = (json: any) => {
   const blob = new Blob([jsonString], { type: 'application/json' });
   return URL.createObjectURL(blob);
 };
+
+export const isNotNullOrEmpty = <T>(arr?: T[]): arr is T[] =>
+  arr != null && arr.length > 0;
