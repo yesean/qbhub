@@ -1,19 +1,11 @@
-import { Category } from './category';
-import { Difficulty } from './difficulty';
-import { Subcategory } from './subcategory';
-import { Tournament } from './tournament';
+import { Question } from './question';
 
 export type Bonus = {
   id: number;
   leadin: string;
   formattedLeadin: string;
-  category: Category;
-  subcategory?: Subcategory;
-  difficulty: Difficulty;
-  tournament: Tournament;
-  year: number;
   parts: BonusPart[];
-};
+} & Question;
 
 export type BonusResult = {
   score: BonusScore;

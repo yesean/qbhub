@@ -1,7 +1,4 @@
-import { Category } from './category';
-import { Difficulty } from './difficulty';
-import { Subcategory } from './subcategory';
-import { Tournament } from './tournament';
+import { Question } from './question';
 
 export type Tossup = {
   id: number;
@@ -10,12 +7,7 @@ export type Tossup = {
   formattedText: string;
   formattedAnswer: string;
   normalizedAnswer: string;
-  category: Category;
-  subcategory?: Subcategory;
-  difficulty: Difficulty;
-  tournament: Tournament;
-  year: number;
-};
+} & Question;
 
 export enum TossupScore {
   neg = -5,
