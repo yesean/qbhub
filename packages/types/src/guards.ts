@@ -1,4 +1,7 @@
-import { Category, Difficulty, Subcategory, Tournament } from '@qbhub/types';
+import { Category } from './category';
+import { Difficulty } from './difficulty';
+import { Subcategory } from './subcategory';
+import { Tournament } from './tournament';
 
 // primitive type guards
 export const isNumber = (value: any): value is number =>

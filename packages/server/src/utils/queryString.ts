@@ -4,15 +4,6 @@ import {
   SortOption,
   Subcategory,
   Tournament,
-} from '@qbhub/types';
-import { QueryStringParsingError } from '../types/errors';
-import {
-  MAX_LIMIT,
-  MAX_TOURNAMENT_YEAR,
-  MIN_LIMIT,
-  MIN_TOURNAMENT_YEAR,
-} from './constants';
-import {
   isCategoryArray,
   isDifficultyArray,
   isNumeric,
@@ -22,7 +13,14 @@ import {
   isSubcategoryArray,
   isTournamentArray,
   stringToNumber,
-} from './types';
+} from '@qbhub/types';
+import { QueryStringParsingError } from '../types/errors';
+import {
+  MAX_LIMIT,
+  MAX_TOURNAMENT_YEAR,
+  MIN_LIMIT,
+  MIN_TOURNAMENT_YEAR,
+} from './constants';
 
 /**
  * Helper functions for creating error messages.
