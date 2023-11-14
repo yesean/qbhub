@@ -5,7 +5,7 @@ import {
   Subcategory,
   Tournament,
 } from '@qbhub/types';
-import { isNotNullOrEmpty, isNullOrEmpty } from './array';
+import { isNotNullOrEmpty } from './array';
 import {
   DEFAULT_READING_SPEED,
   localStorageKeys as keys,
@@ -49,6 +49,42 @@ export const saveSettings = (settings: Partial<Settings>) => {
   if (settings.fromYear != null) {
     saveFromYear(settings.fromYear);
   }
+};
+
+// check if question passes settings filters
+export const validateQuestion = (
+  question: Question,
+  settings: Partial<Settings>,
+) => {
+  if (
+    isNotNullOrEmpty(settings.categories) &&
+    !settings.categories.includes(question.category)
+  )
+    return false;
+
+  if (
+    question.subcategory != null &&
+    isNotNullOrEmpty(settings.subcategories) &&
+    !settings.subcategories.includes(question.subcategory)
+  )
+    return false;
+
+  if (
+    isNotNullOrEmpty(settings.difficulties) &&
+    !settings.difficulties.includes(question.difficulty)
+  )
+    return false;
+
+  if (
+    isNotNullOrEmpty(settings.tournaments) &&
+    !settings.tournaments.includes(question.tournament)
+  )
+    return false;
+
+  if (settings.fromYear != null && settings.fromYear > question.year)
+    return false;
+
+  return true;
 };
 
 const validateReadingSpeed = (s: number) => s >= 0 && s <= 100 && s % 5 === 0;

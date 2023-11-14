@@ -12,6 +12,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../redux/store';
 import * as fetchUtils from '../utils/fetch';
 import { getBonusScore, ReaderStatus } from '../utils/reader';
+import { Settings, validateQuestion } from '../utils/settings';
 
 type BonusReaderState = {
   status: ReaderStatus;
@@ -139,6 +140,14 @@ const bonusReaderSlice = createSlice({
         }
       }
     },
+    filterBonuses: (
+      state,
+      { payload: settings }: PayloadAction<Partial<Settings>>,
+    ) => {
+      state.bonuses = state.bonuses.filter((tu) =>
+        validateQuestion(tu, settings),
+      );
+    },
     filterBonusesByCategory: (state, action: PayloadAction<Category[]>) => {
       state.bonuses = state.bonuses.filter((bn) =>
         action.payload.includes(bn.category),
@@ -205,6 +214,7 @@ export const {
   prompt,
   submitAnswer,
   nextBonusPart,
+  filterBonuses,
   filterBonusesByCategory,
   filterBonusesBySubcategory,
   filterBonusesByDifficulties,

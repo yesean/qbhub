@@ -16,6 +16,7 @@ import {
   getTossupWords,
   ReaderStatus,
 } from '../utils/reader';
+import { Settings, validateQuestion } from '../utils/settings';
 
 type TossupReaderState = {
   status: ReaderStatus;
@@ -130,6 +131,14 @@ const tossupReaderSlice = createSlice({
         state.score += score;
       }
     },
+    filterTossups: (
+      state,
+      { payload: settings }: PayloadAction<Partial<Settings>>,
+    ) => {
+      state.tossups = state.tossups.filter((tu) =>
+        validateQuestion(tu, settings),
+      );
+    },
     filterTossupsByCategory: (state, action: PayloadAction<Category[]>) => {
       state.tossups = state.tossups.filter((tu) =>
         action.payload.includes(tu.category),
@@ -190,6 +199,7 @@ export const {
   buzz,
   prompt,
   submitAnswer,
+  filterTossups,
   filterTossupsByCategory,
   filterTossupsBySubcategory,
   filterTossupsByDifficulties,
