@@ -1,4 +1,11 @@
-import { Category, Difficulty, Subcategory, Tournament } from '@qbhub/types';
+import {
+  Category,
+  Difficulty,
+  Question,
+  Subcategory,
+  Tournament,
+} from '@qbhub/types';
+import { isNotNullOrEmpty, isNullOrEmpty } from './array';
 import {
   DEFAULT_READING_SPEED,
   localStorageKeys as keys,
@@ -15,12 +22,12 @@ export const saveTournaments = buildSave<Tournament[]>(keys.TOURNAMENTS);
 export const saveFromYear = buildSave<number>(keys.FROM_YEAR);
 
 export type Settings = {
-  readingSpeed: number;
-  categories: Category[];
-  subcategories: Subcategory[];
-  difficulties: Difficulty[];
-  tournaments: Tournament[];
-  fromYear: number;
+  readingSpeed: number | undefined;
+  categories: Category[] | undefined;
+  subcategories: Subcategory[] | undefined;
+  difficulties: Difficulty[] | undefined;
+  tournaments: Tournament[] | undefined;
+  fromYear: number | undefined;
 };
 
 export const saveSettings = (settings: Partial<Settings>) => {

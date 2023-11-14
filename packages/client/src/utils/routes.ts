@@ -1,71 +1,60 @@
+import { Category, Difficulty, Subcategory, Tournament } from '@qbhub/types';
 import queryString from 'query-string';
 import { useCallback, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import {
   DecodedValueMap,
-  DelimitedNumericArrayParam,
   encodeQueryParams,
-  NumberParam,
   QueryParamConfigMap,
-  StringParam,
   useQueryParams,
 } from 'use-query-params';
+import {
+  buildNumericEnumArrayParam,
+  NeverNullNumberParam,
+  NeverNullStringParam,
+} from './queryParams';
 
-const SETTINGS_SEARCH_PARAMS = {
-  readingSpeed: NumberParam,
-  categories: DelimitedNumericArrayParam,
-  subcategories: DelimitedNumericArrayParam,
-  difficulties: DelimitedNumericArrayParam,
-  tournaments: DelimitedNumericArrayParam,
-  fromYear: NumberParam,
+const GLOBAL_QUERY_PARAMS = {
+  categories: buildNumericEnumArrayParam(Category),
+  subcategories: buildNumericEnumArrayParam(Subcategory),
+  difficulties: buildNumericEnumArrayParam(Difficulty),
+  tournaments: buildNumericEnumArrayParam(Tournament),
+  fromYear: NeverNullNumberParam,
+  readingSpeed: NeverNullNumberParam,
 };
 
+const buildRoute = <T extends QueryParamConfigMap>(
+  path: string,
+  extraQueryParams: T = {} as T,
+) => ({
+  path,
+  queryParams: { ...GLOBAL_QUERY_PARAMS, ...extraQueryParams },
+});
+
 const ROUTES = {
-  tossupReader: {
-    path: '/tossup',
-    searchParams: SETTINGS_SEARCH_PARAMS,
-  },
-  bonusReader: {
-    path: '/bonus',
-    searchParams: SETTINGS_SEARCH_PARAMS,
-  },
-  frequencyList: {
-    path: '/frequency',
-    searchParams: SETTINGS_SEARCH_PARAMS,
-  },
+  tossupReader: buildRoute('/tossup'),
+  bonusReader: buildRoute('/bonus'),
+  frequencyList: buildRoute('/frequency'),
   clue: {
-    search: {
-      path: '/clue',
-      searchParams: {
-        ...SETTINGS_SEARCH_PARAMS,
-        query: StringParam,
-      },
-    },
-    display: {
-      path: '/clue/display',
-      searchParams: {
-        ...SETTINGS_SEARCH_PARAMS,
-        answer: StringParam,
-      },
-    },
+    search: buildRoute('/clue', { query: NeverNullStringParam }),
+    display: buildRoute('/clue/display', {
+      answer: NeverNullStringParam,
+    }),
   },
-  about: {
-    path: '/about',
-    searchParams: SETTINGS_SEARCH_PARAMS,
-  },
+  about: buildRoute('/about'),
 };
 
 type RouteConfig<T extends QueryParamConfigMap> = {
   path: string;
-  searchParams: T;
+  queryParams: T;
 };
 
 const buildGetURL =
-  <T extends QueryParamConfigMap>({ path, searchParams }: RouteConfig<T>) =>
+  <T extends QueryParamConfigMap>({ path, queryParams }: RouteConfig<T>) =>
   (query?: Partial<DecodedValueMap<T>>) => {
     if (query == null) return path;
 
-    const encodedQuery = encodeQueryParams(searchParams, query);
+    const encodedQuery = encodeQueryParams(queryParams, query);
     return `${path}?${queryString.stringify(encodedQuery)}`;
   };
 
@@ -73,7 +62,7 @@ const buildUseRouteContext = <T extends QueryParamConfigMap>(
   routeConfig: RouteConfig<T>,
 ) =>
   function useRouteContext() {
-    const [params] = useQueryParams<T>(routeConfig.searchParams);
+    const [params] = useQueryParams<T>(routeConfig.queryParams);
 
     const getURL = useCallback(
       (newParams: Partial<DecodedValueMap<T>>) =>
@@ -114,8 +103,7 @@ export const useClueDisplayRouteContext = buildUseRouteContext(
 );
 export const useAboutRouteContext = buildUseRouteContext(ROUTES.about);
 
-export const useGlobalQueryParams = () =>
-  useQueryParams(SETTINGS_SEARCH_PARAMS);
+export const useGlobalQueryParams = () => useQueryParams(GLOBAL_QUERY_PARAMS);
 
 export const useGetURL = () => {
   const [params] = useGlobalQueryParams();
