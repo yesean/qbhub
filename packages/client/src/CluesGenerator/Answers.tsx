@@ -32,12 +32,15 @@ const answersFields = [
   { label: 'Frequency', dataKey: 'frequency' },
 ] as const;
 
-const Answers: React.FC<React.PropsWithChildren<unknown>> = () => {
+type Props = {
+  query: string;
+};
+
+const Answers: React.FC<React.PropsWithChildren<Props>> = ({ query }) => {
   const { answers, status } = useSelector(selectCluesGenerator);
   const dispatch = useAppDispatch();
-  const { params, getURL: getClueSearchURL } = useClueSearchRouteContext();
+  const { getURL: getClueSearchURL } = useClueSearchRouteContext();
   const { getURL: getClueDisplayURL } = useClueDisplayRouteContext();
-  const query = params.query as string;
 
   useLayoutEffect(() => {
     dispatch(resetStatus());

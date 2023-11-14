@@ -51,5 +51,5 @@ export default () => {
     params: { query },
   } = useClueSearchRouteContext();
 
-  return query == null ? <Search /> : <Answers />;
+  return query == null ? <Search /> : <Answers query={query} />;
 };
