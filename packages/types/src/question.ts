@@ -3,6 +3,14 @@ import { Difficulty } from './difficulty';
 import { Subcategory } from './subcategory';
 import { Tournament } from './tournament';
 
+export type Question = {
+  category: Category;
+  subcategory?: Subcategory;
+  difficulty: Difficulty;
+  tournament: Tournament;
+  year: number;
+}
+
 // question parameters in Select dropdowns in settings
 export type SelectableQuestionParameter =
   | Category
