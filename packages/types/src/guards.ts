@@ -19,15 +19,16 @@ export const isStringArray = (value: any): value is string[] =>
 export const isNumericArray = (value: any): value is (string | number)[] =>
   Array.isArray(value) && value.every(isNumeric);
 
+export const buildIsEnum =
+  <T extends { [key: string]: unknown }>(e: T) =>
+  (value: unknown): value is T[keyof T] =>
+    Object.values(e).includes(value as T[keyof T]);
+
 // question parameter type guards
-export const isCategory = (value: any): value is Category =>
-  Object.prototype.hasOwnProperty.call(Category, value);
-export const isSubcategory = (value: any): value is Subcategory =>
-  Object.prototype.hasOwnProperty.call(Subcategory, value);
-export const isDifficulty = (value: any): value is Difficulty =>
-  Object.prototype.hasOwnProperty.call(Difficulty, value);
-export const isTournament = (value: any): value is Tournament =>
-  Object.prototype.hasOwnProperty.call(Tournament, value);
+export const isCategory = buildIsEnum(Category);
+export const isSubcategory = buildIsEnum(Subcategory);
+export const isDifficulty = buildIsEnum(Difficulty);
+export const isTournament = buildIsEnum(Tournament);
 
 export const isCategoryArray = (value: any): value is Category[] =>
   Array.isArray(value) && value.every(isCategory);
