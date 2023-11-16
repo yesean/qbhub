@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Text } from '@chakra-ui/react';
+import { Box, Center, Heading, Text } from '@chakra-ui/react';
 import { headers } from './constants';
 
 const About = () => {
@@ -35,11 +35,17 @@ const About = () => {
   };
 
   return (
-    <Flex flexDir="column" overflow="auto" maxW="container.lg">
-      <Box overflow="auto" px={8}>
+    <Center flexDir="column" overflow="auto" w="100%">
+      <Box
+        overflow="auto"
+        px="10%"
+        minW="350px"
+        boxSizing="border-box"
+        maxW="120rem"
+      >
         {headers.map(renderHeaderContent)}
       </Box>
-    </Flex>
+    </Center>
   );
 };
 
