@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { RootState } from '../redux/store';
 import * as fetchUtils from '../utils/fetch';
 import logger from '../utils/logger';
+import { Settings } from '../utils/settings/types';
 
 export const PAGE_SIZE = 20;
 export const FETCH_LIMIT = 5 * PAGE_SIZE;
@@ -36,12 +37,11 @@ const initialState: FrequencyListState = {
 
 export const fetchPages = createAsyncThunk<
   FrequencyListEntry[],
-  number,
+  { settings: Settings; offset: number },
   { state: RootState }
 >(
   'frequencyList/fetchPages',
-  async (offset, { getState }) => {
-    const { settings } = getState();
+  async ({ settings, offset }) => {
     const fetchParams = { ...settings, limit: FETCH_LIMIT, offset };
     const freq = await fetchUtils.fetchFreq(fetchParams);
     return freq;
@@ -56,25 +56,26 @@ export const fetchPages = createAsyncThunk<
   },
 );
 
-export const nextPage = createAsyncThunk<void, undefined, { state: RootState }>(
-  'frequencyList/nextPage',
-  async (_, { getState, dispatch }) => {
-    const {
-      frequencyList: { offset, results },
-    } = getState();
-    if (offset + PAGE_SIZE >= results.length) {
-      // if on the last page, wait for fetch
-      await dispatch(fetchPages(results.length)).unwrap();
-    } else if (offset + 3 * PAGE_SIZE >= results.length) {
-      // if 3 pages from the last page, fetch more in the background
-      logger.info('Starting to prefetch pages.');
-      dispatch(fetchPages(results.length))
-        .unwrap()
-        .then(() => logger.info('Finished prefetching pages.'))
-        .catch((e) => logger.info('Pages prefetch rejected:', e));
-    }
-  },
-);
+export const nextPage = createAsyncThunk<
+  void,
+  { settings: Settings },
+  { state: RootState }
+>('frequencyList/nextPage', async (args, { getState, dispatch }) => {
+  const {
+    frequencyList: { offset, results },
+  } = getState();
+  if (offset + PAGE_SIZE >= results.length) {
+    // if on the last page, wait for fetch
+    await dispatch(fetchPages({ ...args, offset: results.length })).unwrap();
+  } else if (offset + 3 * PAGE_SIZE >= results.length) {
+    // if 3 pages from the last page, fetch more in the background
+    logger.info('Starting to prefetch pages.');
+    dispatch(fetchPages({ ...args, offset: results.length }))
+      .unwrap()
+      .then(() => logger.info('Finished prefetching pages.'))
+      .catch((e) => logger.info('Pages prefetch rejected:', e));
+  }
+});
 
 const frequencyListSlice = createSlice({
   name: 'frequencyList',

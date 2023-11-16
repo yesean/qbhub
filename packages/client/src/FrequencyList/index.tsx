@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import { KeyValueTable } from '../components/tables';
 import { useKeyboardShortcut } from '../hooks/keyboard';
+import { useSettings } from '../hooks/useSettings';
 import { useAppDispatch } from '../redux/hooks';
 import { selectSettings } from '../SettingsModal/settingsSlice';
 import { useGetURL } from '../utils/routes';
@@ -32,15 +33,16 @@ const freqFields = [
 const FrequencyList: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { page, offset, status } = useSelector(selectFrequencyList);
   const { isOpen } = useSelector(selectSettings);
+  const { settings } = useSettings();
   const dispatch = useAppDispatch();
   const { getClueDisplayURL } = useGetURL();
 
   // in initial state, fetch freq
   useEffect(() => {
     if (status === FreqStatus.initial) {
-      dispatch(fetchPages(0));
+      dispatch(fetchPages({ offset: 0, settings }));
     }
-  }, [dispatch, status]);
+  }, [dispatch, settings, status]);
 
   const prev = useCallback(
     () => status === FreqStatus.idle && offset !== 0 && dispatch(prevPage()),
@@ -50,8 +52,8 @@ const FrequencyList: React.FC<React.PropsWithChildren<unknown>> = () => {
     () =>
       status === FreqStatus.idle &&
       page.length === PAGE_SIZE &&
-      dispatch(nextPage()),
-    [dispatch, status, page],
+      dispatch(nextPage({ settings })),
+    [status, page.length, dispatch, settings],
   );
 
   useKeyboardShortcut('p', prev, () => !isOpen);

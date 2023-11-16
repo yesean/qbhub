@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import RouterLinkButton from '../components/buttons/RouterLinkButton';
 import { KeyValueTable } from '../components/tables';
+import { useSettings } from '../hooks/useSettings';
 import { useAppDispatch } from '../redux/hooks';
 import {
   useClueDisplayRouteContext,
@@ -41,12 +42,13 @@ const Answers: React.FC<React.PropsWithChildren<Props>> = ({ query }) => {
   const dispatch = useAppDispatch();
   const { getURL: getClueSearchURL } = useClueSearchRouteContext();
   const { getURL: getClueDisplayURL } = useClueDisplayRouteContext();
+  const { settings } = useSettings();
 
   useLayoutEffect(() => {
     dispatch(resetStatus());
     dispatch(setQuery(query));
-    dispatch(fetchAnswers(query));
-  }, [query, dispatch]);
+    dispatch(fetchAnswers({ settings, answer: query }));
+  }, [query, dispatch, settings]);
 
   if (status !== CluesGeneratorStatus.loaded) {
     return <CircularProgress isIndeterminate color="cyan" />;

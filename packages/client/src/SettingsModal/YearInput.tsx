@@ -1,6 +1,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { Button, HStack, Input, useNumberInput } from '@chakra-ui/react';
-import { MAX_TOURNAMENT_YEAR, MIN_TOURNAMENT_YEAR } from '../utils/constants';
+import {
+  MAX_TOURNAMENT_YEAR,
+  MIN_TOURNAMENT_YEAR,
+} from '../utils/settings/constants';
 
 type YearInputProps = {
   value: number;

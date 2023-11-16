@@ -65,5 +65,7 @@ export const toJSON = (json: any) => {
   return URL.createObjectURL(blob);
 };
 
+export const isEmpty = (arr: unknown[]) => arr.length === 0;
+
 export const isNotNullOrEmpty = <T>(arr?: T[]): arr is T[] =>
   arr != null && arr.length > 0;

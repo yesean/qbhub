@@ -5,6 +5,7 @@ import { elementScrollIntoView } from 'seamless-scroll-polyfill';
 import Answer from '../components/reader/Answer';
 import ReaderQuestion from '../components/reader/Question';
 import UserAnswer from '../components/reader/UserAnswer';
+import { useSettings } from '../hooks/useSettings';
 import { useAppDispatch } from '../redux/hooks';
 import { range } from '../utils/array';
 import { getTossupWords, ReaderStatus } from '../utils/reader';
@@ -24,12 +25,13 @@ const Container = ({ setBuzz }: Props) => {
   } = useSelector(selectBonusReader);
   const userAnswerRef = useRef(null);
   const dispatch = useAppDispatch();
+  const { settings } = useSettings();
 
   const showLoading = status === ReaderStatus.fetching;
   const showEmpty = status === ReaderStatus.empty;
   const emptyMessage =
     'No bonuses found. Try checking your network connection or tweaking the search parameters.';
-  const onEmpty = () => dispatch(nextBonus());
+  const onEmpty = () => dispatch(nextBonus({ settings }));
 
   const leadinOffset = useMemo(
     () =>

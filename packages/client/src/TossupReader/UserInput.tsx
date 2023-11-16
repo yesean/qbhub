@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ReaderUserInput from '../components/reader/UserInput';
 import { useKeyboardShortcut } from '../hooks/keyboard';
+import { useSettings } from '../hooks/useSettings';
 import { useAppDispatch } from '../redux/hooks';
 import { selectSettings } from '../SettingsModal/settingsSlice';
 import { getInputBorderColor, ReaderStatus } from '../utils/reader';
@@ -40,6 +41,7 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
   const [input, setInput] = useState('');
   const dispatch = useAppDispatch();
   const inputRef = useRef<HTMLInputElement>(null);
+  const { settings } = useSettings();
 
   const isReading = status === ReaderStatus.reading;
 
@@ -62,7 +64,7 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
     buzz();
   };
   const submitInput = useCallback(() => submit(input), [input, submit]);
-  const next = () => dispatch(nextTossupAction());
+  const next = () => dispatch(nextTossupAction({ settings }));
 
   // add different button behavior depending on the status
   let onClick;

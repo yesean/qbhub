@@ -39,30 +39,28 @@ const initialState: TossupReaderState = {
   },
 };
 
-export const fetchTossups = createAsyncThunk<
-  Tossup[],
-  undefined,
-  { state: RootState }
->('tossupReader/fetchTossups', async (_, { getState }) => {
-  const { settings } = getState();
-  const tossups = await fetchUtils.fetchTossups(settings);
-  return tossups;
-});
+const fetchTossups = createAsyncThunk<Tossup[], { settings: Settings }>(
+  'tossupReader/fetchTossups',
+  async ({ settings }) => {
+    const tossups = await fetchUtils.fetchTossups(settings);
+    return tossups;
+  },
+);
 
 export const nextTossup = createAsyncThunk<
   void,
-  undefined,
+  { settings: Settings },
   { state: RootState }
 >(
   'tossupReader/nextTossup',
-  async (_, { dispatch, getState }) => {
+  async (args, { dispatch, getState }) => {
     const { tossupReader } = getState();
     // if tossup cache is low, fetch more
     // if tossup cache is empty, keep the action pending
     if (tossupReader.tossups.length === 0) {
-      await dispatch(fetchTossups()).unwrap();
+      await dispatch(fetchTossups(args)).unwrap();
     } else if (tossupReader.tossups.length < 5) {
-      dispatch(fetchTossups());
+      dispatch(fetchTossups(args));
     }
   },
   {

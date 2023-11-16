@@ -13,6 +13,7 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 import FileDownloadButton from '../components/buttons/FileDownloadButton';
 import RouterLinkButton from '../components/buttons/RouterLinkButton';
 import { KeyValueTable } from '../components/tables';
+import { useSettings } from '../hooks/useSettings';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { toCSV, toJSON } from '../utils/array';
 import {
@@ -40,6 +41,7 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { getURL: getClueSearchURL } = useClueSearchRouteContext();
   const { params } = useClueDisplayRouteContext();
   const answer = params.answer as string;
+  const { settings } = useSettings();
 
   useEffect(() => {
     const cluesCSV = clues
@@ -68,8 +70,8 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
   useLayoutEffect(() => {
     dispatch(resetStatus());
     dispatch(selectAnswer(answer));
-    dispatch(fetchClues(answer));
-  }, [dispatch, answer]);
+    dispatch(fetchClues({ answer, settings }));
+  }, [dispatch, answer, settings]);
 
   const renderTooltip = (clue: SelectedClue) => {
     const startIndex = clue.sentence.indexOf(clue.text);
