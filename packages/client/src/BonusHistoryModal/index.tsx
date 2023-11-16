@@ -17,9 +17,9 @@ import {
 import { BonusScore } from '@qbhub/types';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { selectBonusReader } from '../../BonusReader/bonusReaderSlice';
-import { useAppDispatch } from '../../redux/hooks';
-import { TealButton } from '../buttons';
+import { selectBonusReader } from '../BonusReader/bonusReaderSlice';
+import { TealButton } from '../components/buttons';
+import { useAppDispatch } from '../redux/hooks';
 import { close, selectBonusHistoryModal } from './bonusHistoryModalSlice';
 import BonusResults from './BonusResults';
 

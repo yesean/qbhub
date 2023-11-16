@@ -15,9 +15,9 @@ import {
 } from '@chakra-ui/react';
 import { TossupScore } from '@qbhub/types';
 import { useSelector } from 'react-redux';
-import { useAppDispatch } from '../../redux/hooks';
-import { selectTossupReader } from '../../TossupReader/tossupReaderSlice';
-import { TealButton } from '../buttons';
+import { TealButton } from '../components/buttons';
+import { useAppDispatch } from '../redux/hooks';
+import { selectTossupReader } from '../TossupReader/tossupReaderSlice';
 import { close, selectTossupHistoryModal } from './tossupHistoryModalSlice';
 import TossupResults from './TossupResults';
 

@@ -1,4 +1,4 @@
-import { restore, save } from '../../utils/storage';
+import { restore, save } from '../utils/storage';
 
 const KEYS = {
   LAST_SEEN_UPDATE: 'last_seen_update',

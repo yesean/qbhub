@@ -1,14 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
+import bonusHistoryModalReducer from '../BonusHistoryModal/bonusHistoryModalSlice';
 import bonusReaderReducer from '../BonusReader/bonusReaderSlice';
 import cluesGeneatorReducer from '../CluesGenerator/cluesGeneratorSlice';
-import bonusHistoryModalReducer from '../components/BonusHistoryModal/bonusHistoryModalSlice';
 import hamburgerMenuReducer from '../components/HamburgerMenu/hamburgerMenuSlice';
-import infoModalReducer from '../components/InfoModal/infoModalSlice';
-import tossupHistoryModalReducer from '../components/TossupHistoryModal/tossupHistoryModalSlice';
-import updatesModalReducer from '../components/UpdatesModal/updatesModalSlice';
 import frequencyListReducer from '../FrequencyList/frequencyListSlice';
+import infoModalReducer from '../InfoModal/infoModalSlice';
 import settingsReducer from '../SettingsModal/settingsSlice';
+import tossupHistoryModalReducer from '../TossupHistoryModal/tossupHistoryModalSlice';
 import tossupReaderReducer from '../TossupReader/tossupReaderSlice';
+import updatesModalReducer from '../UpdatesModal/updatesModalSlice';
 
 export const store = configureStore({
   reducer: {

@@ -1,7 +1,7 @@
 import { Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { open as openBonusHistory } from '../components/BonusHistoryModal/bonusHistoryModalSlice';
+import { open as openBonusHistory } from '../BonusHistoryModal/bonusHistoryModalSlice';
 import Progress from '../components/reader/Progress';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import useJudge from '../hooks/useJudge';

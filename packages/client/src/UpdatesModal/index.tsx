@@ -1,8 +1,8 @@
 import { Box, Heading, Link } from '@chakra-ui/react';
 import { MDXComponents } from 'mdx/types';
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import Modal from '../Modal';
+import Modal from '../components/Modal';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import Content from './updates.mdx';
 import { close, open, selectUpdatesModal } from './updatesModalSlice';
 import { checkHasUserViewedLatestUpdate, saveLastSeenUpdate } from './utils';

@@ -1,11 +1,11 @@
 import { HamburgerIcon, SettingsIcon, TimeIcon } from '@chakra-ui/icons';
 import { Box, Flex, Heading, IconButton } from '@chakra-ui/react';
+import { open as openBonusHistory } from '../../BonusHistoryModal/bonusHistoryModalSlice';
 import { useAppDispatch } from '../../redux/hooks';
 import { open as openSettings } from '../../SettingsModal/settingsSlice';
+import { open as openTossupHistory } from '../../TossupHistoryModal/tossupHistoryModalSlice';
 import { usePage } from '../../utils/routes';
-import { open as openBonusHistory } from '../BonusHistoryModal/bonusHistoryModalSlice';
 import { open as openHamburgerMenu } from '../HamburgerMenu/hamburgerMenuSlice';
-import { open as openTossupHistory } from '../TossupHistoryModal/tossupHistoryModalSlice';
 
 const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
   const dispatch = useAppDispatch();
