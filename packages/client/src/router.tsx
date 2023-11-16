@@ -6,9 +6,11 @@ import BonusReader from './BonusReader';
 import Clues from './CluesGenerator/Clues';
 import Search from './CluesGenerator/Search';
 import Layout from './components/Layout';
+import NavigateToTossupReader from './components/NavigateToTossupReader';
 import FrequencyList from './FrequencyList';
 import KeyboardShortcutProvider from './providers/KeyboardShortcutProvider';
 import ModalProvider from './providers/ModalProvider';
+import SettingsProvider from './providers/SettingsProvider';
 import TossupReader from './TossupReader';
 import {
   getAboutURL,
@@ -20,6 +22,10 @@ import {
 } from './utils/routes';
 
 const paths = [
+  {
+    path: '/',
+    element: <NavigateToTossupReader />,
+  },
   {
     path: getTossupReaderURL(),
     element: <TossupReader />,
@@ -50,13 +56,15 @@ export default createBrowserRouter([
   {
     element: (
       <QueryParamProvider adapter={ReactRouter6Adapter}>
-        <ModalProvider>
-          <KeyboardShortcutProvider>
-            <Layout>
-              <Outlet />
-            </Layout>
-          </KeyboardShortcutProvider>
-        </ModalProvider>
+        <SettingsProvider>
+          <ModalProvider>
+            <KeyboardShortcutProvider>
+              <Layout>
+                <Outlet />
+              </Layout>
+            </KeyboardShortcutProvider>
+          </ModalProvider>
+        </SettingsProvider>
       </QueryParamProvider>
     ),
     children: paths,
