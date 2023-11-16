@@ -9,7 +9,7 @@ export type Question = {
   difficulty: Difficulty;
   tournament: Tournament;
   year: number;
-}
+};
 
 // question parameters in Select dropdowns in settings
 export type SelectableQuestionParameter =
