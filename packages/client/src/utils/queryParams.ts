@@ -72,7 +72,7 @@ const buildSkipEncodeNumberParam = <T extends typeof NumberParam>(
   },
 });
 
-const buildNeverNullParam = <T extends QueryParamConfig<U, V>, U, V>(
+const buildNeverNullParam = <T extends QueryParamConfig<any, any>>(
   param: T,
 ) => ({
   encode(...args: Parameters<typeof param.encode>) {
@@ -94,26 +94,12 @@ export const buildNeverNullRangedNumberParamWithSkip = (
   maximumValue: number,
   skipValue: number,
 ) =>
-  buildNeverNullParam<
-    typeof NumberParam,
-    Parameters<typeof NumberParam.encode>[0],
-    ReturnType<typeof NumberParam.decode>
-  >(
+  buildNeverNullParam(
     buildRangedNumberParam(
       buildSkipEncodeNumberParam(NumberParam, skipValue),
       minimumValue,
       maximumValue,
     ),
   );
-
-export const NeverNullNumberParam = buildNeverNullParam<
-  typeof NumberParam,
-  Parameters<typeof NumberParam.encode>[0],
-  ReturnType<typeof NumberParam.decode>
->(NumberParam);
-
-export const NeverNullStringParam = buildNeverNullParam<
-  typeof StringParam,
-  Parameters<typeof StringParam.encode>[0],
-  ReturnType<typeof StringParam.decode>
->(StringParam);
+export const NeverNullNumberParam = buildNeverNullParam(NumberParam);
+export const NeverNullStringParam = buildNeverNullParam(StringParam);
