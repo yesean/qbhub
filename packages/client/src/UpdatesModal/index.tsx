@@ -1,7 +1,7 @@
 import { Box, Heading, Link } from '@chakra-ui/react';
 import { MDXComponents } from 'mdx/types';
 import { useEffect } from 'react';
-import Modal from '../components/Modal';
+import QBHubModal from '../components/QBHubModal';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import Content from './updates.mdx';
 import { close, open, selectUpdatesModal } from './updatesModalSlice';
@@ -53,9 +53,9 @@ const Updates = () => {
   }, [dispatch]);
 
   return (
-    <Modal isOpen={isOpen} closeModal={closeModal} title="Updates 🚀">
+    <QBHubModal isOpen={isOpen} closeModal={closeModal} title="Updates 🚀">
       <Content components={mdxComponents} />
-    </Modal>
+    </QBHubModal>
   );
 };
 

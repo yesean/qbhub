@@ -18,7 +18,7 @@ type Props = {
   children: ReactNode;
 };
 
-export default function Modal({
+export default function QBHubModal({
   isOpen,
   closeModal,
   title: heading,
