@@ -6,6 +6,7 @@ import { open as openTossupHistory } from '../components/TossupHistoryModal/toss
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import useJudge from '../hooks/useJudge';
 import { useAppDispatch } from '../redux/hooks';
+import { selectSettings } from '../SettingsModal/settingsSlice';
 import { ReaderStatus } from '../utils/reader';
 import Answer from './Answer';
 import Info from './Info';
@@ -29,6 +30,7 @@ const TossupReader = () => {
       tossup: { formattedAnswer },
     },
   } = useSelector(selectTossupReader);
+  const { isOpen } = useSelector(selectSettings);
   const isAnswering = useSelector(selectIsAnswering);
   const dispatch = useAppDispatch();
 
@@ -45,7 +47,11 @@ const TossupReader = () => {
     }
   }, [status, formattedAnswer]);
 
-  useKeyboardShortcut('h', () => dispatch(openTossupHistory()));
+  useKeyboardShortcut(
+    'h',
+    () => dispatch(openTossupHistory()),
+    () => !isOpen,
+  );
 
   const renderInfo = () =>
     ![ReaderStatus.idle, ReaderStatus.fetching, ReaderStatus.empty].includes(

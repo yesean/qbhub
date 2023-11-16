@@ -37,7 +37,7 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
     status,
     current: { partResult },
   } = useSelector(selectBonusReader);
-  const settings = useSelector(selectSettings);
+  const { isOpen } = useSelector(selectSettings);
   const isAnswering = useSelector(selectIsAnswering);
   const [input, setInput] = useState('');
   const dispatch = useAppDispatch();
@@ -94,10 +94,10 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
   useKeyboardShortcut(
     'n',
     status === ReaderStatus.partialJudged ? nextPart : next,
-    () => !settings.isOpen,
+    () => !isOpen,
   );
-  useKeyboardShortcut(' ', buzzWrapper, () => !settings.isOpen && isReading);
-  useKeyboardShortcut('Enter', submitInput, () => !settings.isOpen);
+  useKeyboardShortcut(' ', buzzWrapper, () => !isOpen && isReading);
+  useKeyboardShortcut('Enter', submitInput, () => !isOpen);
 
   // submit user answer when timer ends
   useEffect(() => {
