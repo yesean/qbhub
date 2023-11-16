@@ -19,7 +19,7 @@ import {
 } from '@qbhub/types';
 import { useSelector } from 'react-redux';
 import Select, { Options } from 'react-select';
-import Modal from '../components/Modal';
+import QBHubModal from '../components/QBHubModal';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import { useSettings } from '../hooks/useSettings';
 import { useAppDispatch } from '../redux/hooks';
@@ -126,7 +126,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   const resetFromYear = () => setSettings({ fromYear: MIN_TOURNAMENT_YEAR });
 
   return (
-    <Modal isOpen={isOpen} closeModal={closeModal} title="Settings">
+    <QBHubModal isOpen={isOpen} closeModal={closeModal} title="Settings">
       <Flex direction="column" gap={4}>
         <Box>
           <Heading size="sm" mb={2} color="gray.800">
@@ -184,7 +184,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
           </Flex>
         </Box>
       </Flex>
-    </Modal>
+    </QBHubModal>
   );
 };
 

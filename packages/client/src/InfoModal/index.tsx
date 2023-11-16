@@ -10,7 +10,7 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
-import Modal from '../components/Modal';
+import QBHubModal from '../components/QBHubModal';
 import { useAppDispatch } from '../redux/hooks';
 import { usePage } from '../utils/routes';
 import { close, selectInfoModal } from './infoModalSlice';
@@ -153,13 +153,13 @@ const InfoModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   };
 
   return (
-    <Modal isOpen={isOpen} closeModal={closeModal} title="Info">
+    <QBHubModal isOpen={isOpen} closeModal={closeModal} title="Info">
       {renderLocalShortcuts()}
       <Heading size="sm" color="gray.800">
         Global Shortcuts
       </Heading>
       {renderTable(globalShortcuts)}
-    </Modal>
+    </QBHubModal>
   );
 };
 
