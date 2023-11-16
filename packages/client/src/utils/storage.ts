@@ -1,30 +1,29 @@
-export const save = (key: string, data: any) =>
+// save item to local storage
+export const save = (key: string, data: unknown) =>
   window.localStorage.setItem(key, JSON.stringify(data));
 
-/*
- * Factory function for saving localStorage items.
- */
-export const buildSave =
-  <T>(key: string) =>
-  (data: T) =>
-    save(key, data);
+// restore item from local storage with error handling and optional validation
+export const restore = <T>(
+  key: string,
+  isDataValid: (data: any) => data is T = (data): data is T => true,
+): T | undefined => {
+  const data = window.localStorage.getItem(key);
 
-export const restore = (key: string) => window.localStorage.getItem(key);
+  if (data == null) {
+    return undefined;
+  }
 
-/*
- * Factory function for restoring localStorage items with fallback behavior and
- * validation.
- */
-export const buildRestore =
-  <T>(key: string, defaultValue: T, validate = (_: string) => true) =>
-  () => {
-    const data = restore(key);
+  try {
+    const parsedData = JSON.parse(data);
 
-    // load default
-    if (data == null || !validate(data)) {
-      save(key, defaultValue);
-      return defaultValue;
+    if (!isDataValid(parsedData)) {
+      throw new Error('invalid data');
     }
 
-    return JSON.parse(data) as T;
-  };
+    return parsedData;
+  } catch (e) {
+    // if data is malformed, remove from localStorage
+    window.localStorage.removeItem(key);
+    return undefined;
+  }
+};
