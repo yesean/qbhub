@@ -9,18 +9,34 @@ import {
   useQueryParams,
 } from 'use-query-params';
 import {
+  buildNeverNullRangedNumberParamWithSkip,
   buildNumericEnumArrayParam,
-  NeverNullNumberParam,
   NeverNullStringParam,
 } from './queryParams';
+import {
+  DEFAULT_READING_SPEED,
+  MAX_TOURNAMENT_YEAR,
+  MIN_TOURNAMENT_YEAR,
+} from './settings/constants';
+
+const FromYearParam = buildNeverNullRangedNumberParamWithSkip(
+  MIN_TOURNAMENT_YEAR,
+  MAX_TOURNAMENT_YEAR,
+  MIN_TOURNAMENT_YEAR,
+);
+const ReadingSpeedParam = buildNeverNullRangedNumberParamWithSkip(
+  0,
+  100,
+  DEFAULT_READING_SPEED,
+);
 
 const GLOBAL_QUERY_PARAMS = {
   categories: buildNumericEnumArrayParam(Category),
   subcategories: buildNumericEnumArrayParam(Subcategory),
   difficulties: buildNumericEnumArrayParam(Difficulty),
   tournaments: buildNumericEnumArrayParam(Tournament),
-  fromYear: NeverNullNumberParam,
-  readingSpeed: NeverNullNumberParam,
+  fromYear: FromYearParam,
+  readingSpeed: ReadingSpeedParam,
 };
 
 const buildRoute = <T extends QueryParamConfigMap>(
