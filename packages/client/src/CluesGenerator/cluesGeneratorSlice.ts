@@ -2,6 +2,7 @@ import { FrequencyListEntry, SelectedClue } from '@qbhub/types';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../redux/store';
 import * as fetchUtils from '../utils/fetch';
+import { Settings } from '../utils/settings/types';
 
 const FETCH_LIMIT = 200;
 
@@ -29,13 +30,12 @@ const initialState: CluesGeneratorSlice = {
 
 export const fetchAnswers = createAsyncThunk<
   FrequencyListEntry[],
-  string,
+  { settings: Settings; answer: string },
   { state: RootState }
 >(
   'cluesGenerator/fetchAnswers',
-  async (answer, { getState }) => {
-    const { settings } = getState();
-    const fetchParams = { ...settings, answer, limit: FETCH_LIMIT };
+  async (args) => {
+    const fetchParams = { ...args, limit: FETCH_LIMIT };
     const answers = await fetchUtils.fetchAnswers(fetchParams);
     return answers;
   },
@@ -50,13 +50,12 @@ export const fetchAnswers = createAsyncThunk<
 );
 export const fetchClues = createAsyncThunk<
   SelectedClue[],
-  string,
+  { settings: Settings; answer: string },
   { state: RootState }
 >(
   'cluesGenerator/fetchClues',
-  async (answer, { getState }) => {
-    const { settings } = getState();
-    const fetchParams = { ...settings, answer, limit: FETCH_LIMIT };
+  async (args) => {
+    const fetchParams = { ...args, limit: FETCH_LIMIT };
     const clues = await fetchUtils.fetchClues(fetchParams);
     return clues;
   },

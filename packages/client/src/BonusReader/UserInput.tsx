@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ReaderUserInput from '../components/reader/UserInput';
 import { useKeyboardShortcut } from '../hooks/keyboard';
+import { useSettings } from '../hooks/useSettings';
 import { useAppDispatch } from '../redux/hooks';
 import { selectSettings } from '../SettingsModal/settingsSlice';
 import { getInputBorderColor, ReaderStatus } from '../utils/reader';
@@ -38,6 +39,7 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
     current: { partResult },
   } = useSelector(selectBonusReader);
   const { isOpen } = useSelector(selectSettings);
+  const { settings } = useSettings();
   const isAnswering = useSelector(selectIsAnswering);
   const [input, setInput] = useState('');
   const dispatch = useAppDispatch();
@@ -64,7 +66,10 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
     buzz();
   };
   const submitInput = useCallback(() => submit(input), [input, submit]);
-  const next = useCallback(() => dispatch(nextBonusAction()), [dispatch]);
+  const next = useCallback(
+    () => dispatch(nextBonusAction({ settings })),
+    [dispatch, settings],
+  );
   const nextPart = useCallback(
     () => dispatch(nextBonusPartAction()),
     [dispatch],

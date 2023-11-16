@@ -40,30 +40,29 @@ const initialState: BonusReaderState = {
   },
 };
 
-export const fetchBonuses = createAsyncThunk<
+const fetchBonuses = createAsyncThunk<
   Bonus[],
-  undefined,
+  { settings: Settings },
   { state: RootState }
->('bonusReader/fetchBonuses', async (_, { getState }) => {
-  const { settings } = getState();
+>('bonusReader/fetchBonuses', async ({ settings }) => {
   const bonuses = await fetchUtils.fetchBonuses(settings);
   return bonuses;
 });
 
 export const nextBonus = createAsyncThunk<
   void,
-  undefined,
+  { settings: Settings },
   { state: RootState }
 >(
   'bonusReader/nextBonus',
-  async (_, { dispatch, getState }) => {
+  async (args, { dispatch, getState }) => {
     const { bonusReader } = getState();
     // if bonus cache is low, fetch more
     // if bonus cache is empty, keep the action pending
     if (bonusReader.bonuses.length === 0) {
-      await dispatch(fetchBonuses()).unwrap();
+      await dispatch(fetchBonuses(args)).unwrap();
     } else if (bonusReader.bonuses.length < 5) {
-      dispatch(fetchBonuses());
+      dispatch(fetchBonuses(args));
     }
   },
   {
