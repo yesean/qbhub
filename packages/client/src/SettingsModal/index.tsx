@@ -17,7 +17,6 @@ import {
   Subcategory,
   Tournament,
 } from '@qbhub/types';
-import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import Select, { Options } from 'react-select';
 import Modal from '../components/Modal';
@@ -52,6 +51,12 @@ const toSelect =
     data: map[key],
   });
 
+// prevent select dropdown from getting overlapped, especially on mobile
+const selectMenuProps = {
+  menuPortalTarget: document.body,
+  styles: { menuPortal: (base: CSSObject) => ({ ...base, zIndex: 9999 }) },
+};
+
 const categoriesForSelect = CATEGORIES.map(toSelect(CATEGORY_MAP));
 const subcategoriesForSelect = SUBCATEGORIES.map(toSelect(SUBCATEGORY_MAP));
 const difficultiesForSelect = DIFFICULTIES.map(toSelect(DIFFICULTY_MAP));
@@ -60,6 +65,11 @@ const tournamentsForSelect = TOURNAMENTS.map(toSelect(TOURNAMENT_MAP));
 const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { isOpen } = useSelector(selectSettings);
   const { settings, setSettings } = useSettings();
+  const dispatch = useAppDispatch();
+  const closeModal = () => dispatch(close());
+
+  useKeyboardShortcut('Escape', closeModal);
+
   const {
     categories,
     subcategories,
@@ -68,15 +78,20 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
     fromYear,
     readingSpeed,
   } = settings;
-  const dispatch = useAppDispatch();
-  const closeModal = () => dispatch(close());
-  useKeyboardShortcut('Escape', closeModal);
+
+  const filteredTournamentsForSelect = tournamentsForSelect.filter(({ data }) =>
+    isTournamentValid(data, settings),
+  );
+
+  const categoriesInSelect = categories.map(toSelect(CATEGORY_MAP));
+  const subcategoriesInSelect = subcategories.map(toSelect(SUBCATEGORY_MAP));
+  const difficultiesInSelect = difficulties.map(toSelect(DIFFICULTY_MAP));
+  const tournamentsInSelect = tournaments.map(toSelect(TOURNAMENT_MAP));
 
   const onReadingSpeedChange = (value: number) => {
     setSettings({ readingSpeed: value });
   };
 
-  const categoriesInSelect = categories.map(toSelect(CATEGORY_MAP));
   const onCategoriesChange = (
     options: Options<{ label: string; value: Category }>,
   ) => {
@@ -84,7 +99,6 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
     setSettings({ categories: newCategories });
   };
 
-  const subcategoriesInSelect = subcategories.map(toSelect(SUBCATEGORY_MAP));
   const onSubcategoriesChange = (
     options: Options<{ label: string; value: Subcategory }>,
   ) => {
@@ -92,7 +106,6 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
     setSettings({ subcategories: newSubcategories });
   };
 
-  const difficultiesInSelect = difficulties.map(toSelect(DIFFICULTY_MAP));
   const onDifficultiesChange = (
     options: Options<{ label: string; value: Difficulty }>,
   ) => {
@@ -100,14 +113,6 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
     setSettings({ difficulties: newDifficulties });
   };
 
-  const filteredTournamentsForSelect = useMemo(
-    () =>
-      tournamentsForSelect.filter(({ data }) =>
-        isTournamentValid(data, settings),
-      ),
-    [settings],
-  );
-  const tournamentsInSelect = tournaments.map(toSelect(TOURNAMENT_MAP));
   const onTournamentsChange = (
     options: Options<{ label: string; value: Tournament }>,
   ) => {
@@ -120,99 +125,88 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   const resetFromYear = () => setSettings({ fromYear: MIN_TOURNAMENT_YEAR });
 
-  // prevent select dropdown from getting overlapped, especially on mobile
-  const selectMenuProps = {
-    menuPortalTarget: document.body,
-    styles: { menuPortal: (base: CSSObject) => ({ ...base, zIndex: 9999 }) },
-  };
-
   return (
     <Modal isOpen={isOpen} closeModal={closeModal} title="Settings">
-      <Box mb={4}>
-        <Heading size="sm" mb={2} color="gray.800">
-          Reading Speed
-        </Heading>
-        <Slider
-          aria-label="tossup reading speed"
-          colorScheme="cyan"
-          min={0}
-          max={100}
-          step={5}
-          defaultValue={readingSpeed ?? DEFAULT_READING_SPEED}
-          onChangeEnd={onReadingSpeedChange}
-        >
-          <SliderTrack>
-            <SliderFilledTrack />
-          </SliderTrack>
-          <SliderThumb bg="gray.500" />
-        </Slider>
-      </Box>
-      <Box mb={4}>
-        <Heading size="sm" mb={2} color="gray.800">
-          Category
-        </Heading>
-        <Select
-          isMulti
-          name="categories"
+      <Flex direction="column" gap={4}>
+        <Box>
+          <Heading size="sm" mb={2} color="gray.800">
+            Reading Speed
+          </Heading>
+          <Slider
+            aria-label="tossup reading speed"
+            colorScheme="cyan"
+            min={0}
+            max={100}
+            step={5}
+            defaultValue={readingSpeed ?? DEFAULT_READING_SPEED}
+            onChangeEnd={onReadingSpeedChange}
+          >
+            <SliderTrack>
+              <SliderFilledTrack />
+            </SliderTrack>
+            <SliderThumb bg="gray.500" />
+          </Slider>
+        </Box>
+        <SettingsMultiSelect
+          label="Category"
           options={categoriesForSelect}
           value={categoriesInSelect}
           onChange={onCategoriesChange}
-          {...selectMenuProps}
         />
-      </Box>
-      <Box mb={4}>
-        <Heading size="sm" mb={2} color="gray.800">
-          Subcategory
-        </Heading>
-        <Select
-          isMulti
-          name="subcategories"
+        <SettingsMultiSelect
+          label="Subcategories"
           options={subcategoriesForSelect}
           value={subcategoriesInSelect}
           onChange={onSubcategoriesChange}
-          {...selectMenuProps}
         />
-      </Box>
-      <Box mb={4}>
-        <Heading size="sm" mb={2} color="gray.800">
-          Difficulty
-        </Heading>
-        <Select
-          isMulti
-          name="difficulties"
+        <SettingsMultiSelect
+          label="Difficulties"
           options={difficultiesForSelect}
           value={difficultiesInSelect}
           onChange={onDifficultiesChange}
-          {...selectMenuProps}
         />
-      </Box>
-      <Box mb={4}>
-        <Heading size="sm" mb={2} color="gray.800">
-          Tournaments
-        </Heading>
-        <Select
-          isMulti
-          name="tournaments"
+        <SettingsMultiSelect
+          label="Tournaments"
           options={filteredTournamentsForSelect}
           value={tournamentsInSelect}
           onChange={onTournamentsChange}
-          {...selectMenuProps}
         />
-      </Box>
-      <Box>
-        <Heading size="sm" mb={2} color="gray.800">
-          From Year
-        </Heading>
-        <Flex gap={4}>
-          <YearInput
-            value={fromYear ?? MIN_TOURNAMENT_YEAR}
-            onChange={onFromYearChange}
-          />
-          <Button onClick={resetFromYear}>All Years</Button>
-        </Flex>
-      </Box>
+        <Box>
+          <Heading size="sm" mb={2} color="gray.800">
+            From Year
+          </Heading>
+          <Flex gap={4}>
+            <YearInput
+              value={fromYear ?? MIN_TOURNAMENT_YEAR}
+              onChange={onFromYearChange}
+            />
+            <Button onClick={resetFromYear}>All Years</Button>
+          </Flex>
+        </Box>
+      </Flex>
     </Modal>
   );
 };
+
+type SettingsMultiSelectProps<T, U> = {
+  label: string;
+  options: { label: string; value: T; data: U }[];
+  value: { label: string; value: T; data: U }[];
+  onChange: (value: Options<{ label: string; value: T; data: U }>) => void;
+};
+
+function SettingsMultiSelect<T, U>({
+  label,
+  ...rest
+}: SettingsMultiSelectProps<T, U>) {
+  return (
+    <Box>
+      <Heading size="sm" mb={2} color="gray.800">
+        {label}
+      </Heading>
+      <Select isMulti name={label} {...rest} {...selectMenuProps} />
+    </Box>
+  );
+}
 
 export default SettingsModal;
