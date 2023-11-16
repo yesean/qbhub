@@ -31,7 +31,7 @@ const freqFields = [
 
 const FrequencyList: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { page, offset, status } = useSelector(selectFrequencyList);
-  const settings = useSelector(selectSettings);
+  const { isOpen } = useSelector(selectSettings);
   const dispatch = useAppDispatch();
   const { getClueDisplayURL } = useGetURL();
 
@@ -54,10 +54,10 @@ const FrequencyList: React.FC<React.PropsWithChildren<unknown>> = () => {
     [dispatch, status, page],
   );
 
-  useKeyboardShortcut('p', prev, () => !settings.isOpen);
-  useKeyboardShortcut('n', next, () => !settings.isOpen);
-  useKeyboardShortcut('ArrowLeft', prev, () => !settings.isOpen);
-  useKeyboardShortcut('ArrowRight', next, () => !settings.isOpen);
+  useKeyboardShortcut('p', prev, () => !isOpen);
+  useKeyboardShortcut('n', next, () => !isOpen);
+  useKeyboardShortcut('ArrowLeft', prev, () => !isOpen);
+  useKeyboardShortcut('ArrowRight', next, () => !isOpen);
 
   const renderTable = () => {
     if (status !== FreqStatus.idle) {

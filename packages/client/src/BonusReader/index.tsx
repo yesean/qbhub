@@ -6,6 +6,7 @@ import Progress from '../components/reader/Progress';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import useJudge from '../hooks/useJudge';
 import { useAppDispatch } from '../redux/hooks';
+import { selectSettings } from '../SettingsModal/settingsSlice';
 import { ReaderStatus } from '../utils/reader';
 import {
   prompt,
@@ -29,6 +30,7 @@ const BonusReader: React.FC<React.PropsWithChildren<unknown>> = () => {
     },
   } = useSelector(selectBonusReader);
   const isAnswering = useSelector(selectIsAnswering);
+  const { isOpen } = useSelector(selectSettings);
   const dispatch = useAppDispatch();
 
   const judge = useJudge(formattedAnswer ?? '', {
@@ -44,7 +46,11 @@ const BonusReader: React.FC<React.PropsWithChildren<unknown>> = () => {
     }
   }, [formattedAnswer, status]);
 
-  useKeyboardShortcut('h', () => dispatch(openBonusHistory()));
+  useKeyboardShortcut(
+    'h',
+    () => dispatch(openBonusHistory()),
+    () => !isOpen,
+  );
 
   const renderInfo = () =>
     ![ReaderStatus.idle, ReaderStatus.fetching, ReaderStatus.empty].includes(
