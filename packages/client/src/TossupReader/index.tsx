@@ -47,7 +47,11 @@ const TossupReader = () => {
     }
   }, [status, formattedAnswer]);
 
-  useKeyboardShortcut('h', openTossupHistoryModal, () => !isModalOpen);
+  useKeyboardShortcut(
+    'h',
+    openTossupHistoryModal,
+    (e) => !isModalOpen && e.target === document.body,
+  );
 
   const renderInfo = () =>
     ![ReaderStatus.idle, ReaderStatus.fetching, ReaderStatus.empty].includes(

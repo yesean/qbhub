@@ -46,7 +46,11 @@ const BonusReader: React.FC<React.PropsWithChildren<unknown>> = () => {
     }
   }, [formattedAnswer, status]);
 
-  useKeyboardShortcut('h', openBonusHistoryModal, () => !isModalOpen);
+  useKeyboardShortcut(
+    'h',
+    openBonusHistoryModal,
+    (e) => !isModalOpen && e.target === document.body,
+  );
 
   const renderInfo = () =>
     ![ReaderStatus.idle, ReaderStatus.fetching, ReaderStatus.empty].includes(
