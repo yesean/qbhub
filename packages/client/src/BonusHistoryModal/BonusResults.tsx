@@ -1,10 +1,10 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { Bonus, BonusPart, BonusPartResult } from '@qbhub/types';
-import { TOURNAMENT_MAP } from '../../utils/constants';
-import { getTossupWords } from '../../utils/reader';
-import { parseHTMLString } from '../../utils/string';
-import FormattedQuestion from '../reader/FormattedQuestion';
-import { VirtualizedTable, VirtualizedTableColumn } from '../tables';
+import FormattedQuestion from '../components/reader/FormattedQuestion';
+import { VirtualizedTable, VirtualizedTableColumn } from '../components/tables';
+import { TOURNAMENT_MAP } from '../utils/constants';
+import { getTossupWords } from '../utils/reader';
+import { parseHTMLString } from '../utils/string';
 
 type BonusPartRowResult = BonusPartResult & { bonus: Bonus; part: BonusPart };
 type BonusResultProps = {

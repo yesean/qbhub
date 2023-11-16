@@ -1,9 +1,9 @@
 import { Box, Text } from '@chakra-ui/react';
 import { TossupResult } from '@qbhub/types';
-import { TOURNAMENT_MAP } from '../../utils/constants';
-import { parseHTMLString } from '../../utils/string';
-import FormattedQuestion from '../reader/FormattedQuestion';
-import { VirtualizedTable, VirtualizedTableColumn } from '../tables';
+import FormattedQuestion from '../components/reader/FormattedQuestion';
+import { VirtualizedTable, VirtualizedTableColumn } from '../components/tables';
+import { TOURNAMENT_MAP } from '../utils/constants';
+import { parseHTMLString } from '../utils/string';
 
 type TossupResultProps = {
   results: TossupResult[];

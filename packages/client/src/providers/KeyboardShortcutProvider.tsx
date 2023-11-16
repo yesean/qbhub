@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { open as openInfo } from '../components/InfoModal/infoModalSlice';
 import { useKeyboardShortcut } from '../hooks/keyboard';
+import { open as openInfo } from '../InfoModal/infoModalSlice';
 import { useAppDispatch } from '../redux/hooks';
 import { open as openSettings } from '../SettingsModal/settingsSlice';
 import { useGetURL } from '../utils/routes';

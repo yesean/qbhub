@@ -1,10 +1,10 @@
 import { InfoOutlineIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
 import { Flex, Heading, IconButton, Link } from '@chakra-ui/react';
+import { open as openInfoModalAction } from '../InfoModal/infoModalSlice';
 import { useAppDispatch } from '../redux/hooks';
 import { ReactComponent as Donate } from '../static/coffee.svg';
 import { ReactComponent as Github } from '../static/github.svg';
-import { open as openInfoModalAction } from './InfoModal/infoModalSlice';
-import { open as openUpdatesModalAction } from './UpdatesModal/updatesModalSlice';
+import { open as openUpdatesModalAction } from '../UpdatesModal/updatesModalSlice';
 
 const Footer: React.FC<React.PropsWithChildren<unknown>> = () => {
   const dispatch = useAppDispatch();

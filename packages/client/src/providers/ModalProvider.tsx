@@ -1,9 +1,9 @@
-import BonusHistoryModal from '../components/BonusHistoryModal';
+import BonusHistoryModal from '../BonusHistoryModal';
 import HamburgerMenu from '../components/HamburgerMenu';
-import InfoModal from '../components/InfoModal';
-import TossupHistoryModal from '../components/TossupHistoryModal';
-import UpdatesModal from '../components/UpdatesModal';
+import InfoModal from '../InfoModal';
 import SettingsModal from '../SettingsModal';
+import TossupHistoryModal from '../TossupHistoryModal';
+import UpdatesModal from '../UpdatesModal';
 
 type Props = {
   children: JSX.Element;

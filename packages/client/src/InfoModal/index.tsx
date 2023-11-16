@@ -10,9 +10,9 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
-import { useAppDispatch } from '../../redux/hooks';
-import { usePage } from '../../utils/routes';
-import Modal from '../Modal';
+import Modal from '../components/Modal';
+import { useAppDispatch } from '../redux/hooks';
+import { usePage } from '../utils/routes';
 import { close, selectInfoModal } from './infoModalSlice';
 
 type Shortcut = {
