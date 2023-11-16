@@ -13,8 +13,8 @@ import { Link as RouterLink } from 'react-router-dom';
 import { KeyValueTable } from '../components/tables';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import { useSettings } from '../hooks/useSettings';
+import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/hooks';
-import { selectSettings } from '../SettingsModal/settingsSlice';
 import { useGetURL } from '../utils/routes';
 import {
   fetchPages,
@@ -32,7 +32,7 @@ const freqFields = [
 
 const FrequencyList: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { page, offset, status } = useSelector(selectFrequencyList);
-  const { isOpen } = useSelector(selectSettings);
+  const { isModalOpen } = useModalContext();
   const { settings } = useSettings();
   const dispatch = useAppDispatch();
   const { getClueDisplayURL } = useGetURL();
@@ -56,10 +56,10 @@ const FrequencyList: React.FC<React.PropsWithChildren<unknown>> = () => {
     [status, page.length, dispatch, settings],
   );
 
-  useKeyboardShortcut('p', prev, () => !isOpen);
-  useKeyboardShortcut('n', next, () => !isOpen);
-  useKeyboardShortcut('ArrowLeft', prev, () => !isOpen);
-  useKeyboardShortcut('ArrowRight', next, () => !isOpen);
+  useKeyboardShortcut('p', prev, () => !isModalOpen);
+  useKeyboardShortcut('n', next, () => !isModalOpen);
+  useKeyboardShortcut('ArrowLeft', prev, () => !isModalOpen);
+  useKeyboardShortcut('ArrowRight', next, () => !isModalOpen);
 
   const renderTable = () => {
     if (status !== FreqStatus.idle) {

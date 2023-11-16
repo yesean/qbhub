@@ -16,19 +16,20 @@ import {
 import { TossupScore } from '@qbhub/types';
 import { useSelector } from 'react-redux';
 import { TealButton } from '../components/buttons';
-import { useAppDispatch } from '../redux/hooks';
 import { selectTossupReader } from '../TossupReader/tossupReaderSlice';
-import { close, selectTossupHistoryModal } from './tossupHistoryModalSlice';
 import TossupResults from './TossupResults';
 
 const scoreHeaders = ['15', '10', '-5', 'Points'];
 
-const TossupHistoryModal: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const dispatch = useAppDispatch();
-  const { results } = useSelector(selectTossupReader);
-  const { isOpen } = useSelector(selectTossupHistoryModal);
+type TossupHistoryModalProps = {
+  isOpen: boolean;
+  closeModal: () => void;
+};
 
-  const closeModal = () => dispatch(close());
+const TossupHistoryModal: React.FC<
+  React.PropsWithChildren<TossupHistoryModalProps>
+> = ({ isOpen, closeModal }) => {
+  const { results } = useSelector(selectTossupReader);
 
   const powers = results.filter((r) => r.score === TossupScore.power).length;
   const tens = results.filter((r) => r.score === TossupScore.ten).length;

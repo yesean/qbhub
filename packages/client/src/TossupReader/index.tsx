@@ -4,9 +4,8 @@ import { useSelector } from 'react-redux';
 import Progress from '../components/reader/Progress';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import useJudge from '../hooks/useJudge';
+import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/hooks';
-import { selectSettings } from '../SettingsModal/settingsSlice';
-import { open as openTossupHistory } from '../TossupHistoryModal/tossupHistoryModalSlice';
 import { ReaderStatus } from '../utils/reader';
 import Answer from './Answer';
 import Info from './Info';
@@ -30,8 +29,9 @@ const TossupReader = () => {
       tossup: { formattedAnswer },
     },
   } = useSelector(selectTossupReader);
-  const { isOpen } = useSelector(selectSettings);
+  const { isModalOpen } = useModalContext();
   const isAnswering = useSelector(selectIsAnswering);
+  const { openTossupHistoryModal } = useModalContext();
   const dispatch = useAppDispatch();
 
   const judge = useJudge(formattedAnswer ?? '', {
@@ -47,11 +47,7 @@ const TossupReader = () => {
     }
   }, [status, formattedAnswer]);
 
-  useKeyboardShortcut(
-    'h',
-    () => dispatch(openTossupHistory()),
-    () => !isOpen,
-  );
+  useKeyboardShortcut('h', openTossupHistoryModal, () => !isModalOpen);
 
   const renderInfo = () =>
     ![ReaderStatus.idle, ReaderStatus.fetching, ReaderStatus.empty].includes(

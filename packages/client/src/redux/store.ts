@@ -1,27 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
-import bonusHistoryModalReducer from '../BonusHistoryModal/bonusHistoryModalSlice';
 import bonusReaderReducer from '../BonusReader/bonusReaderSlice';
 import cluesGeneatorReducer from '../CluesGenerator/cluesGeneratorSlice';
-import hamburgerMenuReducer from '../components/HamburgerMenu/hamburgerMenuSlice';
 import frequencyListReducer from '../FrequencyList/frequencyListSlice';
-import infoModalReducer from '../InfoModal/infoModalSlice';
-import settingsReducer from '../SettingsModal/settingsSlice';
-import tossupHistoryModalReducer from '../TossupHistoryModal/tossupHistoryModalSlice';
 import tossupReaderReducer from '../TossupReader/tossupReaderSlice';
-import updatesModalReducer from '../UpdatesModal/updatesModalSlice';
 
 export const store = configureStore({
   reducer: {
     tossupReader: tossupReaderReducer,
     bonusReader: bonusReaderReducer,
-    settings: settingsReducer,
     frequencyList: frequencyListReducer,
     cluesGenerator: cluesGeneatorReducer,
-    updatesModal: updatesModalReducer,
-    infoModal: infoModalReducer,
-    tossupHistoryModal: tossupHistoryModalReducer,
-    bonusHistoryModal: bonusHistoryModalReducer,
-    hamburgerMenu: hamburgerMenuReducer,
   },
 });
 
@@ -46,5 +34,5 @@ export const observeStore = <T>(
   handleChange();
   return unsubscribe;
 };
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 export type Subscription<T> = Parameters<typeof observeStore<T>>;

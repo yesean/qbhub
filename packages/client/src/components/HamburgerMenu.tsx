@@ -7,9 +7,7 @@ import {
   Heading,
   Link,
 } from '@chakra-ui/react';
-import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
-import { useAppDispatch } from '../../redux/hooks';
 import {
   getAboutURL,
   getBonusReaderURL,
@@ -17,8 +15,7 @@ import {
   getFrequencyListURL,
   getTossupReaderURL,
   useGlobalQueryParams,
-} from '../../utils/routes';
-import { close, selectHamburgerMenu } from './hamburgerMenuSlice';
+} from '../utils/routes';
 
 const links = [
   { name: 'Tossup Reader', getURL: getTossupReaderURL },
@@ -28,19 +25,23 @@ const links = [
   { name: 'About', getURL: getAboutURL },
 ];
 
-const HamburgerMenu: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const dispatch = useAppDispatch();
-  const [params] = useGlobalQueryParams();
-  const { isOpen } = useSelector(selectHamburgerMenu);
+type HamburgerMenuProps = {
+  isOpen: boolean;
+  closeModal: () => void;
+};
 
-  const closeMenu = () => dispatch(close());
+const HamburgerMenu: React.FC<React.PropsWithChildren<HamburgerMenuProps>> = ({
+  isOpen,
+  closeModal,
+}) => {
+  const [params] = useGlobalQueryParams();
 
   return (
-    <Drawer isOpen={isOpen} onClose={closeMenu} placement="right">
+    <Drawer isOpen={isOpen} onClose={closeModal} placement="right">
       <DrawerOverlay />
       <DrawerContent>
         <Flex direction="column" align="center" p={4}>
-          <CloseButton size="lg" onClick={closeMenu} mb={4} />
+          <CloseButton size="lg" onClick={closeModal} mb={4} />
           {links.map(({ name, getURL }) => (
             <Link
               key={name}
