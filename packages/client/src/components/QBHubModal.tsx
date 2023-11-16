@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import usePageHeight from '../hooks/usePageHeight';
-import { TealButton } from './buttons';
+import TealButton from './buttons/TealButton';
 
 type Props = {
   isOpen: boolean;

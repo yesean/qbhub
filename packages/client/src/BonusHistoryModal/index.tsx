@@ -18,7 +18,7 @@ import { BonusScore } from '@qbhub/types';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { selectBonusReader } from '../BonusReader/bonusReaderSlice';
-import { TealButton } from '../components/buttons';
+import TealButton from '../components/buttons/TealButton';
 import BonusResults from './BonusResults';
 
 const scoreHeaders = ['30', '20', '10', '0', 'Total', 'PPB'];
