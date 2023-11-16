@@ -2,9 +2,8 @@ import { Box, Heading, Link } from '@chakra-ui/react';
 import { MDXComponents } from 'mdx/types';
 import { useEffect } from 'react';
 import QBHubModal from '../components/QBHubModal';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { useModalContext } from '../providers/ModalContext';
 import Content from './updates.mdx';
-import { close, open, selectUpdatesModal } from './updatesModalSlice';
 import { checkHasUserViewedLatestUpdate, saveLastSeenUpdate } from './utils';
 
 const mdxComponents: MDXComponents = {
@@ -36,21 +35,21 @@ const mdxComponents: MDXComponents = {
   ),
 };
 
-const Updates = () => {
-  const { isOpen } = useAppSelector(selectUpdatesModal);
-  const dispatch = useAppDispatch();
-  const closeModal = () => {
-    dispatch(close());
-    saveLastSeenUpdate();
-  };
+type UpdatesModalProps = {
+  isOpen: boolean;
+  closeModal: () => void;
+};
+
+const UpdatesModal = ({ isOpen, closeModal }: UpdatesModalProps) => {
+  const { openUpdatesModal } = useModalContext();
 
   // immediately open latest updates if the user hasn't seen it
   useEffect(() => {
-    const openModal = () => dispatch(open());
     if (!checkHasUserViewedLatestUpdate()) {
-      openModal();
+      openUpdatesModal();
+      saveLastSeenUpdate();
     }
-  }, [dispatch]);
+  }, [openUpdatesModal]);
 
   return (
     <QBHubModal isOpen={isOpen} closeModal={closeModal} title="Updates 🚀">
@@ -59,4 +58,4 @@ const Updates = () => {
   );
 };
 
-export default Updates;
+export default UpdatesModal;

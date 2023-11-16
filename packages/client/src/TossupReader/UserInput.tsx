@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 import ReaderUserInput from '../components/reader/UserInput';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import { useSettings } from '../hooks/useSettings';
+import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/hooks';
-import { selectSettings } from '../SettingsModal/settingsSlice';
 import { getInputBorderColor, ReaderStatus } from '../utils/reader';
 import {
   nextTossup as nextTossupAction,
@@ -36,7 +36,7 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
     status,
     current: { result },
   } = useSelector(selectTossupReader);
-  const { isOpen } = useSelector(selectSettings);
+  const { isModalOpen } = useModalContext();
   const isAnswering = useSelector(selectIsAnswering);
   const [input, setInput] = useState('');
   const dispatch = useAppDispatch();
@@ -84,9 +84,9 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
   }
 
   // add keyboard shortcuts
-  useKeyboardShortcut('n', next, () => !isOpen);
-  useKeyboardShortcut(' ', buzzWrapper, () => !isOpen && isReading);
-  useKeyboardShortcut('Enter', submitInput, () => !isOpen);
+  useKeyboardShortcut('n', next, () => !isModalOpen);
+  useKeyboardShortcut(' ', buzzWrapper, () => !isModalOpen && isReading);
+  useKeyboardShortcut('Enter', submitInput, () => !isModalOpen);
 
   // submit user answer when timer ends
   useEffect(() => {

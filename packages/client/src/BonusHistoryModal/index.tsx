@@ -19,18 +19,19 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { selectBonusReader } from '../BonusReader/bonusReaderSlice';
 import { TealButton } from '../components/buttons';
-import { useAppDispatch } from '../redux/hooks';
-import { close, selectBonusHistoryModal } from './bonusHistoryModalSlice';
 import BonusResults from './BonusResults';
 
 const scoreHeaders = ['30', '20', '10', '0', 'Total', 'PPB'];
 
-const BonusHistoryModal: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const dispatch = useAppDispatch();
-  const { results } = useSelector(selectBonusReader);
-  const { isOpen } = useSelector(selectBonusHistoryModal);
+type BonusHistoryModalProps = {
+  isOpen: boolean;
+  closeModal: () => void;
+};
 
-  const closeModal = () => dispatch(close());
+const BonusHistoryModal: React.FC<
+  React.PropsWithChildren<BonusHistoryModalProps>
+> = ({ isOpen, closeModal }) => {
+  const { results } = useSelector(selectBonusReader);
 
   const thirties = results.filter((r) => r.score === BonusScore.thirty).length;
   const twenties = results.filter((r) => r.score === BonusScore.twenty).length;

@@ -1,16 +1,11 @@
 import { InfoOutlineIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
 import { Flex, Heading, IconButton, Link } from '@chakra-ui/react';
-import { open as openInfoModalAction } from '../InfoModal/infoModalSlice';
-import { useAppDispatch } from '../redux/hooks';
+import { useModalContext } from '../providers/ModalContext';
 import { ReactComponent as Donate } from '../static/coffee.svg';
 import { ReactComponent as Github } from '../static/github.svg';
-import { open as openUpdatesModalAction } from '../UpdatesModal/updatesModalSlice';
 
 const Footer: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const dispatch = useAppDispatch();
-
-  const openInfoModal = () => dispatch(openInfoModalAction());
-  const openUpdatesModal = () => dispatch(openUpdatesModalAction());
+  const { openUpdatesModal, openInfoModal } = useModalContext();
 
   return (
     <Flex align="center" justify="center" p={3}>

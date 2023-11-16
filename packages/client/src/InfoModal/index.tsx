@@ -9,11 +9,8 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { useSelector } from 'react-redux';
 import QBHubModal from '../components/QBHubModal';
-import { useAppDispatch } from '../redux/hooks';
 import { usePage } from '../utils/routes';
-import { close, selectInfoModal } from './infoModalSlice';
 
 type Shortcut = {
   label: string | string[];
@@ -90,12 +87,16 @@ const freqShortcuts = [
   { label: ['n', '→'], description: 'Next page' },
 ];
 
-const InfoModal: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const { isOpen } = useSelector(selectInfoModal);
-  const dispatch = useAppDispatch();
-  const page = usePage();
+type InfoModalProps = {
+  isOpen: boolean;
+  closeModal: () => void;
+};
 
-  const closeModal = () => dispatch(close());
+const InfoModal: React.FC<React.PropsWithChildren<InfoModalProps>> = ({
+  isOpen,
+  closeModal,
+}) => {
+  const page = usePage();
 
   const renderShortcutLabel = (label: string | string[]) => {
     if (Array.isArray(label)) {

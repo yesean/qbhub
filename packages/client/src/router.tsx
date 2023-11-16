@@ -9,7 +9,7 @@ import Layout from './components/Layout';
 import NavigateToTossupReader from './components/NavigateToTossupReader';
 import FrequencyList from './FrequencyList';
 import KeyboardShortcutProvider from './providers/KeyboardShortcutProvider';
-import ModalProvider from './providers/ModalProvider';
+import { ModalProvider } from './providers/ModalProvider';
 import SettingsProvider from './providers/SettingsProvider';
 import TossupReader from './TossupReader';
 import {

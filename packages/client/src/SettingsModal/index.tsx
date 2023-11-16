@@ -17,12 +17,10 @@ import {
   Subcategory,
   Tournament,
 } from '@qbhub/types';
-import { useSelector } from 'react-redux';
 import Select, { Options } from 'react-select';
 import QBHubModal from '../components/QBHubModal';
 import { useKeyboardShortcut } from '../hooks/keyboard';
 import { useSettings } from '../hooks/useSettings';
-import { useAppDispatch } from '../redux/hooks';
 import {
   CATEGORIES,
   CATEGORY_MAP,
@@ -38,7 +36,6 @@ import {
   MIN_TOURNAMENT_YEAR,
 } from '../utils/settings/constants';
 import { isTournamentValid } from '../utils/settings/validate';
-import { close, selectSettings } from './settingsSlice';
 import YearInput from './YearInput';
 
 const toSelect =
@@ -62,11 +59,16 @@ const subcategoriesForSelect = SUBCATEGORIES.map(toSelect(SUBCATEGORY_MAP));
 const difficultiesForSelect = DIFFICULTIES.map(toSelect(DIFFICULTY_MAP));
 const tournamentsForSelect = TOURNAMENTS.map(toSelect(TOURNAMENT_MAP));
 
-const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const { isOpen } = useSelector(selectSettings);
+type SettingsModalProps = {
+  isOpen: boolean;
+  closeModal: () => void;
+};
+
+const SettingsModal: React.FC<React.PropsWithChildren<SettingsModalProps>> = ({
+  isOpen,
+  closeModal,
+}) => {
   const { settings, setSettings } = useSettings();
-  const dispatch = useAppDispatch();
-  const closeModal = () => dispatch(close());
 
   useKeyboardShortcut('Escape', closeModal);
 
