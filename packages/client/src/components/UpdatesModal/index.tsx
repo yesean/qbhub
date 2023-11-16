@@ -2,11 +2,10 @@ import { Box, Heading, Link } from '@chakra-ui/react';
 import { MDXComponents } from 'mdx/types';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { localStorageKeys } from '../../utils/constants';
-import { restore, save } from '../../utils/storage';
 import Modal from '../Modal';
 import Content from './updates.mdx';
 import { close, open, selectUpdatesModal } from './updatesModalSlice';
+import { checkHasUserViewedLatestUpdate, saveLastSeenUpdate } from './utils';
 
 const mdxComponents: MDXComponents = {
   h2: ({ children }) => (
@@ -37,19 +36,6 @@ const mdxComponents: MDXComponents = {
   ),
 };
 
-const LATEST_UPDATE = '11-08-2022';
-const checkLastSeenUpdate = () => {
-  const lastSeenUpdate = JSON.parse(
-    restore(localStorageKeys.LAST_SEEN_UPDATE) ?? '{}',
-  );
-  return lastSeenUpdate === LATEST_UPDATE;
-};
-const saveLastSeenUpdate = () => {
-  if (!checkLastSeenUpdate()) {
-    save(localStorageKeys.LAST_SEEN_UPDATE, LATEST_UPDATE);
-  }
-};
-
 const Updates = () => {
   const { isOpen } = useAppSelector(selectUpdatesModal);
   const dispatch = useAppDispatch();
@@ -61,7 +47,7 @@ const Updates = () => {
   // immediately open latest updates if the user hasn't seen it
   useEffect(() => {
     const openModal = () => dispatch(open());
-    if (!checkLastSeenUpdate()) {
+    if (!checkHasUserViewedLatestUpdate()) {
       openModal();
     }
   }, [dispatch]);
