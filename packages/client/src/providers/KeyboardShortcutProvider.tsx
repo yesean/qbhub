@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useKeyboardShortcut } from '../hooks/keyboard';
+import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useGetURL } from '../utils/routes';
 import { useModalContext } from './ModalContext';
 

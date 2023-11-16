@@ -19,7 +19,7 @@ import {
 } from '@qbhub/types';
 import Select, { Options } from 'react-select';
 import QBHubModal from '../components/QBHubModal';
-import { useKeyboardShortcut } from '../hooks/keyboard';
+import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useSettings } from '../hooks/useSettings';
 import {
   CATEGORIES,
