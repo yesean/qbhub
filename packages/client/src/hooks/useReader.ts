@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { selectSettings } from '../SettingsModal/settingsSlice';
-import { getReadingTimeoutDelay } from '../utils/settings';
+import { getReadingTimeoutDelay } from '../utils/reader';
+import { DEFAULT_READING_SPEED } from '../utils/settings/constants';
 import { shuffle } from '../utils/string';
+import { useSettings } from './useSettings';
 
 type ReaderOptions = {
   startImmediately?: boolean;
@@ -33,13 +33,15 @@ export const useReader = (
     onBuzz = () => {},
   }: ReaderOptions = {} as ReaderOptions,
 ) => {
-  const { readingSpeed } = useSelector(selectSettings);
+  const {
+    settings: { readingSpeed },
+  } = useSettings();
   const [visibleIndex, setVisibleIndex] = useState(-1);
   const [incrementId, setIncrementId] = useState<NodeJS.Timeout | null>(null);
   const [isPaused, setIsPaused] = useState(!startImmediately);
 
   const readingDelay = useMemo(
-    () => getReadingTimeoutDelay(readingSpeed),
+    () => getReadingTimeoutDelay(readingSpeed ?? DEFAULT_READING_SPEED),
     [readingSpeed],
   );
   const shuffledWords = useMemo(

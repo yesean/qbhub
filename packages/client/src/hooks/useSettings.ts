@@ -1,9 +1,15 @@
 import { useCallback, useMemo } from 'react';
 import { filterBonuses } from '../BonusReader/bonusReaderSlice';
+import { reset } from '../FrequencyList/frequencyListSlice';
 import { useAppDispatch } from '../redux/hooks';
 import { filterTossups } from '../TossupReader/tossupReaderSlice';
 import { useGlobalQueryParams } from '../utils/routes';
-import { saveSettings, Settings } from '../utils/settings';
+import { saveSettings } from '../utils/settings/storage';
+import { Settings } from '../utils/settings/types';
+import {
+  getUpdatedCategoriesFromSubcategories,
+  getUpdatedSubcategoriesFromCategories,
+} from '../utils/settings/validate';
 
 type SettingsHook = {
   settings: Settings;
@@ -34,18 +40,46 @@ export const useSettings = (): SettingsHook => {
   );
 
   const setSettings = useCallback(
-    (settingsUpdate: Partial<Settings>) => {
-      const newSettings = { ...settings, ...settingsUpdate };
-      setParams(settingsUpdate);
+    (update: Partial<Settings>) => {
+      setParams((prevSettings) => {
+        const nextSettings = { ...prevSettings, ...update };
 
-      // update questions
-      dispatch(filterTossups(newSettings));
-      dispatch(filterBonuses(newSettings));
+        // update subcategories if needed
+        if (update.categories != null)
+          nextSettings.subcategories = getUpdatedSubcategoriesFromCategories(
+            nextSettings.subcategories,
+            update.categories,
+          );
 
-      // save settings to local storage
-      saveSettings(newSettings);
+        // update categories if needed
+        if (update.subcategories != null)
+          nextSettings.categories = getUpdatedCategoriesFromSubcategories(
+            nextSettings.categories,
+            update.subcategories,
+          );
+
+        // update questions
+        dispatch(filterTossups(nextSettings));
+        dispatch(filterBonuses(nextSettings));
+
+        // reset frequency list if question params change
+        if (
+          update.categories != null ||
+          update.subcategories != null ||
+          update.difficulties != null ||
+          update.tournaments != null ||
+          update.fromYear != null
+        )
+          dispatch(reset());
+
+        // save settings to local storage
+        saveSettings(nextSettings);
+
+        // update url
+        return nextSettings;
+      });
     },
-    [dispatch, setParams, settings],
+    [dispatch, setParams],
   );
 
   return useMemo(() => ({ settings, setSettings }), [setSettings, settings]);
