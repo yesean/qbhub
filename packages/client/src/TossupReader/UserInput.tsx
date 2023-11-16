@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import ReaderUserInput from '../components/reader/UserInput';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useSettings } from '../hooks/useSettings';
-import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/hooks';
 import { getInputBorderColor, ReaderStatus } from '../utils/reader';
 import {
@@ -36,7 +35,6 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
     status,
     current: { result },
   } = useSelector(selectTossupReader);
-  const { isModalOpen } = useModalContext();
   const isAnswering = useSelector(selectIsAnswering);
   const [input, setInput] = useState('');
   const dispatch = useAppDispatch();
@@ -84,9 +82,14 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
   }
 
   // add keyboard shortcuts
-  useKeyboardShortcut('n', next, () => !isModalOpen);
-  useKeyboardShortcut(' ', buzzWrapper, () => !isModalOpen && isReading);
-  useKeyboardShortcut('Enter', submitInput, () => !isModalOpen);
+  useKeyboardShortcut('n', next);
+  useKeyboardShortcut(' ', buzzWrapper, {
+    customAllowCondition: isReading,
+  });
+  useKeyboardShortcut('Enter', submitInput, {
+    allowHTMLInput: true,
+    customAllowCondition: isAnswering,
+  });
 
   // submit user answer when timer ends
   useEffect(() => {

@@ -29,7 +29,6 @@ const TossupReader = () => {
       tossup: { formattedAnswer },
     },
   } = useSelector(selectTossupReader);
-  const { isModalOpen } = useModalContext();
   const isAnswering = useSelector(selectIsAnswering);
   const { openTossupHistoryModal } = useModalContext();
   const dispatch = useAppDispatch();
@@ -47,11 +46,7 @@ const TossupReader = () => {
     }
   }, [status, formattedAnswer]);
 
-  useKeyboardShortcut(
-    'h',
-    openTossupHistoryModal,
-    (e) => !isModalOpen && e.target === document.body,
-  );
+  useKeyboardShortcut('h', openTossupHistoryModal);
 
   const renderInfo = () =>
     ![ReaderStatus.idle, ReaderStatus.fetching, ReaderStatus.empty].includes(

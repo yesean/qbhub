@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import BonusHistoryModal from '../BonusHistoryModal';
 import HamburgerMenu from '../components/HamburgerMenu';
+import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import InfoModal from '../InfoModal';
 import SettingsModal from '../SettingsModal';
 import TossupHistoryModal from '../TossupHistoryModal';
@@ -24,6 +25,12 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
   const [activeModal, setActiveModal] = useState<ModalVariant | null>(null);
 
   const closeModal = useCallback(() => setActiveModal(null), []);
+
+  // global esc to close modal shortcut
+  useKeyboardShortcut('Escape', closeModal, {
+    allowHTMLInput: true,
+    allowWhenModalIsOpen: true,
+  });
 
   const modalContext = useMemo(
     () => ({

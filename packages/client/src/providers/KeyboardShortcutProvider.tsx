@@ -19,14 +19,13 @@ export default ({ children }: Props) => {
   } = useGetURL();
 
   // add global keyboard shortcuts
-  const predicate = (e: KeyboardEvent) => e.target === document.body;
-  useKeyboardShortcut('?', openInfoModal, predicate);
-  useKeyboardShortcut('s', openSettingsModal, predicate);
-  useKeyboardShortcut('1', () => navigate(getTossupReaderURL()), predicate);
-  useKeyboardShortcut('2', () => navigate(getBonusReaderURL()), predicate);
-  useKeyboardShortcut('3', () => navigate(getFrequencyListURL()), predicate);
-  useKeyboardShortcut('4', () => navigate(getClueSearchURL()), predicate);
-  useKeyboardShortcut('5', () => navigate(getAboutURL()), predicate);
+  useKeyboardShortcut('?', openInfoModal);
+  useKeyboardShortcut('s', openSettingsModal);
+  useKeyboardShortcut('1', () => navigate(getTossupReaderURL()));
+  useKeyboardShortcut('2', () => navigate(getBonusReaderURL()));
+  useKeyboardShortcut('3', () => navigate(getFrequencyListURL()));
+  useKeyboardShortcut('4', () => navigate(getClueSearchURL()));
+  useKeyboardShortcut('5', () => navigate(getAboutURL()));
 
   return children;
 };

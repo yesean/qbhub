@@ -1,4 +1,11 @@
 import { useEffect } from 'react';
+import { useModalContext } from '../providers/ModalContext';
+
+type EventHandlingOptions = {
+  allowHTMLInput?: boolean;
+  allowWhenModalIsOpen?: boolean;
+  customAllowCondition?: boolean;
+};
 
 /**
  * Custom hook for registering keyboard shortcuts.
@@ -8,14 +15,35 @@ import { useEffect } from 'react';
 export default (
   key: string,
   callback: (e: KeyboardEvent) => void,
-  predicate: (e: KeyboardEvent) => boolean = () => true,
+  {
+    allowHTMLInput = false,
+    allowWhenModalIsOpen = false,
+    customAllowCondition = true,
+  }: EventHandlingOptions = {},
 ) => {
-  // eslint-disable-next-line consistent-return
+  const { isModalOpen } = useModalContext();
+
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
-      if (e.key === key && predicate(e)) callback(e);
+      // ignore events from <input /> element
+      if (e.target instanceof HTMLInputElement && !allowHTMLInput) return;
+
+      // ignore events when a modal is open
+      if (isModalOpen && !allowWhenModalIsOpen) return;
+
+      // ignore user provided condition fails
+      if (!customAllowCondition) return;
+
+      if (e.key === key) callback(e);
     };
     window.addEventListener('keydown', listener);
     return () => window.removeEventListener('keydown', listener);
-  }, [callback, key, predicate]);
+  }, [
+    callback,
+    customAllowCondition,
+    isModalOpen,
+    key,
+    allowHTMLInput,
+    allowWhenModalIsOpen,
+  ]);
 };
