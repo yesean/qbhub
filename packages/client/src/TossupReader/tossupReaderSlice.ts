@@ -1,12 +1,4 @@
-import {
-  Category,
-  Difficulty,
-  Subcategory,
-  Tossup,
-  TossupResult,
-  TossupWord,
-  Tournament,
-} from '@qbhub/types';
+import { Tossup, TossupResult, TossupWord } from '@qbhub/types';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../redux/store';
 import * as fetchUtils from '../utils/fetch';
@@ -16,7 +8,8 @@ import {
   getTossupWords,
   ReaderStatus,
 } from '../utils/reader';
-import { Settings, validateQuestion } from '../utils/settings';
+import { Settings } from '../utils/settings/types';
+import { isQuestionValid } from '../utils/settings/validate';
 
 type TossupReaderState = {
   status: ReaderStatus;
@@ -131,44 +124,10 @@ const tossupReaderSlice = createSlice({
         state.score += score;
       }
     },
-    filterTossups: (
-      state,
-      { payload: settings }: PayloadAction<Partial<Settings>>,
-    ) => {
+    filterTossups: (state, { payload: settings }: PayloadAction<Settings>) => {
       state.tossups = state.tossups.filter((tu) =>
-        validateQuestion(tu, settings),
+        isQuestionValid(tu, settings),
       );
-    },
-    filterTossupsByCategory: (state, action: PayloadAction<Category[]>) => {
-      state.tossups = state.tossups.filter((tu) =>
-        action.payload.includes(tu.category),
-      );
-    },
-    filterTossupsBySubcategory: (
-      state,
-      action: PayloadAction<Subcategory[]>,
-    ) => {
-      state.tossups = state.tossups.filter(
-        (tu) =>
-          tu.subcategory !== undefined &&
-          action.payload.includes(tu.subcategory),
-      );
-    },
-    filterTossupsByDifficulties: (
-      state,
-      action: PayloadAction<Difficulty[]>,
-    ) => {
-      state.tossups = state.tossups.filter((tu) =>
-        action.payload.includes(tu.difficulty),
-      );
-    },
-    filterTossupsByTournament: (state, action: PayloadAction<Tournament[]>) => {
-      state.tossups = state.tossups.filter((tu) =>
-        action.payload.includes(tu.tournament),
-      );
-    },
-    filterTossupsByFromYear: (state, action: PayloadAction<number>) => {
-      state.tossups = state.tossups.filter((tu) => tu.year >= action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -195,17 +154,8 @@ const tossupReaderSlice = createSlice({
       });
   },
 });
-export const {
-  buzz,
-  prompt,
-  submitAnswer,
-  filterTossups,
-  filterTossupsByCategory,
-  filterTossupsBySubcategory,
-  filterTossupsByDifficulties,
-  filterTossupsByTournament,
-  filterTossupsByFromYear,
-} = tossupReaderSlice.actions;
+export const { buzz, prompt, submitAnswer, filterTossups } =
+  tossupReaderSlice.actions;
 
 export const selectTossupReader = (state: RootState) => state.tossupReader;
 export const selectIsAnswering = (state: RootState) =>

@@ -9,8 +9,8 @@ import {
   Tournament,
 } from '@qbhub/types';
 import axios from 'axios';
-import { MIN_TOURNAMENT_YEAR } from './constants';
 import logger from './logger';
+import { MIN_TOURNAMENT_YEAR } from './settings/constants';
 import { cleanTossupText, normalizeTags } from './string';
 
 const API_URL = '/api';

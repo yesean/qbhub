@@ -1,18 +1,10 @@
-import {
-  Bonus,
-  BonusPart,
-  BonusPartResult,
-  BonusResult,
-  Category,
-  Difficulty,
-  Subcategory,
-  Tournament,
-} from '@qbhub/types';
+import { Bonus, BonusPart, BonusPartResult, BonusResult } from '@qbhub/types';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../redux/store';
 import * as fetchUtils from '../utils/fetch';
 import { getBonusScore, ReaderStatus } from '../utils/reader';
-import { Settings, validateQuestion } from '../utils/settings';
+import { Settings } from '../utils/settings/types';
+import { isQuestionValid } from '../utils/settings/validate';
 
 type BonusReaderState = {
   status: ReaderStatus;
@@ -140,44 +132,10 @@ const bonusReaderSlice = createSlice({
         }
       }
     },
-    filterBonuses: (
-      state,
-      { payload: settings }: PayloadAction<Partial<Settings>>,
-    ) => {
-      state.bonuses = state.bonuses.filter((tu) =>
-        validateQuestion(tu, settings),
-      );
-    },
-    filterBonusesByCategory: (state, action: PayloadAction<Category[]>) => {
+    filterBonuses: (state, { payload: settings }: PayloadAction<Settings>) => {
       state.bonuses = state.bonuses.filter((bn) =>
-        action.payload.includes(bn.category),
+        isQuestionValid(bn, settings),
       );
-    },
-    filterBonusesBySubcategory: (
-      state,
-      action: PayloadAction<Subcategory[]>,
-    ) => {
-      state.bonuses = state.bonuses.filter(
-        (bn) =>
-          bn.subcategory !== undefined &&
-          action.payload.includes(bn.subcategory),
-      );
-    },
-    filterBonusesByDifficulties: (
-      state,
-      action: PayloadAction<Difficulty[]>,
-    ) => {
-      state.bonuses = state.bonuses.filter((bn) =>
-        action.payload.includes(bn.difficulty),
-      );
-    },
-    filterBonusesByTournament: (state, action: PayloadAction<Tournament[]>) => {
-      state.bonuses = state.bonuses.filter((bn) =>
-        action.payload.includes(bn.tournament),
-      );
-    },
-    filterBonusesByFromYear: (state, action: PayloadAction<number>) => {
-      state.bonuses = state.bonuses.filter((bn) => bn.year >= action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -209,18 +167,8 @@ const bonusReaderSlice = createSlice({
       });
   },
 });
-export const {
-  buzz,
-  prompt,
-  submitAnswer,
-  nextBonusPart,
-  filterBonuses,
-  filterBonusesByCategory,
-  filterBonusesBySubcategory,
-  filterBonusesByDifficulties,
-  filterBonusesByTournament,
-  filterBonusesByFromYear,
-} = bonusReaderSlice.actions;
+export const { buzz, prompt, submitAnswer, nextBonusPart, filterBonuses } =
+  bonusReaderSlice.actions;
 
 export const selectBonusReader = (state: RootState) => state.bonusReader;
 export const selectIsAnswering = (state: RootState) =>

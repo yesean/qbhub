@@ -2767,17 +2767,3 @@ export const CATEGORIES = CATEGORY_DATA.map(({ key }) => key);
 export const SUBCATEGORIES = SUBCATEGORY_DATA.map(({ key }) => key);
 export const DIFFICULTIES = DIFFICULTY_DATA.map(({ key }) => key);
 export const TOURNAMENTS = TOURNAMENT_DATA.map(({ key }) => key);
-
-export const MIN_TOURNAMENT_YEAR = 2005;
-export const MAX_TOURNAMENT_YEAR = 2020;
-export const DEFAULT_READING_SPEED = 60;
-
-export const localStorageKeys = {
-  READING_SPEED: 'reading_speed',
-  CATEGORIES: 'categories',
-  SUBCATEGORIES: 'subcategories',
-  DIFFICULTIES: 'difficulties',
-  TOURNAMENTS: 'tournaments',
-  FROM_YEAR: 'from_year',
-  LAST_SEEN_UPDATE: 'last_seen_update',
-};

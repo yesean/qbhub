@@ -22,29 +22,24 @@ import { useSelector } from 'react-redux';
 import Select, { Options } from 'react-select';
 import Modal from '../components/Modal';
 import { useKeyboardShortcut } from '../hooks/keyboard';
+import { useSettings } from '../hooks/useSettings';
 import { useAppDispatch } from '../redux/hooks';
 import {
   CATEGORIES,
   CATEGORY_MAP,
   DIFFICULTIES,
   DIFFICULTY_MAP,
-  MIN_TOURNAMENT_YEAR,
   SUBCATEGORIES,
   SUBCATEGORY_MAP,
   TOURNAMENTS,
   TOURNAMENT_MAP,
 } from '../utils/constants';
-import { validateFromYear } from '../utils/settings';
 import {
-  close,
-  selectSettings,
-  updateCategories,
-  updateDifficulties,
-  updateFromYear,
-  updateReadingSpeed,
-  updateSubcategories,
-  updateTournaments,
-} from './settingsSlice';
+  DEFAULT_READING_SPEED,
+  MIN_TOURNAMENT_YEAR,
+} from '../utils/settings/constants';
+import { isTournamentValid } from '../utils/settings/validate';
+import { close, selectSettings } from './settingsSlice';
 import YearInput from './YearInput';
 
 const toSelect =
@@ -63,28 +58,30 @@ const difficultiesForSelect = DIFFICULTIES.map(toSelect(DIFFICULTY_MAP));
 const tournamentsForSelect = TOURNAMENTS.map(toSelect(TOURNAMENT_MAP));
 
 const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
+  const { isOpen } = useSelector(selectSettings);
+  const { settings, setSettings } = useSettings();
   const {
-    readingSpeed,
     categories,
     subcategories,
     difficulties,
     tournaments,
     fromYear,
-    isOpen,
-  } = useSelector(selectSettings);
+    readingSpeed,
+  } = settings;
   const dispatch = useAppDispatch();
   const closeModal = () => dispatch(close());
   useKeyboardShortcut('Escape', closeModal);
 
-  const onReadingSpeedChange = (value: number) =>
-    dispatch(updateReadingSpeed(value));
+  const onReadingSpeedChange = (value: number) => {
+    setSettings({ readingSpeed: value });
+  };
 
   const categoriesInSelect = categories.map(toSelect(CATEGORY_MAP));
   const onCategoriesChange = (
     options: Options<{ label: string; value: Category }>,
   ) => {
     const newCategories = options.map((o) => o.value);
-    dispatch(updateCategories(newCategories));
+    setSettings({ categories: newCategories });
   };
 
   const subcategoriesInSelect = subcategories.map(toSelect(SUBCATEGORY_MAP));
@@ -92,7 +89,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
     options: Options<{ label: string; value: Subcategory }>,
   ) => {
     const newSubcategories = options.map((o) => o.value);
-    dispatch(updateSubcategories(newSubcategories));
+    setSettings({ subcategories: newSubcategories });
   };
 
   const difficultiesInSelect = difficulties.map(toSelect(DIFFICULTY_MAP));
@@ -100,39 +97,34 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
     options: Options<{ label: string; value: Difficulty }>,
   ) => {
     const newDifficulties = options.map((o) => o.value);
-    dispatch(updateDifficulties(newDifficulties));
+    setSettings({ difficulties: newDifficulties });
   };
 
   const filteredTournamentsForSelect = useMemo(
     () =>
-      tournamentsForSelect.filter(
-        ({ data: { year, difficulty } }) =>
-          year >= fromYear &&
-          (difficulties.length === 0 || difficulties.includes(difficulty)),
+      tournamentsForSelect.filter(({ data }) =>
+        isTournamentValid(data, settings),
       ),
-    [difficulties, fromYear],
+    [settings],
   );
   const tournamentsInSelect = tournaments.map(toSelect(TOURNAMENT_MAP));
   const onTournamentsChange = (
     options: Options<{ label: string; value: Tournament }>,
   ) => {
     const newTournaments = options.map((o) => o.value);
-    dispatch(updateTournaments(newTournaments));
+    setSettings({ tournaments: newTournaments });
   };
 
-  const onFromYearChange = (_: any, year: number) => {
-    if (!validateFromYear(year)) return;
+  const onFromYearChange = (_: any, year: number) =>
+    setSettings({ fromYear: year });
 
-    dispatch(updateFromYear(year));
-  };
+  const resetFromYear = () => setSettings({ fromYear: MIN_TOURNAMENT_YEAR });
 
   // prevent select dropdown from getting overlapped, especially on mobile
   const selectMenuProps = {
     menuPortalTarget: document.body,
     styles: { menuPortal: (base: CSSObject) => ({ ...base, zIndex: 9999 }) },
   };
-
-  const resetFromYear = () => dispatch(updateFromYear(MIN_TOURNAMENT_YEAR));
 
   return (
     <Modal isOpen={isOpen} closeModal={closeModal} title="Settings">
@@ -146,8 +138,8 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
           min={0}
           max={100}
           step={5}
-          defaultValue={readingSpeed}
-          onChange={onReadingSpeedChange}
+          defaultValue={readingSpeed ?? DEFAULT_READING_SPEED}
+          onChangeEnd={onReadingSpeedChange}
         >
           <SliderTrack>
             <SliderFilledTrack />
@@ -212,7 +204,10 @@ const SettingsModal: React.FC<React.PropsWithChildren<unknown>> = () => {
           From Year
         </Heading>
         <Flex gap={4}>
-          <YearInput value={fromYear} onChange={onFromYearChange} />
+          <YearInput
+            value={fromYear ?? MIN_TOURNAMENT_YEAR}
+            onChange={onFromYearChange}
+          />
           <Button onClick={resetFromYear}>All Years</Button>
         </Flex>
       </Box>
