@@ -1,6 +1,7 @@
+import { buildIsEnum } from '@qbhub/types';
 import {
-  decodeNumericArray,
-  encodeNumericArray,
+  decodeDelimitedNumericArray,
+  encodeDelimitedNumericArray,
   NumberParam,
   QueryParamConfig,
   StringParam,
@@ -10,21 +11,24 @@ type NumericEnum<T extends string, U extends number> = { [key in T]: U };
 
 export const buildNumericEnumArrayParam = <T extends string, U extends number>(
   numericEnum: NumericEnum<T, U>,
-) => ({
-  encode(array: Parameters<typeof encodeNumericArray>[0]) {
-    return encodeNumericArray(array);
-  },
-  decode(arrayStr: Parameters<typeof decodeNumericArray>[0]): U[] | undefined {
-    const numericArray = decodeNumericArray(arrayStr);
-    if (numericArray == null) return undefined;
+) => {
+  const isEnum = buildIsEnum(numericEnum);
 
-    const validatedArray = numericArray
-      .filter((num): num is number => num != null)
-      .filter((num): num is U => Object.values(numericEnum).includes(num));
+  return {
+    encode(...args: Parameters<typeof encodeDelimitedNumericArray>) {
+      const array = args[0];
+      if (Array.isArray(array) && array.length === 0) return undefined;
 
-    return validatedArray.length === 0 ? undefined : validatedArray;
-  },
-});
+      return encodeDelimitedNumericArray(...args);
+    },
+    decode(...args: Parameters<typeof decodeDelimitedNumericArray>): U[] {
+      const numericArray = decodeDelimitedNumericArray(...args);
+      if (numericArray == null) return [];
+
+      return numericArray.filter(isEnum);
+    },
+  };
+};
 
 export const buildNeverNullParam = <T extends QueryParamConfig<U, V>, U, V>(
   param: T,
