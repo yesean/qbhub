@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ReaderUserInput from '../components/reader/UserInput';
-import { useKeyboardShortcut } from '../hooks/keyboard';
+import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useSettings } from '../hooks/useSettings';
 import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/hooks';

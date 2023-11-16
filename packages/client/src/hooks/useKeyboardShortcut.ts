@@ -5,7 +5,7 @@ import { useEffect } from 'react';
  * Predicate function is used for "disabling" the shortcut without needing to
  * hardcode the condition in the callback.
  */
-export const useKeyboardShortcut = (
+export default (
   key: string,
   callback: (e: KeyboardEvent) => void,
   predicate: (e: KeyboardEvent) => boolean = () => true,

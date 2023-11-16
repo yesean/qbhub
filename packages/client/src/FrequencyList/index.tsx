@@ -11,7 +11,7 @@ import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import { KeyValueTable } from '../components/tables';
-import { useKeyboardShortcut } from '../hooks/keyboard';
+import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useSettings } from '../hooks/useSettings';
 import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/hooks';
