@@ -57,10 +57,10 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
     }
   };
 
-  const buzzWrapper = () => {
+  const buzzWrapper = useCallback(() => {
     focusInput();
     buzz();
-  };
+  }, [buzz]);
   const submitInput = useCallback(() => submit(input), [input, submit]);
   const next = () => dispatch(nextTossupAction({ settings }));
 
