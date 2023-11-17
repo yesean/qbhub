@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useGetURL } from '../utils/routes';
@@ -18,14 +19,36 @@ export default ({ children }: Props) => {
     getAboutURL,
   } = useGetURL();
 
-  // add global keyboard shortcuts
+  // open modal shortcuts
   useKeyboardShortcut('?', openInfoModal);
   useKeyboardShortcut('s', openSettingsModal);
-  useKeyboardShortcut('1', () => navigate(getTossupReaderURL()));
-  useKeyboardShortcut('2', () => navigate(getBonusReaderURL()));
-  useKeyboardShortcut('3', () => navigate(getFrequencyListURL()));
-  useKeyboardShortcut('4', () => navigate(getClueSearchURL()));
-  useKeyboardShortcut('5', () => navigate(getAboutURL()));
+
+  // switch pages shortcuts
+  const goToTossupReader = useCallback(
+    () => navigate(getTossupReaderURL()),
+    [getTossupReaderURL, navigate],
+  );
+  const goToBonusReader = useCallback(
+    () => navigate(getBonusReaderURL()),
+    [getBonusReaderURL, navigate],
+  );
+  const goToFrequencyList = useCallback(
+    () => navigate(getFrequencyListURL()),
+    [getFrequencyListURL, navigate],
+  );
+  const goToClueSearch = useCallback(
+    () => navigate(getClueSearchURL()),
+    [getClueSearchURL, navigate],
+  );
+  const goToAbout = useCallback(
+    () => navigate(getAboutURL()),
+    [getAboutURL, navigate],
+  );
+  useKeyboardShortcut('1', goToTossupReader);
+  useKeyboardShortcut('2', goToBonusReader);
+  useKeyboardShortcut('3', goToFrequencyList);
+  useKeyboardShortcut('4', goToClueSearch);
+  useKeyboardShortcut('5', goToAbout);
 
   return children;
 };
