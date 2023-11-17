@@ -10,7 +10,8 @@ type Props = {
 
 export default ({ children }: Props) => {
   const navigate = useNavigate();
-  const { openInfoModal, openSettingsModal } = useModalContext();
+  const { openInfoModal, openSettingsModal, openUpdatesModal } =
+    useModalContext();
   const {
     getTossupReaderURL,
     getBonusReaderURL,
@@ -22,6 +23,7 @@ export default ({ children }: Props) => {
   // open modal shortcuts
   useKeyboardShortcut('?', openInfoModal);
   useKeyboardShortcut('s', openSettingsModal);
+  useKeyboardShortcut('u', openUpdatesModal);
 
   // switch pages shortcuts
   const goToTossupReader = useCallback(
