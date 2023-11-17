@@ -48,31 +48,22 @@ const TossupReader = () => {
 
   useKeyboardShortcut('h', openTossupHistoryModal);
 
-  const renderInfo = () =>
-    ![ReaderStatus.idle, ReaderStatus.fetching, ReaderStatus.empty].includes(
-      status,
-    ) && <Info />;
-  const renderAnswer = () => status === ReaderStatus.judged && <Answer />;
-  const renderQuestion = () =>
-    status !== ReaderStatus.idle && <Question setBuzz={setBuzz} />;
-  const renderResult = () =>
-    [ReaderStatus.prompting, ReaderStatus.judged].includes(status) && (
-      <Result />
-    );
-  const renderProgress = () =>
-    isAnswering && (
-      <Progress
-        progress={progress}
-        setProgress={setProgress}
-        shouldTick={isAnswering}
-      />
-    );
-  const renderInput = () =>
-    status !== ReaderStatus.empty && (
-      <UserInput progress={progress} submit={judge} buzz={buzz} />
-    );
-  const renderScore = () =>
-    ![ReaderStatus.idle, ReaderStatus.empty].includes(status) && <Score />;
+  const shouldRenderInfo = ![
+    ReaderStatus.idle,
+    ReaderStatus.fetching,
+    ReaderStatus.empty,
+  ].includes(status);
+  const shouldRenderAnswer = status === ReaderStatus.judged;
+  const shouldRenderQuestion = status !== ReaderStatus.idle;
+  const shouldRenderResult = [
+    ReaderStatus.prompting,
+    ReaderStatus.judged,
+  ].includes(status);
+  const shouldRenderProgress = isAnswering;
+  const shouldRenderInput = status !== ReaderStatus.empty;
+  const shouldRenderScore = ![ReaderStatus.idle, ReaderStatus.empty].includes(
+    status,
+  );
 
   return (
     <Flex
@@ -83,13 +74,21 @@ const TossupReader = () => {
       overflow="auto"
       p={1}
     >
-      {renderInfo()}
-      {renderAnswer()}
-      {renderQuestion()}
-      {renderResult()}
-      {renderProgress()}
-      {renderInput()}
-      {renderScore()}
+      {shouldRenderInfo && <Info />}
+      {shouldRenderAnswer && <Answer />}
+      {shouldRenderQuestion && <Question setBuzz={setBuzz} />}
+      {shouldRenderResult && <Result />}
+      {shouldRenderProgress && (
+        <Progress
+          progress={progress}
+          setProgress={setProgress}
+          shouldTick={isAnswering}
+        />
+      )}
+      {shouldRenderInput && (
+        <UserInput progress={progress} submit={judge} buzz={buzz} />
+      )}
+      {shouldRenderScore && <Score />}
     </Flex>
   );
 };
