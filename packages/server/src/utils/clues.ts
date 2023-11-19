@@ -1,9 +1,9 @@
 import { Bag, Clue, ClueBagMap, SelectedClue } from '@qbhub/types';
+import { log } from '@qbhub/utils';
 import stats from 'compromise-stats';
 import _nlp from 'compromise/three';
 import { PlainTossup } from '../types/db';
 import { each, max, shuffle, sum, unique } from './array';
-import logger from './logger';
 import { round } from './number';
 
 const nlp = _nlp.plugin(stats);
@@ -265,11 +265,11 @@ const combineClues = (
  * Wrapper function for combineClues.
  */
 export const getUniqueClues = (clues: Clue[]) => {
-  logger.info('Calculating bag of words for each clue.');
+  log.info('Calculating bag of words for each clue.');
   const clueBagMap = getClueBagMap(clues);
 
   // remove useless clues
-  logger.info('Removing useless clues.');
+  log.info('Removing useless clues.');
   clues = clues.filter((clue) => {
     if (Object.keys(clueBagMap[clue.text]).length === 0) {
       delete clueBagMap[clue.text];
@@ -278,8 +278,8 @@ export const getUniqueClues = (clues: Clue[]) => {
     return true;
   });
 
-  logger.info('Calculating bag of words for corpus.');
+  log.info('Calculating bag of words for corpus.');
   const corpusBag = getCorpusBag(clueBagMap);
-  logger.info('Combining clues.');
+  log.info('Combining clues.');
   return combineClues(clues, clueBagMap, corpusBag);
 };

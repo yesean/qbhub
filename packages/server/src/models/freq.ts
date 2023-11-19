@@ -1,8 +1,8 @@
 import { FrequencyListEntry, QuestionParameters } from '@qbhub/types';
+import { log } from '@qbhub/utils';
 import { Order } from '../types/db';
 import { TABLES } from '../utils/constants';
 import { client, QueryBuilder } from '../utils/db';
-import logger from '../utils/logger';
 
 const columns = [
   { name: TABLES.tossups.columns.normalizedAnswer, alias: 'answer' },
@@ -34,8 +34,8 @@ export const getFreq = async (questionFilters: QuestionParameters) => {
     .offset(questionFilters.offset)
     .build();
 
-  logger.info(`Freq SQL Query:\n${query}`);
-  logger.info(
+  log.info(`Freq SQL Query:\n${query}`);
+  log.info(
     'Parameters:',
     Object.entries(values).map((e) => [Number(e[0]) + 1, e[1]]),
   );

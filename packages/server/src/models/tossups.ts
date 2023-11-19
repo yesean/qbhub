@@ -1,8 +1,8 @@
 import { QuestionParameters, SortOption } from '@qbhub/types';
+import { log } from '@qbhub/utils';
 import { Order, Tossup } from '../types/db';
 import { TABLES } from '../utils/constants';
 import { client, QueryBuilder } from '../utils/db';
-import logger from '../utils/logger';
 import { transformTossup } from '../utils/model';
 
 const columns = [
@@ -46,8 +46,8 @@ export const getTossups = async (questionFilters: QuestionParameters) => {
   }
   const [query, values] = partialQuery.limit(questionFilters.limit).build();
 
-  logger.info(`Tossups SQL Query:\n${query}`);
-  logger.info(
+  log.info(`Tossups SQL Query:\n${query}`);
+  log.info(
     'Parameters:',
     Object.entries(values).map((e) => [Number(e[0]) + 1, e[1]]),
   );

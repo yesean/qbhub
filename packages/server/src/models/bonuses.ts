@@ -1,8 +1,8 @@
 import { BonusPart, QuestionParameters, SortOption } from '@qbhub/types';
+import { log } from '@qbhub/utils';
 import { Bonus as DBBonus, BonusPart as DBBonusPart, Order } from '../types/db';
 import { TABLES } from '../utils/constants';
 import { client, QueryBuilder } from '../utils/db';
-import logger from '../utils/logger';
 import { transformBonus, transformBonusPart } from '../utils/model';
 
 const bonusesColumns = [
@@ -63,8 +63,8 @@ export const getBonuses = async (questionFilters: QuestionParameters) => {
     .limit(questionFilters.limit)
     .build();
 
-  logger.info(`Bonuses SQL Query:\n${bonusesQuery}`);
-  logger.info(
+  log.info(`Bonuses SQL Query:\n${bonusesQuery}`);
+  log.info(
     'Parameters:',
     Object.entries(bonusesValues).map((e) => [Number(e[0]) + 1, e[1]]),
   );
@@ -86,8 +86,8 @@ export const getBonuses = async (questionFilters: QuestionParameters) => {
     .orderBy(bonusPartsOrder)
     .build();
 
-  logger.info(`Bonus parts SQL Query:\n${bonusPartsQuery}`);
-  logger.info(
+  log.info(`Bonus parts SQL Query:\n${bonusPartsQuery}`);
+  log.info(
     'Parameters:',
     Object.entries(bonusPartsValues).map((e) => [Number(e[0]) + 1, e[1]]),
   );

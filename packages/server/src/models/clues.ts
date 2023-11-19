@@ -1,9 +1,9 @@
 import { QuestionParameters } from '@qbhub/types';
+import { log } from '@qbhub/utils';
 import { PlainTossup } from '../types/db';
 import { getAllClues, getUniqueClues } from '../utils/clues';
 import { TABLES } from '../utils/constants';
 import { client, QueryBuilder } from '../utils/db';
-import logger from '../utils/logger';
 
 const columns = [
   { name: TABLES.tossups.columns.text },
@@ -30,16 +30,16 @@ export const getClues = async (questionFilters: QuestionParameters) => {
     .limit(questionFilters.limit)
     .build();
 
-  logger.info(`Clues SQL Query:\n${query}`);
-  logger.info(
+  log.info(`Clues SQL Query:\n${query}`);
+  log.info(
     'Parameters:',
     Object.entries(values).map((e) => [Number(e[0]) + 1, e[1]]),
   );
   const { rows: tossups } = await client.query<PlainTossup>(query, values);
 
   // extract clues from tossups
-  logger.info('Parsing tossups into clues.');
+  log.info('Parsing tossups into clues.');
   const clues = getAllClues(tossups);
-  logger.info('Extracting unique clues from all clues.');
+  log.info('Extracting unique clues from all clues.');
   return getUniqueClues(clues);
 };

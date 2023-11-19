@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
-import * as env from '@qbhub/utils';
+
+import { env } from '@qbhub/utils';
 
 const ignore = (..._: any[]) => {};
 const info = (...args: any[]) => console.log('INFO:', ...args);
