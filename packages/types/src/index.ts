@@ -4,6 +4,7 @@ export * from './category';
 export * from './clue';
 export * from './difficulty';
 export * from './guards';
+export * from './log';
 export * from './question';
 export * from './subcategory';
 export * from './tossup';
