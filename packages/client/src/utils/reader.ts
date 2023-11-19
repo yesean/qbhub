@@ -7,7 +7,7 @@ import {
 import { deburr } from 'lodash-es';
 import { findBestMatch } from 'string-similarity';
 import { combine, emptyStringFilter, getUnique } from './array';
-import logger from './logger';
+import * as log from './log';
 import {
   anyTag,
   getCaptureGroups,
@@ -279,25 +279,22 @@ export class Judge {
   constructor(answerline: string) {
     this.acceptableAnswers = parseAcceptableAnswers(answerline);
     this.promptableAnswers = parsePromptableAnswers(answerline);
-    logger.info('Correct answers:', this.acceptableAnswers);
-    logger.info('Promptable answers:', this.promptableAnswers);
+    log.info('Correct answers:', this.acceptableAnswers);
+    log.info('Promptable answers:', this.promptableAnswers);
   }
 
   judge(userAnswer: string): JudgeResult {
     const MIN_RATING = 0.6;
 
     let ratings = checkAnswer(userAnswer, this.acceptableAnswers);
-    logger.info(
-      `Acceptable answer ratings for "${userAnswer}":`,
-      ratings.ratings,
-    );
+    log.info(`Acceptable answer ratings for "${userAnswer}":`, ratings.ratings);
     if (ratings.bestMatch.rating > MIN_RATING) {
       return JudgeResult.correct;
     }
 
     if (this.promptableAnswers.length > 0) {
       ratings = checkAnswer(userAnswer, this.promptableAnswers);
-      logger.info(
+      log.info(
         `Promptable answer ratings for "${userAnswer}":`,
         ratings.ratings,
       );

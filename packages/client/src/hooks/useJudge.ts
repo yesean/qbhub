@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import logger from '../utils/logger';
+import * as log from '../utils/log';
 import { Judge, JudgeResult, normalizeAnswer } from '../utils/reader';
 
 const useJudge = (
@@ -24,18 +24,18 @@ const useJudge = (
 
       // judge the user answer
       const userAnswer = normalizeAnswer(input);
-      logger.info(`User submitted "${userAnswer}".`);
+      log.info(`User submitted "${userAnswer}".`);
       const judgeResult = judge.judge(userAnswer);
 
       // either prompt on answer or mark it as correct/incorrect
       if (judgeResult === JudgeResult.prompt) {
         // prompt on answer
-        logger.info(`Prompting on "${userAnswer}".`);
+        log.info(`Prompting on "${userAnswer}".`);
         onPrompt();
       } else {
         // submit answer
         const isCorrect = judgeResult === JudgeResult.correct;
-        logger.info(
+        log.info(
           `User answer "${userAnswer}" is ${
             isCorrect ? 'correct' : 'incorrect'
           }.`,
