@@ -1,25 +1,29 @@
 /* eslint-disable no-console */
 
-import * as env from './env';
+import { isLogLevelValid, LogLevel } from '@qbhub/types';
+import * as env from '@qbhub/utils';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ignore = (..._: any[]) => {};
+const log = (logLevel: LogLevel, ...params: unknown[]) => {
+  // only log in development mode
+  if (!env.isDev) return;
 
-/**
- * Logger middleware for normal messages.
- */
-const info = (...params: any[]) => {
-  console.log('INFO:', ...params, '\n');
+  // check if log level is valid, e.g. don't log debug messages in error level
+  if (!isLogLevelValid(logLevel, env.logLevel)) return;
+
+  if (logLevel === LogLevel.Debug) console.debug(...params);
+  if (logLevel === LogLevel.Info) console.info(...params);
+  if (logLevel === LogLevel.Warn) console.warn(...params);
+  if (logLevel === LogLevel.Error) console.error(...params);
 };
 
-/**
- * Logger middleware for critical messages.
- */
-const error = (...params: any[]) => {
-  console.error('ERROR:', ...params);
-};
+const buildLog =
+  (logLevel: LogLevel) =>
+  (...params: unknown[]) =>
+    log(logLevel, ...params);
 
 export default {
-  info: env.isDev ? info : ignore,
-  error,
+  debug: buildLog(LogLevel.Debug),
+  info: buildLog(LogLevel.Info),
+  warn: buildLog(LogLevel.Warn),
+  error: buildLog(LogLevel.Error),
 };
