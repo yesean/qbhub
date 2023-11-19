@@ -2305,8 +2305,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@qbhub/types@workspace:packages/types"
   dependencies:
-    nodemon: ^3.0.1
     prettier: ^3.1.0
+    tsc-watch: ^6.0.4
     typescript: ^4.8.4
   languageName: unknown
   linkType: soft
@@ -4214,7 +4214,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-spawn@npm:^7.0.2":
+"cross-spawn@npm:^7.0.2, cross-spawn@npm:^7.0.3":
   version: 7.0.3
   resolution: "cross-spawn@npm:7.0.3"
   dependencies:
@@ -4571,6 +4571,13 @@ __metadata:
     dom-serializer: 0
     domelementtype: 1
   checksum: f60a725b1f73c1ae82f4894b691601ecc6ecb68320d87923ac3633137627c7865725af813ae5d188ad3954283853bcf46779eb50304ec5d5354044569fcefd2b
+  languageName: node
+  linkType: hard
+
+"duplexer@npm:~0.1.1":
+  version: 0.1.2
+  resolution: "duplexer@npm:0.1.2"
+  checksum: 62ba61a830c56801db28ff6305c7d289b6dc9f859054e8c982abd8ee0b0a14d2e9a8e7d086ffee12e868d43e2bbe8a964be55ddbd8c8957714c87373c7a4f9b0
   languageName: node
   linkType: hard
 
@@ -5468,6 +5475,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"event-stream@npm:=3.3.4":
+  version: 3.3.4
+  resolution: "event-stream@npm:3.3.4"
+  dependencies:
+    duplexer: ~0.1.1
+    from: ~0
+    map-stream: ~0.1.0
+    pause-stream: 0.0.11
+    split: 0.3
+    stream-combiner: ~0.0.4
+    through: ~2.3.1
+  checksum: 80b467820b6daf824d9fb4345d2daf115a056e5c104463f2e98534e92d196a27f2df5ea2aa085624db26f4c45698905499e881d13bc7c01f7a13eac85be72a22
+  languageName: node
+  linkType: hard
+
 "eventemitter2@npm:5.0.1, eventemitter2@npm:~5.0.1":
   version: 5.0.1
   resolution: "eventemitter2@npm:5.0.1"
@@ -5753,6 +5775,13 @@ __metadata:
   version: 0.5.2
   resolution: "fresh@npm:0.5.2"
   checksum: 13ea8b08f91e669a64e3ba3a20eb79d7ca5379a81f1ff7f4310d54e2320645503cc0c78daedc93dfb6191287295f6479544a649c64d8e41a1c0fb0c221552346
+  languageName: node
+  linkType: hard
+
+"from@npm:~0":
+  version: 0.1.7
+  resolution: "from@npm:0.1.7"
+  checksum: b85125b7890489656eb2e4f208f7654a93ec26e3aefaf3bbbcc0d496fc1941e4405834fcc9fe7333192aa2187905510ace70417bbf9ac6f6f4784a731d986939
   languageName: node
   linkType: hard
 
@@ -7034,6 +7063,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"map-stream@npm:~0.1.0":
+  version: 0.1.0
+  resolution: "map-stream@npm:0.1.0"
+  checksum: 38abbe4eb883888031e6b2fc0630bc583c99396be16b8ace5794b937b682a8a081f03e8b15bfd4914d1bc88318f0e9ac73ba3512ae65955cd449f63256ddb31d
+  languageName: node
+  linkType: hard
+
 "markdown-extensions@npm:^1.0.0":
   version: 1.1.1
   resolution: "markdown-extensions@npm:1.1.1"
@@ -7796,6 +7832,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-cleanup@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "node-cleanup@npm:2.1.2"
+  checksum: 584cdc3e42560a998b4579f91ed8f936b27011628f3102e5a1093205f0691cdf8d899287d1f2e4d2071ea4ab1d615810bad6dbe2b988ef173a1cbaa76d8165b3
+  languageName: node
+  linkType: hard
+
 "node-gyp@npm:latest":
   version: 9.1.0
   resolution: "node-gyp@npm:9.1.0"
@@ -7840,26 +7883,6 @@ __metadata:
   bin:
     nodemon: bin/nodemon.js
   checksum: 9fe858682414fe703179f4fe36c86e71f40d2693b5345c09803d7b191816a6589c5df8f1f9873bffee92893880183b95a031c86340e46b364ef1b0b7f619edbf
-  languageName: node
-  linkType: hard
-
-"nodemon@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "nodemon@npm:3.0.1"
-  dependencies:
-    chokidar: ^3.5.2
-    debug: ^3.2.7
-    ignore-by-default: ^1.0.1
-    minimatch: ^3.1.2
-    pstree.remy: ^1.1.8
-    semver: ^7.5.3
-    simple-update-notifier: ^2.0.0
-    supports-color: ^5.5.0
-    touch: ^3.1.0
-    undefsafe: ^2.0.5
-  bin:
-    nodemon: bin/nodemon.js
-  checksum: 6a5d81855760d6617049eccce10ccf02bddb482dab13ceea5280ae595ec7004eee13e7b934368e3f46c37fe4d970342a8c38c99cae7e93e4d7a3ed1c1ecb6acf
   languageName: node
   linkType: hard
 
@@ -8245,6 +8268,15 @@ __metadata:
   version: 1.1.1
   resolution: "pathval@npm:1.1.1"
   checksum: 090e3147716647fb7fb5b4b8c8e5b55e5d0a6086d085b6cd23f3d3c01fcf0ff56fd3cc22f2f4a033bd2e46ed55d61ed8379e123b42afe7d531a2a5fc8bb556d6
+  languageName: node
+  linkType: hard
+
+"pause-stream@npm:0.0.11":
+  version: 0.0.11
+  resolution: "pause-stream@npm:0.0.11"
+  dependencies:
+    through: ~2.3
+  checksum: 3c4a14052a638b92e0c96eb00c0d7977df7f79ea28395250c525d197f1fc02d34ce1165d5362e2e6ebbb251524b94a76f3f0d4abc39ab8b016d97449fe15583c
   languageName: node
   linkType: hard
 
@@ -8685,6 +8717,17 @@ __metadata:
   version: 1.1.0
   resolution: "proxy-from-env@npm:1.1.0"
   checksum: ed7fcc2ba0a33404958e34d95d18638249a68c430e30fcb6c478497d72739ba64ce9810a24f53a7d921d0c065e5b78e3822759800698167256b04659366ca4d4
+  languageName: node
+  linkType: hard
+
+"ps-tree@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "ps-tree@npm:1.2.0"
+  dependencies:
+    event-stream: =3.3.4
+  bin:
+    ps-tree: ./bin/ps-tree.js
+  checksum: e635dd00f53d30d31696cf5f95b3a8dbdf9b1aeb36d4391578ce8e8cd22949b7c5536c73b0dc18c78615ea3ddd4be96101166be59ca2e3e3cb1e2f79ba3c7f98
   languageName: node
   linkType: hard
 
@@ -9500,17 +9543,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.5.3":
-  version: 7.5.4
-  resolution: "semver@npm:7.5.4"
-  dependencies:
-    lru-cache: ^6.0.0
-  bin:
-    semver: bin/semver.js
-  checksum: 12d8ad952fa353b0995bf180cdac205a4068b759a140e5d3c608317098b3575ac2f1e09182206bf2eb26120e1c0ed8fb92c48c592f6099680de56bb071423ca3
-  languageName: node
-  linkType: hard
-
 "semver@npm:~7.0.0":
   version: 7.0.0
   resolution: "semver@npm:7.0.0"
@@ -9640,15 +9672,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"simple-update-notifier@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "simple-update-notifier@npm:2.0.0"
-  dependencies:
-    semver: ^7.5.3
-  checksum: 9ba00d38ce6a29682f64a46213834e4eb01634c2f52c813a9a7b8873ca49cdbb703696f3290f3b27dc067de6d9418b0b84bef22c3eb074acf352529b2d6c27fd
-  languageName: node
-  linkType: hard
-
 "slash@npm:^3.0.0":
   version: 3.0.0
   resolution: "slash@npm:3.0.0"
@@ -9761,6 +9784,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"split@npm:0.3":
+  version: 0.3.3
+  resolution: "split@npm:0.3.3"
+  dependencies:
+    through: 2
+  checksum: 2e076634c9637cfdc54ab4387b6a243b8c33b360874a25adf6f327a5647f07cb3bf1c755d515248eb3afee4e382278d01f62c62d87263c118f28065b86f74f02
+  languageName: node
+  linkType: hard
+
 "sprintf-js@npm:1.1.2":
   version: 1.1.2
   resolution: "sprintf-js@npm:1.1.2"
@@ -9812,6 +9844,22 @@ __metadata:
     inherits: ~2.0.4
     readable-stream: ^3.5.0
   checksum: 4c47ef64d6f03815a9ca3874e2319805e8e8a85f3550776c47ce523b6f4c6cd57f40e46ec6a9ab8ad260fde61863c2718f250d3bedb3fe9052444eb9abfd9921
+  languageName: node
+  linkType: hard
+
+"stream-combiner@npm:~0.0.4":
+  version: 0.0.4
+  resolution: "stream-combiner@npm:0.0.4"
+  dependencies:
+    duplexer: ~0.1.1
+  checksum: 844b622cfe8b9de45a6007404f613b60aaf85200ab9862299066204242f89a7c8033b1c356c998aa6cfc630f6cd9eba119ec1c6dc1f93e245982be4a847aee7d
+  languageName: node
+  linkType: hard
+
+"string-argv@npm:^0.3.1":
+  version: 0.3.2
+  resolution: "string-argv@npm:0.3.2"
+  checksum: 8703ad3f3db0b2641ed2adbb15cf24d3945070d9a751f9e74a924966db9f325ac755169007233e8985a39a6a292f14d4fee20482989b89b96e473c4221508a0f
   languageName: node
   linkType: hard
 
@@ -10031,6 +10079,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"through@npm:2, through@npm:~2.3, through@npm:~2.3.1":
+  version: 2.3.8
+  resolution: "through@npm:2.3.8"
+  checksum: a38c3e059853c494af95d50c072b83f8b676a9ba2818dcc5b108ef252230735c54e0185437618596c790bbba8fcdaef5b290405981ffa09dce67b1f1bf190cbd
+  languageName: node
+  linkType: hard
+
 "tiny-invariant@npm:^1.0.6":
   version: 1.3.1
   resolution: "tiny-invariant@npm:1.3.1"
@@ -10170,6 +10225,22 @@ __metadata:
     ts-node-transpile-only: dist/bin-transpile.js
     ts-script: dist/bin-script-deprecated.js
   checksum: 090adff1302ab20bd3486e6b4799e90f97726ed39e02b39e566f8ab674fd5bd5f727f43615debbfc580d33c6d9d1c6b1b3ce7d8e3cca3e20530a145ffa232c35
+  languageName: node
+  linkType: hard
+
+"tsc-watch@npm:^6.0.4":
+  version: 6.0.4
+  resolution: "tsc-watch@npm:6.0.4"
+  dependencies:
+    cross-spawn: ^7.0.3
+    node-cleanup: ^2.1.2
+    ps-tree: ^1.2.0
+    string-argv: ^0.3.1
+  peerDependencies:
+    typescript: "*"
+  bin:
+    tsc-watch: dist/lib/tsc-watch.js
+  checksum: f7bf7eefbc5a8bbf7c989edd1e5199ac95ad1654b11ea39bfe7fc2e5a83480926928bd405aebe2cbd783fc6ffac521b9ad650cb300d51d4a9b616b7c69da02da
   languageName: node
   linkType: hard
 
