@@ -9,7 +9,7 @@ import {
   Tournament,
 } from '@qbhub/types';
 import axios from 'axios';
-import logger from './logger';
+import * as log from './log';
 import { MIN_TOURNAMENT_YEAR } from './settings/constants';
 import { cleanTossupText, normalizeTags } from './string';
 
@@ -64,7 +64,7 @@ export const fetchTossups = async (params: FetchParams): Promise<Tossup[]> => {
   const url = addParams(TOSSUP_URL, createParams(params));
 
   try {
-    logger.info('Fetching tossups.');
+    log.info('Fetching tossups.');
     const { data } = await axios.get<Tossup[]>(url);
     const tossups = data.map((tu) => ({
       id: tu.id,
@@ -79,7 +79,7 @@ export const fetchTossups = async (params: FetchParams): Promise<Tossup[]> => {
       tournament: tu.tournament,
       year: tu.year,
     }));
-    logger.info('Received tossups.');
+    log.info('Received tossups.');
     return tossups;
   } catch (err) {
     return [];
@@ -90,7 +90,7 @@ export const fetchBonuses = async (params: FetchParams): Promise<Bonus[]> => {
   const url = addParams(BONUS_URL, createParams(params));
 
   try {
-    logger.info('Fetching bonuses.');
+    log.info('Fetching bonuses.');
     const { data } = await axios.get<Bonus[]>(url);
     const bonuses = data.map((bn) => ({
       id: bn.id,
@@ -107,7 +107,7 @@ export const fetchBonuses = async (params: FetchParams): Promise<Bonus[]> => {
         formattedAnswer: normalizeTags(part.formattedAnswer),
       })),
     }));
-    logger.info('Received bonuses.');
+    log.info('Received bonuses.');
     return bonuses;
   } catch (err) {
     return [];
@@ -120,9 +120,9 @@ export const fetchFreq = async (
   const url = addParams(FREQ_URL, createParams(params));
 
   try {
-    logger.info('Fetching frequency list.');
+    log.info('Fetching frequency list.');
     const { data } = await axios.get<FrequencyListEntry[]>(url);
-    logger.info('Received frequency list.');
+    log.info('Received frequency list.');
     return data;
   } catch (err) {
     return [];
@@ -135,9 +135,9 @@ export const fetchAnswers = async (
   const url = addParams(FREQ_URL, createParams(params));
 
   try {
-    logger.info('Fetching answers.');
+    log.info('Fetching answers.');
     const { data } = await axios.get<FrequencyListEntry[]>(url);
-    logger.info('Received answers.');
+    log.info('Received answers.');
     return data;
   } catch (err) {
     return [];
@@ -150,9 +150,9 @@ export const fetchClues = async (
   const url = addParams(CLUES_URL, createParams(params));
 
   try {
-    logger.info('Fetching clues.');
+    log.info('Fetching clues.');
     const { data } = await axios.get<SelectedClue[]>(url);
-    logger.info('Received clues.');
+    log.info('Received clues.');
     return data;
   } catch (err) {
     return [];

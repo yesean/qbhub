@@ -2,7 +2,7 @@ import { FrequencyListEntry } from '@qbhub/types';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { RootState } from '../redux/store';
 import * as fetchUtils from '../utils/fetch';
-import logger from '../utils/logger';
+import * as log from '../utils/log';
 import { Settings } from '../utils/settings/types';
 
 export const PAGE_SIZE = 20;
@@ -69,11 +69,11 @@ export const nextPage = createAsyncThunk<
     await dispatch(fetchPages({ ...args, offset: results.length })).unwrap();
   } else if (offset + 3 * PAGE_SIZE >= results.length) {
     // if 3 pages from the last page, fetch more in the background
-    logger.info('Starting to prefetch pages.');
+    log.info('Starting to prefetch pages.');
     dispatch(fetchPages({ ...args, offset: results.length }))
       .unwrap()
-      .then(() => logger.info('Finished prefetching pages.'))
-      .catch((e) => logger.info('Pages prefetch rejected:', e));
+      .then(() => log.info('Finished prefetching pages.'))
+      .catch((e) => log.info('Pages prefetch rejected:', e));
   }
 });
 
