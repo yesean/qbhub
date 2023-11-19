@@ -2278,6 +2278,7 @@ __metadata:
   resolution: "@qbhub/server@workspace:packages/server"
   dependencies:
     "@qbhub/types": "workspace:^"
+    "@qbhub/utils": "workspace:^"
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.14
     "@types/pg": ^8.6.5
@@ -2311,7 +2312,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@qbhub/utils@workspace:packages/utils":
+"@qbhub/utils@workspace:^, @qbhub/utils@workspace:packages/utils":
   version: 0.0.0-use.local
   resolution: "@qbhub/utils@workspace:packages/utils"
   dependencies:
