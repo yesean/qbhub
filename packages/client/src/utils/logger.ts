@@ -1,11 +1,10 @@
 /* eslint-disable no-console */
-
-const shouldLog = process.env.NODE_ENV === 'development';
+import * as env from '@qbhub/utils';
 
 const ignore = (..._: any[]) => {};
 const info = (...args: any[]) => console.log('INFO:', ...args);
 
 export default {
-  info: shouldLog ? info : ignore,
+  info: env.isDev ? info : ignore,
   error: console.error,
 };

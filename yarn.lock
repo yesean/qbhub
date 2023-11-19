@@ -2217,6 +2217,7 @@ __metadata:
     "@fontsource/raleway": ^4.5.11
     "@mdx-js/rollup": ^2.1.5
     "@qbhub/types": "workspace:^"
+    "@qbhub/utils": "workspace:^"
     "@reduxjs/toolkit": ^1.8.5
     "@testing-library/react": ^13.4.0
     "@testing-library/user-event": ^14.4.3
