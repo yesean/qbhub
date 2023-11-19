@@ -1,4 +1,4 @@
-import { env } from '@qbhub/utils';
+import { env, log } from '@qbhub/utils';
 import cors from 'cors';
 import express from 'express';
 import path from 'path';
@@ -23,5 +23,5 @@ app.get('*', (_, res) =>
 );
 
 app.listen(env.nodePort, () => {
-  logger.info(`App is running on PORT ${env.nodePort}.`);
+  log.info(`App is running on PORT ${env.nodePort}.`);
 });

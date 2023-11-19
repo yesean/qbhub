@@ -1,8 +1,8 @@
+import { log } from '@qbhub/utils';
 import { Request, Response, Router } from 'express';
 import { getTossups } from '../models/tossups';
 import { QueryStringParsingError } from '../types/errors';
 import { parseQueryString } from '../utils/controller';
-import logger from '../utils/logger';
 
 const tossupsRouter = Router();
 tossupsRouter.get('/', async (req: Request, res: Response) => {
@@ -14,7 +14,7 @@ tossupsRouter.get('/', async (req: Request, res: Response) => {
     if (e instanceof QueryStringParsingError) {
       res.status(400).send(e.message);
     }
-    logger.error(e);
+    log.error(e);
   }
 });
 
