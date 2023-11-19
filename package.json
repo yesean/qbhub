@@ -15,7 +15,7 @@
     "lint": "yarn workspaces foreach -pvi run lint",
     "format": "yarn workspaces foreach -pvi run format",
     "test": "yarn workspaces foreach -pvi run test",
-    "build": "rm -rf packages/server/build && yarn workspaces foreach -pvi run build && cp -r packages/client/build packages/server",
+    "build": "yarn workspaces foreach -vi run build && cp -r packages/client/dist packages/server/dist-client",
     "deploy": "scp -r packages/server/{dist,build} qbhub:~/qbhub/packages/server && ssh qbhub 'cd ~/qbhub && git pull && yarn install && pm2 restart qbhub-beta'",
     "deploy:full": "yarn build && yarn deploy"
   },

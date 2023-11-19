@@ -17,8 +17,10 @@ app.use('/api/tossups', tossupsRouter);
 app.use('/api/bonuses', bonusesRouter);
 app.use('/api/freq', freqRouter);
 app.use('/api/clues', cluesRouter);
+
+const CLIENT_BUILD_DIR = path.join(__dirname, '..', 'dist-client');
 app.get('*', (_, res) =>
-  res.sendFile(path.join(__dirname, '..', 'build', 'index.html')),
+  res.sendFile(path.join(CLIENT_BUILD_DIR, 'index.html')),
 );
 
 app.listen(env.nodePort, () => {

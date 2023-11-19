@@ -1,5 +1,8 @@
 **/.DS_Store
 
+dist
+dist-client
+
 # Logs
 logs
 *.log
