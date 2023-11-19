@@ -2311,6 +2311,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@qbhub/utils@workspace:packages/utils":
+  version: 0.0.0-use.local
+  resolution: "@qbhub/utils@workspace:packages/utils"
+  dependencies:
+    "@qbhub/types": "workspace:^"
+    prettier: ^3.1.0
+    tsc-watch: ^6.0.4
+    typescript: ^4.8.4
+  languageName: unknown
+  linkType: soft
+
 "@reduxjs/toolkit@npm:^1.8.5":
   version: 1.8.5
   resolution: "@reduxjs/toolkit@npm:1.8.5"
