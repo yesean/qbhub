@@ -1,5 +1,4 @@
-import * as env from '@qbhub/utils';
-
+import { env } from '@qbhub/utils';
 import cors from 'cors';
 import express from 'express';
 import path from 'path';
@@ -7,7 +6,6 @@ import bonusesRouter from './controllers/bonuses';
 import cluesRouter from './controllers/clues';
 import freqRouter from './controllers/freq';
 import tossupsRouter from './controllers/tossups';
-import logger from './utils/logger';
 
 const app = express();
 app.use(express.json());
