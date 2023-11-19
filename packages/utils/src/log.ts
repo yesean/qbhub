@@ -20,9 +20,7 @@ const buildLog =
   (...params: unknown[]) =>
     log(logLevel, ...params);
 
-export default {
-  debug: buildLog(LogLevel.Debug),
-  info: buildLog(LogLevel.Info),
-  warn: buildLog(LogLevel.Warn),
-  error: buildLog(LogLevel.Error),
-};
+export const debug = buildLog(LogLevel.Debug);
+export const info = buildLog(LogLevel.Info);
+export const warn = buildLog(LogLevel.Warn);
+export const error = buildLog(LogLevel.Error);

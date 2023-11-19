@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
-
 import { isLogLevelValid, LogLevel } from '@qbhub/types';
-import * as env from '@qbhub/utils';
+import { env } from '@qbhub/utils';
 
 const log = (logLevel: LogLevel, ...params: unknown[]) => {
   // only log in development mode
