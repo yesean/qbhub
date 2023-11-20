@@ -1,5 +1,8 @@
 {
   "name": "@qbhub/types",
+  "author": "Sean Ye <seanye24@gmail.com>",
+  "description": "QBHub common types",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "module": "src/index.ts",
   "packageManager": "yarn@3.2.3",
@@ -9,7 +12,9 @@
     "typescript": "^4.8.4"
   },
   "scripts": {
-    "clean": "rm -rf dist tsconfig.tsbuildinfo",
-    "dev": "NODE_ENV=development tsc-watch --noClear"
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:debug": "DEBUG=eslint:cli-engine eslint src --ext .ts,.tsx",
+    "format": "prettier --write src",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo"
   }
 }

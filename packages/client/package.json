@@ -1,7 +1,9 @@
 {
   "name": "@qbhub/client",
+  "author": "Sean Ye <seanye24@gmail.com>",
+  "description": "QBHub React UI",
   "version": "0.1.0",
-  "private": true,
+  "license": "MIT",
   "type": "module",
   "dependencies": {
     "@chakra-ui/icons": "^2.0.10",
@@ -71,11 +73,14 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "yarn lint && vite build",
-    "preview": "vite preview",
-    "lint": "tsc --build && tsc && eslint --ext .ts,.tsx src",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:debug": "DEBUG=eslint:cli-engine eslint src --ext .ts,.tsx",
     "format": "prettier --write src",
+    "compile": "tsc --build",
+    "build": "yarn compile && vite build",
     "test": "vitest --run",
-    "test:watch": "vitest --watch"
+    "test:watch": "vitest --watch",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "preview": "vite preview"
   }
 }
