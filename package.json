@@ -1,23 +1,22 @@
 {
   "name": "qbhub",
-  "version": "1.0.0",
+  "author": "Sean Ye <seanye24@gmail.com>",
   "description": "Quizbowl Meets Automation",
-  "main": "index.js",
-  "author": "Sean Ye",
+  "version": "1.0.0",
   "license": "MIT",
-  "private": true,
+  "packageManager": "yarn@3.6.0",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
-    "dev": "env $(cat .dev.env) yarn workspaces foreach -pvi run dev",
     "start": "yarn workspace @qbhub/server run start",
+    "dev": "env $(cat .dev.env) yarn workspaces foreach -pvi run dev",
     "lint": "yarn workspaces foreach -pvi run lint",
+    "lint:debug": "yarn workspaces foreach -pvi run lint:debug",
     "format": "yarn workspaces foreach -pvi run format",
-    "test": "yarn workspaces foreach -pvi run test",
-    "build": "yarn workspaces foreach -vi run build && cp -r packages/client/dist packages/server/dist-client",
-    "deploy": "scp -r packages/server/{dist,build} qbhub:~/qbhub/packages/server && ssh qbhub 'cd ~/qbhub && git pull && yarn install && pm2 restart qbhub-beta'",
-    "deploy:full": "yarn build && yarn deploy"
-  },
-  "packageManager": "yarn@3.6.0"
+    "build": "yarn workspaces foreach -vi run build && yarn postbuild",
+    "postbuild": "cp -r packages/client/dist packages/server/dist-client",
+    "clean": "yarn workspaces foreach -tpvi run clean",
+    "test": "yarn workspaces foreach -pvi run test"
+  }
 }
