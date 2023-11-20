@@ -1,9 +1,6 @@
 import {
   Category,
   Difficulty,
-  SortOption,
-  Subcategory,
-  Tournament,
   isCategoryArray,
   isDifficultyArray,
   isNumeric,
@@ -12,7 +9,10 @@ import {
   isStringArray,
   isSubcategoryArray,
   isTournamentArray,
+  SortOption,
   stringToNumber,
+  Subcategory,
+  Tournament,
 } from '@qbhub/types';
 import { QueryStringParsingError } from '../types/errors';
 import {
