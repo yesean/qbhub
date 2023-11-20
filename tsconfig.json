@@ -12,9 +12,6 @@
     "noImplicitAny": true,
     "resolveJsonModule": true,
     "composite": true,
-    "declarationMap": true,
-    "paths": {
-      "@qbhub/types": ["./packages/types"]
-    }
+    "declarationMap": true
   }
 }
