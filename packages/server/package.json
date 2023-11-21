@@ -37,8 +37,11 @@
   "scripts": {
     "start": "pm2 start pm2.config.js --no-daemon",
     "dev": "NODE_ENV=development nodemon --watch 'src/**/*.ts' --exec ts-node src/index.ts",
-    "lint": "eslint src --ext .ts,.tsx",
-    "lint:debug": "DEBUG=eslint:cli-engine eslint src --ext .ts,.tsx",
+    "typecheck": "tsc --noEmit",
+    "eslint": "eslint src --ext .ts,.tsx",
+    "eslint:debug": "DEBUG=eslint:cli-engine yarn eslint",
+    "lint": "yarn typecheck && yarn eslint",
+    "lint:debug": "yarn typecheck && yarn eslint:debug",
     "format": "prettier src --write",
     "compile": "tsc --build",
     "build": "yarn compile",
