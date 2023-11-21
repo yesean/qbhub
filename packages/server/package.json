@@ -43,8 +43,7 @@
     "lint": "yarn typecheck && yarn eslint",
     "lint:debug": "yarn typecheck && yarn eslint:debug",
     "format": "prettier src --write",
-    "compile": "tsc --build",
-    "build": "yarn compile",
+    "build": "tsc --build",
     "clean": "rm -rf dist dist-client tsconfig.tsbuildinfo"
   }
 }
