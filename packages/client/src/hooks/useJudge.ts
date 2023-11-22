@@ -1,5 +1,5 @@
+import { log } from '@qbhub/utils';
 import { useCallback, useEffect, useState } from 'react';
-import * as log from '../utils/log';
 import { Judge, JudgeResult, normalizeAnswer } from '../utils/reader';
 
 const useJudge = (

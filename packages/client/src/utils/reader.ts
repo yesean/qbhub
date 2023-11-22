@@ -4,10 +4,10 @@ import {
   TossupScore,
   TossupWord,
 } from '@qbhub/types';
+import { log } from '@qbhub/utils';
 import { deburr } from 'lodash-es';
 import { findBestMatch } from 'string-similarity';
 import { combine, emptyStringFilter, getUnique } from './array';
-import * as log from './log';
 import {
   anyTag,
   getCaptureGroups,

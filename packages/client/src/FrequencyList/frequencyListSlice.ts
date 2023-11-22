@@ -1,8 +1,8 @@
 import { FrequencyListEntry } from '@qbhub/types';
+import { log } from '@qbhub/utils';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { RootState } from '../redux/store';
 import * as fetchUtils from '../utils/fetch';
-import * as log from '../utils/log';
 import { Settings } from '../utils/settings/types';
 
 export const PAGE_SIZE = 20;
