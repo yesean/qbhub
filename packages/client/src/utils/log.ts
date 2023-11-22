@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import { LogLevel } from '@qbhub/types';
 import { env, log } from '@qbhub/utils';
 
