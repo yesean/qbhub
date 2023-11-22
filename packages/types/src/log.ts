@@ -6,6 +6,11 @@ export enum LogLevel {
   Warn = 'warn',
   Error = 'error',
 }
+const isLogLevel = buildIsEnum(LogLevel);
+const DEFAULT_LOG_LEVEL = LogLevel.Warn;
+
+export const validateLogLevel = (data: string | undefined) =>
+  isLogLevel(data) ? data : DEFAULT_LOG_LEVEL;
 
 export const isLogLevelValid = (
   inputLevel: LogLevel,
@@ -36,5 +41,3 @@ export const isLogLevelValid = (
     'error checking if log level is valid, if statements should be exhaustive',
   );
 };
-
-export const isLogLegel = buildIsEnum(LogLevel);
