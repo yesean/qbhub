@@ -8,8 +8,8 @@ import {
   Tossup,
   Tournament,
 } from '@qbhub/types';
+import { log } from '@qbhub/utils';
 import axios from 'axios';
-import * as log from './log';
 import { MIN_TOURNAMENT_YEAR } from './settings/constants';
 import { cleanTossupText, normalizeTags } from './string';
 
