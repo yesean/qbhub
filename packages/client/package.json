@@ -57,6 +57,7 @@
     "@types/string-similarity": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^5.38.1",
     "@typescript-eslint/parser": "^5.38.1",
+    "concurrently": "^8.2.2",
     "eslint": "8.24.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-airbnb-typescript": "17.0.0",
@@ -72,7 +73,7 @@
     "vitest": "^0.34.6"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently \"tsc --build\" \"vite\"",
     "typecheck": "tsc --noEmit",
     "eslint": "eslint src --ext .ts,.tsx",
     "eslint:debug": "DEBUG=eslint:cli-engine yarn eslint",
