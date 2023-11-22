@@ -1,33 +1,48 @@
-import { buildIsEnum, LogLevel } from '@qbhub/types';
+import { validateLogLevel } from '@qbhub/types';
 
-const ENV_KEYS = {
-  nodePort: 'NODE_PORT',
-  nodeEnv: 'NODE_ENV',
-  logLevel: 'LOG_LEVEL',
-  viteLogLevel: 'VITE_LOG_LEVEL',
-};
+function getViteEnv() {
+  const ENV_KEYS = {
+    logLevel: 'VITE_LOG_LEVEL',
+  };
 
-const VITE_ENV_KEYS = {
-  logLevel: 'VITE_LOG_LEVEL',
-};
+  const viteEnv = (import.meta as any).env;
 
-const isLogLevel = buildIsEnum(LogLevel);
-export const DEFAULT_LOG_LEVEL = LogLevel.Warn;
-export const validateLogLevel = (data: string | undefined) =>
-  isLogLevel(data) ? data : DEFAULT_LOG_LEVEL;
+  const isDev = viteEnv?.DEV;
+  const logLevel = validateLogLevel(viteEnv?.[ENV_KEYS.logLevel]);
+  const isVite = viteEnv != null;
 
-const viteEnv = (import.meta as any).env;
-const isVite = viteEnv != null;
+  return {
+    isDev,
+    logLevel,
+    isVite,
+  };
+}
 
-const viteIsDev = viteEnv?.DEV;
-const viteLogLevel = validateLogLevel(viteEnv?.[VITE_ENV_KEYS.logLevel]);
+function getNodeEnv() {
+  const ENV_KEYS = {
+    nodePort: 'NODE_PORT',
+    nodeEnv: 'NODE_ENV',
+    logLevel: 'LOG_LEVEL',
+  };
 
-const envLogLevel = globalThis.process?.env?.[ENV_KEYS.logLevel];
-const nodePort = globalThis.process?.env?.[ENV_KEYS.nodePort];
-const nodeIsDev = globalThis.process?.env?.[ENV_KEYS.nodeEnv] === 'development';
-const nodeLogLevel = validateLogLevel(envLogLevel);
+  const logLevel = validateLogLevel(
+    globalThis.process?.env?.[ENV_KEYS.logLevel],
+  );
+  const isDev = globalThis.process?.env?.[ENV_KEYS.nodeEnv] === 'development';
+  const nodePort = globalThis.process?.env?.[ENV_KEYS.nodePort];
 
-const isDev = isVite ? viteIsDev : nodeIsDev;
-const logLevel = isVite ? viteLogLevel : nodeLogLevel;
+  return {
+    isDev,
+    logLevel,
+    nodePort,
+  };
+}
 
-export { nodePort, isDev, logLevel };
+const viteEnv = getViteEnv();
+const nodeEnv = getNodeEnv();
+
+const isDev = viteEnv.isVite ? viteEnv.isDev : nodeEnv.isDev;
+const logLevel = viteEnv.isVite ? viteEnv.logLevel : nodeEnv.logLevel;
+const { nodePort } = nodeEnv;
+
+export { isDev, logLevel, nodePort };
