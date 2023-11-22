@@ -1,4 +1,4 @@
-import { buildIsEnum } from './guards';
+import { buildIsEnum } from './guards.js';
 
 export enum LogLevel {
   Debug = 'debug',

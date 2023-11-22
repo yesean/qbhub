@@ -1,7 +1,7 @@
-import { Category } from './category';
-import { Difficulty } from './difficulty';
-import { Subcategory } from './subcategory';
-import { Tournament } from './tournament';
+import { Category } from './category.js';
+import { Difficulty } from './difficulty.js';
+import { Subcategory } from './subcategory.js';
+import { Tournament } from './tournament.js';
 
 export type Question = {
   category: Category;

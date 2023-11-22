@@ -14,13 +14,13 @@ import {
   Subcategory,
   Tournament,
 } from '@qbhub/types';
-import { QueryStringParsingError } from '../types/errors';
+import { QueryStringParsingError } from '../types/errors.js';
 import {
   MAX_LIMIT,
   MAX_TOURNAMENT_YEAR,
   MIN_LIMIT,
   MIN_TOURNAMENT_YEAR,
-} from './constants';
+} from './constants.js';
 
 /**
  * Helper functions for creating error messages.

@@ -1,4 +1,4 @@
-import { Tournament } from './tournament';
+import { Tournament } from './tournament.js';
 
 export type Clue = {
   text: string;

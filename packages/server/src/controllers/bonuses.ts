@@ -1,8 +1,8 @@
 import { log } from '@qbhub/utils';
 import { Request, Response, Router } from 'express';
-import { getBonuses } from '../models/bonuses';
-import { QueryStringParsingError } from '../types/errors';
-import { parseQueryString } from '../utils/controller';
+import { getBonuses } from '../models/bonuses.js';
+import { QueryStringParsingError } from '../types/errors.js';
+import { parseQueryString } from '../utils/controller.js';
 
 const bonusesRouter = Router();
 bonusesRouter.get('/', async (req: Request, res: Response) => {

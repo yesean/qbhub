@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { isLogLevelValid, LogLevel } from '@qbhub/types';
-import * as env from './env';
+import * as env from './env.js';
 
 type LogParameters = {
   inputLevel: LogLevel;

@@ -1,9 +1,9 @@
 import { QuestionParameters, SortOption } from '@qbhub/types';
 import { log } from '@qbhub/utils';
-import { Order, Tossup } from '../types/db';
-import { TABLES } from '../utils/constants';
-import { client, QueryBuilder } from '../utils/db';
-import { transformTossup } from '../utils/model';
+import { Order, Tossup } from '../types/db.js';
+import { TABLES } from '../utils/constants.js';
+import { client, QueryBuilder } from '../utils/db.js';
+import { transformTossup } from '../utils/model.js';
 
 const columns = [
   { name: TABLES.tossups.columns.id },

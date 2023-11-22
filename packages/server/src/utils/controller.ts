@@ -11,7 +11,7 @@ import {
   parseText,
   parseTournaments,
   parseUntil,
-} from './queryString';
+} from './queryString.js';
 
 /**
  * Parses the QuestionFilters from a URL query string.
