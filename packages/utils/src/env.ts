@@ -7,12 +7,28 @@ const ENV_KEYS = {
   viteLogLevel: 'VITE_LOG_LEVEL',
 };
 
-export const nodePort = process.env[ENV_KEYS.nodePort];
-export const isDev = process.env[ENV_KEYS.nodeEnv] === 'development';
+const VITE_ENV_KEYS = {
+  logLevel: 'VITE_LOG_LEVEL',
+};
 
 const isLogLevel = buildIsEnum(LogLevel);
-const envLogLevel = process.env[ENV_KEYS.logLevel];
 export const DEFAULT_LOG_LEVEL = LogLevel.Warn;
 export const validateLogLevel = (data: string | undefined) =>
   isLogLevel(data) ? data : DEFAULT_LOG_LEVEL;
-export const logLevel = validateLogLevel(envLogLevel);
+
+const viteEnv = (import.meta as any).env;
+
+const viteIsDev = viteEnv?.DEV;
+const viteLogLevel = validateLogLevel(viteEnv?.[VITE_ENV_KEYS.logLevel]);
+
+const envLogLevel = process.env[ENV_KEYS.logLevel];
+const nodePort = process.env[ENV_KEYS.nodePort];
+const nodeIsDev = process.env[ENV_KEYS.nodeEnv] === 'development';
+const nodeLogLevel = validateLogLevel(envLogLevel);
+
+const isVite = viteEnv != null;
+
+const isDev = isVite ? viteIsDev : nodeIsDev;
+const logLevel = isVite ? viteLogLevel : nodeLogLevel;
+
+export { nodePort, isDev, logLevel };
