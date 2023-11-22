@@ -27,16 +27,6 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
 
-    <!-- add node polyfills -->
-    <script type="module">
-      import { Buffer } from 'buffer';
-      import process from 'process';
-
-      window.global = globalThis;
-      window.Buffer = Buffer;
-      window.process = process;
-    </script>
-
     <!-- bootstrap Vite application -->
     <script type="module" src="/src/index.tsx"></script>
   </body>
