@@ -1,8 +1,17 @@
 version: '3.9'
 services:
+  postgres.dev:
+    image: seanye24/qbhub-postgres
+    restart: always
+    env_file: .env.development
+    ports:
+      - ${PGPORT}:${PGPORT}
+    profiles:
+      - dev
   postgres:
     image: seanye24/qbhub-postgres
     restart: always
+    env_file: .env
     build:
       dockerfile: Dockerfile.postgres
       context: .
@@ -10,34 +19,39 @@ services:
         - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
         - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
         - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-    env_file: .env
     ports:
       - ${PGPORT}:${PGPORT}
+    profiles:
+      - prod
   node:
     image: seanye24/qbhub-node
     depends_on:
       - postgres
+    env_file: .env
     build:
       dockerfile: Dockerfile.node
       context: .
-    env_file: .env
     ports:
       - ${NODE_PORT}:${NODE_PORT}
+    profiles:
+      - prod
   nginx:
     image: seanye24/qbhub-nginx
     depends_on:
       - node
     restart: always
+    env_file: .env
     build:
       dockerfile: Dockerfile.nginx
       context: .
-    env_file: .env
     ports:
       - 80:80
       - 443:443
     volumes:
       - ./data/certbot/conf:/etc/letsencrypt # to serve TLS certs from
       - ./data/certbot/www:/var/www/certbot # to serve ACME challenges from
+    profiles:
+      - prod
   certbot:
     image: certbot/certbot
     volumes:

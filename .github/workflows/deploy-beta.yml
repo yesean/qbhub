@@ -10,15 +10,17 @@ jobs:
       - name: create .env file
         run: |
           touch .env
+          echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> .env
+          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
+          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+
           echo PGHOST=${{ secrets.PGHOST }} >> .env
           echo PGDATABASE=${{ secrets.PGDATABASE }} >> .env
-          echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> .env
           echo PGUSER=${{ secrets.PGUSER }} >> .env
-          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
           echo PGPASSWORD=${{ secrets.PGPASSWORD }} >> .env
-          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
           echo PGPORT=${{ secrets.PGPORT }} >> .env
-          echo NGINX_HOST=${{ secrets.NGINX_BETA_HOST }} >> .env
+
+          echo NGINX_HOST=${{ secrets.NGINX_HOST }} >> .env
           echo NODE_HOST=${{ secrets.NODE_HOST }} >> .env
           echo NODE_PORT=${{ secrets.NODE_PORT }} >> .env
 
@@ -38,7 +40,7 @@ jobs:
           username: ${{ secrets.DO_USERNAME }}
           key: ${{ secrets.DO_KEY }}
           script: |
-            docker compose down
+            docker compose --profile prod down
             docker compose pull
             docker system prune --force
-            docker compose up --detach
+            docker compose --profile prod up --detach
