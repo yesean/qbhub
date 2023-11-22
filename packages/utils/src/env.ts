@@ -22,9 +22,9 @@ const isVite = viteEnv != null;
 const viteIsDev = viteEnv?.DEV;
 const viteLogLevel = validateLogLevel(viteEnv?.[VITE_ENV_KEYS.logLevel]);
 
-const envLogLevel = window.process?.env?.[ENV_KEYS.logLevel];
-const nodePort = window.process?.env?.[ENV_KEYS.nodePort];
-const nodeIsDev = window.process?.env?.[ENV_KEYS.nodeEnv] === 'development';
+const envLogLevel = globalThis.process?.env?.[ENV_KEYS.logLevel];
+const nodePort = globalThis.process?.env?.[ENV_KEYS.nodePort];
+const nodeIsDev = globalThis.process?.env?.[ENV_KEYS.nodeEnv] === 'development';
 const nodeLogLevel = validateLogLevel(envLogLevel);
 
 const isDev = isVite ? viteIsDev : nodeIsDev;
