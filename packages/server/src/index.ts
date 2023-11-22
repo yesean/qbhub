@@ -8,7 +8,6 @@ import freqRouter from './controllers/freq.js';
 import tossupsRouter from './controllers/tossups.js';
 
 const CLIENT_BUILD_DIR = new URL('../dist-client', import.meta.url).pathname;
-console.log({ CLIENT_BUILD_DIR });
 
 const app = express();
 app.use(express.json());
