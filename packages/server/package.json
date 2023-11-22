@@ -38,8 +38,8 @@
   },
   "scripts": {
     "start": "pm2 start pm2.config.cjs --no-daemon",
-    "watch": "NODE_ENV=development nodemon --watch src --ext .ts --exec node --loader ts-node/esm src/index.ts",
-    "dev": "concurrently \"tsc --build\" \"yarn watch\"",
+    "watch": "nodemon --watch src --ext .ts --exec node --loader ts-node/esm src/index.ts",
+    "dev": "NODE_ENV=development concurrently \"tsc --build\" \"yarn watch\"",
     "typecheck": "tsc --noEmit",
     "eslint": "eslint src --ext .ts,.tsx",
     "eslint:debug": "DEBUG=eslint:cli-engine yarn eslint",
