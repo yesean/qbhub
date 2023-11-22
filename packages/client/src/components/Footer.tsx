@@ -1,3 +1,4 @@
+/// <reference types="vite-plugin-svgr/client" />
 import { InfoOutlineIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
 import { Flex, Heading, IconButton, Link } from '@chakra-ui/react';
 import { useModalContext } from '../providers/ModalContext';

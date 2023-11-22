@@ -1,6 +1,6 @@
 import { Bag, Clue, ClueBagMap, SelectedClue } from '@qbhub/types';
 import { log } from '@qbhub/utils';
-import stats from 'compromise-stats';
+import stats from '@seanye/compromise-stats';
 import _nlp from 'compromise/three';
 import { PlainTossup } from '../types/db.js';
 import { each, max, shuffle, sum, unique } from './array.js';

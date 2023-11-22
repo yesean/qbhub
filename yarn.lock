@@ -2357,13 +2357,13 @@ __metadata:
   dependencies:
     "@qbhub/types": "workspace:^"
     "@qbhub/utils": "workspace:^"
+    "@seanye/compromise-stats": ^0.1.1
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.14
     "@types/pg": ^8.6.5
     "@typescript-eslint/eslint-plugin": ^5.38.1
     "@typescript-eslint/parser": ^5.38.1
     compromise: ^14.10.1
-    compromise-stats: ^0.1.0
     concurrently: ^8.2.2
     cors: 2.8.5
     eslint: ^8.54.0
@@ -2533,6 +2533,17 @@ __metadata:
   version: 4.1.4
   resolution: "@rollup/rollup-win32-x64-msvc@npm:4.1.4"
   conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@seanye/compromise-stats@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "@seanye/compromise-stats@npm:0.1.1"
+  dependencies:
+    efrt: ^2.5.0
+  peerDependencies:
+    compromise: ">=14.0.0"
+  checksum: a08bf1cf87a70737ac953d205778f87fefc404bee07aef359fb3cec81449ca62a27c6b511b30b928ac8069855a8cd820a741fc6485515ad7f6960633b993f10e
   languageName: node
   linkType: hard
 
@@ -4256,17 +4267,6 @@ __metadata:
   version: 2.15.1
   resolution: "commander@npm:2.15.1"
   checksum: a1b6b66a98cd1862084fcb230d11f56d3af0e5a42c307158d987464d65112fd9f8de2a682895247d2e475f925895e70e5bda21379b1286b21c55dd5c17f0d5fa
-  languageName: node
-  linkType: hard
-
-"compromise-stats@npm:^0.1.0":
-  version: 0.1.0
-  resolution: "compromise-stats@npm:0.1.0"
-  dependencies:
-    efrt: ^2.5.0
-  peerDependencies:
-    compromise: ">=14.0.0"
-  checksum: c6a5a42c0fe6653fea696c6a4941187450681341bf9517b5cf7977cfe93d1bdf7c332f36903a29e812db59407829aeaa8eadfe9b8c23fc279c857193d4a3befb
   languageName: node
   linkType: hard
 
