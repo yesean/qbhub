@@ -1,4 +1,4 @@
-import { random as randomNumber } from './number';
+import { random as randomNumber } from './number.js';
 
 type Mapping<T, S> = (s: T) => S;
 type StringAccumulator = { [key: string]: any };

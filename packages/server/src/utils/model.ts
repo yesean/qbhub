@@ -3,7 +3,7 @@ import {
   Bonus as DBBonus,
   BonusPart as DBBonusPart,
   Tossup as DBTossup,
-} from '../types/db';
+} from '../types/db.js';
 
 export const transformTossup = (tossup: DBTossup): Tossup => ({
   id: tossup.id,

@@ -4,6 +4,7 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "module": "nodenext",
     "moduleResolution": "nodenext",
+    "isolatedModules": true,
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,

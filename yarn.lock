@@ -2303,7 +2303,7 @@ __metadata:
     "@vitejs/plugin-react": ^2.1.0
     axios: 0.27.2
     buffer: ^6.0.3
-    compromise: 14.5.0
+    compromise: ^14.10.1
     detect-browser: 5.3.0
     eslint: 8.24.0
     eslint-config-airbnb: 19.0.4
@@ -2352,8 +2352,8 @@ __metadata:
     "@types/pg": ^8.6.5
     "@typescript-eslint/eslint-plugin": ^5.38.1
     "@typescript-eslint/parser": ^5.38.1
-    compromise: 14.5.0
-    compromise-stats: 0.1.0
+    compromise: ^14.10.1
+    compromise-stats: ^0.1.0
     cors: 2.8.5
     eslint: ^8.54.0
     eslint-config-airbnb-base: ^15.0.0
@@ -4248,7 +4248,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"compromise-stats@npm:0.1.0":
+"compromise-stats@npm:^0.1.0":
   version: 0.1.0
   resolution: "compromise-stats@npm:0.1.0"
   dependencies:
@@ -4259,14 +4259,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"compromise@npm:14.5.0":
-  version: 14.5.0
-  resolution: "compromise@npm:14.5.0"
+"compromise@npm:^14.10.1":
+  version: 14.10.1
+  resolution: "compromise@npm:14.10.1"
   dependencies:
     efrt: 2.7.0
     grad-school: 0.0.5
-    suffix-thumb: 4.0.2
-  checksum: 4f941c6ea4ee5707c017e7358b55e97e8485cd684b066227e6b2fdd06f8e6f025316b4d653aa945acde0451bd0845374e4f028d81c5fa87b59552152377b822b
+    suffix-thumb: 5.0.2
+  checksum: d7cbf3e38d8405af6c9f63bc6c36b2e45aee4aea05a6b1398cbff8d0c78d52a56eaa1621c7e628b65abbbf17c94600b257ef57d9bbec64d71e8b0b7051960f00
   languageName: node
   linkType: hard
 
@@ -10777,10 +10777,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"suffix-thumb@npm:4.0.2":
-  version: 4.0.2
-  resolution: "suffix-thumb@npm:4.0.2"
-  checksum: e16c47d3efff9ff363e3c19bdfcb2aff511810eabeef6136c4fdf184304148b5b9527721e87af6bc5b1fb42ea61e31802b5df7fd3b19acfe0e445a5f40686902
+"suffix-thumb@npm:5.0.2":
+  version: 5.0.2
+  resolution: "suffix-thumb@npm:5.0.2"
+  checksum: 4c4f37168b9455c460451c9531fd2708dcd20aadbb3bc505901a0bb616fa9239a582661cd002625de3cf499ce747fbac45d074e75f0f1bccd7b88fb9c6f4fac9
   languageName: node
   linkType: hard
 

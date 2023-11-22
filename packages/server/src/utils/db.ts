@@ -1,6 +1,13 @@
 import { QuestionParameters } from '@qbhub/types';
-import { Client } from 'pg';
-import { Column, Order, Parameter, QuestionFilterOptions } from '../types/db';
+import pg from 'pg';
+import {
+  Column,
+  Order,
+  Parameter,
+  QuestionFilterOptions,
+} from '../types/db.js';
+
+const { Client } = pg;
 
 // connect to postgresql database
 export const client = new Client();

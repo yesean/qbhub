@@ -1,2 +1,2 @@
-export * as env from './env';
-export * as log from './log';
+export * as env from './env.js';
+export * as log from './log.js';

@@ -1,9 +1,9 @@
 import { QuestionParameters } from '@qbhub/types';
 import { log } from '@qbhub/utils';
-import { PlainTossup } from '../types/db';
-import { getAllClues, getUniqueClues } from '../utils/clues';
-import { TABLES } from '../utils/constants';
-import { client, QueryBuilder } from '../utils/db';
+import { PlainTossup } from '../types/db.js';
+import { getAllClues, getUniqueClues } from '../utils/clues.js';
+import { TABLES } from '../utils/constants.js';
+import { client, QueryBuilder } from '../utils/db.js';
 
 const columns = [
   { name: TABLES.tossups.columns.text },

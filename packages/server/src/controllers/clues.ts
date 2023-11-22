@@ -1,8 +1,8 @@
 import { log } from '@qbhub/utils';
 import { Request, Response, Router } from 'express';
-import { getClues } from '../models/clues';
-import { QueryStringParsingError } from '../types/errors';
-import { parseQueryString } from '../utils/controller';
+import { getClues } from '../models/clues.js';
+import { QueryStringParsingError } from '../types/errors.js';
+import { parseQueryString } from '../utils/controller.js';
 
 const cluesRouter = Router();
 cluesRouter.get('/', async (req: Request, res: Response) => {

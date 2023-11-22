@@ -2,9 +2,9 @@ import { Bag, Clue, ClueBagMap, SelectedClue } from '@qbhub/types';
 import { log } from '@qbhub/utils';
 import stats from 'compromise-stats';
 import _nlp from 'compromise/three';
-import { PlainTossup } from '../types/db';
-import { each, max, shuffle, sum, unique } from './array';
-import { round } from './number';
+import { PlainTossup } from '../types/db.js';
+import { each, max, shuffle, sum, unique } from './array.js';
+import { round } from './number.js';
 
 const nlp = _nlp.plugin(stats);
 

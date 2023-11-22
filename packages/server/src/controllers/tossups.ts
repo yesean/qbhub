@@ -1,8 +1,8 @@
 import { log } from '@qbhub/utils';
 import { Request, Response, Router } from 'express';
-import { getTossups } from '../models/tossups';
-import { QueryStringParsingError } from '../types/errors';
-import { parseQueryString } from '../utils/controller';
+import { getTossups } from '../models/tossups.js';
+import { QueryStringParsingError } from '../types/errors.js';
+import { parseQueryString } from '../utils/controller.js';
 
 const tossupsRouter = Router();
 tossupsRouter.get('/', async (req: Request, res: Response) => {

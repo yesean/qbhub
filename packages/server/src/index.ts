@@ -2,22 +2,24 @@ import { env, log } from '@qbhub/utils';
 import cors from 'cors';
 import express from 'express';
 import path from 'path';
-import bonusesRouter from './controllers/bonuses';
-import cluesRouter from './controllers/clues';
-import freqRouter from './controllers/freq';
-import tossupsRouter from './controllers/tossups';
+import bonusesRouter from './controllers/bonuses.js';
+import cluesRouter from './controllers/clues.js';
+import freqRouter from './controllers/freq.js';
+import tossupsRouter from './controllers/tossups.js';
+
+const CLIENT_BUILD_DIR = new URL('../dist-client', import.meta.url).pathname;
+console.log({ CLIENT_BUILD_DIR });
 
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use(express.static(path.join(__dirname, '..', 'build')));
+app.use(express.static(CLIENT_BUILD_DIR));
 
 app.use('/api/tossups', tossupsRouter);
 app.use('/api/bonuses', bonusesRouter);
 app.use('/api/freq', freqRouter);
 app.use('/api/clues', cluesRouter);
 
-const CLIENT_BUILD_DIR = path.join(__dirname, '..', 'dist-client');
 app.get('*', (_, res) =>
   res.sendFile(path.join(CLIENT_BUILD_DIR, 'index.html')),
 );

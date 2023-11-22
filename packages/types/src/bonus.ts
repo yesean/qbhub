@@ -1,4 +1,4 @@
-import { Question } from './question';
+import { Question } from './question.js';
 
 export type Bonus = {
   id: number;

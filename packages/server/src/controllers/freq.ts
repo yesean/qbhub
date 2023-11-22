@@ -1,8 +1,8 @@
 import { log } from '@qbhub/utils';
 import { Request, Response, Router } from 'express';
-import { getFreq } from '../models/freq';
-import { QueryStringParsingError } from '../types/errors';
-import { parseQueryString } from '../utils/controller';
+import { getFreq } from '../models/freq.js';
+import { QueryStringParsingError } from '../types/errors.js';
+import { parseQueryString } from '../utils/controller.js';
 
 const freqRouter = Router();
 freqRouter.get('/', async (req: Request, res: Response) => {
