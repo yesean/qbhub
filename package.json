@@ -15,9 +15,9 @@
     "lint": "yarn workspaces foreach -pviA run lint",
     "lint:debug": "yarn workspaces foreach -pviA run lint:debug",
     "format": "yarn workspaces foreach -pviA run format",
-    "build": "yarn workspaces foreach -vi run build && yarn postbuild",
-    "postbuild": "cp -r packages/client/dist packages/server/dist-client",
+    "build": "yarn workspaces foreach -viA run build && yarn postbuild",
     "clean": "yarn workspaces foreach -tpviA run clean",
-    "test": "yarn workspaces foreach -pviA run test"
+    "test": "yarn workspaces foreach -pviA run test",
+    "postbuild": "cp -r packages/client/dist packages/server/dist-client"
   }
 }
