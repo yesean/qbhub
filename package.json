@@ -4,7 +4,7 @@
   "description": "Quizbowl Meets Automation",
   "version": "1.0.0",
   "license": "MIT",
-  "packageManager": "yarn@3.6.0",
+  "packageManager": "yarn@4.0.2",
   "workspaces": [
     "packages/*"
   ],
