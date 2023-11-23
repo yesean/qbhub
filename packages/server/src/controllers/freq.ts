@@ -14,7 +14,7 @@ freqRouter.get('/', async (req: Request, res: Response) => {
     if (e instanceof QueryStringParsingError) {
       res.status(400).send(e.message);
     }
-    log.error(e);
+    log.error('error sending frequency list to client', e);
   }
 });
 

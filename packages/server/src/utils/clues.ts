@@ -265,11 +265,11 @@ const combineClues = (
  * Wrapper function for combineClues.
  */
 export const getUniqueClues = (clues: Clue[]) => {
-  log.info('Calculating bag of words for each clue.');
+  log.debug('Calculating bag of words for each clue.');
   const clueBagMap = getClueBagMap(clues);
 
   // remove useless clues
-  log.info('Removing useless clues.');
+  log.debug('Removing useless clues.');
   clues = clues.filter((clue) => {
     if (Object.keys(clueBagMap[clue.text]).length === 0) {
       delete clueBagMap[clue.text];
@@ -278,8 +278,8 @@ export const getUniqueClues = (clues: Clue[]) => {
     return true;
   });
 
-  log.info('Calculating bag of words for corpus.');
+  log.debug('Calculating bag of words for corpus.');
   const corpusBag = getCorpusBag(clueBagMap);
-  log.info('Combining clues.');
+  log.debug('Combining clues.');
   return combineClues(clues, clueBagMap, corpusBag);
 };

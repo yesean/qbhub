@@ -34,8 +34,8 @@ export const getFreq = async (questionFilters: QuestionParameters) => {
     .offset(questionFilters.offset)
     .build();
 
-  log.info(`Freq SQL Query:\n${query}`);
-  log.info(
+  log.debug(`Freq SQL Query:\n${query}`);
+  log.debug(
     'Parameters:',
     Object.entries(values).map((e) => [Number(e[0]) + 1, e[1]]),
   );

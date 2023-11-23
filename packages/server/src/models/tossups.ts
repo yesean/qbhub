@@ -46,8 +46,8 @@ export const getTossups = async (questionFilters: QuestionParameters) => {
   }
   const [query, values] = partialQuery.limit(questionFilters.limit).build();
 
-  log.info(`Tossups SQL Query:\n${query}`);
-  log.info(
+  log.debug(`Tossups SQL Query:\n${query}`);
+  log.debug(
     'Parameters:',
     Object.entries(values).map((e) => [Number(e[0]) + 1, e[1]]),
   );
