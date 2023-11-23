@@ -10,13 +10,14 @@
   ],
   "scripts": {
     "start": "yarn workspace @qbhub/server run start",
-    "dev": "env $(grep -v '^#' .env.development) yarn workspaces foreach -pvi run dev",
-    "lint": "yarn workspaces foreach -pvi run lint",
-    "lint:debug": "yarn workspaces foreach -pvi run lint:debug",
-    "format": "yarn workspaces foreach -pvi run format",
+    "db": "docker compose --profile dev up --detach",
+    "dev": "yarn run db && env $(grep -v '^#' .env.development) yarn workspaces foreach -pviA run dev",
+    "lint": "yarn workspaces foreach -pviA run lint",
+    "lint:debug": "yarn workspaces foreach -pviA run lint:debug",
+    "format": "yarn workspaces foreach -pviA run format",
     "build": "yarn workspaces foreach -vi run build && yarn postbuild",
     "postbuild": "cp -r packages/client/dist packages/server/dist-client",
-    "clean": "yarn workspaces foreach -tpvi run clean",
-    "test": "yarn workspaces foreach -pvi run test"
+    "clean": "yarn workspaces foreach -tpviA run clean",
+    "test": "yarn workspaces foreach -pviA run test"
   }
 }
