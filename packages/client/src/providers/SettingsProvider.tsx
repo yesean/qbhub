@@ -14,7 +14,6 @@ type Props = {
 
 // Provider component for initializing settings
 export default ({ children }: Props) => {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const { settings, setSettings } = useSettings();
   const ref = useRef(settings); // initialize ref at mount
 
