@@ -78,7 +78,7 @@
     "prelint": "tsc --build",
     "lint": "yarn prelint && yarn typecheck && yarn eslint",
     "lint:debug": "yarn prelint && yarn typecheck && yarn eslint:debug",
-    "format": "prettier --write src",
+    "format": "prettier --write src index.html",
     "build": "tsc --build && vite build",
     "test": "vitest --run",
     "test:watch": "vitest --watch",

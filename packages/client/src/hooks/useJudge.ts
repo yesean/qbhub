@@ -36,7 +36,8 @@ const useJudge = (
         // submit answer
         const isCorrect = judgeResult === JudgeResult.correct;
         log.debug(
-          `user answer (${userAnswer}) is: ${isCorrect ? 'correct' : 'incorrect'
+          `user answer (${userAnswer}) is: ${
+            isCorrect ? 'correct' : 'incorrect'
           }.`,
         );
         onSubmit(isCorrect, input);
