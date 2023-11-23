@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useSettings } from '../hooks/useSettings';
 import { restoreSettings } from '../utils/settings/storage';
 import {
-  getUpdatedCategoriesFromSubcategories,
+  getValidatedSettings,
   isSettingsDefault,
 } from '../utils/settings/validate';
 
@@ -21,18 +21,12 @@ export default ({ children }: Props) => {
   useEffect(() => {
     const initialURLSettings = ref.current;
     const isQueryParamsEmpty = isSettingsDefault(initialURLSettings);
+    const initialSettings = getValidatedSettings(
+      // if url is empty, fallback to local storage
+      isQueryParamsEmpty ? initialStorageSettings : initialURLSettings,
+    );
 
-    // if url is empty, try restoring settings from local storage
-    if (isQueryParamsEmpty) {
-      setSettings(initialStorageSettings);
-    } else {
-      // if categories and subcategories conflict, give priority to subcategories
-      const updatedCategories = getUpdatedCategoriesFromSubcategories(
-        initialURLSettings.categories,
-        initialURLSettings.subcategories,
-      );
-      setSettings({ ...initialURLSettings, categories: updatedCategories }); // save url settings to local storage
-    }
+    setSettings(initialSettings);
   }, [setSettings]);
 
   return children;

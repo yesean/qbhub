@@ -93,3 +93,21 @@ export const getUpdatedSubcategoriesFromCategories = (
     (sub) => !newCategories.includes(SUBCATEGORY_MAP[sub].category),
   );
 };
+
+// validate categories/subcategories conflicts from unvalidated sources (URL or local storage)
+export const getValidatedSettings = (
+  invalidatedSettings: Partial<Settings>,
+): Partial<Settings> => {
+  if (
+    invalidatedSettings.categories == null ||
+    invalidatedSettings.subcategories == null
+  )
+    return invalidatedSettings;
+
+  // if input categories and subcategories conflict, give priority to subcategories
+  const updatedCategories = getUpdatedCategoriesFromSubcategories(
+    invalidatedSettings.categories,
+    invalidatedSettings.subcategories,
+  );
+  return { ...invalidatedSettings, categories: updatedCategories };
+};
