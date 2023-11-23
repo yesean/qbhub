@@ -30,16 +30,16 @@ export const getClues = async (questionFilters: QuestionParameters) => {
     .limit(questionFilters.limit)
     .build();
 
-  log.info(`Clues SQL Query:\n${query}`);
-  log.info(
+  log.debug(`Clues SQL Query:\n${query}`);
+  log.debug(
     'Parameters:',
     Object.entries(values).map((e) => [Number(e[0]) + 1, e[1]]),
   );
   const { rows: tossups } = await client.query<PlainTossup>(query, values);
 
   // extract clues from tossups
-  log.info('Parsing tossups into clues.');
+  log.debug('Parsing tossups into clues.');
   const clues = getAllClues(tossups);
-  log.info('Extracting unique clues from all clues.');
+  log.debug('Extracting unique clues from all clues.');
   return getUniqueClues(clues);
 };

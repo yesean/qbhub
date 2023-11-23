@@ -67,8 +67,8 @@ export const getBonuses = async (questionFilters: QuestionParameters) => {
     .limit(questionFilters.limit)
     .build();
 
-  log.info(`Bonuses SQL Query:\n${bonusesQuery}`);
-  log.info(
+  log.debug(`Bonuses SQL Query:\n${bonusesQuery}`);
+  log.debug(
     'Parameters:',
     Object.entries(bonusesValues).map((e) => [Number(e[0]) + 1, e[1]]),
   );
@@ -90,8 +90,8 @@ export const getBonuses = async (questionFilters: QuestionParameters) => {
     .orderBy(bonusPartsOrder)
     .build();
 
-  log.info(`Bonus parts SQL Query:\n${bonusPartsQuery}`);
-  log.info(
+  log.debug(`Bonus parts SQL Query:\n${bonusPartsQuery}`);
+  log.debug(
     'Parameters:',
     Object.entries(bonusPartsValues).map((e) => [Number(e[0]) + 1, e[1]]),
   );
