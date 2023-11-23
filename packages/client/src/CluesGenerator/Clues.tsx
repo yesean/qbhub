@@ -9,13 +9,13 @@ import {
   Tooltip,
 } from '@chakra-ui/react';
 import { SelectedClue } from '@qbhub/types';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useLayoutEffect } from 'react';
 import FileDownloadButton from '../components/buttons/FileDownloadButton';
 import RouterLinkButton from '../components/buttons/RouterLinkButton';
 import { KeyValueTable } from '../components/tables';
 import { useSettings } from '../hooks/useSettings';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { toCSV, toJSON } from '../utils/array';
+import { getCSVURL, getJSONURL } from '../utils/array';
 import {
   useClueDisplayRouteContext,
   useClueSearchRouteContext,
@@ -36,36 +36,20 @@ const cluesFields = [
 const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { status, clues, currentQuery } = useAppSelector(selectCluesGenerator);
   const dispatch = useAppDispatch();
-  const [CSVLink, setCSVLink] = useState('');
-  const [JSONLink, setJSONLink] = useState('');
   const { getURL: getClueSearchURL } = useClueSearchRouteContext();
   const { params } = useClueDisplayRouteContext();
   const answer = params.answer as string;
   const { settings } = useSettings();
 
-  useEffect(() => {
-    const cluesCSV = clues
+  const cluesCSVURL = getCSVURL(
+    clues
       .filter((clue) => clue.score > 0)
-      .map((clue) => [clue.text, answer, clue.sentence]);
-    const url = toCSV(cluesCSV);
-    setCSVLink(url);
+      .map((clue) => [clue.text, answer, clue.sentence]),
+  );
 
-    return () => {
-      URL.revokeObjectURL(url);
-    };
-  }, [answer, clues]);
-
-  useEffect(() => {
-    const cluesJSON = clues
-      .filter((clue) => clue.score > 0)
-      .map((clue) => ({ ...clue, answer }));
-    const url = toJSON(cluesJSON);
-    setJSONLink(url);
-
-    return () => {
-      URL.revokeObjectURL(url);
-    };
-  }, [answer, clues]);
+  const cluesJSONURL = getJSONURL(
+    clues.filter((clue) => clue.score > 0).map((clue) => ({ ...clue, answer })),
+  );
 
   useLayoutEffect(() => {
     dispatch(resetStatus());
@@ -173,9 +157,13 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
               leftIcon={<SearchIcon w={4} h={4} />}
               variant="secondary"
             />
-            <FileDownloadButton href={CSVLink} download={answer} label="CSV" />
             <FileDownloadButton
-              href={JSONLink}
+              href={cluesCSVURL}
+              download={answer}
+              label="CSV"
+            />
+            <FileDownloadButton
+              href={cluesJSONURL}
               download={answer}
               label="JSON"
             />
