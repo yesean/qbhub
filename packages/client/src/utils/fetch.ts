@@ -64,7 +64,7 @@ export const fetchTossups = async (params: FetchParams): Promise<Tossup[]> => {
   const url = addParams(TOSSUP_URL, createParams(params));
 
   try {
-    log.info('Fetching tossups.');
+    log.info('fetching tossups');
     const { data } = await axios.get<Tossup[]>(url);
     const tossups = data.map((tu) => ({
       id: tu.id,
@@ -79,9 +79,10 @@ export const fetchTossups = async (params: FetchParams): Promise<Tossup[]> => {
       tournament: tu.tournament,
       year: tu.year,
     }));
-    log.info('Received tossups.');
+    log.info('finished fetching tossups');
     return tossups;
   } catch (err) {
+    log.error('error fetching tossups', err);
     return [];
   }
 };
@@ -90,7 +91,7 @@ export const fetchBonuses = async (params: FetchParams): Promise<Bonus[]> => {
   const url = addParams(BONUS_URL, createParams(params));
 
   try {
-    log.info('Fetching bonuses.');
+    log.info('fetching bonuses');
     const { data } = await axios.get<Bonus[]>(url);
     const bonuses = data.map((bn) => ({
       id: bn.id,
@@ -107,9 +108,10 @@ export const fetchBonuses = async (params: FetchParams): Promise<Bonus[]> => {
         formattedAnswer: normalizeTags(part.formattedAnswer),
       })),
     }));
-    log.info('Received bonuses.');
+    log.info('finished fetching bonuses');
     return bonuses;
   } catch (err) {
+    log.error('error fetching bonuses', err);
     return [];
   }
 };
@@ -120,11 +122,12 @@ export const fetchFreq = async (
   const url = addParams(FREQ_URL, createParams(params));
 
   try {
-    log.info('Fetching frequency list.');
+    log.info('fetching frequency list');
     const { data } = await axios.get<FrequencyListEntry[]>(url);
-    log.info('Received frequency list.');
+    log.info('finished fetching frequency list');
     return data;
   } catch (err) {
+    log.error('error fetching frequency list', err);
     return [];
   }
 };
@@ -135,11 +138,12 @@ export const fetchAnswers = async (
   const url = addParams(FREQ_URL, createParams(params));
 
   try {
-    log.info('Fetching answers.');
+    log.info('fetching answers');
     const { data } = await axios.get<FrequencyListEntry[]>(url);
-    log.info('Received answers.');
+    log.info('finished fetching answers');
     return data;
   } catch (err) {
+    log.error('error fetching answers', err);
     return [];
   }
 };
@@ -150,11 +154,12 @@ export const fetchClues = async (
   const url = addParams(CLUES_URL, createParams(params));
 
   try {
-    log.info('Fetching clues.');
+    log.info('fetching clues');
     const { data } = await axios.get<SelectedClue[]>(url);
-    log.info('Received clues.');
+    log.info('finished fetching clues');
     return data;
   } catch (err) {
+    log.error('error fetching clues');
     return [];
   }
 };

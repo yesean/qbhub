@@ -69,11 +69,11 @@ export const nextPage = createAsyncThunk<
     await dispatch(fetchPages({ ...args, offset: results.length })).unwrap();
   } else if (offset + 3 * PAGE_SIZE >= results.length) {
     // if 3 pages from the last page, fetch more in the background
-    log.info('Starting to prefetch pages.');
+    log.info('less than 3 pages left, prefetching frequency list pages');
     dispatch(fetchPages({ ...args, offset: results.length }))
       .unwrap()
-      .then(() => log.info('Finished prefetching pages.'))
-      .catch((e) => log.info('Pages prefetch rejected:', e));
+      .then(() => log.info('finished prefetching frequency list pages'))
+      .catch((e) => log.error('error prefetching frequency list pages', e));
   }
 });
 

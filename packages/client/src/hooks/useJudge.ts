@@ -24,20 +24,19 @@ const useJudge = (
 
       // judge the user answer
       const userAnswer = normalizeAnswer(input);
-      log.info(`User submitted "${userAnswer}".`);
+      log.debug(`user answer: ${userAnswer}`);
       const judgeResult = judge.judge(userAnswer);
 
       // either prompt on answer or mark it as correct/incorrect
       if (judgeResult === JudgeResult.prompt) {
         // prompt on answer
-        log.info(`Prompting on "${userAnswer}".`);
+        log.debug(`prompting on: ${userAnswer}`);
         onPrompt();
       } else {
         // submit answer
         const isCorrect = judgeResult === JudgeResult.correct;
-        log.info(
-          `User answer "${userAnswer}" is ${
-            isCorrect ? 'correct' : 'incorrect'
+        log.debug(
+          `user answer (${userAnswer}) is: ${isCorrect ? 'correct' : 'incorrect'
           }.`,
         );
         onSubmit(isCorrect, input);

@@ -279,23 +279,23 @@ export class Judge {
   constructor(answerline: string) {
     this.acceptableAnswers = parseAcceptableAnswers(answerline);
     this.promptableAnswers = parsePromptableAnswers(answerline);
-    log.info('Correct answers:', this.acceptableAnswers);
-    log.info('Promptable answers:', this.promptableAnswers);
+    log.debug('accepted answers:', this.acceptableAnswers);
+    log.debug('promptable answers:', this.promptableAnswers);
   }
 
   judge(userAnswer: string): JudgeResult {
     const MIN_RATING = 0.6;
 
     let ratings = checkAnswer(userAnswer, this.acceptableAnswers);
-    log.info(`Acceptable answer ratings for "${userAnswer}":`, ratings.ratings);
+    log.debug(`acceptable answer ratings for: ${userAnswer}`, ratings.ratings);
     if (ratings.bestMatch.rating > MIN_RATING) {
       return JudgeResult.correct;
     }
 
     if (this.promptableAnswers.length > 0) {
       ratings = checkAnswer(userAnswer, this.promptableAnswers);
-      log.info(
-        `Promptable answer ratings for "${userAnswer}":`,
+      log.debug(
+        `promptable answer ratings for: ${userAnswer}`,
         ratings.ratings,
       );
       if (ratings.bestMatch.rating > MIN_RATING) {
