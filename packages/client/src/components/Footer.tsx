@@ -32,7 +32,7 @@ const Footer: React.FC<React.PropsWithChildren<unknown>> = () => {
         bg="white"
         icon={
           <Link href="https://github.com/yesean/qbhub" isExternal w={5} h={5}>
-            <Github width="100%" height="100%" />
+            <Icon as={Github} w="100%" h="100%" />
           </Link>
         }
       />
