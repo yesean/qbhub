@@ -2,7 +2,6 @@
 import { InfoOutlineIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
 import { Flex, Heading, Icon, IconButton, Link } from '@chakra-ui/react';
 import { useModalContext } from '../providers/ModalContext';
-import { ReactComponent as Donate } from '../static/coffee.svg';
 import { ReactComponent as Discord } from '../static/discord.svg';
 import { ReactComponent as Github } from '../static/github.svg';
 
@@ -18,21 +17,7 @@ const Footer: React.FC<React.PropsWithChildren<unknown>> = () => {
         bg="white"
         icon={
           <Link href={discordURL} isExternal w={5} h={5}>
-            <Icon as={Discord} w="110%" h="110%" color="#7289da" />
-          </Link>
-        }
-      />
-      <IconButton
-        aria-label="buymeacoffee link"
-        bg="white"
-        icon={
-          <Link
-            href="https://www.buymeacoffee.com/qbhub"
-            isExternal
-            w={5}
-            h={5}
-          >
-            <Donate width="100%" height="100%" />
+            <Icon as={Discord} w="115%" h="115%" color="#7289da" />
           </Link>
         }
       />
