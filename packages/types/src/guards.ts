@@ -1,6 +1,8 @@
+import { Bonus } from './bonus.js';
 import { Category } from './category.js';
 import { Difficulty } from './difficulty.js';
 import { Subcategory } from './subcategory.js';
+import { Tossup } from './tossup.js';
 import { Tournament } from './tournament.js';
 
 // primitive type guards
@@ -38,6 +40,12 @@ export const isDifficultyArray = (value: any): value is Difficulty[] =>
   Array.isArray(value) && value.every(isDifficulty);
 export const isTournamentArray = (value: any): value is Tournament[] =>
   Array.isArray(value) && value.every(isTournament);
+
+// question type guards
+export const isTossup = (question: Tossup | Bonus): question is Tossup =>
+  (question as Tossup).normalizedAnswer !== undefined;
+export const isBonus = (question: Tossup | Bonus): question is Bonus =>
+  (question as Tossup).normalizedAnswer === undefined;
 
 // type conversion helpers
 export const stringToNumber = (value: string) => parseInt(value, 10);
