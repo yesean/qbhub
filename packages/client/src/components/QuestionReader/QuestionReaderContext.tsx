@@ -9,19 +9,19 @@ enum QuestionReaderStatus {
 
 type QuestionReaderContextType = {
   status: QuestionReaderStatus;
-  question: Tossup | Bonus | null;
+  question: Tossup | Bonus;
 };
 
 const QuestionReaderContext = React.createContext<QuestionReaderContextType>({
   status: QuestionReaderStatus.Judged,
-  question: null,
+  question: {} as Tossup,
 });
 
 export const useQuestionReaderContext = () => useContext(QuestionReaderContext);
 
 type QuestionReaderContextProviderProps = {
   children: ReactNode;
-  question: Tossup | Bonus | null;
+  question: Tossup | Bonus;
 };
 
 export const QuestionReaderContextProvider = ({
