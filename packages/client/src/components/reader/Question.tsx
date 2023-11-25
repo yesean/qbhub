@@ -58,7 +58,7 @@ const Question: React.FC<React.PropsWithChildren<QuestionProps>> = ({
         p={4}
         display="flex"
         flexWrap="wrap"
-        justifyContent={showLoading ? 'center' : 'start'}
+        justifyContent="start"
         borderRadius="md"
       >
         {children}
