@@ -1,7 +1,6 @@
 import { Question } from './question.js';
 
 export type Tossup = {
-  id: number;
   text: string;
   answer: string;
   formattedText: string;

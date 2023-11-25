@@ -9,3 +9,6 @@ export enum Difficulty {
   'Hard College',
   'Open',
 }
+
+export const getDifficultyName = (difficulty: Difficulty) =>
+  Difficulty[difficulty];

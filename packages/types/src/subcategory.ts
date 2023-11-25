@@ -68,3 +68,6 @@ export enum Subcategory {
   'Social Science Anthropology' = 76,
   'Fine Arts Opera' = 77,
 }
+
+export const getSubcategoryName = (subcategory: Subcategory) =>
+  Subcategory[subcategory];

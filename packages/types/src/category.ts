@@ -11,3 +11,5 @@ export enum Category {
   Philosophy = 25,
   'Current Events' = 26,
 }
+
+export const getCategoryName = (category: Category) => Category[category];
