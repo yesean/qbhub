@@ -53,9 +53,7 @@ const ROUTES = {
   frequencyList: buildRoute('/frequency'),
   clue: {
     search: buildRoute('/clue', { query: NeverNullStringParam }),
-    display: buildRoute('/clue/display', {
-      answer: NeverNullStringParam,
-    }),
+    display: buildRoute('/clue/display', { answer: NeverNullStringParam }),
   },
   about: buildRoute('/about'),
 };
