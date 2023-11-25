@@ -10,8 +10,6 @@ import { useQuestionReaderContext } from './QuestionReaderContext';
 export default () => {
   const { question } = useQuestionReaderContext();
 
-  if (question == null) return null;
-
   const tournament = getTournamentName(question.tournament);
   const difficulty = getDifficultyName(question.difficulty);
   const category = getCategoryName(question.category);
