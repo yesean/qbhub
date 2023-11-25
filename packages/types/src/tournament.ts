@@ -391,3 +391,6 @@ export enum Tournament {
   '2019 ACF Fall' = 418,
   '2019 Early Fall Tournament (EFT)' = 419,
 }
+
+export const getTournamentName = (tournament: Tournament) =>
+  Tournament[tournament];

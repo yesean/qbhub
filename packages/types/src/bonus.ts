@@ -1,7 +1,6 @@
 import { Question } from './question.js';
 
 export type Bonus = {
-  id: number;
   leadin: string;
   formattedLeadin: string;
   parts: BonusPart[];

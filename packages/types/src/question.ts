@@ -4,6 +4,7 @@ import { Subcategory } from './subcategory.js';
 import { Tournament } from './tournament.js';
 
 export type Question = {
+  id: number;
   category: Category;
   subcategory?: Subcategory;
   difficulty: Difficulty;
