@@ -22,6 +22,10 @@ export default ({ words, onFinish }: Props) => {
 
   const pause = useCallback(() => setIsPaused(true), []);
   const resume = useCallback(() => setIsPaused(false), []);
+  const reveal = useCallback(() => {
+    pause();
+    setVisibleIndex(words.length - 1);
+  }, [pause, words.length]);
 
   useEffect(() => {
     if (visibleIndex === words.length - 1 && !isFinished.current) {
@@ -45,7 +49,8 @@ export default ({ words, onFinish }: Props) => {
       visibleIndex,
       pause,
       resume,
+      reveal,
     }),
-    [pause, resume, visibleIndex],
+    [pause, resume, reveal, visibleIndex],
   );
 };
