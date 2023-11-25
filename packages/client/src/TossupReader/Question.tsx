@@ -39,12 +39,22 @@ const Question = ({ setBuzz }: QuestionProps) => {
     () => getTossupWords(formattedText).map(({ word }) => word),
     [formattedText],
   );
+
   const { buzz, reveal, displayWords, visibleIndex } = useReader(words, {
     onBuzz: useCallback(
       (index: number) => dispatch(buzzAction(index)),
       [dispatch],
     ),
   });
+
+  const shuffledTossupWords = useMemo(
+    () =>
+      displayWords.map((word, i) => ({
+        word,
+        bold: tossupWords[i].bold,
+      })),
+    [displayWords, tossupWords],
+  );
 
   useLayoutEffect(() => {
     setBuzz(() => buzz);
@@ -60,15 +70,6 @@ const Question = ({ setBuzz }: QuestionProps) => {
 
     elementScrollIntoView(visibleRef.current, { block: 'center' });
   }, [visibleIndex, buzzIndex, status]);
-
-  const shuffledTossupWords = useMemo(
-    () =>
-      displayWords.map((word, i) => ({
-        word,
-        bold: tossupWords[i].bold,
-      })),
-    [displayWords, tossupWords],
-  );
 
   return (
     <FormattedQuestion
