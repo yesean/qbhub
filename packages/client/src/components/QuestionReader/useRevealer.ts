@@ -33,11 +33,12 @@ export default ({ words, onFinish }: Props) => {
       return;
     }
 
+    if (status === QuestionReaderStatus.Answering) return;
+
     if (status === QuestionReaderStatus.Judged) {
       setVisibleIndex(words.length - 1);
+      return;
     }
-
-    if (status !== QuestionReaderStatus.Reading) return;
 
     const timeoutID = setTimeout(() => {
       setVisibleIndex((prevIndex) => prevIndex + 1);

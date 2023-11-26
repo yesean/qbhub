@@ -1,4 +1,4 @@
-import { Box, Container, Link, Text } from '@chakra-ui/react';
+import { Box, Link, Text } from '@chakra-ui/react';
 import { isTossup } from '@qbhub/types';
 import { Link as RouterLink } from 'react-router-dom';
 import { getClueDisplayURL } from '../../utils/routes';

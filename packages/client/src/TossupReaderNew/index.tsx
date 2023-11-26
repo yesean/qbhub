@@ -24,6 +24,4 @@ const mockQuestion: Tossup = {
   normalizedAnswer: 'data types',
 };
 
-export default () => {
-  return <QuestionReader question={mockQuestion} />;
-};
+export default () => <QuestionReader question={mockQuestion} />;
