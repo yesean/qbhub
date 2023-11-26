@@ -23,7 +23,7 @@ export default () => {
   }
 
   return (
-    <Heading size="sm" mb={4}>
+    <Heading size="sm" px={4}>
       {text}
     </Heading>
   );
