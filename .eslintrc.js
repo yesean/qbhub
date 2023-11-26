@@ -1,5 +1,12 @@
 module.exports = {
-  extends: ['airbnb', 'airbnb/hooks', 'airbnb-typescript', 'prettier'],
+  extends: [
+    'airbnb',
+    'airbnb-typescript',
+    'airbnb/hooks',
+    'plugin:@typescript-eslint/recommended-type-checked',
+    'plugin:@typescript-eslint/stylistic-type-checked',
+    'prettier',
+  ],
   rules: {
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/lines-between-class-members': [
@@ -8,6 +15,12 @@ module.exports = {
       { exceptAfterSingleLine: true },
     ],
     '@typescript-eslint/no-use-before-define': ['error', { functions: false }],
+    '@typescript-eslint/switch-exhaustiveness-check': [
+      'error',
+      { requireDefaultForNonUnion: true },
+    ],
+    'arrow-body-style': 'warn',
+    'default-case': 'off',
     'no-param-reassign': 'off',
     quotes: ['error', 'single', { avoidEscape: true }],
     'react/function-component-definition': 'off',
