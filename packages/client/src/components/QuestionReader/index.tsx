@@ -18,16 +18,6 @@ type Props = {
 export default ({ question }: Props) => {
   if (!isTossup(question)) return null;
 
-  const textWords = useMemo(
-    () => getTossupWords(question.formattedText),
-    [question.formattedText],
-  );
-
-  const { visibleIndex, pause, resume, reveal } = useRevealer({
-    words: textWords,
-    onFinish: () => {},
-  });
-
   return (
     <QuestionReaderContextProvider question={question}>
       <QuestionInfo />
