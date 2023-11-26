@@ -15,6 +15,7 @@ module.exports = {
     'no-param-reassign': 'off',
     quotes: ['error', 'single', { avoidEscape: true }],
     'react/function-component-definition': 'off',
+    'react/jsx-props-no-spreading': 'off',
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/require-default-props': 'off',
