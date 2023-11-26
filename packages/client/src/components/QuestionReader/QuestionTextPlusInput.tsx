@@ -106,6 +106,7 @@ export default (_: Props) => {
     customAllowCondition: status === QuestionReaderStatus.Judged,
   });
 
+  const shouldShowProgress = status === QuestionReaderStatus.Answering;
   const shouldShowBorder = status === QuestionReaderStatus.Judged;
 
   return (
@@ -116,6 +117,9 @@ export default (_: Props) => {
           indices={{ visible: visibleIndex, buzz: questionResult?.buzzIndex }}
         />
       </Box>
+      {shouldShowProgress && (
+        <QuestionReaderProgress progress={progress} setProgress={setProgress} />
+      )}
       <Flex w="100%" justify="center">
         <Input
           ref={inputRef}
