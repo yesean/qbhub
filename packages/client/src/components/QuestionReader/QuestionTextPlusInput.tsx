@@ -18,7 +18,7 @@ import {
 import QuestionReaderProgress from './QuestionReaderProgress';
 import useRevealer from './useRevealer';
 
-export const getInputBorderColor = (
+const getInputBorderColor = (
   status: QuestionReaderStatus,
   questionResult: TossupResult | null,
 ) => {
@@ -27,6 +27,17 @@ export const getInputBorderColor = (
 
   if (questionResult.isCorrect) return 'green.400';
   return 'red.400';
+};
+
+const getButtonText = (status: QuestionReaderStatus) => {
+  switch (status) {
+    case QuestionReaderStatus.Reading:
+      return 'Buzz';
+    case QuestionReaderStatus.Answering:
+      return 'Submit';
+    case QuestionReaderStatus.Judged:
+      return 'Next';
+  }
 };
 
 type Props = {};
@@ -150,7 +161,7 @@ export default (_: Props) => {
           borderColor={getInputBorderColor(status, questionResult)}
           borderWidth={shouldShowBorder ? 2 : undefined}
         />
-        <TealButton onClick={handleClick}>Buzz</TealButton>
+        <TealButton onClick={handleClick}>{getButtonText(status)}</TealButton>
       </Flex>
     </>
   );
