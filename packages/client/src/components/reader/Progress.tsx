@@ -7,6 +7,9 @@ type ProgressProps = {
   shouldTick: boolean;
 };
 
+const PROGRESS_UPDATE_INTERVAL = 5;
+const PROGRESS_UPDATE_AMOUNT = 0.1;
+
 const Progress: React.FC<React.PropsWithChildren<ProgressProps>> = ({
   progress,
   setProgress,
@@ -15,8 +18,8 @@ const Progress: React.FC<React.PropsWithChildren<ProgressProps>> = ({
   useEffect(() => {
     if (shouldTick) {
       const id = setTimeout(() => {
-        setProgress((p) => (p > 0 ? p - 0.1 : 0));
-      }, 5);
+        setProgress((p) => (p > 0 ? p - PROGRESS_UPDATE_AMOUNT : 0));
+      }, PROGRESS_UPDATE_INTERVAL);
       return () => {
         window.clearTimeout(id);
       };
