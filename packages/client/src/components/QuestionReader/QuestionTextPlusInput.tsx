@@ -33,7 +33,6 @@ type Props = {};
 
 export default (_: Props) => {
   const [userInput, setUserInput] = useState('');
-  const [progress, setProgress] = useState(100);
   const inputRef = useRef<HTMLInputElement>(null);
   const { question, status, setStatus, questionResult, setQuestionResult } =
     useQuestionReaderContext();
@@ -43,6 +42,8 @@ export default (_: Props) => {
     [question.formattedText],
   );
 
+  // buzz action: focus input, change status
+  // can be triggered by button click or revealer finishing
   const handleBuzz = useCallback(() => {
     if (status !== QuestionReaderStatus.Reading) return;
 
@@ -55,45 +56,34 @@ export default (_: Props) => {
 
   const { visibleIndex, pause, reveal } = useRevealer({
     words: textWords,
-    onFinish: handleBuzz,
+    onFinish: handleBuzz, // trigger buzz automatically once the reader is finished
   });
 
-  const handleClick = useCallback(() => {
-    switch (status) {
-      case QuestionReaderStatus.Reading: {
-        pause();
-        handleBuzz();
-        break;
-      }
-      case QuestionReaderStatus.Answering: {
-        const judge = new Judge(question.formattedAnswer);
-        const isCorrect = judge.judge(userInput) === JudgeResult.correct;
-        const isInPower =
-          visibleIndex === -1 ? false : textWords[visibleIndex].bold;
-        const isBuzzAtEnd = visibleIndex === textWords.length - 1;
-        setQuestionResult({
-          buzzIndex: visibleIndex,
-          isCorrect,
-          userAnswer: userInput,
-          words: textWords,
-          tossup: question,
-          score: getTossupScore(isCorrect, isInPower, isBuzzAtEnd),
-        });
+  // submit action: blur input, reveal answer, evaluate user answer
+  // can be triggered by button click or progress bar finishing
+  const handleSubmit = useCallback(() => {
+    if (status !== QuestionReaderStatus.Answering) return;
 
-        inputRef.current?.blur();
-        reveal();
-        setStatus(getNextStatus(status));
-        break;
-      }
-      case QuestionReaderStatus.Judged: {
-        inputRef.current?.blur();
-        setStatus(getNextStatus(status));
-        break;
-      }
-    }
+    inputRef.current?.blur();
+    reveal();
+
+    // evaluate user answer
+    const judge = new Judge(question.formattedAnswer);
+    const isCorrect = judge.judge(userInput) === JudgeResult.correct;
+    const isInPower =
+      visibleIndex === -1 ? false : textWords[visibleIndex].bold;
+    const isBuzzAtEnd = visibleIndex === textWords.length - 1;
+    setQuestionResult({
+      buzzIndex: visibleIndex,
+      isCorrect,
+      userAnswer: userInput,
+      words: textWords,
+      tossup: question,
+      score: getTossupScore(isCorrect, isInPower, isBuzzAtEnd),
+    });
+
+    setStatus(getNextStatus(status));
   }, [
-    handleBuzz,
-    pause,
     question,
     reveal,
     setQuestionResult,
@@ -103,6 +93,26 @@ export default (_: Props) => {
     userInput,
     visibleIndex,
   ]);
+
+  const handleClick = useCallback(() => {
+    switch (status) {
+      case QuestionReaderStatus.Reading: {
+        // pause the reader and trigger buzz
+        pause();
+        handleBuzz();
+        break;
+      }
+      case QuestionReaderStatus.Answering: {
+        handleSubmit();
+        break;
+      }
+      case QuestionReaderStatus.Judged: {
+        inputRef.current?.blur();
+        setStatus(getNextStatus(status));
+        break;
+      }
+    }
+  }, [handleBuzz, handleSubmit, pause, setStatus, status]);
 
   useKeyboardShortcut(' ', handleClick, {
     customAllowCondition: status === QuestionReaderStatus.Reading,
@@ -128,9 +138,7 @@ export default (_: Props) => {
           indices={{ visible: visibleIndex, buzz: questionResult?.buzzIndex }}
         />
       </Box>
-      {shouldShowProgress && (
-        <QuestionReaderProgress progress={progress} setProgress={setProgress} />
-      )}
+      {shouldShowProgress && <QuestionReaderProgress onFinish={handleSubmit} />}
       <Flex w="100%" justify="center">
         <Input
           ref={inputRef}

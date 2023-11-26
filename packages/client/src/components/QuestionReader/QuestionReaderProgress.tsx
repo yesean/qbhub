@@ -1,22 +1,27 @@
 import { Progress as ChakraProgress } from '@chakra-ui/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 type Props = {
-  progress: number;
-  setProgress: React.Dispatch<React.SetStateAction<number>>;
+  onFinish: () => void;
 };
 
 const PROGRESS_UPDATE_INTERVAL = 5;
 const PROGRESS_UPDATE_AMOUNT = 0.1;
 
-export default ({ progress, setProgress }: Props) => {
+export default ({ onFinish }: Props) => {
+  const [progress, setProgress] = useState(100);
+
   useEffect(() => {
     const timeoutID = setTimeout(() => {
-      if (progress > 0) setProgress(progress - PROGRESS_UPDATE_AMOUNT);
+      if (progress <= 0) {
+        onFinish();
+      } else {
+        setProgress(progress - PROGRESS_UPDATE_AMOUNT);
+      }
     }, PROGRESS_UPDATE_INTERVAL);
 
     return () => clearTimeout(timeoutID);
-  }, [setProgress, progress]);
+  }, [setProgress, progress, onFinish]);
 
   return (
     <ChakraProgress
@@ -24,7 +29,6 @@ export default ({ progress, setProgress }: Props) => {
       isAnimated
       colorScheme="cyan"
       borderRadius="sm"
-      mb={4}
       value={progress}
       flexShrink={0}
     />
