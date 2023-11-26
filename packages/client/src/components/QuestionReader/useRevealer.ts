@@ -1,44 +1,40 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSettings } from '../../hooks/useSettings';
 import { getReadingTimeoutDelay } from '../../utils/reader';
 import { DEFAULT_READING_SPEED } from '../../utils/settings/constants';
-import {
-  QuestionReaderStatus,
-  useQuestionReaderContext,
-} from './QuestionReaderContext';
 
 type Props = {
-  words: any[];
-  onFinish: () => void;
+  words: unknown[];
 };
 
-export default ({ words, onFinish }: Props) => {
+export default ({ words }: Props) => {
   const [visibleIndex, setVisibleIndex] = useState(-1);
+  const [isPaused, setIsPaused] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const {
     settings: { readingSpeed },
   } = useSettings();
-  const { status } = useQuestionReaderContext();
 
   const readingDelay = getReadingTimeoutDelay(
     readingSpeed ?? DEFAULT_READING_SPEED,
   );
 
+  const pause = useCallback(() => setIsPaused(true), []);
+  const reveal = useCallback(
+    () => setVisibleIndex(words.length - 1),
+    [words.length],
+  );
+
   useEffect(() => {
+    // stop when there is no more words
     if (visibleIndex === words.length - 1) {
       if (!isFinished) {
         setIsFinished(true);
-        onFinish();
       }
       return;
     }
 
-    if (status === QuestionReaderStatus.Answering) return;
-
-    if (status === QuestionReaderStatus.Judged) {
-      setVisibleIndex(words.length - 1);
-      return;
-    }
+    if (isPaused) return;
 
     const timeoutID = setTimeout(() => {
       setVisibleIndex((prevIndex) => prevIndex + 1);
@@ -46,12 +42,14 @@ export default ({ words, onFinish }: Props) => {
 
     // eslint-disable-next-line consistent-return
     return () => clearTimeout(timeoutID);
-  }, [isFinished, onFinish, readingDelay, status, visibleIndex, words.length]);
+  }, [isFinished, isPaused, readingDelay, visibleIndex, words.length]);
 
   return useMemo(
     () => ({
       visibleIndex,
+      pause,
+      reveal,
     }),
-    [visibleIndex],
+    [pause, reveal, visibleIndex],
   );
 };
