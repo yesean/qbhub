@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSettings } from '../../hooks/useSettings';
 import { getReadingTimeoutDelay } from '../../utils/reader';
 import { DEFAULT_READING_SPEED } from '../../utils/settings/constants';
@@ -11,7 +11,7 @@ type Props = {
 export default ({ words, onFinish }: Props) => {
   const [visibleIndex, setVisibleIndex] = useState(-1);
   const [isPaused, setIsPaused] = useState(false);
-  const isFinished = useRef(false);
+  const [isFinished, setIsFinished] = useState(false);
   const {
     settings: { readingSpeed },
   } = useSettings();
@@ -28,8 +28,8 @@ export default ({ words, onFinish }: Props) => {
   }, [pause, words.length]);
 
   useEffect(() => {
-    if (visibleIndex === words.length - 1 && !isFinished.current) {
-      isFinished.current = true;
+    if (visibleIndex === words.length - 1 && !isFinished) {
+      setIsFinished(true);
       onFinish();
       return;
     }
@@ -42,7 +42,14 @@ export default ({ words, onFinish }: Props) => {
 
     // eslint-disable-next-line consistent-return
     return () => clearTimeout(timeoutID);
-  }, [isPaused, onFinish, readingDelay, visibleIndex, words.length]);
+  }, [
+    isFinished,
+    isPaused,
+    onFinish,
+    readingDelay,
+    visibleIndex,
+    words.length,
+  ]);
 
   return useMemo(
     () => ({
