@@ -13,23 +13,25 @@ type Props = {
   // onJudged: () => void;
 };
 
-export default ({ question }: Props) => {
+const QuestionReader = (_: Props) => {
+  return (
+    <Flex direction="column" maxW="container.md" overflow="auto" p={2} gap={4}>
+      <QuestionInfo />
+      <QuestionAnswer />
+      <QuestionText />
+      <QuestionReaderInput />
+    </Flex>
+  );
+};
+
+export default (props: Props) => {
+  const { question } = props;
+
   if (!isTossup(question)) return null;
 
   return (
     <QuestionReaderContextProvider question={question}>
-      <Flex
-        direction="column"
-        maxW="container.md"
-        overflow="auto"
-        p={2}
-        gap={4}
-      >
-        <QuestionInfo />
-        <QuestionAnswer />
-        <QuestionText />
-        <QuestionReaderInput />
-      </Flex>
+      <QuestionReader {...props} />
     </QuestionReaderContextProvider>
   );
 };
