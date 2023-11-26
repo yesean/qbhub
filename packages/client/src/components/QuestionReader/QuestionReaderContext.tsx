@@ -1,4 +1,4 @@
-import { Tossup } from '@qbhub/types';
+import { Tossup, TossupResult } from '@qbhub/types';
 import React, { ReactNode, useContext, useMemo, useState } from 'react';
 
 export enum QuestionReaderStatus {
@@ -21,15 +21,19 @@ export const getNextStatus = (
 };
 
 type QuestionReaderContextType = {
+  question: Tossup;
   status: QuestionReaderStatus;
   setStatus: React.Dispatch<React.SetStateAction<QuestionReaderStatus>>;
-  question: Tossup;
+  questionResult: TossupResult | null;
+  setQuestionResult: React.Dispatch<React.SetStateAction<TossupResult | null>>;
 };
 
 const QuestionReaderContext = React.createContext<QuestionReaderContextType>({
+  question: {} as Tossup,
   status: QuestionReaderStatus.Judged,
   setStatus: () => {},
-  question: {} as Tossup,
+  questionResult: {} as TossupResult,
+  setQuestionResult: () => {},
 });
 
 export const useQuestionReaderContext = () => useContext(QuestionReaderContext);
@@ -46,14 +50,19 @@ export const QuestionReaderContextProvider = ({
   const [status, setStatus] = useState<QuestionReaderStatus>(
     QuestionReaderStatus.Reading,
   );
+  const [questionResult, setQuestionResult] = useState<TossupResult | null>(
+    null,
+  );
 
   const context = useMemo(
     () => ({
       status,
       setStatus,
       question,
+      questionResult,
+      setQuestionResult,
     }),
-    [question, status],
+    [question, questionResult, status],
   );
 
   return (
