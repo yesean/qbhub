@@ -13,6 +13,7 @@ type Props = {
   // onJudged: () => void;
 };
 
+// eslint-disable-next-line arrow-body-style
 const QuestionReader = (_: Props) => {
   return (
     <Flex direction="column" maxW="container.md" overflow="auto" p={2} gap={4}>
@@ -30,7 +31,8 @@ export default (props: Props) => {
   if (!isTossup(question)) return null;
 
   return (
-    <QuestionReaderContextProvider question={question}>
+    // use `key` to reset question reader per question
+    <QuestionReaderContextProvider key={question.id} question={question}>
       <QuestionReader {...props} />
     </QuestionReaderContextProvider>
   );
