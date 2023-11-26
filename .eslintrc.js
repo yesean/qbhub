@@ -8,11 +8,9 @@ module.exports = {
       { exceptAfterSingleLine: true },
     ],
     '@typescript-eslint/no-use-before-define': ['error', { functions: false }],
-    '@typescript-eslint/switch-exhaustiveness-check': [
-      'error',
-      { requireDefaultForNonUnion: true },
-    ],
+    '@typescript-eslint/switch-exhaustiveness-check': 'error',
     'arrow-body-style': 'warn',
+    'consistent-return': 'off',
     'default-case': 'off',
     'no-param-reassign': 'off',
     quotes: ['error', 'single', { avoidEscape: true }],
