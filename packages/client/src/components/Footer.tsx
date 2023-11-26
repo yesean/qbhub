@@ -2,8 +2,8 @@
 import { InfoOutlineIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
 import { Flex, Heading, Icon, IconButton, Link } from '@chakra-ui/react';
 import { useModalContext } from '../providers/ModalContext';
-import { ReactComponent as Discord } from '../static/discord.svg';
-import { ReactComponent as Github } from '../static/github.svg';
+import Discord from '../static/discord.svg?react';
+import Github from '../static/github.svg?react';
 
 const discordURL = 'https://discord.gg/wWXfWUDdWm';
 
