@@ -39,11 +39,6 @@ export enum ReaderStatus {
   empty,
 }
 
-export enum JudgeResult {
-  correct,
-  incorrect,
-  prompt,
-}
 /**
  * Get words from string without any tags.
  * e.g. I <strong>love</strong> dogs => [I, love, dogs]
@@ -267,6 +262,12 @@ const checkAnswer = (userAnswer: string, answers: string[]) => {
 
   return findBestMatch(userAnswer, answers);
 };
+
+export enum JudgeResult {
+  correct,
+  incorrect,
+  prompt,
+}
 
 /**
  * Class for judging user answers against an answerline, supports prompts.
