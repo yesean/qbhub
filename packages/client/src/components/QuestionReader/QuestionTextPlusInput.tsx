@@ -15,6 +15,7 @@ import {
   getNextStatus,
   useQuestionReaderContext,
 } from './QuestionReaderContext';
+import QuestionReaderProgress from './QuestionReaderProgress';
 import useRevealer from './useRevealer';
 
 export const getInputBorderColor = (
@@ -32,6 +33,7 @@ type Props = {};
 
 export default (_: Props) => {
   const [userInput, setUserInput] = useState('');
+  const [progress, setProgress] = useState(100);
   const inputRef = useRef<HTMLInputElement>(null);
   const { question, status, setStatus, questionResult, setQuestionResult } =
     useQuestionReaderContext();
@@ -41,18 +43,26 @@ export default (_: Props) => {
     [question.formattedText],
   );
 
+  const handleBuzz = useCallback(() => {
+    if (status !== QuestionReaderStatus.Reading) return;
+
+    if (inputRef.current != null) {
+      inputRef.current.disabled = false;
+      inputRef.current.focus();
+    }
+    setStatus(getNextStatus(status));
+  }, [setStatus, status]);
+
   const { visibleIndex, pause, reveal } = useRevealer({
     words: textWords,
+    onFinish: handleBuzz,
   });
 
   const handleClick = useCallback(() => {
     switch (status) {
       case QuestionReaderStatus.Reading: {
-        if (inputRef.current != null) {
-          inputRef.current.disabled = false;
-          inputRef.current.focus();
-        }
         pause();
+        handleBuzz();
         break;
       }
       case QuestionReaderStatus.Answering: {
@@ -72,16 +82,17 @@ export default (_: Props) => {
 
         inputRef.current?.blur();
         reveal();
+        setStatus(getNextStatus(status));
         break;
       }
       case QuestionReaderStatus.Judged: {
         inputRef.current?.blur();
+        setStatus(getNextStatus(status));
         break;
       }
     }
-
-    setStatus(getNextStatus(status));
   }, [
+    handleBuzz,
     pause,
     question,
     reveal,
