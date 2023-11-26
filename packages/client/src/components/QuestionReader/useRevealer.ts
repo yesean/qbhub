@@ -28,9 +28,11 @@ export default ({ words, onFinish }: Props) => {
   }, [pause, words.length]);
 
   useEffect(() => {
-    if (visibleIndex === words.length - 1 && !isFinished) {
-      setIsFinished(true);
-      onFinish();
+    if (visibleIndex === words.length - 1) {
+      if (!isFinished) {
+        setIsFinished(true);
+        onFinish();
+      }
       return;
     }
 
