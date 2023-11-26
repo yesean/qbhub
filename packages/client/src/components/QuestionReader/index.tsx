@@ -9,15 +9,8 @@ import {
 } from './QuestionReaderContext';
 import QuestionTextPlusInput from './QuestionTextPlusInput';
 
-type Props = {
-  question: Tossup; // TODO: fix type
-  // onNextQuestion: () => void;
-  // onSubmitAnswer: () => void;
-  // onJudged: () => void;
-};
-
 // eslint-disable-next-line arrow-body-style
-const QuestionReader = (_: Props) => {
+const QuestionReader = () => {
   const { status } = useQuestionReaderContext();
 
   const shouldShowAnswer = status === QuestionReaderStatus.Judged;
@@ -31,13 +24,20 @@ const QuestionReader = (_: Props) => {
   );
 };
 
-export default (props: Props) => {
+type QuestionReaderWrapperProps = {
+  question: Tossup; // TODO: fix type
+  onNextQuestion: () => void;
+  // onSubmitAnswer: () => void;
+  // onJudged: () => void;
+};
+
+export default (props: QuestionReaderWrapperProps) => {
   const { question } = props;
 
   return (
     // use `key` to reset question reader per question
-    <QuestionReaderContextProvider key={question.id} question={question}>
-      <QuestionReader {...props} />
+    <QuestionReaderContextProvider key={question.id} {...props}>
+      <QuestionReader />
     </QuestionReaderContextProvider>
   );
 };

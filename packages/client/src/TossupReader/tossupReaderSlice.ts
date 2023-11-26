@@ -1,12 +1,12 @@
 import { Tossup, TossupResult, TossupWord } from '@qbhub/types';
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { RootState } from '../redux/store';
 import * as fetchUtils from '../utils/fetch';
 import {
+  ReaderStatus,
   getPowerIndex,
   getTossupScore,
   getTossupWords,
-  ReaderStatus,
 } from '../utils/reader';
 import { Settings } from '../utils/settings/types';
 import { isQuestionValid } from '../utils/settings/validate';
@@ -51,29 +51,16 @@ export const nextTossup = createAsyncThunk<
   void,
   { settings: Settings },
   { state: RootState }
->(
-  'tossupReader/nextTossup',
-  async (args, { dispatch, getState }) => {
-    const { tossupReader } = getState();
-    // if tossup cache is low, fetch more
-    // if tossup cache is empty, keep the action pending
-    if (tossupReader.tossups.length === 0) {
-      await dispatch(fetchTossups(args)).unwrap();
-    } else if (tossupReader.tossups.length < 5) {
-      dispatch(fetchTossups(args));
-    }
-  },
-  {
-    condition: (_, { getState }) => {
-      const { tossupReader } = getState();
-      return [
-        ReaderStatus.idle,
-        ReaderStatus.judged,
-        ReaderStatus.empty,
-      ].includes(tossupReader.status);
-    },
-  },
-);
+>('tossupReader/nextTossup', async (args, { dispatch, getState }) => {
+  const { tossupReader } = getState();
+  // if tossup cache is low, fetch more
+  // if tossup cache is empty, keep the action pending
+  if (tossupReader.tossups.length === 0) {
+    await dispatch(fetchTossups(args)).unwrap();
+  } else if (tossupReader.tossups.length < 5) {
+    dispatch(fetchTossups(args));
+  }
+});
 
 const tossupReaderSlice = createSlice({
   name: 'tossupReader',
