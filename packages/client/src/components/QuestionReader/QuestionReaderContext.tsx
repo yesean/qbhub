@@ -26,6 +26,7 @@ type QuestionReaderContextType = {
   setStatus: React.Dispatch<React.SetStateAction<QuestionReaderStatus>>;
   questionResult: TossupResult | null;
   setQuestionResult: React.Dispatch<React.SetStateAction<TossupResult | null>>;
+  onNextQuestion: () => void;
 };
 
 const QuestionReaderContext = React.createContext<QuestionReaderContextType>({
@@ -34,6 +35,7 @@ const QuestionReaderContext = React.createContext<QuestionReaderContextType>({
   setStatus: () => {},
   questionResult: {} as TossupResult,
   setQuestionResult: () => {},
+  onNextQuestion: () => {},
 });
 
 export const useQuestionReaderContext = () => useContext(QuestionReaderContext);
@@ -41,11 +43,13 @@ export const useQuestionReaderContext = () => useContext(QuestionReaderContext);
 type QuestionReaderContextProviderProps = {
   children: ReactNode;
   question: Tossup;
+  onNextQuestion: () => void;
 };
 
 export const QuestionReaderContextProvider = ({
   children,
   question,
+  onNextQuestion,
 }: QuestionReaderContextProviderProps) => {
   const [status, setStatus] = useState<QuestionReaderStatus>(
     QuestionReaderStatus.Reading,
@@ -61,8 +65,9 @@ export const QuestionReaderContextProvider = ({
       question,
       questionResult,
       setQuestionResult,
+      onNextQuestion,
     }),
-    [question, questionResult, status],
+    [onNextQuestion, question, questionResult, status],
   );
 
   return (

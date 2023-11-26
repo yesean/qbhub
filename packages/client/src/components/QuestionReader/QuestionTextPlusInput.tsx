@@ -45,8 +45,14 @@ type Props = {};
 export default (_: Props) => {
   const [userInput, setUserInput] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-  const { question, status, setStatus, questionResult, setQuestionResult } =
-    useQuestionReaderContext();
+  const {
+    question,
+    status,
+    setStatus,
+    questionResult,
+    setQuestionResult,
+    onNextQuestion,
+  } = useQuestionReaderContext();
 
   const textWords = useMemo(
     () => getTossupWords(question.formattedText),
@@ -105,6 +111,16 @@ export default (_: Props) => {
     visibleIndex,
   ]);
 
+  // next question action: blur input
+  // can be triggered by button click
+  const handleNextQuestion = useCallback(() => {
+    if (status !== QuestionReaderStatus.Judged) return;
+
+    inputRef.current?.blur();
+    onNextQuestion();
+    setStatus(getNextStatus(status));
+  }, [onNextQuestion, setStatus, status]);
+
   const handleClick = useCallback(() => {
     switch (status) {
       case QuestionReaderStatus.Reading: {
@@ -118,12 +134,11 @@ export default (_: Props) => {
         break;
       }
       case QuestionReaderStatus.Judged: {
-        inputRef.current?.blur();
-        setStatus(getNextStatus(status));
+        handleNextQuestion();
         break;
       }
     }
-  }, [handleBuzz, handleSubmit, pause, setStatus, status]);
+  }, [handleBuzz, handleNextQuestion, handleSubmit, pause, status]);
 
   useKeyboardShortcut(' ', handleClick, {
     customAllowCondition: status === QuestionReaderStatus.Reading,
