@@ -1,15 +1,15 @@
 import { Box } from '@chakra-ui/react';
-import { isTossup } from '@qbhub/types';
 import { useMemo } from 'react';
 import { getTossupWords } from '../../utils/reader';
 import FormattedQuestion from '../reader/FormattedQuestion';
-import { useQuestionReaderContext } from './QuestionReaderContext';
+import {
+  QuestionReaderStatus,
+  useQuestionReaderContext,
+} from './QuestionReaderContext';
 import useRevealer from './useRevealer';
 
 export default () => {
-  const { question } = useQuestionReaderContext();
-
-  if (!isTossup(question)) return null;
+  const { question, status, setStatus } = useQuestionReaderContext();
 
   const textWords = useMemo(
     () => getTossupWords(question.formattedText),
@@ -18,7 +18,10 @@ export default () => {
 
   const { visibleIndex } = useRevealer({
     words: textWords,
-    onFinish: () => {},
+    onFinish: () => {
+      if (status === QuestionReaderStatus.Reading)
+        setStatus(QuestionReaderStatus.Answering);
+    },
   });
 
   return (

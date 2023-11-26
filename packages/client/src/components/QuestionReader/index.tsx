@@ -1,5 +1,5 @@
 import { Flex } from '@chakra-ui/react';
-import { Bonus, Tossup, isTossup } from '@qbhub/types';
+import { Tossup, isTossup } from '@qbhub/types';
 import QuestionAnswer from './QuestionAnswer';
 import QuestionInfo from './QuestionInfo';
 import { QuestionReaderContextProvider } from './QuestionReaderContext';
@@ -7,7 +7,7 @@ import QuestionReaderInput from './QuestionReaderInput';
 import QuestionText from './QuestionText';
 
 type Props = {
-  question: Tossup | Bonus; // TODO: fix type
+  question: Tossup; // TODO: fix type
   // onNextQuestion: () => void;
   // onSubmitAnswer: () => void;
   // onJudged: () => void;

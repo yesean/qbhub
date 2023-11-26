@@ -1,4 +1,4 @@
-import { Bonus, Tossup } from '@qbhub/types';
+import { Tossup } from '@qbhub/types';
 import React, { ReactNode, useContext, useMemo, useState } from 'react';
 
 export enum QuestionReaderStatus {
@@ -7,10 +7,23 @@ export enum QuestionReaderStatus {
   Judged,
 }
 
+export const getNextStatus = (
+  prevStatus: QuestionReaderStatus,
+): QuestionReaderStatus => {
+  switch (prevStatus) {
+    case QuestionReaderStatus.Reading:
+      return QuestionReaderStatus.Answering;
+    case QuestionReaderStatus.Answering:
+      return QuestionReaderStatus.Judged;
+    case QuestionReaderStatus.Judged:
+      return QuestionReaderStatus.Reading;
+  }
+};
+
 type QuestionReaderContextType = {
   status: QuestionReaderStatus;
   setStatus: React.Dispatch<React.SetStateAction<QuestionReaderStatus>>;
-  question: Tossup | Bonus;
+  question: Tossup;
 };
 
 const QuestionReaderContext = React.createContext<QuestionReaderContextType>({
@@ -23,7 +36,7 @@ export const useQuestionReaderContext = () => useContext(QuestionReaderContext);
 
 type QuestionReaderContextProviderProps = {
   children: ReactNode;
-  question: Tossup | Bonus;
+  question: Tossup;
 };
 
 export const QuestionReaderContextProvider = ({
