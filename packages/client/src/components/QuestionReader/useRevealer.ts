@@ -6,9 +6,10 @@ import { DEFAULT_READING_SPEED } from '../../utils/settings/constants';
 type Props = {
   words: unknown[];
   onFinish: () => void;
+  onChange: (visibleIndex: number) => void;
 };
 
-export default ({ words, onFinish }: Props) => {
+export default ({ words, onFinish, onChange }: Props) => {
   const [visibleIndex, setVisibleIndex] = useState(-1);
   const [isPaused, setIsPaused] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
@@ -40,6 +41,7 @@ export default ({ words, onFinish }: Props) => {
 
     const timeoutID = setTimeout(() => {
       setVisibleIndex((prevIndex) => prevIndex + 1);
+      onChange(visibleIndex + 1);
     }, readingDelay);
 
     // eslint-disable-next-line consistent-return
@@ -47,6 +49,7 @@ export default ({ words, onFinish }: Props) => {
   }, [
     isFinished,
     isPaused,
+    onChange,
     onFinish,
     readingDelay,
     visibleIndex,
