@@ -1,6 +1,7 @@
-import { Box, Flex, Input, Text } from '@chakra-ui/react';
+import { Box, Flex, Input } from '@chakra-ui/react';
 import { Tossup, TossupResult } from '@qbhub/types';
 import { useCallback, useMemo, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 import useKeyboardShortcut from '../../hooks/useKeyboardShortcut';
 import {
   QuestionReaderStatus,
@@ -116,6 +117,12 @@ export default function QuestionTextPlusInput() {
       revealQuestion();
       onJudged(result);
       setStatus(getNextStatus(status));
+
+      if (result.judgeResult === JudgeResult.correct) {
+        toast.success('correct!');
+      } else {
+        toast.error('sorry, incorrect');
+      }
     },
     [blurInput, onJudged, revealQuestion, setStatus, status],
   );
@@ -145,6 +152,7 @@ export default function QuestionTextPlusInput() {
     if (result.judgeResult === JudgeResult.prompt) {
       focusInput();
       selectInput();
+      toast('prompt', { icon: '💭' });
       setStatus(getNextStatus(status, { isPrompted: true }));
       return;
     }
@@ -235,9 +243,6 @@ export default function QuestionTextPlusInput() {
           indices={{ visible: visibleIndex, buzz: buzzIndex }}
         />
       </Box>
-      {status === QuestionReaderStatus.AnsweringAfterPrompt && (
-        <Text>prompt</Text>
-      )}
       {shouldShowProgress && (
         <QuestionReaderProgress
           key={status}

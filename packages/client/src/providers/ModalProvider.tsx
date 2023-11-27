@@ -1,11 +1,12 @@
 import { useCallback, useMemo, useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 import BonusHistoryModal from '../BonusHistoryModal';
-import HamburgerMenu from '../components/HamburgerMenu';
-import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import InfoModal from '../InfoModal';
 import SettingsModal from '../SettingsModal';
 import TossupHistoryModal from '../TossupHistoryModal';
 import UpdatesModal from '../UpdatesModal';
+import HamburgerMenu from '../components/HamburgerMenu';
+import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { ModalContext } from './ModalContext';
 
 enum ModalVariant {
@@ -76,6 +77,7 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
         isOpen={activeModal === ModalVariant.HamburgerMenuVariant}
         closeModal={closeModal}
       />
+      <Toaster position="bottom-center" />
       {children}
     </ModalContext.Provider>
   );
