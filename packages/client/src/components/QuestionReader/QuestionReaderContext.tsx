@@ -1,5 +1,6 @@
 import { Tossup, TossupResult } from '@qbhub/types';
 import React, { ReactNode, useContext, useMemo, useState } from 'react';
+import { JudgeResult } from '../../utils/reader';
 
 export enum QuestionReaderStatus {
   Reading,
@@ -30,13 +31,21 @@ export const getNextStatus = (
   }
 };
 
+export type QuestionResult = {
+  judgeResult: JudgeResult;
+  question: Tossup;
+  userAnswer: string;
+  buzzIndex: number;
+};
+
+// TODO: generalize types to Question
 type QuestionReaderContextType = {
   question: Tossup;
   previousResults: TossupResult[];
   status: QuestionReaderStatus;
   setStatus: React.Dispatch<React.SetStateAction<QuestionReaderStatus>>;
   onNextQuestion: () => void;
-  onJudged: (result: TossupResult) => void;
+  onJudged: (result: QuestionResult) => void;
 };
 
 const QuestionReaderContext = React.createContext<QuestionReaderContextType>({
@@ -50,12 +59,12 @@ const QuestionReaderContext = React.createContext<QuestionReaderContextType>({
 
 export const useQuestionReaderContext = () => useContext(QuestionReaderContext);
 
-type QuestionReaderContextProviderProps = {
+export type QuestionReaderContextProviderProps = {
   children: ReactNode;
   question: Tossup;
   previousResults: TossupResult[];
   onNextQuestion: () => void;
-  onJudged: (result: TossupResult) => void;
+  onJudged: (result: QuestionResult) => void;
 };
 
 export const QuestionReaderContextProvider = ({

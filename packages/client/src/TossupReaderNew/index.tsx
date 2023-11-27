@@ -7,10 +7,39 @@ import {
   submitResult,
 } from '../TossupReader/tossupReaderSlice';
 import QuestionReader from '../components/QuestionReader';
+import { QuestionResult } from '../components/QuestionReader/QuestionReaderContext';
 import TealButton from '../components/buttons/TealButton';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useSettings } from '../hooks/useSettings';
 import { useAppDispatch } from '../redux/hooks';
+import {
+  JudgeResult,
+  getPowerIndex,
+  getTossupScore,
+  getTossupWords,
+} from '../utils/reader';
+
+// evaluate user answer
+const getTossupResult = ({
+  judgeResult,
+  question,
+  userAnswer,
+  buzzIndex,
+}: QuestionResult): TossupResult => {
+  const isCorrect = judgeResult === JudgeResult.correct;
+  const tossupWords = getTossupWords(question.formattedText);
+  const isInPower = buzzIndex <= getPowerIndex(tossupWords);
+  const isBuzzAtEnd = buzzIndex === tossupWords.length - 1;
+
+  return {
+    tossup: question,
+    userAnswer,
+    buzzIndex,
+    isCorrect,
+    words: tossupWords,
+    score: getTossupScore(isCorrect, isInPower, isBuzzAtEnd),
+  };
+};
 
 export default () => {
   const { current, results } = useSelector(selectTossupReader);
@@ -22,8 +51,8 @@ export default () => {
     [dispatch, settings],
   );
 
-  const handleTossupResult = useCallback(
-    (result: TossupResult) => dispatch(submitResult(result)),
+  const handleQuestionResult = useCallback(
+    (result: QuestionResult) => dispatch(submitResult(getTossupResult(result))),
     [dispatch],
   );
 
@@ -44,7 +73,7 @@ export default () => {
       question={current.tossup}
       previousResults={results}
       onNextQuestion={handleNextTossup}
-      onJudged={handleTossupResult}
+      onJudged={handleQuestionResult}
     />
   );
 };
