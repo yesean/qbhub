@@ -3,7 +3,7 @@ import { isTossup } from '@qbhub/types';
 import { Link as RouterLink } from 'react-router-dom';
 import { getClueDisplayURL } from '../../utils/routes';
 import { parseHTMLString } from '../../utils/string';
-import { useQuestionReaderContext } from './QuestionReaderContext';
+import useQuestionReaderContext from './useQuestionReaderContext';
 
 export default function QuestionAnswer() {
   const { question } = useQuestionReaderContext();

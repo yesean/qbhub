@@ -5,7 +5,7 @@ import {
   getSubcategoryName,
   getTournamentName,
 } from '@qbhub/types';
-import { useQuestionReaderContext } from './QuestionReaderContext';
+import useQuestionReaderContext from './useQuestionReaderContext';
 
 export default function QuestionInfo() {
   const { question } = useQuestionReaderContext();

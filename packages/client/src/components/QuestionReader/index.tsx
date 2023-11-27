@@ -1,14 +1,14 @@
 import { Flex } from '@chakra-ui/react';
+import { QuestionReaderStatus } from '../../utils/questionReader';
 import QuestionAnswer from './QuestionAnswer';
 import QuestionInfo from './QuestionInfo';
 import {
   QuestionReaderContextProvider,
   QuestionReaderContextProviderProps,
-  QuestionReaderStatus,
-  useQuestionReaderContext,
 } from './QuestionReaderContext';
 import QuestionReaderScore from './QuestionReaderScore';
 import QuestionTextPlusInput from './QuestionTextPlusInput';
+import useQuestionReaderContext from './useQuestionReaderContext';
 
 const QuestionReader = () => {
   const { status } = useQuestionReaderContext();

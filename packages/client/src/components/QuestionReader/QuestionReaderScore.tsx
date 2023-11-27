@@ -6,10 +6,8 @@ import {
   StatNumber,
 } from '@chakra-ui/react';
 import { TossupResult } from '@qbhub/types';
-import {
-  QuestionReaderStatus,
-  useQuestionReaderContext,
-} from './QuestionReaderContext';
+import { QuestionReaderStatus } from '../../utils/questionReader';
+import useQuestionReaderContext from './useQuestionReaderContext';
 
 export default function QuestionReaderScore() {
   const { previousResults, status } = useQuestionReaderContext();
