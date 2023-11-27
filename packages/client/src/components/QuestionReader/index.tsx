@@ -10,7 +10,6 @@ import {
 import QuestionReaderScore from './QuestionReaderScore';
 import QuestionTextPlusInput from './QuestionTextPlusInput';
 
-// eslint-disable-next-line arrow-body-style
 const QuestionReader = () => {
   const { status } = useQuestionReaderContext();
 
@@ -26,8 +25,9 @@ const QuestionReader = () => {
   );
 };
 
+// TODO: generalize types to Question
 type QuestionReaderWrapperProps = {
-  question: Tossup; // TODO: fix type
+  question: Tossup;
   previousResults: TossupResult[];
   onNextQuestion: () => void;
   onJudged: (result: TossupResult) => void;
