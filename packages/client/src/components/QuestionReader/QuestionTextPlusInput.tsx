@@ -262,9 +262,9 @@ export default () => {
 
   const shouldShowProgress = isAnswering;
   const shouldShowBorder = status === QuestionReaderStatus.Judged;
-  const currentResult = previousResults.find(
-    ({ tossup: { id } }) => id === question.id,
-  );
+  const lastResult = previousResults.at(-1);
+  const buzzIndex =
+    status === QuestionReaderStatus.Judged ? lastResult?.buzzIndex : undefined;
   const shouldDisableInput = !isAnswering;
 
   return (
@@ -272,7 +272,7 @@ export default () => {
       <Box overflow="auto" bg="gray.100" p={4} borderRadius="md">
         <FormattedQuestion
           words={tossupWords}
-          indices={{ visible: visibleIndex, buzz: currentResult?.buzzIndex }}
+          indices={{ visible: visibleIndex, buzz: buzzIndex }}
         />
       </Box>
       {status === QuestionReaderStatus.AnsweringAfterPrompt && (
@@ -292,7 +292,7 @@ export default () => {
           placeholder="Answer"
           mr={4}
           isDisabled={shouldDisableInput}
-          borderColor={getInputBorderColor(status, currentResult)}
+          borderColor={getInputBorderColor(status, lastResult)}
           borderWidth={shouldShowBorder ? 2 : undefined}
         />
         <TealButton onClick={handleClick}>{getButtonText(status)}</TealButton>
