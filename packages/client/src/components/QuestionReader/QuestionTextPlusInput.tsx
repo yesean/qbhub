@@ -1,5 +1,5 @@
 import { Box, Flex, Input } from '@chakra-ui/react';
-import { TossupResult } from '@qbhub/types';
+import { Tossup, TossupResult } from '@qbhub/types';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import useKeyboardShortcut from '../../hooks/useKeyboardShortcut';
 import {
@@ -19,6 +19,7 @@ import {
 import QuestionReaderProgress from './QuestionReaderProgress';
 import useRevealer from './useRevealer';
 
+// get input border color for tossup results, green/red for correct/incorrect
 const getInputBorderColor = (
   status: QuestionReaderStatus,
   questionResult?: TossupResult,
@@ -30,6 +31,7 @@ const getInputBorderColor = (
   return 'red.400';
 };
 
+// get button text depending on reader status
 const getButtonText = (status: QuestionReaderStatus) => {
   switch (status) {
     case QuestionReaderStatus.Reading:
@@ -41,6 +43,31 @@ const getButtonText = (status: QuestionReaderStatus) => {
   }
 };
 
+// evaluate user answer
+const getTossupResult = (
+  question: Tossup,
+  userInput: string,
+  visibleIndex: number,
+) => {
+  const tossupWords = getTossupWords(question.formattedText);
+
+  const judge = new Judge(question.formattedAnswer);
+  const isCorrect = judge.judge(userInput) === JudgeResult.correct;
+  const isInPower = visibleIndex <= getPowerIndex(tossupWords);
+  const isBuzzAtEnd = visibleIndex === tossupWords.length - 1;
+  return {
+    buzzIndex: visibleIndex,
+    isCorrect,
+    userAnswer: userInput,
+    words: tossupWords,
+    tossup: question,
+    score: getTossupScore(isCorrect, isInPower, isBuzzAtEnd),
+  };
+};
+
+/**
+ * Question text revealer + Answering input
+ */
 export default () => {
   const [userInput, setUserInput] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -53,78 +80,84 @@ export default () => {
     onJudged,
   } = useQuestionReaderContext();
 
+  const focusInput = useCallback(() => {
+    if (inputRef.current != null) {
+      inputRef.current.disabled = false;
+      inputRef.current.focus();
+    }
+  }, []);
+
+  const blurInput = useCallback(() => inputRef.current?.blur(), []);
+
   const tossupWords = useMemo(
     () => getTossupWords(question.formattedText),
     [question.formattedText],
   );
 
-  // buzz action: focus input, change status
-  // can be triggered by button click or revealer finishing
+  /**
+   * @Action buzz
+   * @CausedBy spacebar press, button click, all words get revealed
+   * @Behavior focus input, set next status
+   */
   const handleBuzz = useCallback(() => {
+    focusInput();
+    setStatus(getNextStatus(status));
+  }, [focusInput, setStatus, status]);
+
+  const buzzIfUserHasNot = useCallback(() => {
     if (status !== QuestionReaderStatus.Reading) return;
 
-    if (inputRef.current != null) {
-      inputRef.current.disabled = false;
-      inputRef.current.focus();
-    }
-    setStatus(getNextStatus(status));
-  }, [setStatus, status]);
+    handleBuzz();
+  }, [handleBuzz, status]);
 
-  const { visibleIndex, pause, reveal } = useRevealer({
+  const {
+    visibleIndex,
+    pause: pauseQuestionRevealing,
+    reveal: revealQuestion,
+  } = useRevealer({
     words: tossupWords,
-    onFinish: handleBuzz, // trigger buzz automatically once the reader is finished
+    onFinish: buzzIfUserHasNot, // manually trigger buzz, if all words are revealed before the user buzzes
   });
 
-  // submit action: blur input, reveal answer, evaluate user answer
-  // can be triggered by button click or progress bar finishing
+  /**
+   * @Action submit answer
+   * @CausedBy enter press, button click, answering timer finishes
+   * @Behavior blur input, reveal answer, evaluate user answer, call the passed-in submit callback, set next status
+   */
   const handleSubmit = useCallback(() => {
-    if (status !== QuestionReaderStatus.Answering) return;
-
-    inputRef.current?.blur();
-    reveal();
-
     // evaluate user answer
-    const judge = new Judge(question.formattedAnswer);
-    const isCorrect = judge.judge(userInput) === JudgeResult.correct;
-    const isInPower = visibleIndex <= getPowerIndex(tossupWords);
-    const isBuzzAtEnd = visibleIndex === tossupWords.length - 1;
-    const nextResult = {
-      buzzIndex: visibleIndex,
-      isCorrect,
-      userAnswer: userInput,
-      words: tossupWords,
-      tossup: question,
-      score: getTossupScore(isCorrect, isInPower, isBuzzAtEnd),
-    };
-    onJudged(nextResult);
+    const nextResult = getTossupResult(question, userInput, visibleIndex);
 
+    blurInput();
+    revealQuestion();
+    onJudged(nextResult);
     setStatus(getNextStatus(status));
   }, [
+    blurInput,
     onJudged,
     question,
-    reveal,
+    revealQuestion,
     setStatus,
     status,
-    tossupWords,
     userInput,
     visibleIndex,
   ]);
 
-  // next question action: blur input
-  // can be triggered by button click
+  /**
+   * @Action next question
+   * @CausedBy n press, button click
+   * @Behavior blur input, call the passed-in next callback, set next status
+   */
   const handleNextQuestion = useCallback(() => {
-    if (status !== QuestionReaderStatus.Judged) return;
-
-    inputRef.current?.blur();
+    blurInput();
     onNextQuestion();
     setStatus(getNextStatus(status));
-  }, [onNextQuestion, setStatus, status]);
+  }, [blurInput, onNextQuestion, setStatus, status]);
 
   const handleClick = useCallback(() => {
     switch (status) {
       case QuestionReaderStatus.Reading: {
-        // pause the reader and trigger buzz
-        pause();
+        pauseQuestionRevealing();
         handleBuzz();
         break;
       }
@@ -137,7 +170,13 @@ export default () => {
         break;
       }
     }
-  }, [handleBuzz, handleNextQuestion, handleSubmit, pause, status]);
+  }, [
+    handleBuzz,
+    handleNextQuestion,
+    handleSubmit,
+    pauseQuestionRevealing,
+    status,
+  ]);
 
   useKeyboardShortcut(' ', handleClick, {
     customAllowCondition: status === QuestionReaderStatus.Reading,
