@@ -1,4 +1,4 @@
-import { Box, Flex, Input } from '@chakra-ui/react';
+import { Box, Flex, Input, Text } from '@chakra-ui/react';
 import { Tossup, TossupResult } from '@qbhub/types';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import useKeyboardShortcut from '../../hooks/useKeyboardShortcut';
@@ -113,8 +113,8 @@ export default () => {
       inputRef.current.focus();
     }
   }, []);
-
   const blurInput = useCallback(() => inputRef.current?.blur(), []);
+  const selectInput = useCallback(() => inputRef.current?.select(), []);
 
   const tossupWords = useMemo(
     () => getTossupWords(question.formattedText),
@@ -184,6 +184,7 @@ export default () => {
     // if user is prompted
     if (questionResult.judgeResult === JudgeResult.prompt) {
       focusInput();
+      selectInput();
       setStatus(getNextStatus(status, { isPrompted: true }));
       return;
     }
@@ -194,6 +195,7 @@ export default () => {
     focusInput,
     handleSubmitOnAnsweringAfterPrompt,
     question,
+    selectInput,
     setStatus,
     status,
     userInput,
@@ -273,6 +275,9 @@ export default () => {
           indices={{ visible: visibleIndex, buzz: currentResult?.buzzIndex }}
         />
       </Box>
+      {status === QuestionReaderStatus.AnsweringAfterPrompt && (
+        <Text>prompt</Text>
+      )}
       {shouldShowProgress && (
         <QuestionReaderProgress
           key={status}
