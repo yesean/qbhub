@@ -125,6 +125,7 @@ const tossupReaderSlice = createSlice({
     builder
       .addCase(nextTossup.pending, (state) => {
         state.status = ReaderStatus.fetching;
+        state.current = initialState.current;
       })
       .addCase(nextTossup.fulfilled, (state) => {
         if (state.tossups.length === 0) {
