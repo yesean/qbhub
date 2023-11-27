@@ -1,9 +1,9 @@
 import { Flex } from '@chakra-ui/react';
-import { Tossup, TossupResult } from '@qbhub/types';
 import QuestionAnswer from './QuestionAnswer';
 import QuestionInfo from './QuestionInfo';
 import {
   QuestionReaderContextProvider,
+  QuestionReaderContextProviderProps,
   QuestionReaderStatus,
   useQuestionReaderContext,
 } from './QuestionReaderContext';
@@ -25,13 +25,10 @@ const QuestionReader = () => {
   );
 };
 
-// TODO: generalize types to Question
-type QuestionReaderWrapperProps = {
-  question: Tossup;
-  previousResults: TossupResult[];
-  onNextQuestion: () => void;
-  onJudged: (result: TossupResult) => void;
-};
+type QuestionReaderWrapperProps = Omit<
+  QuestionReaderContextProviderProps,
+  'children'
+>;
 
 export default (props: QuestionReaderWrapperProps) => {
   const { question } = props;

@@ -2,17 +2,12 @@ import { Box, Flex, Input, Text } from '@chakra-ui/react';
 import { Tossup, TossupResult } from '@qbhub/types';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import useKeyboardShortcut from '../../hooks/useKeyboardShortcut';
-import {
-  Judge,
-  JudgeResult,
-  getPowerIndex,
-  getTossupScore,
-  getTossupWords,
-} from '../../utils/reader';
+import { Judge, JudgeResult, getTossupWords } from '../../utils/reader';
 import TealButton from '../buttons/TealButton';
 import FormattedQuestion from '../reader/FormattedQuestion';
 import {
   QuestionReaderStatus,
+  QuestionResult,
   getNextStatus,
   useQuestionReaderContext,
 } from './QuestionReaderContext';
@@ -45,13 +40,6 @@ const getButtonText = (status: QuestionReaderStatus): string => {
   }
 };
 
-type QuestionResult = {
-  judgeResult: JudgeResult;
-  question: Tossup;
-  userAnswer: string;
-  buzzIndex: number;
-};
-
 const getQuestionResult = (
   question: Tossup,
   userAnswer: string,
@@ -65,30 +53,6 @@ const getQuestionResult = (
     question,
     userAnswer,
     buzzIndex,
-  };
-};
-
-// evaluate user answer
-const getTossupResult = ({
-  question,
-  userAnswer,
-  buzzIndex,
-}: QuestionResult): TossupResult => {
-  const judge = new Judge(question.formattedAnswer);
-  const judgeResult = judge.judge(userAnswer);
-  const isCorrect = judgeResult === JudgeResult.correct;
-
-  const tossupWords = getTossupWords(question.formattedText);
-  const isInPower = buzzIndex <= getPowerIndex(tossupWords);
-  const isBuzzAtEnd = buzzIndex === tossupWords.length - 1;
-
-  return {
-    tossup: question,
-    userAnswer,
-    buzzIndex,
-    isCorrect,
-    words: tossupWords,
-    score: getTossupScore(isCorrect, isInPower, isBuzzAtEnd),
   };
 };
 
@@ -146,6 +110,16 @@ export default () => {
     onFinish: buzzIfUserHasNot, // manually trigger buzz, if all words are revealed before the user buzzes
   });
 
+  const submitResult = useCallback(
+    (result: QuestionResult) => {
+      blurInput();
+      revealQuestion();
+      onJudged(result);
+      setStatus(getNextStatus(status));
+    },
+    [blurInput, onJudged, revealQuestion, setStatus, status],
+  );
+
   /**
    * @Action submit answer after being prompted
    * @CausedBy enter press, button click, answering timer finishes
@@ -153,23 +127,9 @@ export default () => {
    */
   const handleSubmitOnAnsweringAfterPrompt = useCallback(() => {
     // evaluate user answer
-    const questionResult = getQuestionResult(question, userInput, visibleIndex);
-    const nextResult = getTossupResult(questionResult);
-
-    blurInput();
-    revealQuestion();
-    onJudged(nextResult);
-    setStatus(getNextStatus(status));
-  }, [
-    blurInput,
-    onJudged,
-    question,
-    revealQuestion,
-    setStatus,
-    status,
-    userInput,
-    visibleIndex,
-  ]);
+    const result = getQuestionResult(question, userInput, visibleIndex);
+    submitResult(result);
+  }, [question, submitResult, userInput, visibleIndex]);
 
   /**
    * @Action submit answer
@@ -179,10 +139,10 @@ export default () => {
    *  otherwise: mimic behavior of: submit answer after being prompted
    */
   const handleSubmitOnAnswering = useCallback(() => {
-    const questionResult = getQuestionResult(question, userInput, visibleIndex);
+    const result = getQuestionResult(question, userInput, visibleIndex);
 
     // if user is prompted
-    if (questionResult.judgeResult === JudgeResult.prompt) {
+    if (result.judgeResult === JudgeResult.prompt) {
       focusInput();
       selectInput();
       setStatus(getNextStatus(status, { isPrompted: true }));
@@ -190,14 +150,14 @@ export default () => {
     }
 
     // not prompted
-    handleSubmitOnAnsweringAfterPrompt();
+    submitResult(result);
   }, [
     focusInput,
-    handleSubmitOnAnsweringAfterPrompt,
     question,
     selectInput,
     setStatus,
     status,
+    submitResult,
     userInput,
     visibleIndex,
   ]);
