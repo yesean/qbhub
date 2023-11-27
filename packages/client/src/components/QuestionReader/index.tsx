@@ -1,5 +1,5 @@
 import { Flex } from '@chakra-ui/react';
-import { Tossup } from '@qbhub/types';
+import { Tossup, TossupResult } from '@qbhub/types';
 import QuestionAnswer from './QuestionAnswer';
 import QuestionInfo from './QuestionInfo';
 import {
@@ -7,6 +7,7 @@ import {
   QuestionReaderStatus,
   useQuestionReaderContext,
 } from './QuestionReaderContext';
+import QuestionReaderScore from './QuestionReaderScore';
 import QuestionTextPlusInput from './QuestionTextPlusInput';
 
 // eslint-disable-next-line arrow-body-style
@@ -20,15 +21,16 @@ const QuestionReader = () => {
       <QuestionInfo />
       {shouldShowAnswer && <QuestionAnswer />}
       <QuestionTextPlusInput />
+      <QuestionReaderScore />
     </Flex>
   );
 };
 
 type QuestionReaderWrapperProps = {
   question: Tossup; // TODO: fix type
+  previousResults: TossupResult[];
   onNextQuestion: () => void;
-  // onSubmitAnswer: () => void;
-  // onJudged: () => void;
+  onJudged: (result: TossupResult) => void;
 };
 
 export default (props: QuestionReaderWrapperProps) => {

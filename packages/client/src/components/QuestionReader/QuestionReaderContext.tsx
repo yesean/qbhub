@@ -22,20 +22,20 @@ export const getNextStatus = (
 
 type QuestionReaderContextType = {
   question: Tossup;
+  previousResults: TossupResult[];
   status: QuestionReaderStatus;
   setStatus: React.Dispatch<React.SetStateAction<QuestionReaderStatus>>;
-  questionResult: TossupResult | null;
-  setQuestionResult: React.Dispatch<React.SetStateAction<TossupResult | null>>;
   onNextQuestion: () => void;
+  onJudged: (result: TossupResult) => void;
 };
 
 const QuestionReaderContext = React.createContext<QuestionReaderContextType>({
   question: {} as Tossup,
+  previousResults: [],
   status: QuestionReaderStatus.Judged,
   setStatus: () => {},
-  questionResult: {} as TossupResult,
-  setQuestionResult: () => {},
   onNextQuestion: () => {},
+  onJudged: () => {},
 });
 
 export const useQuestionReaderContext = () => useContext(QuestionReaderContext);
@@ -43,31 +43,31 @@ export const useQuestionReaderContext = () => useContext(QuestionReaderContext);
 type QuestionReaderContextProviderProps = {
   children: ReactNode;
   question: Tossup;
+  previousResults: TossupResult[];
   onNextQuestion: () => void;
+  onJudged: (result: TossupResult) => void;
 };
 
 export const QuestionReaderContextProvider = ({
   children,
   question,
+  previousResults,
   onNextQuestion,
+  onJudged,
 }: QuestionReaderContextProviderProps) => {
   const [status, setStatus] = useState<QuestionReaderStatus>(
     QuestionReaderStatus.Reading,
   );
-  const [questionResult, setQuestionResult] = useState<TossupResult | null>(
-    null,
-  );
-
   const context = useMemo(
     () => ({
       status,
       setStatus,
       question,
-      questionResult,
-      setQuestionResult,
+      previousResults,
       onNextQuestion,
+      onJudged,
     }),
-    [onNextQuestion, question, questionResult, status],
+    [onJudged, onNextQuestion, previousResults, question, status],
   );
 
   return (
