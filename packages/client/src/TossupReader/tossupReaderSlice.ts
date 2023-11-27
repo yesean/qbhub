@@ -109,6 +109,9 @@ const tossupReaderSlice = createSlice({
         state.score += score;
       }
     },
+    submitResult: (state, action: PayloadAction<TossupResult>) => {
+      state.results.push(action.payload);
+    },
     filterTossups: (state, { payload: settings }: PayloadAction<Settings>) => {
       state.tossups = state.tossups.filter((tu) =>
         isQuestionValid(tu, settings),
@@ -139,7 +142,7 @@ const tossupReaderSlice = createSlice({
       });
   },
 });
-export const { buzz, prompt, submitAnswer, filterTossups } =
+export const { buzz, prompt, submitAnswer, submitResult, filterTossups } =
   tossupReaderSlice.actions;
 
 export const selectTossupReader = (state: RootState) => state.tossupReader;

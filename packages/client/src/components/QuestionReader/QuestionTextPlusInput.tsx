@@ -5,6 +5,7 @@ import useKeyboardShortcut from '../../hooks/useKeyboardShortcut';
 import {
   Judge,
   JudgeResult,
+  getPowerIndex,
   getTossupScore,
   getTossupWords,
 } from '../../utils/reader';
@@ -20,7 +21,7 @@ import useRevealer from './useRevealer';
 
 const getInputBorderColor = (
   status: QuestionReaderStatus,
-  questionResult: TossupResult | null,
+  questionResult?: TossupResult,
 ) => {
   if (status !== QuestionReaderStatus.Judged || questionResult == null)
     return 'gray.300';
@@ -40,21 +41,19 @@ const getButtonText = (status: QuestionReaderStatus) => {
   }
 };
 
-type Props = {};
-
-export default (_: Props) => {
+export default () => {
   const [userInput, setUserInput] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const {
     question,
     status,
     setStatus,
-    questionResult,
-    setQuestionResult,
+    previousResults,
     onNextQuestion,
+    onJudged,
   } = useQuestionReaderContext();
 
-  const textWords = useMemo(
+  const tossupWords = useMemo(
     () => getTossupWords(question.formattedText),
     [question.formattedText],
   );
@@ -72,7 +71,7 @@ export default (_: Props) => {
   }, [setStatus, status]);
 
   const { visibleIndex, pause, reveal } = useRevealer({
-    words: textWords,
+    words: tossupWords,
     onFinish: handleBuzz, // trigger buzz automatically once the reader is finished
   });
 
@@ -87,26 +86,26 @@ export default (_: Props) => {
     // evaluate user answer
     const judge = new Judge(question.formattedAnswer);
     const isCorrect = judge.judge(userInput) === JudgeResult.correct;
-    const isInPower =
-      visibleIndex === -1 ? false : textWords[visibleIndex].bold;
-    const isBuzzAtEnd = visibleIndex === textWords.length - 1;
-    setQuestionResult({
+    const isInPower = visibleIndex <= getPowerIndex(tossupWords);
+    const isBuzzAtEnd = visibleIndex === tossupWords.length - 1;
+    const nextResult = {
       buzzIndex: visibleIndex,
       isCorrect,
       userAnswer: userInput,
-      words: textWords,
+      words: tossupWords,
       tossup: question,
       score: getTossupScore(isCorrect, isInPower, isBuzzAtEnd),
-    });
+    };
+    onJudged(nextResult);
 
     setStatus(getNextStatus(status));
   }, [
+    onJudged,
     question,
     reveal,
-    setQuestionResult,
     setStatus,
     status,
-    textWords,
+    tossupWords,
     userInput,
     visibleIndex,
   ]);
@@ -155,13 +154,16 @@ export default (_: Props) => {
 
   const shouldShowProgress = status === QuestionReaderStatus.Answering;
   const shouldShowBorder = status === QuestionReaderStatus.Judged;
+  const currentResult = previousResults.find(
+    ({ tossup: { id } }) => id === question.id,
+  );
 
   return (
     <>
       <Box overflow="auto" bg="gray.100" p={4} borderRadius="md">
         <FormattedQuestion
-          words={textWords}
-          indices={{ visible: visibleIndex, buzz: questionResult?.buzzIndex }}
+          words={tossupWords}
+          indices={{ visible: visibleIndex, buzz: currentResult?.buzzIndex }}
         />
       </Box>
       {shouldShowProgress && <QuestionReaderProgress onFinish={handleSubmit} />}
@@ -173,7 +175,7 @@ export default (_: Props) => {
           placeholder="Answer"
           mr={4}
           isDisabled={status !== QuestionReaderStatus.Answering}
-          borderColor={getInputBorderColor(status, questionResult)}
+          borderColor={getInputBorderColor(status, currentResult)}
           borderWidth={shouldShowBorder ? 2 : undefined}
         />
         <TealButton onClick={handleClick}>{getButtonText(status)}</TealButton>
