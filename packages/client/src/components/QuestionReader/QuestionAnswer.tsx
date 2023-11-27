@@ -5,7 +5,7 @@ import { getClueDisplayURL } from '../../utils/routes';
 import { parseHTMLString } from '../../utils/string';
 import { useQuestionReaderContext } from './QuestionReaderContext';
 
-export default () => {
+export default function QuestionAnswer() {
   const { question } = useQuestionReaderContext();
 
   if (!isTossup(question)) return null;
@@ -25,4 +25,4 @@ export default () => {
       </Text>
     </Box>
   );
-};
+}

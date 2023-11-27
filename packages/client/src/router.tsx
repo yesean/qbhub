@@ -58,7 +58,7 @@ const paths = [
   },
 ];
 
-export default createBrowserRouter([
+const router = createBrowserRouter([
   {
     element: (
       <QueryParamProvider adapter={ReactRouter6Adapter}>
@@ -76,3 +76,5 @@ export default createBrowserRouter([
     children: paths,
   },
 ]);
+
+export default router;

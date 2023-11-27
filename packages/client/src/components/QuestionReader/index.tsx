@@ -30,7 +30,9 @@ type QuestionReaderWrapperProps = Omit<
   'children'
 >;
 
-export default (props: QuestionReaderWrapperProps) => {
+export default function QuestionReaderWrapper(
+  props: QuestionReaderWrapperProps,
+) {
   const { question } = props;
 
   return (
@@ -39,4 +41,4 @@ export default (props: QuestionReaderWrapperProps) => {
       <QuestionReader />
     </QuestionReaderContextProvider>
   );
-};
+}

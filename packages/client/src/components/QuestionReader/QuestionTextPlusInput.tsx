@@ -59,7 +59,7 @@ const getQuestionResult = (
 /**
  * Question text revealer + Answering input
  */
-export default () => {
+export default function QuestionTextPlusInput() {
   const [userInput, setUserInput] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const {
@@ -259,4 +259,4 @@ export default () => {
       </Flex>
     </>
   );
-};
+}

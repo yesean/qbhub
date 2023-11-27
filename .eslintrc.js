@@ -1,4 +1,5 @@
 module.exports = {
+  plugins: ['react-refresh'],
   extends: ['airbnb', 'airbnb-typescript', 'airbnb/hooks', 'prettier'],
   rules: {
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
@@ -20,6 +21,10 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'react/require-default-props': 'off',
     'import/prefer-default-export': 'off',
+    'react-refresh/only-export-components': [
+      'warn',
+      { allowConstantExport: true },
+    ],
   },
   ignorePatterns: ['.eslintrc.js', 'vite.config.ts'],
   parserOptions: {

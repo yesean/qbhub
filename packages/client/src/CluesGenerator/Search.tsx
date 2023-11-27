@@ -48,10 +48,10 @@ const Search: React.FC<React.PropsWithChildren<unknown>> = () => {
   );
 };
 
-export default () => {
+export default function SearchWrapper() {
   const {
     params: { query },
   } = useClueSearchRouteContext();
 
   return query == null ? <Search /> : <Answers query={query} />;
-};
+}
