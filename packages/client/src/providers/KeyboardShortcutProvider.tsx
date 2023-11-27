@@ -8,7 +8,7 @@ type Props = {
   children: JSX.Element;
 };
 
-export default ({ children }: Props) => {
+export default function KeyboardShortcutProvider({ children }: Props) {
   const navigate = useNavigate();
   const { openInfoModal, openSettingsModal, openUpdatesModal } =
     useModalContext();
@@ -53,4 +53,4 @@ export default ({ children }: Props) => {
   useKeyboardShortcut('5', goToAbout);
 
   return children;
-};
+}

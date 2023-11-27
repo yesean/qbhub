@@ -11,7 +11,7 @@ import {
   useQuestionReaderContext,
 } from './QuestionReaderContext';
 
-export default () => {
+export default function QuestionReaderScore() {
   const { previousResults, status } = useQuestionReaderContext();
 
   if (previousResults.length === 0) return null;
@@ -34,4 +34,4 @@ export default () => {
       )}
     </Stat>
   );
-};
+}

@@ -41,7 +41,7 @@ const getTossupResult = ({
   };
 };
 
-export default () => {
+export default function TossupReader() {
   const { current, results } = useSelector(selectTossupReader);
   const dispatch = useAppDispatch();
   const { settings } = useSettings();
@@ -76,4 +76,4 @@ export default () => {
       onJudged={handleQuestionResult}
     />
   );
-};
+}

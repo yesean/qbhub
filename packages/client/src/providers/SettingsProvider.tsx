@@ -13,7 +13,7 @@ type Props = {
 };
 
 // Provider component for initializing settings
-export default ({ children }: Props) => {
+export default function SettingsProvider({ children }: Props) {
   const { settings, setSettings } = useSettings();
   const ref = useRef(settings); // initialize ref at mount
 
@@ -30,4 +30,4 @@ export default ({ children }: Props) => {
   }, [setSettings]);
 
   return children;
-};
+}

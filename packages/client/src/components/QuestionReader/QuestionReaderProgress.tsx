@@ -8,7 +8,10 @@ type Props = {
 
 const PROGRESS_TOTAL_UPDATE_FRAMES = 1000; // number of progress updates between 100->0, i.e. controls progress smoothness
 
-export default ({ onFinish, duration = 10000 }: Props) => {
+export default function QuestionReaderProgress({
+  onFinish,
+  duration = 10000,
+}: Props) {
   const [progress, setProgress] = useState(100);
 
   const updateInterval = duration / PROGRESS_TOTAL_UPDATE_FRAMES;
@@ -36,4 +39,4 @@ export default ({ onFinish, duration = 10000 }: Props) => {
       flexShrink={0}
     />
   );
-};
+}

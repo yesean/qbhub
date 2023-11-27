@@ -7,7 +7,7 @@ import {
 } from '@qbhub/types';
 import { useQuestionReaderContext } from './QuestionReaderContext';
 
-export default () => {
+export default function QuestionInfo() {
   const { question } = useQuestionReaderContext();
 
   const tournament = getTournamentName(question.tournament);
@@ -27,4 +27,4 @@ export default () => {
       {text}
     </Heading>
   );
-};
+}
