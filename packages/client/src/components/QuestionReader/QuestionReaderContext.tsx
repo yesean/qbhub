@@ -1,35 +1,7 @@
 import { Tossup, TossupResult } from '@qbhub/types';
-import React, { ReactNode, useContext, useMemo, useState } from 'react';
+import React, { ReactNode, useMemo, useState } from 'react';
+import { QuestionReaderStatus } from '../../utils/questionReader';
 import { JudgeResult } from '../../utils/reader';
-
-export enum QuestionReaderStatus {
-  Reading,
-  Answering,
-  AnsweringAfterPrompt,
-  Judged,
-}
-
-type NextStatusOptions = {
-  isPrompted?: boolean;
-};
-
-export const getNextStatus = (
-  prevStatus: QuestionReaderStatus,
-  { isPrompted = false }: NextStatusOptions = {},
-): QuestionReaderStatus => {
-  switch (prevStatus) {
-    case QuestionReaderStatus.Reading:
-      return QuestionReaderStatus.Answering;
-    case QuestionReaderStatus.Answering:
-      return isPrompted
-        ? QuestionReaderStatus.AnsweringAfterPrompt
-        : QuestionReaderStatus.Judged;
-    case QuestionReaderStatus.AnsweringAfterPrompt:
-      return QuestionReaderStatus.Judged;
-    case QuestionReaderStatus.Judged:
-      return QuestionReaderStatus.Reading;
-  }
-};
 
 export type QuestionResult = {
   judgeResult: JudgeResult;
@@ -48,16 +20,15 @@ type QuestionReaderContextType = {
   onJudged: (result: QuestionResult) => void;
 };
 
-const QuestionReaderContext = React.createContext<QuestionReaderContextType>({
-  question: {} as Tossup,
-  previousResults: [],
-  status: QuestionReaderStatus.Judged,
-  setStatus: () => {},
-  onNextQuestion: () => {},
-  onJudged: () => {},
-});
-
-export const useQuestionReaderContext = () => useContext(QuestionReaderContext);
+export const QuestionReaderContext =
+  React.createContext<QuestionReaderContextType>({
+    question: {} as Tossup,
+    previousResults: [],
+    status: QuestionReaderStatus.Judged,
+    setStatus: () => {},
+    onNextQuestion: () => {},
+    onJudged: () => {},
+  });
 
 export type QuestionReaderContextProviderProps = {
   children: ReactNode;

@@ -2,16 +2,16 @@ import { Box, Flex, Input, Text } from '@chakra-ui/react';
 import { Tossup, TossupResult } from '@qbhub/types';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import useKeyboardShortcut from '../../hooks/useKeyboardShortcut';
+import {
+  QuestionReaderStatus,
+  getNextStatus,
+} from '../../utils/questionReader';
 import { Judge, JudgeResult, getTossupWords } from '../../utils/reader';
 import TealButton from '../buttons/TealButton';
 import FormattedQuestion from '../reader/FormattedQuestion';
-import {
-  QuestionReaderStatus,
-  QuestionResult,
-  getNextStatus,
-  useQuestionReaderContext,
-} from './QuestionReaderContext';
+import { QuestionResult } from './QuestionReaderContext';
 import QuestionReaderProgress from './QuestionReaderProgress';
+import useQuestionReaderContext from './useQuestionReaderContext';
 import useRevealer from './useRevealer';
 
 // get input border color for tossup results, green/red for correct/incorrect
