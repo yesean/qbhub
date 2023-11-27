@@ -23,7 +23,7 @@ import useRevealer from './useRevealer';
 const getInputBorderColor = (
   status: QuestionReaderStatus,
   questionResult?: TossupResult,
-) => {
+): string => {
   if (status !== QuestionReaderStatus.Judged || questionResult == null)
     return 'gray.300';
 
@@ -32,35 +32,62 @@ const getInputBorderColor = (
 };
 
 // get button text depending on reader status
-const getButtonText = (status: QuestionReaderStatus) => {
+const getButtonText = (status: QuestionReaderStatus): string => {
   switch (status) {
     case QuestionReaderStatus.Reading:
       return 'Buzz';
     case QuestionReaderStatus.Answering:
+      return 'Submit';
+    case QuestionReaderStatus.AnsweringAfterPrompt:
       return 'Submit';
     case QuestionReaderStatus.Judged:
       return 'Next';
   }
 };
 
-// evaluate user answer
-const getTossupResult = (
-  question: Tossup,
-  userInput: string,
-  visibleIndex: number,
-) => {
-  const tossupWords = getTossupWords(question.formattedText);
+type QuestionResult = {
+  judgeResult: JudgeResult;
+  question: Tossup;
+  userAnswer: string;
+  buzzIndex: number;
+};
 
+const getQuestionResult = (
+  question: Tossup,
+  userAnswer: string,
+  buzzIndex: number,
+): QuestionResult => {
   const judge = new Judge(question.formattedAnswer);
-  const isCorrect = judge.judge(userInput) === JudgeResult.correct;
-  const isInPower = visibleIndex <= getPowerIndex(tossupWords);
-  const isBuzzAtEnd = visibleIndex === tossupWords.length - 1;
+  const judgeResult = judge.judge(userAnswer);
   return {
-    buzzIndex: visibleIndex,
-    isCorrect,
-    userAnswer: userInput,
-    words: tossupWords,
+    judgeResult,
+
+    question,
+    userAnswer,
+    buzzIndex,
+  };
+};
+
+// evaluate user answer
+const getTossupResult = ({
+  question,
+  userAnswer,
+  buzzIndex,
+}: QuestionResult): TossupResult => {
+  const judge = new Judge(question.formattedAnswer);
+  const judgeResult = judge.judge(userAnswer);
+  const isCorrect = judgeResult === JudgeResult.correct;
+
+  const tossupWords = getTossupWords(question.formattedText);
+  const isInPower = buzzIndex <= getPowerIndex(tossupWords);
+  const isBuzzAtEnd = buzzIndex === tossupWords.length - 1;
+
+  return {
     tossup: question,
+    userAnswer,
+    buzzIndex,
+    isCorrect,
+    words: tossupWords,
     score: getTossupScore(isCorrect, isInPower, isBuzzAtEnd),
   };
 };
@@ -120,13 +147,14 @@ export default () => {
   });
 
   /**
-   * @Action submit answer
+   * @Action submit answer after being prompted
    * @CausedBy enter press, button click, answering timer finishes
    * @Behavior blur input, reveal answer, evaluate user answer, call the passed-in submit callback, set next status
    */
-  const handleSubmit = useCallback(() => {
+  const handleSubmitOnAnsweringAfterPrompt = useCallback(() => {
     // evaluate user answer
-    const nextResult = getTossupResult(question, userInput, visibleIndex);
+    const questionResult = getQuestionResult(question, userInput, visibleIndex);
+    const nextResult = getTossupResult(questionResult);
 
     blurInput();
     revealQuestion();
@@ -137,6 +165,35 @@ export default () => {
     onJudged,
     question,
     revealQuestion,
+    setStatus,
+    status,
+    userInput,
+    visibleIndex,
+  ]);
+
+  /**
+   * @Action submit answer
+   * @CausedBy enter press, button click, answering timer finishes
+   * @Behavior
+   *  if prompted: focus input, set next status
+   *  otherwise: mimic behavior of: submit answer after being prompted
+   */
+  const handleSubmitOnAnswering = useCallback(() => {
+    const questionResult = getQuestionResult(question, userInput, visibleIndex);
+
+    // if user is prompted
+    if (questionResult.judgeResult === JudgeResult.prompt) {
+      focusInput();
+      setStatus(getNextStatus(status, { isPrompted: true }));
+      return;
+    }
+
+    // not prompted
+    handleSubmitOnAnsweringAfterPrompt();
+  }, [
+    focusInput,
+    handleSubmitOnAnsweringAfterPrompt,
+    question,
     setStatus,
     status,
     userInput,
@@ -162,7 +219,11 @@ export default () => {
         break;
       }
       case QuestionReaderStatus.Answering: {
-        handleSubmit();
+        handleSubmitOnAnswering();
+        break;
+      }
+      case QuestionReaderStatus.AnsweringAfterPrompt: {
+        handleSubmitOnAnsweringAfterPrompt();
         break;
       }
       case QuestionReaderStatus.Judged: {
@@ -173,10 +234,16 @@ export default () => {
   }, [
     handleBuzz,
     handleNextQuestion,
-    handleSubmit,
+    handleSubmitOnAnswering,
+    handleSubmitOnAnsweringAfterPrompt,
     pauseQuestionRevealing,
     status,
   ]);
+
+  const isAnswering = [
+    QuestionReaderStatus.Answering,
+    QuestionReaderStatus.AnsweringAfterPrompt,
+  ].includes(status);
 
   useKeyboardShortcut(' ', handleClick, {
     customAllowCondition: status === QuestionReaderStatus.Reading,
@@ -184,18 +251,19 @@ export default () => {
 
   useKeyboardShortcut('Enter', handleClick, {
     allowHTMLInput: true,
-    customAllowCondition: status === QuestionReaderStatus.Answering,
+    customAllowCondition: isAnswering,
   });
 
   useKeyboardShortcut('n', handleClick, {
     customAllowCondition: status === QuestionReaderStatus.Judged,
   });
 
-  const shouldShowProgress = status === QuestionReaderStatus.Answering;
+  const shouldShowProgress = isAnswering;
   const shouldShowBorder = status === QuestionReaderStatus.Judged;
   const currentResult = previousResults.find(
     ({ tossup: { id } }) => id === question.id,
   );
+  const shouldDisableInput = !isAnswering;
 
   return (
     <>
@@ -205,7 +273,12 @@ export default () => {
           indices={{ visible: visibleIndex, buzz: currentResult?.buzzIndex }}
         />
       </Box>
-      {shouldShowProgress && <QuestionReaderProgress onFinish={handleSubmit} />}
+      {shouldShowProgress && (
+        <QuestionReaderProgress
+          key={status}
+          onFinish={handleSubmitOnAnswering}
+        />
+      )}
       <Flex w="100%" justify="center">
         <Input
           ref={inputRef}
@@ -213,7 +286,7 @@ export default () => {
           onChange={(e) => setUserInput(e.target.value)}
           placeholder="Answer"
           mr={4}
-          isDisabled={status !== QuestionReaderStatus.Answering}
+          isDisabled={shouldDisableInput}
           borderColor={getInputBorderColor(status, currentResult)}
           borderWidth={shouldShowBorder ? 2 : undefined}
         />
