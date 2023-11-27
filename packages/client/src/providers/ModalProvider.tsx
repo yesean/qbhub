@@ -77,7 +77,7 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
         isOpen={activeModal === ModalVariant.HamburgerMenuVariant}
         closeModal={closeModal}
       />
-      <Toaster position="bottom-center" />
+      <Toaster />
       {children}
     </ModalContext.Provider>
   );
