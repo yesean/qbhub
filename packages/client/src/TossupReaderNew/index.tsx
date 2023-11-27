@@ -8,6 +8,7 @@ import {
 } from '../TossupReader/tossupReaderSlice';
 import QuestionReader from '../components/QuestionReader';
 import TealButton from '../components/buttons/TealButton';
+import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useSettings } from '../hooks/useSettings';
 import { useAppDispatch } from '../redux/hooks';
 
@@ -27,6 +28,11 @@ export default () => {
   );
 
   const isTossupMissing = current.tossup.id === undefined;
+
+  useKeyboardShortcut('n', handleNextTossup, {
+    customAllowCondition: isTossupMissing,
+  });
+
   if (isTossupMissing) {
     return (
       <TealButton onClick={handleNextTossup}>click for tossups</TealButton>
