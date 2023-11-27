@@ -3,25 +3,28 @@ import { useEffect, useState } from 'react';
 
 type Props = {
   onFinish: () => void;
+  duration?: number; // in milliseconds, default to 10 seconds
 };
 
-const PROGRESS_UPDATE_INTERVAL = 5;
-const PROGRESS_UPDATE_AMOUNT = 0.1;
+const PROGRESS_TOTAL_UPDATE_FRAMES = 1000; // number of progress updates between 100->0, i.e. controls progress smoothness
 
-export default ({ onFinish }: Props) => {
+export default ({ onFinish, duration = 10000 }: Props) => {
   const [progress, setProgress] = useState(100);
+
+  const updateInterval = duration / PROGRESS_TOTAL_UPDATE_FRAMES;
+  const updateAmount = 100 / PROGRESS_TOTAL_UPDATE_FRAMES;
 
   useEffect(() => {
     const timeoutID = setTimeout(() => {
       if (progress <= 0) {
         onFinish();
       } else {
-        setProgress(progress - PROGRESS_UPDATE_AMOUNT);
+        setProgress(progress - updateAmount);
       }
-    }, PROGRESS_UPDATE_INTERVAL);
+    }, updateInterval);
 
     return () => clearTimeout(timeoutID);
-  }, [setProgress, progress, onFinish]);
+  }, [onFinish, progress, updateAmount, updateInterval]);
 
   return (
     <ChakraProgress
