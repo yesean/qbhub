@@ -62,10 +62,9 @@ export const getTossupWords = (text: string): TossupWord[] => {
 /**
  * Get power index from tossup text.
  */
-export const getPowerIndex = (tossupWords: TossupWord[]) => {
-  const POWER_MARKER = '(*)';
-  return tossupWords.findIndex(({ word }) => word === POWER_MARKER);
-};
+const POWER_MARKER = '(*)';
+export const getPowerIndex = (tossupWords: TossupWord[]) =>
+  tossupWords.findIndex(({ word }) => word === POWER_MARKER);
 
 /**
  * Calculate tossup score based on buzz.
