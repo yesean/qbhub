@@ -2,6 +2,7 @@ import { Box, Flex, Input } from '@chakra-ui/react';
 import { Tossup, TossupResult } from '@qbhub/types';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
+import { elementScrollIntoView } from 'seamless-scroll-polyfill';
 import useKeyboardShortcut from '../../hooks/useKeyboardShortcut';
 import {
   QuestionReaderStatus,
@@ -63,6 +64,7 @@ const getQuestionResult = (
 export default function QuestionTextPlusInput() {
   const [userInput, setUserInput] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const visibleRef = useRef<HTMLParagraphElement>(null);
   const {
     question,
     status,
@@ -96,11 +98,17 @@ export default function QuestionTextPlusInput() {
     setStatus(getNextStatus(status));
   }, [focusInput, setStatus, status]);
 
+  const scrollToVisible = useCallback(() => {
+    if (visibleRef.current != null)
+      elementScrollIntoView(visibleRef.current, { block: 'center' });
+  }, []);
+
   const buzzIfUserHasNot = useCallback(() => {
     if (status !== QuestionReaderStatus.Reading) return;
 
+    scrollToVisible();
     handleBuzz();
-  }, [handleBuzz, status]);
+  }, [handleBuzz, scrollToVisible, status]);
 
   const {
     visibleIndex,
@@ -108,6 +116,7 @@ export default function QuestionTextPlusInput() {
     reveal: revealQuestion,
   } = useRevealer({
     words: tossupWords,
+    onChange: scrollToVisible,
     onFinish: buzzIfUserHasNot, // manually trigger buzz, if all words are revealed before the user buzzes
   });
 
@@ -241,6 +250,7 @@ export default function QuestionTextPlusInput() {
         <FormattedQuestion
           words={tossupWords}
           indices={{ visible: visibleIndex, buzz: buzzIndex }}
+          visibleRef={visibleRef}
         />
       </Box>
       {shouldShowProgress && (
