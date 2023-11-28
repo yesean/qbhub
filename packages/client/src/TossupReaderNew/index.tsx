@@ -11,6 +11,7 @@ import { QuestionResult } from '../components/QuestionReader/QuestionReaderConte
 import TealButton from '../components/buttons/TealButton';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useSettings } from '../hooks/useSettings';
+import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/hooks';
 import {
   JudgeResult,
@@ -42,6 +43,7 @@ const getTossupResult = ({
 };
 
 export default function TossupReader() {
+  const { openTossupHistoryModal } = useModalContext();
   const { current, results } = useSelector(selectTossupReader);
   const dispatch = useAppDispatch();
   const { settings } = useSettings();
@@ -61,6 +63,8 @@ export default function TossupReader() {
   useKeyboardShortcut('n', handleNextTossup, {
     customAllowCondition: isTossupMissing,
   });
+
+  useKeyboardShortcut('h', openTossupHistoryModal);
 
   if (isTossupMissing) {
     return (
