@@ -1,5 +1,5 @@
 import { Box, Flex, Input } from '@chakra-ui/react';
-import { Tossup } from '@qbhub/types';
+import { QuestionResult, Tossup } from '@qbhub/types';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';
@@ -11,10 +11,7 @@ import {
 import { Judge, JudgeResult, getTossupWords } from '../../utils/reader';
 import TealButton from '../buttons/TealButton';
 import FormattedQuestion from '../reader/FormattedQuestion';
-import {
-  QuestionResult,
-  UnscoredQuestionResult,
-} from './QuestionReaderContext';
+import { UnscoredQuestionResult } from './QuestionReaderContext';
 import QuestionReaderProgress from './QuestionReaderProgress';
 import useQuestionReaderContext from './useQuestionReaderContext';
 import useRevealer from './useRevealer';

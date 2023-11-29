@@ -1,14 +1,6 @@
-import { Tossup } from '@qbhub/types';
+import { QuestionResult, Tossup } from '@qbhub/types';
 import React, { ReactNode, useMemo, useState } from 'react';
 import { QuestionReaderStatus } from '../../utils/questionReader';
-
-export type QuestionResult = {
-  buzzIndex: number;
-  isCorrect: boolean;
-  question: Tossup;
-  score: number;
-  userAnswer: string;
-};
 
 export type UnscoredQuestionResult = Omit<QuestionResult, 'score'>;
 

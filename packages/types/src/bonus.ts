@@ -6,19 +6,6 @@ export type Bonus = Question & {
   parts: BonusPart[];
 };
 
-export type BonusResult = {
-  bonus: Bonus;
-  parts: BonusPartResult[];
-  score: BonusScore;
-};
-
-export enum BonusScore {
-  zero = 0,
-  ten = 10,
-  twenty = 20,
-  thirty = 30,
-}
-
 export type BonusPart = {
   answer: string;
   formattedAnswer: string;
@@ -27,9 +14,22 @@ export type BonusPart = {
   text: string;
 };
 
+export type BonusResult = {
+  bonus: Bonus;
+  parts: BonusPartResult[];
+  score: BonusScore;
+};
+
 export type BonusPartResult = {
   buzzIndex: number;
   isCorrect: boolean;
   number: number;
   userAnswer: string;
 };
+
+export enum BonusScore {
+  zero = 0,
+  ten = 10,
+  twenty = 20,
+  thirty = 30,
+}
