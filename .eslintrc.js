@@ -2,10 +2,22 @@ module.exports = {
   plugins: ['react-refresh'],
   extends: ['airbnb', 'airbnb-typescript', 'airbnb/hooks', 'prettier'],
   rules: {
-    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    'no-unused-vars': 'off', // base rule must be disabled: https://typescript-eslint.io/rules/no-unused-vars/
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { varsIgnorePattern: '^_', argsIgnorePattern: '^_' },
+    ],
+    // adapted from: https://github.com/iamturns/eslint-config-airbnb-typescript/blob/8ef77c928c97d977f053c9c638831363a715d4a9/lib/shared.js#L41-L58
+    // allow for leading underscore
     '@typescript-eslint/naming-convention': [
       'error',
-      { leadingUnderscore: 'allow' },
+      {
+        selector: 'variable',
+        format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
+        leadingUnderscore: 'allow',
+      },
+      { selector: 'function', format: ['camelCase', 'PascalCase'] },
+      { selector: 'typeLike', format: ['PascalCase'] },
     ],
     '@typescript-eslint/lines-between-class-members': [
       'error',
