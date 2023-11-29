@@ -4,7 +4,7 @@ export enum LogLevel {
   Debug = 'debug',
   Error = 'error',
   Info = 'info',
-  Warn = 'warn'
+  Warn = 'warn',
 }
 const isLogLevel = buildIsEnum(LogLevel);
 const DEFAULT_LOG_LEVEL = LogLevel.Warn;

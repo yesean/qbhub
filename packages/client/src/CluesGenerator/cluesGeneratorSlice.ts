@@ -30,7 +30,7 @@ const initialState: CluesGeneratorSlice = {
 
 export const fetchAnswers = createAsyncThunk<
   FrequencyListEntry[],
-  { answer: string, settings: Settings; },
+  { answer: string; settings: Settings },
   { state: RootState }
 >(
   'cluesGenerator/fetchAnswers',
@@ -50,7 +50,7 @@ export const fetchAnswers = createAsyncThunk<
 );
 export const fetchClues = createAsyncThunk<
   SelectedClue[],
-  { answer: string, settings: Settings; },
+  { answer: string; settings: Settings },
   { state: RootState }
 >(
   'cluesGenerator/fetchClues',

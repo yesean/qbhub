@@ -15,8 +15,8 @@ import {
 } from '@chakra-ui/react';
 import { TossupScore } from '@qbhub/types';
 import { useSelector } from 'react-redux';
-import TealButton from '../components/buttons/TealButton';
 import { selectTossupReader } from '../TossupReader/tossupReaderSlice';
+import TealButton from '../components/buttons/TealButton';
 import TossupResults from './TossupResults';
 
 const scoreHeaders = ['15', '10', '-5', 'Points'];

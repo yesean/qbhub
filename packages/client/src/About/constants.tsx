@@ -8,7 +8,7 @@ const toStringFragments = (str: string, i: number) => (
 
 const replaceLinks = (
   strings: TemplateStringsArray,
-  ...links: { href: string, label: string; }[]
+  ...links: { href: string; label: string }[]
 ) => {
   const fragments = strings.map(toStringFragments);
   const linkElements = links.map(({ href, label }) => (

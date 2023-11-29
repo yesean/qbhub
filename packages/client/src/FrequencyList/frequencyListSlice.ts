@@ -37,7 +37,7 @@ const initialState: FrequencyListState = {
 
 export const fetchPages = createAsyncThunk<
   FrequencyListEntry[],
-  { offset: number, settings: Settings; },
+  { offset: number; settings: Settings },
   { state: RootState }
 >(
   'frequencyList/fetchPages',
