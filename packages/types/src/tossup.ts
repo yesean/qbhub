@@ -8,6 +8,15 @@ export type Tossup = Question & {
   text: string;
 };
 
+export type TossupResult = {
+  buzzIndex: number;
+  isCorrect: boolean;
+  score: TossupScore;
+  tossup: Tossup;
+  userAnswer: string;
+  words: TossupWord[];
+};
+
 export enum TossupScore {
   neg = -5,
   incorrect = 0,
@@ -18,13 +27,4 @@ export enum TossupScore {
 export type TossupWord = {
   bold: boolean;
   word: string;
-};
-
-export type TossupResult = {
-  buzzIndex: number;
-  isCorrect: boolean;
-  score: TossupScore;
-  tossup: Tossup;
-  userAnswer: string;
-  words: TossupWord[];
 };

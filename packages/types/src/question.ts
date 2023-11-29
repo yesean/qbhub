@@ -1,6 +1,7 @@
 import { Category } from './category.js';
 import { Difficulty } from './difficulty.js';
 import { Subcategory } from './subcategory.js';
+import { Tossup } from './tossup.js';
 import { Tournament } from './tournament.js';
 
 export type Question = {
@@ -10,6 +11,14 @@ export type Question = {
   tournament: Tournament;
   year: number;
   subcategory?: Subcategory;
+};
+
+export type QuestionResult = {
+  buzzIndex: number;
+  isCorrect: boolean;
+  question: Tossup;
+  score: number;
+  userAnswer: string;
 };
 
 // question parameters in Select dropdowns in settings

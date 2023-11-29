@@ -1,4 +1,4 @@
-import { TossupResult } from '@qbhub/types';
+import { QuestionResult, TossupResult } from '@qbhub/types';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import {
@@ -7,10 +7,7 @@ import {
   submitResult,
 } from '../TossupReader/tossupReaderSlice';
 import QuestionReader from '../components/QuestionReader';
-import {
-  QuestionResult,
-  UnscoredQuestionResult,
-} from '../components/QuestionReader/QuestionReaderContext';
+import { UnscoredQuestionResult } from '../components/QuestionReader/QuestionReaderContext';
 import TealButton from '../components/buttons/TealButton';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useSettings } from '../hooks/useSettings';

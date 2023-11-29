@@ -5,8 +5,8 @@ import {
   StatLabel,
   StatNumber,
 } from '@chakra-ui/react';
+import { QuestionResult } from '@qbhub/types';
 import { QuestionReaderStatus } from '../../utils/questionReader';
-import { QuestionResult } from './QuestionReaderContext';
 import useQuestionReaderContext from './useQuestionReaderContext';
 
 export default function QuestionReaderScore() {
