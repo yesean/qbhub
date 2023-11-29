@@ -26,27 +26,27 @@ export const createParamsFromArray = (field: string, values: any[]) =>
 export const addParams = (url: string, params: string) => `${url}?${params}`;
 
 type FetchParams = {
-  categories?: Category[];
-  subcategories?: Subcategory[];
-  difficulties?: Difficulty[];
-  tournaments?: Tournament[];
-  fromYear?: number;
-  text?: string;
   answer?: string;
+  categories?: Category[];
+  difficulties?: Difficulty[];
+  fromYear?: number;
   limit?: number;
   offset?: number;
+  subcategories?: Subcategory[];
+  text?: string;
+  tournaments?: Tournament[];
 };
 
 const createParams = ({
-  categories = [],
-  subcategories = [],
-  difficulties = [],
-  tournaments = [],
-  fromYear = MIN_TOURNAMENT_YEAR,
-  text = '',
   answer = '',
+  categories = [],
+  difficulties = [],
+  fromYear = MIN_TOURNAMENT_YEAR,
   limit = 10,
   offset = 0,
+  subcategories = [],
+  text = '',
+  tournaments = [],
 }: FetchParams) =>
   combineParams(
     createParamsFromArray('categories', categories),
@@ -67,15 +67,15 @@ export const fetchTossups = async (params: FetchParams): Promise<Tossup[]> => {
     log.info('fetching tossups');
     const { data } = await axios.get<Tossup[]>(url);
     const tossups = data.map((tu) => ({
-      id: tu.id,
-      text: cleanTossupText(tu.text),
       answer: tu.answer,
-      formattedText: cleanTossupText(tu.formattedText),
-      formattedAnswer: normalizeTags(tu.formattedAnswer),
-      normalizedAnswer: tu.normalizedAnswer,
       category: tu.category,
-      subcategory: tu.subcategory,
       difficulty: tu.difficulty,
+      formattedAnswer: normalizeTags(tu.formattedAnswer),
+      formattedText: cleanTossupText(tu.formattedText),
+      id: tu.id,
+      normalizedAnswer: tu.normalizedAnswer,
+      subcategory: tu.subcategory,
+      text: cleanTossupText(tu.text),
       tournament: tu.tournament,
       year: tu.year,
     }));
@@ -94,19 +94,19 @@ export const fetchBonuses = async (params: FetchParams): Promise<Bonus[]> => {
     log.info('fetching bonuses');
     const { data } = await axios.get<Bonus[]>(url);
     const bonuses = data.map((bn) => ({
+      category: bn.category,
+      difficulty: bn.difficulty,
+      formattedLeadin: normalizeTags(bn.formattedLeadin),
       id: bn.id,
       leadin: bn.leadin,
-      formattedLeadin: normalizeTags(bn.formattedLeadin),
-      category: bn.category,
-      subcategory: bn.subcategory,
-      difficulty: bn.difficulty,
-      tournament: bn.tournament,
-      year: bn.year,
       parts: bn.parts.map((part) => ({
         ...part,
-        formattedText: normalizeTags(part.formattedText),
         formattedAnswer: normalizeTags(part.formattedAnswer),
+        formattedText: normalizeTags(part.formattedText),
       })),
+      subcategory: bn.subcategory,
+      tournament: bn.tournament,
+      year: bn.year,
     }));
     log.info('finished fetching bonuses');
     return bonuses;

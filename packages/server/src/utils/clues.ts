@@ -71,8 +71,8 @@ export const getAllClues = (tossups: PlainTossup[]): Clue[] => {
           return getClauses(sentence).map((clause) => {
             const clueText = normalizeClue(clause);
             return {
-              text: clueText,
               sentence: normalizedSentence,
+              text: clueText,
               tournament,
             };
           });
@@ -244,8 +244,8 @@ const combineClues = (
     }));
     uniqueClues.push({
       ...queryClue,
-      score: bestClueScore,
       matches,
+      score: bestClueScore,
     } as SelectedClue);
 
     // remove similar clues

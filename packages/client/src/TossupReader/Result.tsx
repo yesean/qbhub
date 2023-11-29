@@ -6,19 +6,19 @@ import { ReaderStatus } from '../utils/reader';
 import { selectTossupReader } from './tossupReaderSlice';
 
 const messages = {
-  prompt: ['Prompt!'],
-  power: ['🎉  Power!  🥳', '🎉  Fifteen!  🥳'],
-  ten: ['Ten!', 'Correct!'],
   neg: ['Neg', 'Incorrect'],
   other: ['Incorrect, no penalty'],
+  power: ['🎉  Power!  🥳', '🎉  Fifteen!  🥳'],
+  prompt: ['Prompt!'],
+  ten: ['Ten!', 'Correct!'],
 };
 
 const Result: React.FC<React.PropsWithChildren<unknown>> = () => {
   const {
-    status,
     current: {
       result: { score },
     },
+    status,
   } = useSelector(selectTossupReader);
 
   let text;

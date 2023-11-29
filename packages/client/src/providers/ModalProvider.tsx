@@ -35,18 +35,18 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
 
   const modalContext = useMemo(
     () => ({
-      isModalOpen: activeModal != null,
       closeModal,
-      openSettingsModal: () =>
-        setActiveModal(ModalVariant.SettingsModalVariant),
-      openUpdatesModal: () => setActiveModal(ModalVariant.UpdatesModalVariant),
-      openInfoModal: () => setActiveModal(ModalVariant.InfoModalVariant),
-      openTossupHistoryModal: () =>
-        setActiveModal(ModalVariant.TossupHistoryModalVariant),
+      isModalOpen: activeModal != null,
       openBonusHistoryModal: () =>
         setActiveModal(ModalVariant.BonusHistoryModalVariant),
       openHamburgerMenu: () =>
         setActiveModal(ModalVariant.HamburgerMenuVariant),
+      openInfoModal: () => setActiveModal(ModalVariant.InfoModalVariant),
+      openSettingsModal: () =>
+        setActiveModal(ModalVariant.SettingsModalVariant),
+      openTossupHistoryModal: () =>
+        setActiveModal(ModalVariant.TossupHistoryModalVariant),
+      openUpdatesModal: () => setActiveModal(ModalVariant.UpdatesModalVariant),
     }),
     [activeModal, closeModal],
   );

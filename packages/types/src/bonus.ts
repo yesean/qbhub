@@ -1,15 +1,15 @@
 import { Question } from './question.js';
 
-export type Bonus = {
-  leadin: string;
+export type Bonus = Question & {
   formattedLeadin: string;
+  leadin: string;
   parts: BonusPart[];
-} & Question;
+};
 
 export type BonusResult = {
-  score: BonusScore;
-  parts: BonusPartResult[];
   bonus: Bonus;
+  parts: BonusPartResult[];
+  score: BonusScore;
 };
 
 export enum BonusScore {
@@ -20,16 +20,16 @@ export enum BonusScore {
 }
 
 export type BonusPart = {
+  answer: string;
+  formattedAnswer: string;
+  formattedText: string;
   number: number;
   text: string;
-  answer: string;
-  formattedText: string;
-  formattedAnswer: string;
 };
 
 export type BonusPartResult = {
+  buzzIndex: number;
+  isCorrect: boolean;
   number: number;
   userAnswer: string;
-  isCorrect: boolean;
-  buzzIndex: number;
 };

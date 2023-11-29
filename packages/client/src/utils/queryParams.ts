@@ -15,17 +15,17 @@ export const buildNumericEnumArrayParam = <T extends string, U extends number>(
   const isEnum = buildIsEnum(numericEnum);
 
   return {
-    encode(...args: Parameters<typeof encodeDelimitedNumericArray>) {
-      const array = args[0];
-      if (Array.isArray(array) && array.length === 0) return undefined;
-
-      return encodeDelimitedNumericArray(...args);
-    },
     decode(...args: Parameters<typeof decodeDelimitedNumericArray>): U[] {
       const numericArray = decodeDelimitedNumericArray(...args);
       if (numericArray == null) return [];
 
       return numericArray.filter(isEnum);
+    },
+    encode(...args: Parameters<typeof encodeDelimitedNumericArray>) {
+      const array = args[0];
+      if (Array.isArray(array) && array.length === 0) return undefined;
+
+      return encodeDelimitedNumericArray(...args);
     },
   };
 };
@@ -35,13 +35,6 @@ const buildRangedNumberParam = <T extends typeof NumberParam>(
   minimumValue: number,
   maximumValue: number,
 ) => ({
-  encode(arg: Parameters<typeof param.encode>[0]) {
-    if (isNumber(arg) && (arg < minimumValue || arg > maximumValue)) {
-      return undefined;
-    }
-
-    return param.encode(arg);
-  },
   decode(...args: Parameters<typeof param.decode>) {
     const decodedValue = param.decode(...args);
     if (decodedValue == null) return undefined;
@@ -51,17 +44,19 @@ const buildRangedNumberParam = <T extends typeof NumberParam>(
 
     return decodedValue;
   },
+  encode(arg: Parameters<typeof param.encode>[0]) {
+    if (isNumber(arg) && (arg < minimumValue || arg > maximumValue)) {
+      return undefined;
+    }
+
+    return param.encode(arg);
+  },
 });
 
 const buildSkipEncodeNumberParam = <T extends typeof NumberParam>(
   param: T,
   skipValue: number,
 ) => ({
-  encode(arg: Parameters<typeof param.encode>[0]) {
-    if (isNumber(arg) && arg === skipValue) return undefined;
-
-    return param.encode(arg);
-  },
   decode(...args: Parameters<typeof param.decode>) {
     const decodedValue = param.decode(...args);
 
@@ -70,22 +65,27 @@ const buildSkipEncodeNumberParam = <T extends typeof NumberParam>(
 
     return decodedValue;
   },
+  encode(arg: Parameters<typeof param.encode>[0]) {
+    if (isNumber(arg) && arg === skipValue) return undefined;
+
+    return param.encode(arg);
+  },
 });
 
 const buildNeverNullParam = <T extends QueryParamConfig<any, any>>(
   param: T,
 ) => ({
-  encode(...args: Parameters<typeof param.encode>) {
-    const encodedValue = param.encode(...args);
-    if (encodedValue == null) return undefined;
-
-    return encodedValue;
-  },
   decode(...args: Parameters<typeof param.decode>) {
     const decodedValue = param.decode(...args);
     if (decodedValue == null) return undefined;
 
     return decodedValue;
+  },
+  encode(...args: Parameters<typeof param.encode>) {
+    const encodedValue = param.encode(...args);
+    if (encodedValue == null) return undefined;
+
+    return encodedValue;
   },
 });
 

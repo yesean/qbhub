@@ -20,21 +20,21 @@ import { getPowerIndex, getTossupScore, getTossupWords } from '../utils/reader';
 
 // evaluate user answer
 const getTossupResult = ({
+  buzzIndex,
   isCorrect,
   question,
-  userAnswer,
-  buzzIndex,
   score,
+  userAnswer,
 }: QuestionResult): TossupResult => {
   const tossupWords = getTossupWords(question.formattedText);
 
   return {
-    tossup: question,
-    userAnswer,
     buzzIndex,
     isCorrect,
-    words: tossupWords,
     score,
+    tossup: question,
+    userAnswer,
+    words: tossupWords,
   };
 };
 
@@ -65,7 +65,7 @@ export default function TossupReader() {
   );
 
   const getScore = useCallback(
-    ({ question, isCorrect, buzzIndex }: UnscoredQuestionResult) => {
+    ({ buzzIndex, isCorrect, question }: UnscoredQuestionResult) => {
       const tossupWords = getTossupWords(question.formattedText);
       const isInPower = buzzIndex <= getPowerIndex(tossupWords);
       const isBuzzAtEnd = buzzIndex === tossupWords.length - 1;

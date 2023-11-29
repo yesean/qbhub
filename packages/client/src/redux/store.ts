@@ -6,10 +6,10 @@ import tossupReaderReducer from '../TossupReader/tossupReaderSlice';
 
 export const store = configureStore({
   reducer: {
-    tossupReader: tossupReaderReducer,
     bonusReader: bonusReaderReducer,
-    frequencyList: frequencyListReducer,
     cluesGenerator: cluesGeneatorReducer,
+    frequencyList: frequencyListReducer,
+    tossupReader: tossupReaderReducer,
   },
 });
 

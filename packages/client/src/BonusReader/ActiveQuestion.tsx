@@ -16,19 +16,19 @@ import { ReaderStatus, getTossupWords } from '../utils/reader';
 import { buzz as buzzAction, selectBonusReader } from './bonusReaderSlice';
 
 type SectionProps = {
-  prefix: string;
-  words: TossupWord[];
   buzzIndex: number;
+  prefix: string;
   visibleIndex: number;
   visibleRef: React.RefObject<HTMLParagraphElement>;
+  words: TossupWord[];
 };
 
 const Section = ({
-  prefix,
-  words,
   buzzIndex,
+  prefix,
   visibleIndex,
   visibleRef,
+  words,
 }: SectionProps) => {
   useEffect(() => {
     if (
@@ -52,7 +52,7 @@ const Section = ({
       </Text>{' '}
       <FormattedQuestion
         words={words}
-        indices={{ visible: visibleIndex, buzz: buzzIndex }}
+        indices={{ buzz: buzzIndex, visible: visibleIndex }}
         visibleRef={visibleRef}
       />
     </Box>
@@ -60,7 +60,7 @@ const Section = ({
 };
 
 // map word for FormattedQuestion
-const transformWord = (word: string) => ({ word, bold: false });
+const transformWord = (word: string) => ({ bold: false, word });
 
 type ActiveQuestionProps = {
   setBuzz: React.Dispatch<React.SetStateAction<() => void>>;
@@ -69,13 +69,13 @@ type ActiveQuestionProps = {
 const ActiveQuestion = ({ setBuzz }: ActiveQuestionProps) => {
   const visibleRef = useRef<HTMLParagraphElement>(null);
   const {
-    status,
     current: {
-      buzzIndex,
       bonus: { formattedLeadin },
-      part: { formattedText },
+      buzzIndex,
       number,
+      part: { formattedText },
     },
+    status,
   } = useSelector(selectBonusReader);
   const dispatch = useAppDispatch();
 
@@ -91,7 +91,7 @@ const ActiveQuestion = ({ setBuzz }: ActiveQuestionProps) => {
     };
   }, [formattedLeadin, formattedText, number]);
 
-  const { buzz, reveal, displayWords, visibleIndex } = useReader(words, {
+  const { buzz, displayWords, reveal, visibleIndex } = useReader(words, {
     onBuzz: useCallback(
       (index: number) => dispatch(buzzAction(index)),
       [dispatch],

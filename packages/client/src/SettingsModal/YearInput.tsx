@@ -6,18 +6,18 @@ import {
 } from '../utils/settings/constants';
 
 type YearInputProps = {
-  value: number;
   onChange: (_: string, arg: number) => void;
+  value: number;
 };
 
-const YearInput = ({ value, onChange }: YearInputProps) => {
-  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
+const YearInput = ({ onChange, value }: YearInputProps) => {
+  const { getDecrementButtonProps, getIncrementButtonProps, getInputProps } =
     useNumberInput({
-      min: MIN_TOURNAMENT_YEAR,
-      max: MAX_TOURNAMENT_YEAR,
-      value,
-      onChange,
       allowMouseWheel: true,
+      max: MAX_TOURNAMENT_YEAR,
+      min: MIN_TOURNAMENT_YEAR,
+      onChange,
+      value,
     });
 
   const inc = getIncrementButtonProps();

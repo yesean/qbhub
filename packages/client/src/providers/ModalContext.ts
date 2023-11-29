@@ -1,25 +1,25 @@
 import { createContext, useContext } from 'react';
 
 type ModalContextType = {
-  isModalOpen: boolean;
   closeModal: () => void;
-  openSettingsModal: () => void;
-  openUpdatesModal: () => void;
-  openInfoModal: () => void;
-  openTossupHistoryModal: () => void;
+  isModalOpen: boolean;
   openBonusHistoryModal: () => void;
   openHamburgerMenu: () => void;
+  openInfoModal: () => void;
+  openSettingsModal: () => void;
+  openTossupHistoryModal: () => void;
+  openUpdatesModal: () => void;
 };
 
 export const ModalContext = createContext<ModalContextType>({
-  isModalOpen: false,
   closeModal: () => {},
-  openSettingsModal: () => {},
-  openUpdatesModal: () => {},
-  openInfoModal: () => {},
-  openTossupHistoryModal: () => {},
+  isModalOpen: false,
   openBonusHistoryModal: () => {},
   openHamburgerMenu: () => {},
+  openInfoModal: () => {},
+  openSettingsModal: () => {},
+  openTossupHistoryModal: () => {},
+  openUpdatesModal: () => {},
 });
 
 export const useModalContext = () => useContext(ModalContext);

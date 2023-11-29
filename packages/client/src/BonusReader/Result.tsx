@@ -6,26 +6,26 @@ import { ReaderStatus } from '../utils/reader';
 import { selectBonusReader } from './bonusReaderSlice';
 
 const messages = {
-  prompt: ['Prompt!'],
   correct: ['Correct!'],
   incorrect: ['Incorrect.'],
+  prompt: ['Prompt!'],
+  ten: ['Ten!'],
   thirty: [
     '🎉  All Thirty!  🥳',
     '🎉  For Thirty!  🥳',
     '🎉  All Correct!  🥳',
   ],
   twenty: ['Twenty!'],
-  ten: ['Ten!'],
   zero: ['Bagel.', 'Zero.'],
 };
 
 const Result: React.FC<React.PropsWithChildren<unknown>> = () => {
   const {
-    status,
     current: {
-      result: { score },
       partResult,
+      result: { score },
     },
+    status,
   } = useSelector(selectBonusReader);
 
   let text;

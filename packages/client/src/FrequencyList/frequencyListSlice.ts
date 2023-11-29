@@ -20,28 +20,28 @@ export enum FreqStatus {
 }
 
 type FrequencyListState = {
-  status: FreqStatus;
   fetchStatus: FreqFetchStatus;
-  results: FrequencyListEntry[];
-  page: FrequencyListEntry[];
   offset: number;
+  page: FrequencyListEntry[];
+  results: FrequencyListEntry[];
+  status: FreqStatus;
 };
 
 const initialState: FrequencyListState = {
-  status: FreqStatus.initial,
   fetchStatus: FreqFetchStatus.idle,
-  results: [],
-  page: [],
   offset: 0,
+  page: [],
+  results: [],
+  status: FreqStatus.initial,
 };
 
 export const fetchPages = createAsyncThunk<
   FrequencyListEntry[],
-  { settings: Settings; offset: number },
+  { offset: number, settings: Settings; },
   { state: RootState }
 >(
   'frequencyList/fetchPages',
-  async ({ settings, offset }) => {
+  async ({ offset, settings }) => {
     const fetchParams = { ...settings, limit: FETCH_LIMIT, offset };
     const freq = await fetchUtils.fetchFreq(fetchParams);
     return freq;
@@ -60,7 +60,7 @@ export const nextPage = createAsyncThunk<
   void,
   { settings: Settings },
   { state: RootState }
->('frequencyList/nextPage', async (args, { getState, dispatch }) => {
+>('frequencyList/nextPage', async (args, { dispatch, getState }) => {
   const {
     frequencyList: { offset, results },
   } = getState();
@@ -78,20 +78,6 @@ export const nextPage = createAsyncThunk<
 });
 
 const frequencyListSlice = createSlice({
-  name: 'frequencyList',
-  initialState,
-  reducers: {
-    prevPage: (state) => {
-      state.offset = Math.max(0, state.offset - PAGE_SIZE);
-      state.page = state.results.slice(state.offset, state.offset + PAGE_SIZE);
-    },
-    reset: (state) => {
-      state.status = FreqStatus.initial;
-      state.offset = 0;
-      state.page = [];
-      state.results = [];
-    },
-  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchPages.pending, (state) => {
@@ -125,6 +111,20 @@ const frequencyListSlice = createSlice({
           state.offset + PAGE_SIZE,
         );
       });
+  },
+  initialState,
+  name: 'frequencyList',
+  reducers: {
+    prevPage: (state) => {
+      state.offset = Math.max(0, state.offset - PAGE_SIZE);
+      state.page = state.results.slice(state.offset, state.offset + PAGE_SIZE);
+    },
+    reset: (state) => {
+      state.status = FreqStatus.initial;
+      state.offset = 0;
+      state.page = [];
+      state.results = [];
+    },
   },
 });
 export const selectFrequencyList = (state: RootState) => state.frequencyList;

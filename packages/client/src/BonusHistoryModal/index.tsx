@@ -24,13 +24,13 @@ import BonusResults from './BonusResults';
 const scoreHeaders = ['30', '20', '10', '0', 'Total', 'PPB'];
 
 type BonusHistoryModalProps = {
-  isOpen: boolean;
   closeModal: () => void;
+  isOpen: boolean;
 };
 
 const BonusHistoryModal: React.FC<
   React.PropsWithChildren<BonusHistoryModalProps>
-> = ({ isOpen, closeModal }) => {
+> = ({ closeModal, isOpen }) => {
   const { results } = useSelector(selectBonusReader);
 
   const thirties = results.filter((r) => r.score === BonusScore.thirty).length;

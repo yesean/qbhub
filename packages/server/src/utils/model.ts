@@ -6,13 +6,13 @@ import {
 } from '../types/db.js';
 
 export const transformTossup = (tossup: DBTossup): Tossup => ({
-  id: tossup.id,
-  text: tossup.text,
-  formattedText: tossup.formatted_text,
   answer: tossup.answer,
-  formattedAnswer: tossup.formatted_answer,
-  normalizedAnswer: tossup.normalized_answer,
   category: tossup.category,
+  formattedAnswer: tossup.formatted_answer,
+  formattedText: tossup.formatted_text,
+  id: tossup.id,
+  normalizedAnswer: tossup.normalized_answer,
+  text: tossup.text,
   ...(tossup.subcategory ? { subcategory: tossup.subcategory } : {}),
   difficulty: tossup.difficulty,
   tournament: tossup.tournament,
@@ -20,21 +20,21 @@ export const transformTossup = (tossup: DBTossup): Tossup => ({
 });
 
 export const transformBonus = (bonus: DBBonus, parts: BonusPart[]): Bonus => ({
+  category: bonus.category,
+  formattedLeadin: bonus.formatted_leadin,
   id: bonus.id,
   leadin: bonus.leadin,
-  formattedLeadin: bonus.formatted_leadin,
-  category: bonus.category,
   ...(bonus.subcategory ? { subcategory: bonus.subcategory } : {}),
   difficulty: bonus.difficulty,
+  parts,
   tournament: bonus.tournament,
   year: bonus.year,
-  parts,
 });
 
 export const transformBonusPart = (bonusPart: DBBonusPart): BonusPart => ({
-  text: bonusPart.text,
   answer: bonusPart.answer,
-  formattedText: bonusPart.formatted_text,
   formattedAnswer: bonusPart.formatted_answer,
+  formattedText: bonusPart.formatted_text,
   number: bonusPart.number,
+  text: bonusPart.text,
 });

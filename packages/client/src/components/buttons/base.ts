@@ -1,28 +1,28 @@
 const ButtonLayoutProps = {
-  display: 'inline-flex',
   alignItems: 'center',
+  borderRadius: 'md',
+  display: 'inline-flex',
+  fontWeight: 'semibold',
   h: 12,
   px: 4,
   py: 2,
-  borderRadius: 'md',
-  fontWeight: 'semibold',
 };
 
 export const PrimaryButton = {
   ...ButtonLayoutProps,
+  _hover: {
+    bg: 'cyan.500',
+    textDecor: 'none',
+  },
   bg: 'cyan.400',
   color: 'gray.50',
-  _hover: {
-    textDecor: 'none',
-    bg: 'cyan.500',
-  },
 };
 
 export const SecondaryButton = {
   ...ButtonLayoutProps,
-  bg: 'gray.100',
   _hover: {
-    textDecor: 'none',
     bg: 'gray.200',
+    textDecor: 'none',
   },
+  bg: 'gray.100',
 };

@@ -24,10 +24,10 @@ const TossupReader = () => {
   const [progress, setProgress] = useState(100);
   const [buzz, setBuzz] = useState(() => () => {});
   const {
-    status,
     current: {
       tossup: { formattedAnswer },
     },
+    status,
   } = useSelector(selectTossupReader);
   const isAnswering = useSelector(selectIsAnswering);
   const { openTossupHistoryModal } = useModalContext();

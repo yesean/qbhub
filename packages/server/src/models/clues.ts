@@ -7,8 +7,8 @@ import { QueryBuilder, client } from '../utils/db.js';
 
 const columns = [
   { name: TABLES.tossups.columns.text },
-  { name: TABLES.tossups.columns.normalizedAnswer, alias: 'answer' },
-  { name: TABLES.tournaments.columns.name, alias: 'tournament' },
+  { alias: 'answer', name: TABLES.tossups.columns.normalizedAnswer },
+  { alias: 'tournament', name: TABLES.tournaments.columns.name },
 ];
 
 /**
@@ -24,8 +24,8 @@ export const getClues = async (questionFilters: QuestionParameters) => {
       TABLES.tournaments.columns.id,
     )
     .filterTossups(questionFilters, {
-      useNormalizedAnswer: true,
       useExactAnswer: true,
+      useNormalizedAnswer: true,
     })
     .limit(questionFilters.limit)
     .build();

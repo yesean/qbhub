@@ -18,21 +18,21 @@ import {
 } from '../utils/routes';
 
 const links = [
-  { name: 'Tossup Reader', getURL: getTossupReaderURL },
-  { name: 'Bonus Reader', getURL: getBonusReaderURL },
-  { name: 'Frequency List', getURL: getFrequencyListURL },
-  { name: 'Clues Generator', getURL: getClueSearchURL },
-  { name: 'About', getURL: getAboutURL },
+  { getURL: getTossupReaderURL, name: 'Tossup Reader' },
+  { getURL: getBonusReaderURL, name: 'Bonus Reader' },
+  { getURL: getFrequencyListURL, name: 'Frequency List' },
+  { getURL: getClueSearchURL, name: 'Clues Generator' },
+  { getURL: getAboutURL, name: 'About' },
 ];
 
 type HamburgerMenuProps = {
-  isOpen: boolean;
   closeModal: () => void;
+  isOpen: boolean;
 };
 
 const HamburgerMenu: React.FC<React.PropsWithChildren<HamburgerMenuProps>> = ({
-  isOpen,
   closeModal,
+  isOpen,
 }) => {
   const [params] = useGlobalQueryParams();
 
@@ -42,7 +42,7 @@ const HamburgerMenu: React.FC<React.PropsWithChildren<HamburgerMenuProps>> = ({
       <DrawerContent>
         <Flex direction="column" align="center" p={4}>
           <CloseButton size="lg" onClick={closeModal} mb={4} />
-          {links.map(({ name, getURL }) => (
+          {links.map(({ getURL, name }) => (
             <Link
               key={name}
               as={RouterLink}

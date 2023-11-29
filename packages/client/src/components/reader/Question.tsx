@@ -8,18 +8,18 @@ import {
 } from '@chakra-ui/react';
 
 type QuestionProps = {
-  showLoading: boolean;
-  showEmpty: boolean;
   emptyMessage: string;
   onEmpty: () => void;
+  showEmpty: boolean;
+  showLoading: boolean;
 };
 
 const Question: React.FC<React.PropsWithChildren<QuestionProps>> = ({
-  showLoading,
-  showEmpty,
+  children,
   emptyMessage,
   onEmpty,
-  children,
+  showEmpty,
+  showLoading,
 }) => {
   const render = () => {
     if (showLoading) {

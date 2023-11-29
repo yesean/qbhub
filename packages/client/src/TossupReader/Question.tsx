@@ -26,12 +26,12 @@ type QuestionProps = {
 const Question = ({ setBuzz }: QuestionProps) => {
   const visibleRef = useRef<HTMLParagraphElement>(null);
   const {
-    status,
     current: {
-      tossup: { formattedText },
       buzzIndex,
+      tossup: { formattedText },
       tossupWords,
     },
+    status,
   } = useSelector(selectTossupReader);
   const dispatch = useAppDispatch();
 
@@ -40,7 +40,7 @@ const Question = ({ setBuzz }: QuestionProps) => {
     [formattedText],
   );
 
-  const { buzz, reveal, displayWords, visibleIndex } = useReader(words, {
+  const { buzz, displayWords, reveal, visibleIndex } = useReader(words, {
     onBuzz: useCallback(
       (index: number) => dispatch(buzzAction(index)),
       [dispatch],
@@ -50,8 +50,8 @@ const Question = ({ setBuzz }: QuestionProps) => {
   const shuffledTossupWords = useMemo(
     () =>
       displayWords.map((word, i) => ({
-        word,
         bold: tossupWords[i].bold,
+        word,
       })),
     [displayWords, tossupWords],
   );
@@ -75,8 +75,8 @@ const Question = ({ setBuzz }: QuestionProps) => {
     <FormattedQuestion
       words={shuffledTossupWords}
       indices={{
-        visible: visibleIndex,
         buzz: buzzIndex,
+        visible: visibleIndex,
       }}
       visibleRef={visibleRef}
     />

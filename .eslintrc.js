@@ -1,5 +1,5 @@
 module.exports = {
-  plugins: ['react-refresh'],
+  plugins: ['react-refresh', 'sort-keys-fix', 'sort-destructure-keys'],
   extends: ['airbnb', 'airbnb-typescript', 'airbnb/hooks', 'prettier'],
   rules: {
     'no-unused-vars': 'off', // base rule must be disabled: https://typescript-eslint.io/rules/no-unused-vars/
@@ -26,10 +26,42 @@ module.exports = {
     ],
     '@typescript-eslint/no-use-before-define': ['error', { functions: false }],
     '@typescript-eslint/switch-exhaustiveness-check': 'error',
+    // reference: https://typescript-eslint.io/rules/member-ordering/#options
+    '@typescript-eslint/member-ordering': [
+      'error',
+      {
+        default: {
+          optionalityOrder: 'required-first',
+          order: 'natural-case-insensitive',
+        },
+        classes: [
+          'private-field',
+          'protected-field',
+          'public-field',
+
+          'constructor',
+
+          'public-get',
+          'protected-get',
+          'private-get',
+
+          'public-set',
+          'protected-set',
+          'private-set',
+
+          'public-method',
+          'protected-method',
+          'private-method',
+        ],
+      },
+    ],
+    '@typescript-eslint/sort-type-constituents': 'error',
     'arrow-body-style': 'warn',
     'consistent-return': 'off',
     'default-case': 'off',
     'no-param-reassign': 'off',
+    'sort-keys-fix/sort-keys-fix': 'error',
+    'sort-destructure-keys/sort-destructure-keys': 'error',
     quotes: ['error', 'single', { avoidEscape: true }],
     'react/function-component-definition': 'off',
     'react/jsx-props-no-spreading': 'off',

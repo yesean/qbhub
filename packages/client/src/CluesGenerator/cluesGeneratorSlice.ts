@@ -13,24 +13,24 @@ export enum CluesGeneratorStatus {
 }
 
 type CluesGeneratorSlice = {
-  status: CluesGeneratorStatus;
-  clues: SelectedClue[];
   answers: FrequencyListEntry[];
-  selectedAnswer: string;
+  clues: SelectedClue[];
   currentQuery: string;
+  selectedAnswer: string;
+  status: CluesGeneratorStatus;
 };
 
 const initialState: CluesGeneratorSlice = {
-  status: CluesGeneratorStatus.initial,
-  clues: [],
   answers: [],
-  selectedAnswer: '',
+  clues: [],
   currentQuery: '',
+  selectedAnswer: '',
+  status: CluesGeneratorStatus.initial,
 };
 
 export const fetchAnswers = createAsyncThunk<
   FrequencyListEntry[],
-  { settings: Settings; answer: string },
+  { answer: string, settings: Settings; },
   { state: RootState }
 >(
   'cluesGenerator/fetchAnswers',
@@ -50,7 +50,7 @@ export const fetchAnswers = createAsyncThunk<
 );
 export const fetchClues = createAsyncThunk<
   SelectedClue[],
-  { settings: Settings; answer: string },
+  { answer: string, settings: Settings; },
   { state: RootState }
 >(
   'cluesGenerator/fetchClues',
@@ -70,19 +70,6 @@ export const fetchClues = createAsyncThunk<
 );
 
 const cluesGeneratorSlice = createSlice({
-  name: 'cluesGenerator',
-  initialState,
-  reducers: {
-    resetStatus: (state) => {
-      state.status = CluesGeneratorStatus.initial;
-    },
-    selectAnswer: (state, action: PayloadAction<string>) => {
-      state.selectedAnswer = action.payload;
-    },
-    setQuery: (state, action: PayloadAction<string>) => {
-      state.currentQuery = action.payload;
-    },
-  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAnswers.pending, (state) => {
@@ -100,6 +87,19 @@ const cluesGeneratorSlice = createSlice({
         state.status = CluesGeneratorStatus.loaded;
         state.clues = action.payload;
       });
+  },
+  initialState,
+  name: 'cluesGenerator',
+  reducers: {
+    resetStatus: (state) => {
+      state.status = CluesGeneratorStatus.initial;
+    },
+    selectAnswer: (state, action: PayloadAction<string>) => {
+      state.selectedAnswer = action.payload;
+    },
+    setQuery: (state, action: PayloadAction<string>) => {
+      state.currentQuery = action.payload;
+    },
   },
 });
 export const { resetStatus, selectAnswer, setQuery } =

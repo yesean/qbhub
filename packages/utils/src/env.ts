@@ -13,16 +13,16 @@ function getViteEnv() {
 
   return {
     isDev,
-    logLevel,
     isVite,
+    logLevel,
   };
 }
 
 function getNodeEnv() {
   const ENV_KEYS = {
-    nodePort: 'NODE_PORT',
-    nodeEnv: 'NODE_ENV',
     logLevel: 'LOG_LEVEL',
+    nodeEnv: 'NODE_ENV',
+    nodePort: 'NODE_PORT',
   };
 
   const logLevel = validateLogLevel(

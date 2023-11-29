@@ -24,18 +24,18 @@ const buttonTexts = new Map([
 ]);
 
 type UserInputProps = {
+  buzz: () => void;
   progress: number;
   submit: (s: string) => void;
-  buzz: () => void;
 };
 const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
+  buzz,
   progress,
   submit,
-  buzz,
 }) => {
   const {
-    status,
     current: { partResult },
+    status,
   } = useSelector(selectBonusReader);
   const { settings } = useSettings();
   const isAnswering = useSelector(selectIsAnswering);

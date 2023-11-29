@@ -29,8 +29,8 @@ import {
 } from './cluesGeneratorSlice';
 
 const answersFields = [
-  { label: 'Answer', dataKey: 'answer' },
-  { label: 'Frequency', dataKey: 'frequency' },
+  { dataKey: 'answer', label: 'Answer' },
+  { dataKey: 'frequency', label: 'Frequency' },
 ] as const;
 
 type Props = {
@@ -47,7 +47,7 @@ const Answers: React.FC<React.PropsWithChildren<Props>> = ({ query }) => {
   useLayoutEffect(() => {
     dispatch(resetStatus());
     dispatch(setQuery(query));
-    dispatch(fetchAnswers({ settings, answer: query }));
+    dispatch(fetchAnswers({ answer: query, settings }));
   }, [query, dispatch, settings]);
 
   if (status !== CluesGeneratorStatus.loaded) {

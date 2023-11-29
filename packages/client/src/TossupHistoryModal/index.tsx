@@ -22,13 +22,13 @@ import TossupResults from './TossupResults';
 const scoreHeaders = ['15', '10', '-5', 'Points'];
 
 type TossupHistoryModalProps = {
-  isOpen: boolean;
   closeModal: () => void;
+  isOpen: boolean;
 };
 
 const TossupHistoryModal: React.FC<
   React.PropsWithChildren<TossupHistoryModalProps>
-> = ({ isOpen, closeModal }) => {
+> = ({ closeModal, isOpen }) => {
   const { results } = useSelector(selectTossupReader);
 
   const powers = results.filter((r) => r.score === TossupScore.power).length;

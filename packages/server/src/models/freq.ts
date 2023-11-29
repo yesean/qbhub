@@ -5,12 +5,12 @@ import { TABLES } from '../utils/constants.js';
 import { QueryBuilder, client } from '../utils/db.js';
 
 const columns = [
-  { name: TABLES.tossups.columns.normalizedAnswer, alias: 'answer' },
-  { name: 'count(normalized_answer)', alias: 'frequency' },
+  { alias: 'answer', name: TABLES.tossups.columns.normalizedAnswer },
+  { alias: 'frequency', name: 'count(normalized_answer)' },
 ];
 const columnOrder: Order = [
-  { name: 'count(normalized_answer)', direction: 'desc' },
-  { name: TABLES.tossups.columns.normalizedAnswer, direction: 'asc' },
+  { direction: 'desc', name: 'count(normalized_answer)' },
+  { direction: 'asc', name: TABLES.tossups.columns.normalizedAnswer },
 ];
 
 /**

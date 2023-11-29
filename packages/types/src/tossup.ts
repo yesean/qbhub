@@ -1,12 +1,12 @@
 import { Question } from './question.js';
 
-export type Tossup = {
-  text: string;
+export type Tossup = Question & {
   answer: string;
-  formattedText: string;
   formattedAnswer: string;
+  formattedText: string;
   normalizedAnswer: string;
-} & Question;
+  text: string;
+};
 
 export enum TossupScore {
   neg = -5,
@@ -16,15 +16,15 @@ export enum TossupScore {
 }
 
 export type TossupWord = {
-  word: string;
   bold: boolean;
+  word: string;
 };
 
 export type TossupResult = {
+  buzzIndex: number;
+  isCorrect: boolean;
+  score: TossupScore;
   tossup: Tossup;
   userAnswer: string;
-  isCorrect: boolean;
-  buzzIndex: number;
   words: TossupWord[];
-  score: TossupScore;
 };

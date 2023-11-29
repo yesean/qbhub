@@ -13,8 +13,8 @@ import {
 } from '../utils/settings/validate';
 
 type SettingsHook = {
-  settings: Settings;
   setSettings: (newSettings: Partial<Settings>) => void;
+  settings: Settings;
 };
 
 export const useSettings = (): SettingsHook => {
@@ -26,11 +26,11 @@ export const useSettings = (): SettingsHook => {
   const settings = useMemo<Settings>(
     () => ({
       categories: params.categories,
-      subcategories: params.subcategories,
       difficulties: params.difficulties,
-      tournaments: params.tournaments,
       fromYear: params.fromYear,
       readingSpeed,
+      subcategories: params.subcategories,
+      tournaments: params.tournaments,
     }),
     [
       params.categories,
@@ -86,5 +86,5 @@ export const useSettings = (): SettingsHook => {
     [dispatch, setParams],
   );
 
-  return useMemo(() => ({ settings, setSettings }), [setSettings, settings]);
+  return useMemo(() => ({ setSettings, settings }), [setSettings, settings]);
 };

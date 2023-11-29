@@ -1,6 +1,6 @@
 import { Tournament } from '@qbhub/types';
 
-export type Parameter = string | number;
+export type Parameter = number | string;
 
 export type Column = {
   name: string;
@@ -8,53 +8,53 @@ export type Column = {
 };
 
 export type Order = {
-  name: string;
   direction: 'asc' | 'desc';
+  name: string;
 }[];
 
 export type QuestionFilterOptions = {
   ignoreEmptyNormalizedAnswer?: boolean;
-  useNormalizedAnswer?: boolean;
   useExactAnswer?: boolean;
+  useNormalizedAnswer?: boolean;
 };
 
 export type Tossup = {
-  id: number;
-  text: string;
   answer: string;
-  formatted_text: string;
-  formatted_answer: string;
-  normalized_answer: string;
   category: number;
-  subcategory: number | null;
   difficulty: number;
+  formatted_answer: string;
+  formatted_text: string;
+  id: number;
+  normalized_answer: string;
+  subcategory: number | null;
+  text: string;
   tournament: number;
   year: number;
 };
 
 export type Bonus = {
+  category: number;
+  difficulty: number;
+  formatted_leadin: string;
   id: number;
   leadin: string;
-  formatted_leadin: string;
-  category: number;
   subcategory: number | null;
-  difficulty: number;
   tournament: number;
   year: number;
 };
 
 export type BonusPart = {
-  bonus_id: number;
-  text: string;
   answer: string;
-  formatted_text: string;
+  bonus_id: number;
   formatted_answer: string;
+  formatted_text: string;
   number: number;
+  text: string;
 };
 
 // stripped down version of `Tossup` used for clues processing
 export type PlainTossup = {
-  text: string;
-  answer: string; // uses normalized_answer
+  answer: string;
+  text: string; // uses normalized_answer
   tournament: Tournament;
 };
