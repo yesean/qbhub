@@ -29,12 +29,12 @@ import {
 } from './cluesGeneratorSlice';
 
 const cluesFields = [
-  { label: 'Clue', dataKey: 'clue' },
-  { label: 'Score', dataKey: 'score' },
+  { dataKey: 'clue', label: 'Clue' },
+  { dataKey: 'score', label: 'Score' },
 ] as const;
 
 const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const { status, clues, currentQuery } = useAppSelector(selectCluesGenerator);
+  const { clues, currentQuery, status } = useAppSelector(selectCluesGenerator);
   const dispatch = useAppDispatch();
   const { getURL: getClueSearchURL } = useClueSearchRouteContext();
   const { params } = useClueDisplayRouteContext();

@@ -23,10 +23,10 @@ const FromYearParam = buildNeverNullRangedNumberParamWithSkip(
 
 const GLOBAL_QUERY_PARAMS = {
   categories: buildNumericEnumArrayParam(Category),
-  subcategories: buildNumericEnumArrayParam(Subcategory),
   difficulties: buildNumericEnumArrayParam(Difficulty),
-  tournaments: buildNumericEnumArrayParam(Tournament),
   fromYear: FromYearParam,
+  subcategories: buildNumericEnumArrayParam(Subcategory),
+  tournaments: buildNumericEnumArrayParam(Tournament),
 };
 
 const QUERY_PARAM_OPTIONS = {
@@ -42,15 +42,15 @@ const buildRoute = <T extends QueryParamConfigMap>(
 });
 
 const ROUTES = {
-  tossupReaderNew: buildRoute('/tossup-new'),
-  tossupReader: buildRoute('/tossup'),
-  bonusReader: buildRoute('/bonus'),
-  frequencyList: buildRoute('/frequency'),
-  clue: {
-    search: buildRoute('/clue', { query: NeverNullStringParam }),
-    display: buildRoute('/clue/display', { answer: NeverNullStringParam }),
-  },
   about: buildRoute('/about'),
+  bonusReader: buildRoute('/bonus'),
+  clue: {
+    display: buildRoute('/clue/display', { answer: NeverNullStringParam }),
+    search: buildRoute('/clue', { query: NeverNullStringParam }),
+  },
+  frequencyList: buildRoute('/frequency'),
+  tossupReader: buildRoute('/tossup'),
+  tossupReaderNew: buildRoute('/tossup-new'),
 };
 
 type RouteConfig<T extends QueryParamConfigMap> = {
@@ -84,8 +84,8 @@ const buildUseRouteContext = <T extends QueryParamConfigMap>(
 
     return useMemo(
       () => ({
-        params,
         getURL,
+        params,
       }),
       [getURL, params],
     );
@@ -124,23 +124,23 @@ export const useGetURL = () => {
 
   return useMemo(
     () => ({
-      getTossupReaderURL: (
-        newParams: Parameters<typeof getTossupReaderURL>[0] = {},
-      ) => getTossupReaderURL({ ...params, ...newParams }),
+      getAboutURL: (newParams: Parameters<typeof getAboutURL>[0] = {}) =>
+        getAboutURL({ ...params, ...newParams }),
       getBonusReaderURL: (
         newParams: Parameters<typeof getBonusReaderURL>[0] = {},
       ) => getBonusReaderURL({ ...params, ...newParams }),
-      getFrequencyListURL: (
-        newParams: Parameters<typeof getFrequencyListURL>[0] = {},
-      ) => getFrequencyListURL({ ...params, ...newParams }),
-      getClueSearchURL: (
-        newParams: Parameters<typeof getClueSearchURL>[0] = {},
-      ) => getClueSearchURL({ ...params, ...newParams }),
       getClueDisplayURL: (
         newParams: Parameters<typeof getClueDisplayURL>[0] = {},
       ) => getClueDisplayURL({ ...params, ...newParams }),
-      getAboutURL: (newParams: Parameters<typeof getAboutURL>[0] = {}) =>
-        getAboutURL({ ...params, ...newParams }),
+      getClueSearchURL: (
+        newParams: Parameters<typeof getClueSearchURL>[0] = {},
+      ) => getClueSearchURL({ ...params, ...newParams }),
+      getFrequencyListURL: (
+        newParams: Parameters<typeof getFrequencyListURL>[0] = {},
+      ) => getFrequencyListURL({ ...params, ...newParams }),
+      getTossupReaderURL: (
+        newParams: Parameters<typeof getTossupReaderURL>[0] = {},
+      ) => getTossupReaderURL({ ...params, ...newParams }),
     }),
     [params],
   );
@@ -153,13 +153,13 @@ export const usePage = () => {
   const isBonusReader = pathname.startsWith(ROUTES.bonusReader.path);
   return useMemo(
     () => ({
-      isTossupReader,
-      isBonusReader,
-      isReader: isTossupReader || isBonusReader,
-      isFrequencyList: pathname.startsWith(ROUTES.frequencyList.path),
-      isClueSearch: pathname.startsWith(ROUTES.clue.search.path),
-      isClueDisplay: pathname.startsWith(ROUTES.clue.display.path),
       isAbout: pathname.startsWith(ROUTES.about.path),
+      isBonusReader,
+      isClueDisplay: pathname.startsWith(ROUTES.clue.display.path),
+      isClueSearch: pathname.startsWith(ROUTES.clue.search.path),
+      isFrequencyList: pathname.startsWith(ROUTES.frequencyList.path),
+      isReader: isTossupReader || isBonusReader,
+      isTossupReader,
     }),
     [isBonusReader, isTossupReader, pathname],
   );

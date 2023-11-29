@@ -25,41 +25,42 @@ import {
 
 const paths = [
   {
-    path: '/',
     element: <NavigateToTossupReader />,
+    path: '/',
   },
   {
-    path: getTossupReaderNewURL(),
     element: <TossupReaderNew />,
+    path: getTossupReaderNewURL(),
   },
   {
-    path: getTossupReaderURL(),
     element: <TossupReader />,
+    path: getTossupReaderURL(),
   },
   {
-    path: getBonusReaderURL(),
     element: <BonusReader />,
+    path: getBonusReaderURL(),
   },
   {
-    path: getFrequencyListURL(),
     element: <FrequencyList />,
+    path: getFrequencyListURL(),
   },
   {
-    path: getClueSearchURL(),
     element: <Search />,
+    path: getClueSearchURL(),
   },
   {
-    path: getClueDisplayURL(),
     element: <Clues />,
+    path: getClueDisplayURL(),
   },
   {
-    path: getAboutURL(),
     element: <About />,
+    path: getAboutURL(),
   },
 ];
 
 const router = createBrowserRouter([
   {
+    children: paths,
     element: (
       <QueryParamProvider adapter={ReactRouter6Adapter}>
         <SettingsProvider>
@@ -73,7 +74,6 @@ const router = createBrowserRouter([
         </SettingsProvider>
       </QueryParamProvider>
     ),
-    children: paths,
   },
 ]);
 

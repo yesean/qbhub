@@ -55,11 +55,11 @@ const getQuestionResult = (
   const judgeResult = judge.judge(userAnswer);
   const isCorrect = judgeResult === JudgeResult.correct;
   const unscoredQuestionResult = {
-    question,
-    isCorrect,
-    userAnswer,
     buzzIndex,
+    isCorrect,
     judgeResult,
+    question,
+    userAnswer,
   };
   const score = getScore(unscoredQuestionResult);
   return { ...unscoredQuestionResult, score };
@@ -73,13 +73,13 @@ export default function QuestionTextPlusInput() {
   const inputRef = useRef<HTMLInputElement>(null);
   const visibleRef = useRef<HTMLParagraphElement>(null);
   const {
-    question,
-    status,
-    setStatus,
-    previousResults,
-    onNextQuestion,
-    onJudged,
     getScore,
+    onJudged,
+    onNextQuestion,
+    previousResults,
+    question,
+    setStatus,
+    status,
   } = useQuestionReaderContext();
 
   const focusInput = useCallback(() => {
@@ -119,13 +119,13 @@ export default function QuestionTextPlusInput() {
   }, [handleBuzz, scrollToVisible, status]);
 
   const {
-    visibleIndex,
     pause: pauseQuestionRevealing,
     reveal: revealQuestion,
+    visibleIndex,
   } = useRevealer({
-    words: tossupWords,
     onChange: scrollToVisible,
-    onFinish: buzzIfUserHasNot, // manually trigger buzz, if all words are revealed before the user buzzes
+    onFinish: buzzIfUserHasNot,
+    words: tossupWords, // manually trigger buzz, if all words are revealed before the user buzzes
   });
 
   const submitResult = useCallback(
@@ -268,7 +268,7 @@ export default function QuestionTextPlusInput() {
       <Box overflow="auto" bg="gray.100" p={4} borderRadius="md">
         <FormattedQuestion
           words={tossupWords}
-          indices={{ visible: visibleIndex, buzz: buzzIndex }}
+          indices={{ buzz: buzzIndex, visible: visibleIndex }}
           visibleRef={visibleRef}
         />
       </Box>

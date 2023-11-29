@@ -9,8 +9,8 @@ type AnswerProps = {
 };
 
 const Answer: React.FC<React.PropsWithChildren<AnswerProps>> = ({
-  text,
   query,
+  text,
 }) => {
   const { getClueDisplayURL } = useGetURL();
 

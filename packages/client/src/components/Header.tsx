@@ -6,10 +6,10 @@ import { usePage } from '../utils/routes';
 const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
   const page = usePage();
   const {
-    openTossupHistoryModal,
     openBonusHistoryModal,
-    openSettingsModal,
     openHamburgerMenu,
+    openSettingsModal,
+    openTossupHistoryModal,
   } = useModalContext();
 
   const openHistoryModal = page.isTossupReader

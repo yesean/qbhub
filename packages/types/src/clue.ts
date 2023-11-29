@@ -1,8 +1,8 @@
 import { Tournament } from './tournament.js';
 
 export type Clue = {
-  text: string;
   sentence: string;
+  text: string;
   tournament: Tournament;
 };
 

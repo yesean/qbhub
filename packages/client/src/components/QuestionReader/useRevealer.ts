@@ -4,12 +4,12 @@ import { getReadingTimeoutDelay } from '../../utils/reader';
 import { DEFAULT_READING_SPEED } from '../../utils/settings/constants';
 
 type Props = {
-  words: unknown[];
-  onFinish: () => void;
   onChange: (visibleIndex: number) => void;
+  onFinish: () => void;
+  words: unknown[];
 };
 
-export default ({ words, onFinish, onChange }: Props) => {
+export default ({ onChange, onFinish, words }: Props) => {
   const [visibleIndex, setVisibleIndex] = useState(-1);
   const [isPaused, setIsPaused] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
@@ -58,9 +58,9 @@ export default ({ words, onFinish, onChange }: Props) => {
 
   return useMemo(
     () => ({
-      visibleIndex,
       pause,
       reveal,
+      visibleIndex,
     }),
     [pause, reveal, visibleIndex],
   );

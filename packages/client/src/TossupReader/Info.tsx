@@ -6,7 +6,7 @@ import { selectTossupReader } from './tossupReaderSlice';
 const Info: React.FC<React.PropsWithChildren<unknown>> = () => {
   const {
     current: {
-      tossup: { tournament, category, subcategory, difficulty },
+      tossup: { category, difficulty, subcategory, tournament },
     },
   } = useSelector(selectTossupReader);
 

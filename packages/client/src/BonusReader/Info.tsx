@@ -6,7 +6,7 @@ import { selectBonusReader } from './bonusReaderSlice';
 const Info: React.FC<React.PropsWithChildren<unknown>> = () => {
   const {
     current: {
-      bonus: { tournament, category, subcategory, difficulty },
+      bonus: { category, difficulty, subcategory, tournament },
     },
   } = useSelector(selectBonusReader);
 

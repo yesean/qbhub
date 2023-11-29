@@ -12,10 +12,10 @@ const columns = [
   { name: TABLES.tossups.columns.formattedText },
   { name: TABLES.tossups.columns.formattedAnswer },
   { name: TABLES.tossups.columns.normalizedAnswer },
-  { name: TABLES.tossups.columns.category, alias: 'category' },
-  { name: TABLES.tossups.columns.subcategory, alias: 'subcategory' },
+  { alias: 'category', name: TABLES.tossups.columns.category },
+  { alias: 'subcategory', name: TABLES.tossups.columns.subcategory },
   { name: TABLES.tournaments.columns.difficulty },
-  { name: TABLES.tournaments.columns.id, alias: 'tournament' },
+  { alias: 'tournament', name: TABLES.tournaments.columns.id },
   { name: TABLES.tournaments.columns.year },
 ];
 
@@ -25,8 +25,8 @@ const columns = [
 export const getTossups = async (questionFilters: QuestionParameters) => {
   const order: Order = [
     {
-      name: TABLES.tournaments.columns.year,
       direction: questionFilters.sort === SortOption.latest ? 'desc' : 'asc',
+      name: TABLES.tournaments.columns.year,
     },
   ];
 

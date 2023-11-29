@@ -12,17 +12,17 @@ import usePageHeight from '../hooks/usePageHeight';
 import TealButton from './buttons/TealButton';
 
 type Props = {
-  isOpen: boolean;
-  closeModal: () => void;
-  title: string;
   children: ReactNode;
+  closeModal: () => void;
+  isOpen: boolean;
+  title: string;
 };
 
 export default function QBHubModal({
-  isOpen,
-  closeModal,
-  title: heading,
   children,
+  closeModal,
+  isOpen,
+  title: heading,
 }: Props) {
   const pageHeight = usePageHeight();
 

@@ -25,12 +25,12 @@ import {
 } from './frequencyListSlice';
 
 const freqFields = [
-  { label: 'Answer', dataKey: 'answer' },
-  { label: 'Frequency', dataKey: 'frequency' },
+  { dataKey: 'answer', label: 'Answer' },
+  { dataKey: 'frequency', label: 'Frequency' },
 ] as const;
 
 const FrequencyList: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const { page, offset, status } = useSelector(selectFrequencyList);
+  const { offset, page, status } = useSelector(selectFrequencyList);
   const { settings } = useSettings();
   const dispatch = useAppDispatch();
   const { getClueDisplayURL } = useGetURL();

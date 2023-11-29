@@ -7,14 +7,14 @@ import {
 } from '@chakra-ui/react';
 
 type ScoreProps = {
-  score: number;
   delta: number;
+  score: number;
   showDelta: boolean;
 };
 
 const Score: React.FC<React.PropsWithChildren<ScoreProps>> = ({
-  score,
   delta,
+  score,
   showDelta,
 }) => {
   const renderScore = showDelta ? `${score - delta} → ${score}` : score;

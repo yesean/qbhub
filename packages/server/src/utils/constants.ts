@@ -1,62 +1,62 @@
 export const TABLES = {
-  tossups: {
-    name: 'tossups',
+  bonusParts: {
     columns: {
-      id: 'tossups.id',
-      text: 'tossups.text',
-      answer: 'tossups.answer',
-      formattedText: 'tossups.formatted_text',
-      formattedAnswer: 'tossups.formatted_answer',
-      normalizedAnswer: 'tossups.normalized_answer',
-      category: 'tossups.category_id',
-      subcategory: 'tossups.subcategory_id',
-      tournament: 'tossups.tournament_id',
+      answer: 'bonus_parts.answer',
+      bonusId: 'bonus_parts.bonus_id',
+      formattedAnswer: 'bonus_parts.formatted_answer',
+      formattedText: 'bonus_parts.formatted_text',
+      id: 'bonus_parts.id',
+      number: 'bonus_parts.number',
+      text: 'bonus_parts.text',
     },
+    name: 'bonus_parts',
   },
   bonuses: {
-    name: 'bonuses',
     columns: {
+      category: 'bonuses.category_id',
+      difficulty: 'bonuses.difficulty',
+      formattedLeadin: 'bonuses.formatted_leadin',
       id: 'bonuses.id',
       leadin: 'bonuses.leadin',
-      formattedLeadin: 'bonuses.formatted_leadin',
-      category: 'bonuses.category_id',
       subcategory: 'bonuses.subcategory_id',
-      difficulty: 'bonuses.difficulty',
       tournament: 'bonuses.tournament_id',
     },
-  },
-  bonusParts: {
-    name: 'bonus_parts',
-    columns: {
-      id: 'bonus_parts.id',
-      bonusId: 'bonus_parts.bonus_id',
-      text: 'bonus_parts.text',
-      answer: 'bonus_parts.answer',
-      formattedText: 'bonus_parts.formatted_text',
-      formattedAnswer: 'bonus_parts.formatted_answer',
-      number: 'bonus_parts.number',
-    },
-  },
-  tournaments: {
-    name: 'tournaments',
-    columns: {
-      id: 'tournaments.id',
-      year: 'tournaments.year',
-      name: 'tournaments.name',
-      difficulty: 'tournaments.difficulty',
-    },
+    name: 'bonuses',
   },
   categories: {
-    name: 'categories',
     columns: {
       id: 'categories.id',
     },
+    name: 'categories',
   },
   subcategories: {
-    name: 'subcategories',
     columns: {
       id: 'subcategories.id',
     },
+    name: 'subcategories',
+  },
+  tossups: {
+    columns: {
+      answer: 'tossups.answer',
+      category: 'tossups.category_id',
+      formattedAnswer: 'tossups.formatted_answer',
+      formattedText: 'tossups.formatted_text',
+      id: 'tossups.id',
+      normalizedAnswer: 'tossups.normalized_answer',
+      subcategory: 'tossups.subcategory_id',
+      text: 'tossups.text',
+      tournament: 'tossups.tournament_id',
+    },
+    name: 'tossups',
+  },
+  tournaments: {
+    columns: {
+      difficulty: 'tournaments.difficulty',
+      id: 'tournaments.id',
+      name: 'tournaments.name',
+      year: 'tournaments.year',
+    },
+    name: 'tournaments',
   },
 };
 

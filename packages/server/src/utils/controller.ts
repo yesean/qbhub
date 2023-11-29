@@ -20,17 +20,17 @@ const parseQuestionFilters = (
   q: qs.ParsedQs,
   { answer = false, limit = false },
 ): QuestionParameters => ({
-  categories: parseCategories(q),
-  subcategories: parseSubcategories(q),
-  difficulties: parseDifficulties(q),
-  tournaments: parseTournaments(q),
-  text: parseText(q),
   answer: parseAnswer(q, answer),
-  sort: parseSort(q),
+  categories: parseCategories(q),
+  difficulties: parseDifficulties(q),
   from: parseFrom(q),
-  until: parseUntil(q),
-  offset: parseOffset(q),
   limit: parseLimit(q, limit),
+  offset: parseOffset(q),
+  sort: parseSort(q),
+  subcategories: parseSubcategories(q),
+  text: parseText(q),
+  tournaments: parseTournaments(q),
+  until: parseUntil(q),
 });
 
 /**
@@ -57,8 +57,8 @@ const parseClues = (q: qs.ParsedQs) =>
   parseQuestionFilters(q, { answer: true, limit: true });
 
 export const parseQueryString = {
-  tossups: parseTossups,
   bonuses: parseBonuses,
-  freq: parseFreq,
   clues: parseClues,
+  freq: parseFreq,
+  tossups: parseTossups,
 };

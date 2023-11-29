@@ -2,14 +2,14 @@ import { DownloadIcon } from '@chakra-ui/icons';
 import { LinkButton, Props as LinkButtonProps } from './LinkButton';
 
 export type FileDownloadButtonProps = LinkButtonProps & {
-  href: string;
   download: string;
+  href: string;
   label: string;
 };
 
 const FileDownloadButton: React.FC<FileDownloadButtonProps> = ({
-  href,
   download,
+  href,
   label,
   ...rest
 }) => (

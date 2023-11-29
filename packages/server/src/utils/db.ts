@@ -283,22 +283,9 @@ export class QueryBuilder {
     this.commands = [];
   }
 
-  /**
-   * Registers an argument and returns its identifier.
-   */
-  private register(arg: Parameter) {
-    this.parameters.push(arg);
-    return `$${this.parameters.length}`;
-  }
-
-  private addCommand(command: string) {
-    this.commands.push(command);
-    return this;
-  }
-
   select(columns: Column[]) {
     const command = columns
-      .map(({ name, alias }) => {
+      .map(({ alias, name }) => {
         if (alias === undefined) return name;
 
         return `${name} AS ${alias}`;
@@ -374,5 +361,18 @@ export class QueryBuilder {
    */
   build(): [string, Parameter[]] {
     return [this.commands.join('\n'), this.parameters];
+  }
+
+  /**
+   * Registers an argument and returns its identifier.
+   */
+  private register(arg: Parameter) {
+    this.parameters.push(arg);
+    return `$${this.parameters.length}`;
+  }
+
+  private addCommand(command: string) {
+    this.commands.push(command);
+    return this;
   }
 }

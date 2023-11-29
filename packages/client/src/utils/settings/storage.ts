@@ -11,11 +11,11 @@ import { isFromYearValid, isReadingSpeedValid } from './validate';
 
 const KEYS = {
   categories: 'categories',
-  subcategories: 'subcategories',
   difficulties: 'difficulties',
-  tournaments: 'tournaments',
-  readingSpeed: 'readingSpeed',
   fromYear: 'fromYear',
+  readingSpeed: 'readingSpeed',
+  subcategories: 'subcategories',
+  tournaments: 'tournaments',
 };
 
 export const saveSettings = (settings: Partial<Settings>) => {
@@ -47,10 +47,10 @@ export const restoreSettings = (): Partial<Settings> => {
 
   return {
     categories,
-    subcategories,
     difficulties,
-    tournaments,
     fromYear,
     readingSpeed,
+    subcategories,
+    tournaments,
   };
 };

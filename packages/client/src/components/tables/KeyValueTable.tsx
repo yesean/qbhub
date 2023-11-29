@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from 'react';
 type KeyValueTableProps = {
   data: { [key: string]: any }[];
   headers: readonly [
-    { label: string; dataKey: string },
-    { label: string; dataKey: string },
+    { dataKey: string, label: string; },
+    { dataKey: string, label: string; },
   ];
-  width: number;
   height: number;
+  width: number;
 };
 
 /**
@@ -17,8 +17,8 @@ type KeyValueTableProps = {
 const KeyValueTable: React.FC<React.PropsWithChildren<KeyValueTableProps>> = ({
   data,
   headers,
-  width,
   height,
+  width,
 }) => {
   /**
    * Since we set the bottom border for each row, if the table body has to scroll,
@@ -72,11 +72,11 @@ const KeyValueTable: React.FC<React.PropsWithChildren<KeyValueTableProps>> = ({
               borderBottom="1px"
               borderColor="gray.200"
               sx={{
-                '&:nth-of-type(odd)': { bg: 'gray.100' },
                 '&:last-child': {
                   borderBottom: scroll > client ? 'none' : '1px',
                   borderColor: 'gray.200',
                 },
+                '&:nth-of-type(odd)': { bg: 'gray.100' },
               }}
             >
               <Box flex="0.6">{text}</Box>

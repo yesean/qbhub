@@ -23,10 +23,10 @@ const BonusReader: React.FC<React.PropsWithChildren<unknown>> = () => {
   const [progress, setProgress] = useState(100);
   const [buzz, setBuzz] = useState(() => () => {});
   const {
-    status,
     current: {
       part: { formattedAnswer },
     },
+    status,
   } = useSelector(selectBonusReader);
   const isAnswering = useSelector(selectIsAnswering);
   const dispatch = useAppDispatch();

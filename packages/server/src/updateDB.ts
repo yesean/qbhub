@@ -59,14 +59,14 @@ const client = new Client();
   console.log('Adding a `normalized_answer` field to the `tossups` table.');
 
   console.log('Retrieving all tossup answers.');
-  const { rows } = await client.query<{ id: number; answer: string }>(
+  const { rows } = await client.query<{ answer: string, id: number; }>(
     'SELECT id,answer FROM tossups;',
   );
   console.log('Finished retrieving all tossup answers.');
   console.log(`Found ${rows.length} tossup answers.`);
 
   console.log('Inserting `normalized_answer` into `tossups`.');
-  const updates = rows.map(async ({ id, answer }, i) => {
+  const updates = rows.map(async ({ answer, id }, i) => {
     if (i % 10000 === 0) {
       console.log(`Queuing update for tossup ${i}`);
     }

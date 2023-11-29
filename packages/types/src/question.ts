@@ -4,42 +4,42 @@ import { Subcategory } from './subcategory.js';
 import { Tournament } from './tournament.js';
 
 export type Question = {
-  id: number;
   category: Category;
-  subcategory?: Subcategory;
   difficulty: Difficulty;
+  id: number;
   tournament: Tournament;
   year: number;
+  subcategory?: Subcategory;
 };
 
 // question parameters in Select dropdowns in settings
 export type SelectableQuestionParameter =
   | Category
-  | Subcategory
   | Difficulty
+  | Subcategory
   | Tournament;
 
 export type QuestionContentParameters = {
-  categories: Category[];
-  subcategories: Subcategory[];
-  difficulties: Difficulty[];
-  tournaments: Tournament[];
-  text: string;
   answer: string;
+  categories: Category[];
+  difficulties: Difficulty[];
+  subcategories: Subcategory[];
+  text: string;
+  tournaments: Tournament[];
 };
 
 export type QuestionQueryParameters = {
-  sort: SortOption;
   from: number;
-  until: number;
-  offset: number;
   limit: number;
+  offset: number;
+  sort: SortOption;
+  until: number;
 };
 
 export enum SortOption {
-  random = 'random',
-  latest = 'latest',
   earliest = 'earliest',
+  latest = 'latest',
+  random = 'random',
 }
 
 export type QuestionParameters = QuestionContentParameters &

@@ -5,10 +5,10 @@ import { shuffle } from '../utils/string';
 import { useSettings } from './useSettings';
 
 type ReaderOptions = {
-  startImmediately?: boolean;
   autoBuzz?: boolean;
-  onFinish?: () => void;
   onBuzz?: (index: number) => void;
+  onFinish?: () => void;
+  startImmediately?: boolean;
 };
 
 /**
@@ -27,10 +27,10 @@ type ReaderOptions = {
 export const useReader = (
   words: string[],
   {
-    startImmediately = true,
     autoBuzz = true,
-    onFinish = () => {},
     onBuzz = () => {},
+    onFinish = () => {},
+    startImmediately = true,
   }: ReaderOptions = {} as ReaderOptions,
 ) => {
   const {
@@ -126,13 +126,13 @@ export const useReader = (
 
   return useMemo(
     () => ({
-      displayWords,
-      visibleIndex,
       buzz,
+      displayWords,
       pause,
+      reset,
       resume,
       reveal,
-      reset,
+      visibleIndex,
     }),
     [buzz, displayWords, pause, reset, resume, reveal, visibleIndex],
   );

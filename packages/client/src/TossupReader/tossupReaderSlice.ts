@@ -12,31 +12,31 @@ import { Settings } from '../utils/settings/types';
 import { isQuestionValid } from '../utils/settings/validate';
 
 type TossupReaderState = {
-  status: ReaderStatus;
-  tossups: Tossup[];
-  results: TossupResult[];
-  score: number;
   current: {
-    tossup: Tossup;
-    result: TossupResult;
     buzzIndex: number;
     powerIndex: number;
+    result: TossupResult;
+    tossup: Tossup;
     tossupWords: TossupWord[];
   };
+  results: TossupResult[];
+  score: number;
+  status: ReaderStatus;
+  tossups: Tossup[];
 };
 
 const initialState: TossupReaderState = {
-  status: ReaderStatus.idle,
-  tossups: [],
-  results: [],
-  score: 0,
   current: {
-    tossup: {} as Tossup,
-    result: {} as TossupResult,
     buzzIndex: -1,
     powerIndex: -1,
+    result: {} as TossupResult,
+    tossup: {} as Tossup,
     tossupWords: [],
   },
+  results: [],
+  score: 0,
+  status: ReaderStatus.idle,
+  tossups: [],
 };
 
 const fetchTossups = createAsyncThunk<Tossup[], { settings: Settings }>(
@@ -63,14 +63,43 @@ export const nextTossup = createAsyncThunk<
 });
 
 const tossupReaderSlice = createSlice({
-  name: 'tossupReader',
+  extraReducers: (builder) => {
+    builder.addCase(fetchTossups.fulfilled, (state, action) => {
+      state.tossups.push(...action.payload);
+    });
+    builder
+      .addCase(nextTossup.pending, (state) => {
+        state.status = ReaderStatus.fetching;
+        state.current = initialState.current;
+      })
+      .addCase(nextTossup.fulfilled, (state) => {
+        if (state.tossups.length === 0) {
+          state.status = ReaderStatus.empty;
+        } else {
+          state.current = { ...initialState.current };
+          [state.current.tossup] = state.tossups;
+          state.current.tossupWords = getTossupWords(
+            state.current.tossup.formattedText,
+          );
+          state.current.powerIndex = getPowerIndex(state.current.tossupWords);
+          state.tossups.shift();
+          state.status = ReaderStatus.reading;
+        }
+      });
+  },
   initialState,
+  name: 'tossupReader',
   reducers: {
     buzz: (state, action: PayloadAction<number>) => {
       if (state.status === ReaderStatus.reading) {
         state.status = ReaderStatus.answering;
         state.current.buzzIndex = action.payload;
       }
+    },
+    filterTossups: (state, { payload: settings }: PayloadAction<Settings>) => {
+      state.tossups = state.tossups.filter((tu) =>
+        isQuestionValid(tu, settings),
+      );
     },
     prompt: (state) => {
       if (
@@ -99,10 +128,10 @@ const tossupReaderSlice = createSlice({
         );
         state.current.result = {
           ...action.payload,
-          score,
           buzzIndex: state.current.buzzIndex,
-          words: state.current.tossupWords,
+          score,
           tossup: state.current.tossup,
+          words: state.current.tossupWords,
         };
 
         state.results.unshift(state.current.result);
@@ -112,38 +141,9 @@ const tossupReaderSlice = createSlice({
     submitResult: (state, action: PayloadAction<TossupResult>) => {
       state.results.push(action.payload);
     },
-    filterTossups: (state, { payload: settings }: PayloadAction<Settings>) => {
-      state.tossups = state.tossups.filter((tu) =>
-        isQuestionValid(tu, settings),
-      );
-    },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(fetchTossups.fulfilled, (state, action) => {
-      state.tossups.push(...action.payload);
-    });
-    builder
-      .addCase(nextTossup.pending, (state) => {
-        state.status = ReaderStatus.fetching;
-        state.current = initialState.current;
-      })
-      .addCase(nextTossup.fulfilled, (state) => {
-        if (state.tossups.length === 0) {
-          state.status = ReaderStatus.empty;
-        } else {
-          state.current = { ...initialState.current };
-          [state.current.tossup] = state.tossups;
-          state.current.tossupWords = getTossupWords(
-            state.current.tossup.formattedText,
-          );
-          state.current.powerIndex = getPowerIndex(state.current.tossupWords);
-          state.tossups.shift();
-          state.status = ReaderStatus.reading;
-        }
-      });
   },
 });
-export const { buzz, prompt, submitAnswer, submitResult, filterTossups } =
+export const { buzz, filterTossups, prompt, submitAnswer, submitResult } =
   tossupReaderSlice.actions;
 
 export const selectTossupReader = (state: RootState) => state.tossupReader;

@@ -10,22 +10,22 @@ type TossupResultProps = {
 };
 
 const cells: { [key: string]: (result: TossupResult) => JSX.Element } = {
-  score: ({ score }) => <Text align="center">{score}</Text>,
-  input: ({ userAnswer }) => (
-    <Box textAlign="center" overflowWrap="break-word">
-      {userAnswer || '<no answer>'}
-    </Box>
-  ),
   answer: ({ tossup: { formattedAnswer } }) => (
     <Box textAlign="center" overflowWrap="break-word">
       {parseHTMLString(formattedAnswer)}
     </Box>
   ),
-  question: ({ words, buzzIndex }) => (
+  input: ({ userAnswer }) => (
+    <Box textAlign="center" overflowWrap="break-word">
+      {userAnswer || '<no answer>'}
+    </Box>
+  ),
+  question: ({ buzzIndex, words }) => (
     <Box>
       <FormattedQuestion words={words} indices={{ buzz: buzzIndex }} />
     </Box>
   ),
+  score: ({ score }) => <Text align="center">{score}</Text>,
   tournament: ({ tossup: { tournament } }) => (
     <Box>{TOURNAMENT_MAP[tournament].name}</Box>
   ),
@@ -36,39 +36,39 @@ const TossupResults: React.FC<React.PropsWithChildren<TossupResultProps>> = ({
 }) => {
   const columns: VirtualizedTableColumn<TossupResult>[] = [
     {
-      label: 'Score',
-      proportion: 1,
-      minWidth: 50,
-      useForHeight: false,
       cell: cells.score,
-    },
-    {
-      label: 'Input',
+      label: 'Score',
+      minWidth: 50,
       proportion: 1,
-      minWidth: 120,
       useForHeight: false,
+    },
+    {
       cell: cells.input,
-    },
-    {
-      label: 'Answer',
-      proportion: 2,
+      label: 'Input',
       minWidth: 120,
-      useForHeight: true,
-      cell: cells.answer,
-    },
-    {
-      label: 'Question',
-      proportion: 4,
-      minWidth: 150,
-      useForHeight: true,
-      cell: cells.question,
-    },
-    {
-      label: 'Tournament',
-      proportion: 3,
-      minWidth: 105,
+      proportion: 1,
       useForHeight: false,
+    },
+    {
+      cell: cells.answer,
+      label: 'Answer',
+      minWidth: 120,
+      proportion: 2,
+      useForHeight: true,
+    },
+    {
+      cell: cells.question,
+      label: 'Question',
+      minWidth: 150,
+      proportion: 4,
+      useForHeight: true,
+    },
+    {
       cell: cells.tournament,
+      label: 'Tournament',
+      minWidth: 105,
+      proportion: 3,
+      useForHeight: false,
     },
   ];
 

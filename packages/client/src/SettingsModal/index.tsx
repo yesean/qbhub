@@ -42,9 +42,9 @@ const toSelect =
     map: Record<T, U>,
   ) =>
   (key: T) => ({
+    data: map[key],
     label: map[key].name,
     value: key,
-    data: map[key],
   });
 
 // prevent select dropdown from getting overlapped, especially on mobile
@@ -59,23 +59,23 @@ const difficultiesForSelect = DIFFICULTIES.map(toSelect(DIFFICULTY_MAP));
 const tournamentsForSelect = TOURNAMENTS.map(toSelect(TOURNAMENT_MAP));
 
 type SettingsModalProps = {
-  isOpen: boolean;
   closeModal: () => void;
+  isOpen: boolean;
 };
 
 const SettingsModal: React.FC<React.PropsWithChildren<SettingsModalProps>> = ({
-  isOpen,
   closeModal,
+  isOpen,
 }) => {
-  const { settings, setSettings } = useSettings();
+  const { setSettings, settings } = useSettings();
 
   const {
     categories,
-    subcategories,
     difficulties,
-    tournaments,
     fromYear,
     readingSpeed,
+    subcategories,
+    tournaments,
   } = settings;
 
   const filteredTournamentsForSelect = tournamentsForSelect.filter(({ data }) =>
@@ -189,9 +189,9 @@ const SettingsModal: React.FC<React.PropsWithChildren<SettingsModalProps>> = ({
 
 type SettingsMultiSelectProps<T, U> = {
   label: string;
-  options: { label: string; value: T; data: U }[];
-  value: { label: string; value: T; data: U }[];
-  onChange: (value: Options<{ label: string; value: T; data: U }>) => void;
+  onChange: (value: Options<{ data: U, label: string; value: T; }>) => void;
+  options: { data: U, label: string; value: T; }[];
+  value: { data: U, label: string; value: T; }[];
 };
 
 function SettingsMultiSelect<T, U>({

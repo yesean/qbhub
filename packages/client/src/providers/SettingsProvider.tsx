@@ -14,7 +14,7 @@ type Props = {
 
 // Provider component for initializing settings
 export default function SettingsProvider({ children }: Props) {
-  const { settings, setSettings } = useSettings();
+  const { setSettings, settings } = useSettings();
   const ref = useRef(settings); // initialize ref at mount
 
   // only run once at mount

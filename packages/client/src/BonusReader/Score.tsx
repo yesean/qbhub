@@ -5,9 +5,9 @@ import { selectBonusReader } from './bonusReaderSlice';
 
 const Score: React.FC<React.PropsWithChildren<unknown>> = () => {
   const {
-    status,
-    score,
     current: { result },
+    score,
+    status,
   } = useSelector(selectBonusReader);
 
   return (

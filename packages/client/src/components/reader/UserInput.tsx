@@ -3,33 +3,33 @@ import { useEffect } from 'react';
 import TealButton from '../buttons/TealButton';
 
 type UserInputProps = {
-  input: string;
-  setInput: React.Dispatch<React.SetStateAction<string>>;
-  placeholder: string;
-  text: string;
-  onClick: () => void;
-  submit: () => void;
-  shouldSubmit: boolean;
-  disabled: boolean;
   borderColor: string;
+  disabled: boolean;
+  input: string;
+  inputRef: React.RefObject<HTMLInputElement>;
+  onClick: () => void;
+  placeholder: string;
+  setInput: React.Dispatch<React.SetStateAction<string>>;
+  shouldSubmit: boolean;
   showBorder: boolean;
   showInput: boolean;
-  inputRef: React.RefObject<HTMLInputElement>;
+  submit: () => void;
+  text: string;
 };
 
 const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
-  input,
-  setInput,
-  placeholder,
-  text,
-  onClick,
-  submit,
-  shouldSubmit,
-  disabled,
   borderColor,
+  disabled,
+  input,
+  inputRef,
+  onClick,
+  placeholder,
+  setInput,
+  shouldSubmit,
   showBorder,
   showInput,
-  inputRef,
+  submit,
+  text,
 }) => {
   useEffect(() => {
     if (shouldSubmit) submit();

@@ -6,8 +6,8 @@ export type FromYear = number;
 
 export type Settings = {
   categories: Category[];
-  subcategories: Subcategory[];
   difficulties: Difficulty[];
+  subcategories: Subcategory[];
   tournaments: Tournament[];
   fromYear?: FromYear;
   readingSpeed?: ReadingSpeed;

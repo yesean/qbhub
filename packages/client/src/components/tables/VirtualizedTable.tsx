@@ -4,33 +4,33 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { VariableSizeList } from 'react-window';
 
 type RowProps<T> = {
-  style: React.CSSProperties;
-  index: number;
   data: {
-    results: T[];
     columns: Column<T>[];
+    results: T[];
     rowColor: (arg: T) => string;
-    setRowHeight: (index: number, size: number) => void;
     rowHeaderRef: React.RefObject<HTMLDivElement>;
     rowRefs: React.RefObject<HTMLDivElement>[];
+    setRowHeight: (index: number, size: number) => void;
     setRowRefs: React.Dispatch<
       React.SetStateAction<React.RefObject<HTMLDivElement>[]>
     >;
   };
+  index: number;
+  style: React.CSSProperties;
 };
 
 const Row = <T,>({
-  style,
-  index,
   data: {
-    results,
     columns,
+    results,
     rowColor,
-    setRowHeight,
     rowHeaderRef,
     rowRefs,
+    setRowHeight,
     setRowRefs,
   },
+  index,
+  style,
 }: React.PropsWithChildren<RowProps<T>>) => {
   const rowRef = useRef<HTMLDivElement>(null);
   const [tallestCell, setTallestCell] = useState(0);
@@ -79,7 +79,7 @@ const Row = <T,>({
         });
       }}
     >
-      {columns.map(({ cell, proportion, minWidth, useForHeight, label }) => (
+      {columns.map(({ cell, label, minWidth, proportion, useForHeight }) => (
         <Center
           key={label}
           minW={`${minWidth}px`}
@@ -103,20 +103,20 @@ const Row = <T,>({
 export type Column<T> = {
   cell: (arg: T) => JSX.Element;
   label: string;
-  proportion: number;
   minWidth: number;
+  proportion: number;
   useForHeight?: boolean;
 };
 
 type VirtualizedTableProps<T> = {
-  results: T[];
   columns: Column<T>[];
+  results: T[];
   rowColor: (arg: T) => string;
 };
 
 const VirtualizedTable = <T,>({
-  results,
   columns,
+  results,
   rowColor,
 }: React.PropsWithChildren<VirtualizedTableProps<T>>) => {
   const listRef = useRef<VariableSizeList>(null);
@@ -158,7 +158,7 @@ const VirtualizedTable = <T,>({
         }}
       >
         <Flex w={`max(100%, ${maxRowWidth})`} mb={2}>
-          {columns.map(({ label, proportion, minWidth }, i) => (
+          {columns.map(({ label, minWidth, proportion }, i) => (
             <Heading
               size="sm"
               // eslint-disable-next-line react/no-array-index-key
@@ -174,7 +174,7 @@ const VirtualizedTable = <T,>({
       </Box>
       <Box flex="1">
         <AutoSizer>
-          {({ width, height }) => (
+          {({ height, width }) => (
             <VariableSizeList<RowProps<T>['data']>
               width={width}
               height={height}
@@ -193,12 +193,12 @@ const VirtualizedTable = <T,>({
               }}
               ref={listRef}
               itemData={{
-                results,
                 columns,
+                results,
                 rowColor,
-                setRowHeight,
                 rowHeaderRef,
                 rowRefs,
+                setRowHeight,
                 setRowRefs,
               }}
             >

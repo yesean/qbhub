@@ -12,18 +12,18 @@ type BonusResultProps = {
 };
 
 const cells: { [key: string]: (result: BonusPartRowResult) => JSX.Element } = {
-  part: ({ number }) => <Text align="center">{number}</Text>,
-  input: ({ userAnswer }) => (
-    <Box textAlign="center" overflowWrap="break-word">
-      {userAnswer || '<no answer>'}
-    </Box>
-  ),
   answer: ({ part: { formattedAnswer } }) => (
     <Box textAlign="center" overflowWrap="break-word">
       {parseHTMLString(formattedAnswer)}
     </Box>
   ),
-  question: ({ part: { formattedText }, buzzIndex }) => (
+  input: ({ userAnswer }) => (
+    <Box textAlign="center" overflowWrap="break-word">
+      {userAnswer || '<no answer>'}
+    </Box>
+  ),
+  part: ({ number }) => <Text align="center">{number}</Text>,
+  question: ({ buzzIndex, part: { formattedText } }) => (
     <Flex flexWrap="wrap">
       <FormattedQuestion
         words={getTossupWords(formattedText)}
@@ -41,39 +41,39 @@ const BonusResults: React.FC<React.PropsWithChildren<BonusResultProps>> = ({
 }) => {
   const columns: VirtualizedTableColumn<BonusPartRowResult>[] = [
     {
-      label: 'Part',
-      proportion: 1,
-      minWidth: 40,
-      useForHeight: false,
       cell: cells.part,
-    },
-    {
-      label: 'Input',
+      label: 'Part',
+      minWidth: 40,
       proportion: 1,
-      minWidth: 120,
       useForHeight: false,
+    },
+    {
       cell: cells.input,
-    },
-    {
-      label: 'Answer',
-      proportion: 2,
+      label: 'Input',
       minWidth: 120,
-      useForHeight: true,
-      cell: cells.answer,
-    },
-    {
-      label: 'Question',
-      proportion: 4,
-      minWidth: 150,
-      useForHeight: true,
-      cell: cells.question,
-    },
-    {
-      label: 'Tournament',
-      proportion: 3,
-      minWidth: 105,
+      proportion: 1,
       useForHeight: false,
+    },
+    {
+      cell: cells.answer,
+      label: 'Answer',
+      minWidth: 120,
+      proportion: 2,
+      useForHeight: true,
+    },
+    {
+      cell: cells.question,
+      label: 'Question',
+      minWidth: 150,
+      proportion: 4,
+      useForHeight: true,
+    },
+    {
       cell: cells.tournament,
+      label: 'Tournament',
+      minWidth: 105,
+      proportion: 3,
+      useForHeight: false,
     },
   ];
 

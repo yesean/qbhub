@@ -1,13 +1,13 @@
 import { Box, Text } from '@chakra-ui/react';
 
 type UserAnswerProps = {
-  text: string;
   isCorrect: boolean;
+  text: string;
 };
 
 const UserAnswer: React.FC<React.PropsWithChildren<UserAnswerProps>> = ({
-  text,
   isCorrect,
+  text,
 }) => (
   <Box>
     <b>YOU SAID:</b>{' '}

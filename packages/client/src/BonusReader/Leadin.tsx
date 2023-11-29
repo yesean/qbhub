@@ -3,11 +3,11 @@ import FormattedQuestion from '../components/reader/FormattedQuestion';
 import { getTossupWords } from '../utils/reader';
 
 type LeadinProps = {
-  text: string;
   buzzIndex: number;
+  text: string;
 };
 
-const Leadin = ({ text, buzzIndex }: LeadinProps) => (
+const Leadin = ({ buzzIndex, text }: LeadinProps) => (
   <Box>
     <b>BONUS:</b>{' '}
     <FormattedQuestion

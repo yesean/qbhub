@@ -3,64 +3,64 @@ import React, { ReactNode, useMemo, useState } from 'react';
 import { QuestionReaderStatus } from '../../utils/questionReader';
 
 export type QuestionResult = {
-  question: Tossup;
-  isCorrect: boolean;
-  userAnswer: string;
   buzzIndex: number;
+  isCorrect: boolean;
+  question: Tossup;
   score: number;
+  userAnswer: string;
 };
 
 export type UnscoredQuestionResult = Omit<QuestionResult, 'score'>;
 
 // TODO: generalize types to Question
 type QuestionReaderContextType = {
-  status: QuestionReaderStatus;
-  setStatus: React.Dispatch<React.SetStateAction<QuestionReaderStatus>>;
-  question: Tossup;
-  previousResults: QuestionResult[];
-  onNextQuestion: () => void;
-  onJudged: (result: QuestionResult) => void;
   getScore: (result: UnscoredQuestionResult) => number;
+  onJudged: (result: QuestionResult) => void;
+  onNextQuestion: () => void;
+  previousResults: QuestionResult[];
+  question: Tossup;
+  setStatus: React.Dispatch<React.SetStateAction<QuestionReaderStatus>>;
+  status: QuestionReaderStatus;
 };
 
 export const QuestionReaderContext =
   React.createContext<QuestionReaderContextType>({
-    question: {} as Tossup,
-    previousResults: [],
-    status: QuestionReaderStatus.Judged,
-    setStatus: () => {},
-    onNextQuestion: () => {},
-    onJudged: () => {},
     getScore: () => 0,
+    onJudged: () => {},
+    onNextQuestion: () => {},
+    previousResults: [],
+    question: {} as Tossup,
+    setStatus: () => {},
+    status: QuestionReaderStatus.Judged,
   });
 
 export type QuestionReaderContextProviderProps = Omit<
   QuestionReaderContextType,
-  'status' | 'setStatus'
+  'setStatus' | 'status'
 > & {
   children: ReactNode;
 };
 
 export const QuestionReaderContextProvider = ({
   children,
-  question,
-  previousResults,
-  onNextQuestion,
-  onJudged,
   getScore,
+  onJudged,
+  onNextQuestion,
+  previousResults,
+  question,
 }: QuestionReaderContextProviderProps) => {
   const [status, setStatus] = useState<QuestionReaderStatus>(
     QuestionReaderStatus.Reading,
   );
   const context = useMemo(
     () => ({
-      status,
-      setStatus,
-      question,
-      previousResults,
-      onNextQuestion,
-      onJudged,
       getScore,
+      onJudged,
+      onNextQuestion,
+      previousResults,
+      question,
+      setStatus,
+      status,
     }),
     [getScore, onJudged, onNextQuestion, previousResults, question, status],
   );

@@ -22,18 +22,18 @@ const buttonTexts = new Map([
 ]);
 
 type UserInputProps = {
+  buzz: () => void;
   progress: number;
   submit: (s: string) => void;
-  buzz: () => void;
 };
 const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
+  buzz,
   progress,
   submit,
-  buzz,
 }) => {
   const {
-    status,
     current: { result },
+    status,
   } = useSelector(selectTossupReader);
   const isAnswering = useSelector(selectIsAnswering);
   const [input, setInput] = useState('');

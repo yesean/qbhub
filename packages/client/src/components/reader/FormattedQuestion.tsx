@@ -4,8 +4,8 @@ import React, { Fragment } from 'react';
 import { parseHTMLString } from '../../utils/string';
 
 type Props = {
-  words: { word: string; bold: boolean }[];
-  indices?: { visible?: number; buzz?: number };
+  words: { bold: boolean; word: string }[];
+  indices?: { buzz?: number; visible?: number };
   visibleRef?: React.RefObject<HTMLParagraphElement>;
 };
 
@@ -31,7 +31,7 @@ const Bell = ({ shouldDisplay }: { shouldDisplay: boolean }) => {
 
 const FormattedQuestion = ({
   words,
-  indices: { visible = words.length, buzz = -1 } = {},
+  indices: { buzz = -1, visible = words.length } = {},
   visibleRef,
 }: Props) => (
   <>

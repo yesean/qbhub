@@ -7,37 +7,37 @@ import { Settings } from '../utils/settings/types';
 import { isQuestionValid } from '../utils/settings/validate';
 
 type BonusReaderState = {
-  status: ReaderStatus;
   bonuses: Bonus[];
-  results: BonusResult[];
-  score: number;
   current: {
+    bonus: Bonus;
+    buzzIndex: number;
     number: number;
     part: BonusPart;
     partResult: BonusPartResult;
-    bonus: Bonus;
     result: BonusResult;
-    buzzIndex: number;
   };
+  results: BonusResult[];
+  score: number;
+  status: ReaderStatus;
 };
 
 const initialState: BonusReaderState = {
-  status: ReaderStatus.idle,
   bonuses: [],
-  results: [],
-  score: 0,
   current: {
+    bonus: {} as Bonus,
+    buzzIndex: -1,
     number: 1,
     part: {} as BonusPart,
     partResult: {} as BonusPartResult,
-    bonus: {} as Bonus,
     result: {
-      score: 0,
-      parts: [],
       bonus: {} as Bonus,
+      parts: [],
+      score: 0,
     },
-    buzzIndex: -1,
   },
+  results: [],
+  score: 0,
+  status: ReaderStatus.idle,
 };
 
 const fetchBonuses = createAsyncThunk<
@@ -78,8 +78,36 @@ export const nextBonus = createAsyncThunk<
 );
 
 const bonusReaderSlice = createSlice({
-  name: 'bonusReader',
+  extraReducers: (builder) => {
+    builder.addCase(fetchBonuses.fulfilled, (state, action) => {
+      state.bonuses.push(...action.payload);
+    });
+    builder
+      .addCase(nextBonus.pending, (state) => {
+        state.status = ReaderStatus.fetching;
+      })
+      .addCase(nextBonus.fulfilled, (state) => {
+        if (state.bonuses.length === 0) {
+          state.status = ReaderStatus.empty;
+        } else {
+          // reset current
+          state.current = {
+            ...initialState.current,
+            result: { ...initialState.current.result },
+          };
+
+          // initialize current
+          const currentBonus = state.bonuses.shift() as Bonus;
+          state.current.bonus = currentBonus;
+          state.current.result.bonus = state.current.bonus;
+          [state.current.part] = state.current.bonus.parts;
+
+          state.status = ReaderStatus.reading;
+        }
+      });
+  },
   initialState,
+  name: 'bonusReader',
   reducers: {
     buzz: (state, action: PayloadAction<number>) => {
       if (state.status === ReaderStatus.reading) {
@@ -87,12 +115,10 @@ const bonusReaderSlice = createSlice({
         state.current.buzzIndex = action.payload;
       }
     },
-    prompt: (state) => {
-      if (
-        [ReaderStatus.answering, ReaderStatus.prompting].includes(state.status)
-      ) {
-        state.status = ReaderStatus.prompting;
-      }
+    filterBonuses: (state, { payload: settings }: PayloadAction<Settings>) => {
+      state.bonuses = state.bonuses.filter((bn) =>
+        isQuestionValid(bn, settings),
+      );
     },
     nextBonusPart: (state) => {
       state.current.buzzIndex = initialState.current.buzzIndex;
@@ -100,6 +126,13 @@ const bonusReaderSlice = createSlice({
       state.current.number += 1;
       state.current.part = state.current.bonus.parts[state.current.number - 1];
       state.status = ReaderStatus.reading;
+    },
+    prompt: (state) => {
+      if (
+        [ReaderStatus.answering, ReaderStatus.prompting].includes(state.status)
+      ) {
+        state.status = ReaderStatus.prompting;
+      }
     },
     submitAnswer: (
       state,
@@ -131,42 +164,9 @@ const bonusReaderSlice = createSlice({
         }
       }
     },
-    filterBonuses: (state, { payload: settings }: PayloadAction<Settings>) => {
-      state.bonuses = state.bonuses.filter((bn) =>
-        isQuestionValid(bn, settings),
-      );
-    },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(fetchBonuses.fulfilled, (state, action) => {
-      state.bonuses.push(...action.payload);
-    });
-    builder
-      .addCase(nextBonus.pending, (state) => {
-        state.status = ReaderStatus.fetching;
-      })
-      .addCase(nextBonus.fulfilled, (state) => {
-        if (state.bonuses.length === 0) {
-          state.status = ReaderStatus.empty;
-        } else {
-          // reset current
-          state.current = {
-            ...initialState.current,
-            result: { ...initialState.current.result },
-          };
-
-          // initialize current
-          const currentBonus = state.bonuses.shift() as Bonus;
-          state.current.bonus = currentBonus;
-          state.current.result.bonus = state.current.bonus;
-          [state.current.part] = state.current.bonus.parts;
-
-          state.status = ReaderStatus.reading;
-        }
-      });
   },
 });
-export const { buzz, prompt, submitAnswer, nextBonusPart, filterBonuses } =
+export const { buzz, filterBonuses, nextBonusPart, prompt, submitAnswer } =
   bonusReaderSlice.actions;
 
 export const selectBonusReader = (state: RootState) => state.bonusReader;

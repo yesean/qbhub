@@ -20,8 +20,8 @@ type Props = {
 
 const Container = ({ setBuzz }: Props) => {
   const {
+    current: { bonus, number, part, partResult, result },
     status,
-    current: { number, bonus, result, part, partResult },
   } = useSelector(selectBonusReader);
   const userAnswerRef = useRef(null);
   const dispatch = useAppDispatch();

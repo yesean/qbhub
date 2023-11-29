@@ -51,9 +51,9 @@ export const getTossupWords = (text: string): TossupWord[] => {
   const tossupWords = words.map((word) => {
     if (boldWordIndex < boldWords.length && word === boldWords[boldWordIndex]) {
       boldWordIndex += 1;
-      return { word, bold: true };
+      return { bold: true, word };
     }
-    return { word, bold: false };
+    return { bold: false, word };
   });
 
   return tossupWords;
@@ -252,11 +252,11 @@ export const getInputBorderColor = (
 const checkAnswer = (userAnswer: string, answers: string[]) => {
   if (answers.length === 0)
     return {
-      ratings: [],
       bestMatch: {
         rating: 0,
       },
       bestMatchIndex: -1,
+      ratings: [],
     };
 
   return findBestMatch(userAnswer, answers);
@@ -273,7 +273,6 @@ export enum JudgeResult {
  */
 export class Judge {
   acceptableAnswers: string[];
-
   promptableAnswers: string[];
 
   constructor(answerline: string) {

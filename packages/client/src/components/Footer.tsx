@@ -8,7 +8,7 @@ import Github from '../static/github.svg?react';
 const discordURL = 'https://discord.gg/wWXfWUDdWm';
 
 const Footer: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const { openUpdatesModal, openInfoModal } = useModalContext();
+  const { openInfoModal, openUpdatesModal } = useModalContext();
 
   return (
     <Flex align="center" justify="center" p={3}>

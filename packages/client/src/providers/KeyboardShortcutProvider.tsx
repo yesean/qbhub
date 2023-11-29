@@ -13,11 +13,11 @@ export default function KeyboardShortcutProvider({ children }: Props) {
   const { openInfoModal, openSettingsModal, openUpdatesModal } =
     useModalContext();
   const {
-    getTossupReaderURL,
-    getBonusReaderURL,
-    getFrequencyListURL,
-    getClueSearchURL,
     getAboutURL,
+    getBonusReaderURL,
+    getClueSearchURL,
+    getFrequencyListURL,
+    getTossupReaderURL,
   } = useGetURL();
 
   // open modal shortcuts

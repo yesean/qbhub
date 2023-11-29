@@ -112,7 +112,7 @@ export const removeFirstNames = (s: string) => {
  */
 export const multipleLastIndexOf = (
   s: string,
-  values: string[] | Set<string>,
+  values: Set<string> | string[],
   fromIndex = s.length,
 ) => {
   values = new Set(values);

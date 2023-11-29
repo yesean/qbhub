@@ -2,9 +2,9 @@ import { buildIsEnum } from './guards.js';
 
 export enum LogLevel {
   Debug = 'debug',
-  Info = 'info',
-  Warn = 'warn',
   Error = 'error',
+  Info = 'info',
+  Warn = 'warn'
 }
 const isLogLevel = buildIsEnum(LogLevel);
 const DEFAULT_LOG_LEVEL = LogLevel.Warn;

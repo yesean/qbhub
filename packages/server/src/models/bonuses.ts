@@ -13,10 +13,10 @@ const bonusesColumns = [
   { name: TABLES.bonuses.columns.id },
   { name: TABLES.bonuses.columns.leadin },
   { name: TABLES.bonuses.columns.formattedLeadin },
-  { name: TABLES.bonuses.columns.category, alias: 'category' },
-  { name: TABLES.bonuses.columns.subcategory, alias: 'subcategory' },
+  { alias: 'category', name: TABLES.bonuses.columns.category },
+  { alias: 'subcategory', name: TABLES.bonuses.columns.subcategory },
   { name: TABLES.tournaments.columns.difficulty },
-  { name: TABLES.tournaments.columns.id, alias: 'tournament' },
+  { alias: 'tournament', name: TABLES.tournaments.columns.id },
   { name: TABLES.tournaments.columns.year },
 ];
 
@@ -30,8 +30,8 @@ const bonusPartsColumns = [
 ];
 
 const bonusPartsOrder: Order = [
-  { name: TABLES.bonusParts.columns.bonusId, direction: 'asc' },
-  { name: TABLES.bonusParts.columns.number, direction: 'asc' },
+  { direction: 'asc', name: TABLES.bonusParts.columns.bonusId },
+  { direction: 'asc', name: TABLES.bonusParts.columns.number },
 ];
 
 /**
@@ -43,8 +43,8 @@ const bonusPartsOrder: Order = [
 export const getBonuses = async (questionFilters: QuestionParameters) => {
   const bonusesOrder: Order = [
     {
-      name: TABLES.tournaments.columns.year,
       direction: questionFilters.sort === SortOption.latest ? 'desc' : 'asc',
+      name: TABLES.tournaments.columns.year,
     },
   ];
 

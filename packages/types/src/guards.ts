@@ -10,7 +10,7 @@ export const isNumber = (value: any): value is number =>
   typeof value === 'number' || value instanceof Number;
 export const isString = (value: any): value is string =>
   typeof value === 'string' || value instanceof String;
-export const isNumeric = (value: any): value is string | number =>
+export const isNumeric = (value: any): value is number | string =>
   !Number.isNaN(value) && !Number.isNaN(parseFloat(value));
 
 // array type guards
@@ -18,7 +18,7 @@ export const isNumberArray = (value: any): value is number[] =>
   Array.isArray(value) && value.every(isNumber);
 export const isStringArray = (value: any): value is string[] =>
   Array.isArray(value) && value.every(isString);
-export const isNumericArray = (value: any): value is (string | number)[] =>
+export const isNumericArray = (value: any): value is (number | string)[] =>
   Array.isArray(value) && value.every(isNumeric);
 
 export const buildIsEnum =
@@ -42,9 +42,9 @@ export const isTournamentArray = (value: any): value is Tournament[] =>
   Array.isArray(value) && value.every(isTournament);
 
 // question type guards
-export const isTossup = (question: Tossup | Bonus): question is Tossup =>
+export const isTossup = (question: Bonus | Tossup): question is Tossup =>
   (question as Tossup).normalizedAnswer !== undefined;
-export const isBonus = (question: Tossup | Bonus): question is Bonus =>
+export const isBonus = (question: Bonus | Tossup): question is Bonus =>
   (question as Tossup).normalizedAnswer === undefined;
 
 // type conversion helpers
