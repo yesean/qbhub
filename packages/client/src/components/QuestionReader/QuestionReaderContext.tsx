@@ -1,23 +1,27 @@
-import { Tossup, TossupResult } from '@qbhub/types';
+import { Tossup } from '@qbhub/types';
 import React, { ReactNode, useMemo, useState } from 'react';
 import { QuestionReaderStatus } from '../../utils/questionReader';
 import { JudgeResult } from '../../utils/reader';
 
 export type QuestionResult = {
-  judgeResult: JudgeResult;
   question: Tossup;
+  judgeResult: JudgeResult;
   userAnswer: string;
   buzzIndex: number;
+  score: number;
 };
+
+export type UnscoredQuestionResult = Omit<QuestionResult, 'score'>;
 
 // TODO: generalize types to Question
 type QuestionReaderContextType = {
-  question: Tossup;
-  previousResults: TossupResult[];
   status: QuestionReaderStatus;
   setStatus: React.Dispatch<React.SetStateAction<QuestionReaderStatus>>;
+  question: Tossup;
+  previousResults: QuestionResult[];
   onNextQuestion: () => void;
   onJudged: (result: QuestionResult) => void;
+  getScore: (result: UnscoredQuestionResult) => number;
 };
 
 export const QuestionReaderContext =
@@ -28,14 +32,14 @@ export const QuestionReaderContext =
     setStatus: () => {},
     onNextQuestion: () => {},
     onJudged: () => {},
+    getScore: () => 0,
   });
 
-export type QuestionReaderContextProviderProps = {
+export type QuestionReaderContextProviderProps = Omit<
+  QuestionReaderContextType,
+  'status' | 'setStatus'
+> & {
   children: ReactNode;
-  question: Tossup;
-  previousResults: TossupResult[];
-  onNextQuestion: () => void;
-  onJudged: (result: QuestionResult) => void;
 };
 
 export const QuestionReaderContextProvider = ({
@@ -44,6 +48,7 @@ export const QuestionReaderContextProvider = ({
   previousResults,
   onNextQuestion,
   onJudged,
+  getScore,
 }: QuestionReaderContextProviderProps) => {
   const [status, setStatus] = useState<QuestionReaderStatus>(
     QuestionReaderStatus.Reading,
@@ -56,8 +61,9 @@ export const QuestionReaderContextProvider = ({
       previousResults,
       onNextQuestion,
       onJudged,
+      getScore,
     }),
-    [onJudged, onNextQuestion, previousResults, question, status],
+    [getScore, onJudged, onNextQuestion, previousResults, question, status],
   );
 
   return (

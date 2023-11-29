@@ -21,10 +21,10 @@ export type TossupWord = {
 };
 
 export type TossupResult = {
-  isCorrect: boolean;
+  tossup: Tossup;
   userAnswer: string;
-  score: TossupScore;
+  isCorrect: boolean;
   buzzIndex: number;
   words: TossupWord[];
-  tossup: Tossup;
+  score: TossupScore;
 };

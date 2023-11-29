@@ -7,7 +7,10 @@ import {
   submitResult,
 } from '../TossupReader/tossupReaderSlice';
 import QuestionReader from '../components/QuestionReader';
-import { QuestionResult } from '../components/QuestionReader/QuestionReaderContext';
+import {
+  QuestionResult,
+  UnscoredQuestionResult,
+} from '../components/QuestionReader/QuestionReaderContext';
 import TealButton from '../components/buttons/TealButton';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useSettings } from '../hooks/useSettings';
@@ -26,11 +29,10 @@ const getTossupResult = ({
   question,
   userAnswer,
   buzzIndex,
+  score,
 }: QuestionResult): TossupResult => {
-  const isCorrect = judgeResult === JudgeResult.correct;
   const tossupWords = getTossupWords(question.formattedText);
-  const isInPower = buzzIndex <= getPowerIndex(tossupWords);
-  const isBuzzAtEnd = buzzIndex === tossupWords.length - 1;
+  const isCorrect = judgeResult === JudgeResult.correct;
 
   return {
     tossup: question,
@@ -38,15 +40,25 @@ const getTossupResult = ({
     buzzIndex,
     isCorrect,
     words: tossupWords,
-    score: getTossupScore(isCorrect, isInPower, isBuzzAtEnd),
+    score,
   };
 };
+
+const getQuestionResult = (result: TossupResult): QuestionResult => ({
+  question: result.tossup,
+  judgeResult: result.isCorrect ? JudgeResult.correct : JudgeResult.incorrect,
+  userAnswer: result.userAnswer,
+  buzzIndex: result.buzzIndex,
+  score: result.score,
+});
 
 export default function TossupReader() {
   const { openTossupHistoryModal } = useModalContext();
   const { current, results } = useSelector(selectTossupReader);
   const dispatch = useAppDispatch();
   const { settings } = useSettings();
+
+  const questionResults = results.map(getQuestionResult);
 
   const handleNextTossup = useCallback(
     () => dispatch(nextTossup({ settings })),
@@ -56,6 +68,18 @@ export default function TossupReader() {
   const handleQuestionResult = useCallback(
     (result: QuestionResult) => dispatch(submitResult(getTossupResult(result))),
     [dispatch],
+  );
+
+  const getScore = useCallback(
+    ({ question, judgeResult, buzzIndex }: UnscoredQuestionResult) => {
+      const isCorrect = judgeResult === JudgeResult.correct;
+      const tossupWords = getTossupWords(question.formattedText);
+      const isInPower = buzzIndex <= getPowerIndex(tossupWords);
+      const isBuzzAtEnd = buzzIndex === tossupWords.length - 1;
+
+      return getTossupScore(isCorrect, isInPower, isBuzzAtEnd);
+    },
+    [],
   );
 
   const isTossupMissing = current.tossup.id === undefined;
@@ -75,9 +99,10 @@ export default function TossupReader() {
   return (
     <QuestionReader
       question={current.tossup}
-      previousResults={results}
+      previousResults={questionResults}
       onNextQuestion={handleNextTossup}
       onJudged={handleQuestionResult}
+      getScore={getScore}
     />
   );
 }
