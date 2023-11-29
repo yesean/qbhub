@@ -1,7 +1,6 @@
 import { Box, Flex, Input } from '@chakra-ui/react';
 import { QuestionResult, Tossup } from '@qbhub/types';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import toast from 'react-hot-toast';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';
 import useKeyboardShortcut from '../../hooks/useKeyboardShortcut';
 import {
@@ -73,6 +72,7 @@ export default function QuestionTextPlusInput() {
     getScore,
     onJudged,
     onNextQuestion,
+    onPrompt,
     previousResults,
     question,
     setStatus,
@@ -131,12 +131,6 @@ export default function QuestionTextPlusInput() {
       revealQuestion();
       onJudged(result);
       setStatus(getNextStatus(status));
-
-      if (result.isCorrect) {
-        toast.success('correct!');
-      } else {
-        toast.error('sorry, incorrect');
-      }
     },
     [blurInput, onJudged, revealQuestion, setStatus, status],
   );
@@ -176,7 +170,7 @@ export default function QuestionTextPlusInput() {
     if (result.judgeResult === JudgeResult.prompt) {
       focusInput();
       selectInput();
-      toast('prompt', { icon: '💭' });
+      onPrompt(result);
       setStatus(getNextStatus(status, { isPrompted: true }));
       return;
     }
@@ -186,6 +180,7 @@ export default function QuestionTextPlusInput() {
   }, [
     focusInput,
     getScore,
+    onPrompt,
     question,
     selectInput,
     setStatus,

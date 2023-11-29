@@ -9,6 +9,7 @@ type QuestionReaderContextType = {
   getScore: (result: UnscoredQuestionResult) => number;
   onJudged: (result: QuestionResult) => void;
   onNextQuestion: () => void;
+  onPrompt: (result: QuestionResult) => void;
   previousResults: QuestionResult[];
   question: Tossup;
   setStatus: React.Dispatch<React.SetStateAction<QuestionReaderStatus>>;
@@ -20,6 +21,7 @@ export const QuestionReaderContext =
     getScore: () => 0,
     onJudged: () => {},
     onNextQuestion: () => {},
+    onPrompt: () => {},
     previousResults: [],
     question: {} as Tossup,
     setStatus: () => {},
@@ -35,26 +37,18 @@ export type QuestionReaderContextProviderProps = Omit<
 
 export const QuestionReaderContextProvider = ({
   children,
-  getScore,
-  onJudged,
-  onNextQuestion,
-  previousResults,
-  question,
+  ...rest
 }: QuestionReaderContextProviderProps) => {
   const [status, setStatus] = useState<QuestionReaderStatus>(
     QuestionReaderStatus.Reading,
   );
   const context = useMemo(
     () => ({
-      getScore,
-      onJudged,
-      onNextQuestion,
-      previousResults,
-      question,
+      ...rest,
       setStatus,
       status,
     }),
-    [getScore, onJudged, onNextQuestion, previousResults, question, status],
+    [rest, status],
   );
 
   return (

@@ -1,5 +1,6 @@
 import { QuestionResult, TossupResult } from '@qbhub/types';
 import { useCallback, useMemo } from 'react';
+import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import {
   nextTossup,
@@ -57,9 +58,21 @@ export default function TossupReader() {
   );
 
   const handleQuestionResult = useCallback(
-    (result: QuestionResult) => dispatch(submitResult(getTossupResult(result))),
+    (result: QuestionResult) => {
+      dispatch(submitResult(getTossupResult(result)));
+
+      if (result.isCorrect) {
+        toast.success('correct!');
+      } else {
+        toast.error('sorry, incorrect');
+      }
+    },
     [dispatch],
   );
+
+  const handlePrompt = useCallback(() => {
+    toast('prompt', { icon: '💭' });
+  }, []);
 
   const getScore = useCallback(
     ({ buzzIndex, isCorrect, question }: UnscoredQuestionResult) => {
@@ -92,6 +105,7 @@ export default function TossupReader() {
       previousResults={questionResults}
       onNextQuestion={handleNextTossup}
       onJudged={handleQuestionResult}
+      onPrompt={handlePrompt}
       getScore={getScore}
     />
   );
