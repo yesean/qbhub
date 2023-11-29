@@ -2,7 +2,12 @@ import { Category, Difficulty, Question, Subcategory } from '@qbhub/types';
 import { isEmpty, isNotNullOrEmpty } from '../array';
 import { SUBCATEGORY_MAP } from '../constants';
 import { MAX_TOURNAMENT_YEAR, MIN_TOURNAMENT_YEAR } from './constants';
-import { FromYear, ReadingSpeed, Settings } from './types';
+import {
+  FromYear,
+  ReadingSpeed,
+  Settings,
+  URLQueryParamSettings,
+} from './types';
 
 // check if settings matches default values
 export const isSettingsDefault = (settings: Settings) =>
@@ -10,8 +15,8 @@ export const isSettingsDefault = (settings: Settings) =>
   isEmpty(settings.subcategories) &&
   isEmpty(settings.difficulties) &&
   isEmpty(settings.tournaments) &&
-  settings.readingSpeed === undefined &&
-  settings.fromYear === undefined;
+  settings.fromYear === undefined &&
+  settings.readingSpeed === undefined;
 
 // check if question passes settings filters
 export const isQuestionValid = (
@@ -110,4 +115,12 @@ export const getValidatedSettings = (
     invalidatedSettings.subcategories,
   );
   return { ...invalidatedSettings, categories: updatedCategories };
+};
+
+// remove reading speed from settings for url query params
+export const getURLQueryParamSettings = (
+  settings: Settings,
+): URLQueryParamSettings => {
+  const { readingSpeed: _, ...urlQueryParamSettings } = settings;
+  return urlQueryParamSettings;
 };

@@ -1,12 +1,13 @@
 import { useCallback, useMemo } from 'react';
 import { filterBonuses } from '../BonusReader/bonusReaderSlice';
 import { reset } from '../FrequencyList/frequencyListSlice';
-import { useAppDispatch } from '../redux/hooks';
 import { filterTossups } from '../TossupReader/tossupReaderSlice';
+import { useAppDispatch } from '../redux/hooks';
 import { useGlobalQueryParams } from '../utils/routes';
-import { saveSettings } from '../utils/settings/storage';
+import { restoreSettings, saveSettings } from '../utils/settings/storage';
 import { Settings } from '../utils/settings/types';
 import {
+  getURLQueryParamSettings,
   getUpdatedCategoriesFromSubcategories,
   getUpdatedSubcategoriesFromCategories,
 } from '../utils/settings/validate';
@@ -20,6 +21,8 @@ export const useSettings = (): SettingsHook => {
   const [params, setParams] = useGlobalQueryParams();
   const dispatch = useAppDispatch();
 
+  // always read reading speed from local storage
+  const { readingSpeed } = restoreSettings();
   const settings = useMemo<Settings>(
     () => ({
       categories: params.categories,
@@ -27,15 +30,15 @@ export const useSettings = (): SettingsHook => {
       difficulties: params.difficulties,
       tournaments: params.tournaments,
       fromYear: params.fromYear,
-      readingSpeed: params.readingSpeed,
+      readingSpeed,
     }),
     [
       params.categories,
       params.difficulties,
       params.fromYear,
-      params.readingSpeed,
       params.subcategories,
       params.tournaments,
+      readingSpeed,
     ],
   );
 
@@ -76,7 +79,8 @@ export const useSettings = (): SettingsHook => {
         saveSettings(nextSettings);
 
         // update url
-        return nextSettings;
+        const urlQueryParamSettings = getURLQueryParamSettings(nextSettings);
+        return urlQueryParamSettings;
       });
     },
     [dispatch, setParams],

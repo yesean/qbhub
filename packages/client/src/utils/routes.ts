@@ -4,30 +4,21 @@ import { useCallback, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import {
   DecodedValueMap,
-  encodeQueryParams,
   QueryParamConfigMap,
+  encodeQueryParams,
   useQueryParams,
 } from 'use-query-params';
 import {
+  NeverNullStringParam,
   buildNeverNullRangedNumberParamWithSkip,
   buildNumericEnumArrayParam,
-  NeverNullStringParam,
 } from './queryParams';
-import {
-  DEFAULT_READING_SPEED,
-  MAX_TOURNAMENT_YEAR,
-  MIN_TOURNAMENT_YEAR,
-} from './settings/constants';
+import { MAX_TOURNAMENT_YEAR, MIN_TOURNAMENT_YEAR } from './settings/constants';
 
 const FromYearParam = buildNeverNullRangedNumberParamWithSkip(
   MIN_TOURNAMENT_YEAR,
   MAX_TOURNAMENT_YEAR,
   MIN_TOURNAMENT_YEAR,
-);
-const ReadingSpeedParam = buildNeverNullRangedNumberParamWithSkip(
-  0,
-  100,
-  DEFAULT_READING_SPEED,
 );
 
 const GLOBAL_QUERY_PARAMS = {
@@ -36,8 +27,11 @@ const GLOBAL_QUERY_PARAMS = {
   difficulties: buildNumericEnumArrayParam(Difficulty),
   tournaments: buildNumericEnumArrayParam(Tournament),
   fromYear: FromYearParam,
-  readingSpeed: ReadingSpeedParam,
 };
+
+const QUERY_PARAM_OPTIONS = {
+  updateType: 'replace',
+} as const;
 
 const buildRoute = <T extends QueryParamConfigMap>(
   path: string,
@@ -77,7 +71,10 @@ const buildUseRouteContext = <T extends QueryParamConfigMap>(
   routeConfig: RouteConfig<T>,
 ) =>
   function useRouteContext() {
-    const [params] = useQueryParams<T>(routeConfig.queryParams);
+    const [params] = useQueryParams<T>(
+      routeConfig.queryParams,
+      QUERY_PARAM_OPTIONS,
+    );
 
     const getURL = useCallback(
       (newParams: Partial<DecodedValueMap<T>>) =>
@@ -119,7 +116,8 @@ export const useClueDisplayRouteContext = buildUseRouteContext(
 );
 export const useAboutRouteContext = buildUseRouteContext(ROUTES.about);
 
-export const useGlobalQueryParams = () => useQueryParams(GLOBAL_QUERY_PARAMS);
+export const useGlobalQueryParams = () =>
+  useQueryParams(GLOBAL_QUERY_PARAMS, QUERY_PARAM_OPTIONS);
 
 export const useGetURL = () => {
   const [params] = useGlobalQueryParams();

@@ -9,6 +9,9 @@ export type Settings = {
   subcategories: Subcategory[];
   difficulties: Difficulty[];
   tournaments: Tournament[];
-  readingSpeed: ReadingSpeed | undefined;
-  fromYear: FromYear | undefined;
+  fromYear?: FromYear;
+  readingSpeed?: ReadingSpeed;
 };
+
+// do not store readings speed in the URL
+export type URLQueryParamSettings = Omit<Settings, 'readingSpeed'>;
