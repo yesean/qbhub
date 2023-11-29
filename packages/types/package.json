@@ -22,13 +22,13 @@
   },
   "scripts": {
     "dev": "tsc --build",
+    "format": "prettier --write src ",
+    "format:check": "prettier --check src",
     "typecheck": "tsc --noEmit",
     "eslint": "eslint src --ext .ts,.tsx",
     "eslint:debug": "DEBUG=eslint:cli-engine yarn eslint",
-    "lint": "yarn typecheck && yarn eslint",
-    "lint:debug": "yarn typecheck && yarn eslint:debug",
-    "format": "prettier --write src",
-    "format:check": "prettier --check src",
+    "lint": "yarn format:check && yarn typecheck && yarn eslint",
+    "lint:debug": "yarn format:check && yarn typecheck && yarn eslint:debug",
     "clean": "rm -rf dist tsconfig.tsbuildinfo"
   }
 }
