@@ -1,4 +1,4 @@
-import { QuestionResult, TossupResult } from '@qbhub/types';
+import { QuestionResult, TossupResult, TossupScore } from '@qbhub/types';
 import { useCallback, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
@@ -41,6 +41,34 @@ const getQuestionResult = (result: TossupResult): QuestionResult => ({
   question: result.tossup,
 });
 
+const getScore = ({
+  buzzIndex,
+  isCorrect,
+  question,
+}: UnscoredQuestionResult) => {
+  const tossupWords = getTossupWords(question.formattedText);
+  const isInPower = buzzIndex <= getPowerIndex(tossupWords);
+  const isBuzzAtEnd = buzzIndex === tossupWords.length - 1;
+
+  return getTossupScore(isCorrect, isInPower, isBuzzAtEnd);
+};
+
+const displayJudgedToast = (result: QuestionResult) => {
+  if (result.isCorrect) {
+    if (result.score === TossupScore.power) {
+      toast.success('power!');
+    } else if (result.score === TossupScore.ten) {
+      toast.success('ten!');
+    }
+  } else {
+    toast.error('incorrect');
+  }
+};
+
+const displayPromptToast = () => {
+  toast('prompt', { icon: '💭' });
+};
+
 export default function TossupReader() {
   const { openTossupHistoryModal } = useModalContext();
   const { current, results } = useSelector(selectTossupReader);
@@ -60,29 +88,9 @@ export default function TossupReader() {
   const handleQuestionResult = useCallback(
     (result: QuestionResult) => {
       dispatch(submitResult(getTossupResult(result)));
-
-      if (result.isCorrect) {
-        toast.success('correct!');
-      } else {
-        toast.error('sorry, incorrect');
-      }
+      displayJudgedToast(result);
     },
     [dispatch],
-  );
-
-  const handlePrompt = useCallback(() => {
-    toast('prompt', { icon: '💭' });
-  }, []);
-
-  const getScore = useCallback(
-    ({ buzzIndex, isCorrect, question }: UnscoredQuestionResult) => {
-      const tossupWords = getTossupWords(question.formattedText);
-      const isInPower = buzzIndex <= getPowerIndex(tossupWords);
-      const isBuzzAtEnd = buzzIndex === tossupWords.length - 1;
-
-      return getTossupScore(isCorrect, isInPower, isBuzzAtEnd);
-    },
-    [],
   );
 
   const isTossupMissing = current.tossup.id === undefined;
@@ -104,7 +112,7 @@ export default function TossupReader() {
       getScore={getScore}
       onJudged={handleQuestionResult}
       onNextQuestion={handleNextTossup}
-      onPrompt={handlePrompt}
+      onPrompt={displayPromptToast}
       previousResults={questionResults}
       question={current.tossup}
     />
