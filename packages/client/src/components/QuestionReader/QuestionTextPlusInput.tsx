@@ -27,7 +27,7 @@ const getInputBorderColor = (
   if (status !== QuestionReaderStatus.Judged || questionResult == null)
     return 'gray.300';
 
-  if (questionResult.judgeResult === JudgeResult.correct) return 'green.400';
+  if (questionResult.isCorrect) return 'green.400';
   return 'red.400';
 };
 
@@ -50,14 +50,16 @@ const getQuestionResult = (
   userAnswer: string,
   buzzIndex: number,
   getScore: (result: UnscoredQuestionResult) => number,
-): QuestionResult => {
+) => {
   const judge = new Judge(question.formattedAnswer);
   const judgeResult = judge.judge(userAnswer);
+  const isCorrect = judgeResult === JudgeResult.correct;
   const unscoredQuestionResult = {
     question,
-    judgeResult,
+    isCorrect,
     userAnswer,
     buzzIndex,
+    judgeResult,
   };
   const score = getScore(unscoredQuestionResult);
   return { ...unscoredQuestionResult, score };
@@ -133,7 +135,7 @@ export default function QuestionTextPlusInput() {
       onJudged(result);
       setStatus(getNextStatus(status));
 
-      if (result.judgeResult === JudgeResult.correct) {
+      if (result.isCorrect) {
         toast.success('correct!');
       } else {
         toast.error('sorry, incorrect');

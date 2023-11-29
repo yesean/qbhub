@@ -1,5 +1,5 @@
 import { TossupResult } from '@qbhub/types';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import {
   nextTossup,
@@ -16,23 +16,17 @@ import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useSettings } from '../hooks/useSettings';
 import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/hooks';
-import {
-  JudgeResult,
-  getPowerIndex,
-  getTossupScore,
-  getTossupWords,
-} from '../utils/reader';
+import { getPowerIndex, getTossupScore, getTossupWords } from '../utils/reader';
 
 // evaluate user answer
 const getTossupResult = ({
-  judgeResult,
+  isCorrect,
   question,
   userAnswer,
   buzzIndex,
   score,
 }: QuestionResult): TossupResult => {
   const tossupWords = getTossupWords(question.formattedText);
-  const isCorrect = judgeResult === JudgeResult.correct;
 
   return {
     tossup: question,
@@ -45,11 +39,8 @@ const getTossupResult = ({
 };
 
 const getQuestionResult = (result: TossupResult): QuestionResult => ({
+  ...result,
   question: result.tossup,
-  judgeResult: result.isCorrect ? JudgeResult.correct : JudgeResult.incorrect,
-  userAnswer: result.userAnswer,
-  buzzIndex: result.buzzIndex,
-  score: result.score,
 });
 
 export default function TossupReader() {
@@ -58,7 +49,10 @@ export default function TossupReader() {
   const dispatch = useAppDispatch();
   const { settings } = useSettings();
 
-  const questionResults = results.map(getQuestionResult);
+  const questionResults = useMemo(
+    () => results.map(getQuestionResult),
+    [results],
+  );
 
   const handleNextTossup = useCallback(
     () => dispatch(nextTossup({ settings })),
@@ -71,8 +65,7 @@ export default function TossupReader() {
   );
 
   const getScore = useCallback(
-    ({ question, judgeResult, buzzIndex }: UnscoredQuestionResult) => {
-      const isCorrect = judgeResult === JudgeResult.correct;
+    ({ question, isCorrect, buzzIndex }: UnscoredQuestionResult) => {
       const tossupWords = getTossupWords(question.formattedText);
       const isInPower = buzzIndex <= getPowerIndex(tossupWords);
       const isBuzzAtEnd = buzzIndex === tossupWords.length - 1;
