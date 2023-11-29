@@ -1,5 +1,5 @@
 import { Box, Flex, Input } from '@chakra-ui/react';
-import { Tossup, TossupResult } from '@qbhub/types';
+import { Tossup } from '@qbhub/types';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';
@@ -11,7 +11,10 @@ import {
 import { Judge, JudgeResult, getTossupWords } from '../../utils/reader';
 import TealButton from '../buttons/TealButton';
 import FormattedQuestion from '../reader/FormattedQuestion';
-import { QuestionResult } from './QuestionReaderContext';
+import {
+  QuestionResult,
+  UnscoredQuestionResult,
+} from './QuestionReaderContext';
 import QuestionReaderProgress from './QuestionReaderProgress';
 import useQuestionReaderContext from './useQuestionReaderContext';
 import useRevealer from './useRevealer';
@@ -19,12 +22,12 @@ import useRevealer from './useRevealer';
 // get input border color for tossup results, green/red for correct/incorrect
 const getInputBorderColor = (
   status: QuestionReaderStatus,
-  questionResult?: TossupResult,
+  questionResult?: QuestionResult,
 ): string => {
   if (status !== QuestionReaderStatus.Judged || questionResult == null)
     return 'gray.300';
 
-  if (questionResult.isCorrect) return 'green.400';
+  if (questionResult.judgeResult === JudgeResult.correct) return 'green.400';
   return 'red.400';
 };
 
@@ -46,16 +49,18 @@ const getQuestionResult = (
   question: Tossup,
   userAnswer: string,
   buzzIndex: number,
+  getScore: (result: UnscoredQuestionResult) => number,
 ): QuestionResult => {
   const judge = new Judge(question.formattedAnswer);
   const judgeResult = judge.judge(userAnswer);
-  return {
-    judgeResult,
-
+  const unscoredQuestionResult = {
     question,
+    judgeResult,
     userAnswer,
     buzzIndex,
   };
+  const score = getScore(unscoredQuestionResult);
+  return { ...unscoredQuestionResult, score };
 };
 
 /**
@@ -72,6 +77,7 @@ export default function QuestionTextPlusInput() {
     previousResults,
     onNextQuestion,
     onJudged,
+    getScore,
   } = useQuestionReaderContext();
 
   const focusInput = useCallback(() => {
@@ -143,9 +149,14 @@ export default function QuestionTextPlusInput() {
    */
   const handleSubmitOnAnsweringAfterPrompt = useCallback(() => {
     // evaluate user answer
-    const result = getQuestionResult(question, userInput, visibleIndex);
+    const result = getQuestionResult(
+      question,
+      userInput,
+      visibleIndex,
+      getScore,
+    );
     submitResult(result);
-  }, [question, submitResult, userInput, visibleIndex]);
+  }, [getScore, question, submitResult, userInput, visibleIndex]);
 
   /**
    * @Action submit answer
@@ -155,7 +166,12 @@ export default function QuestionTextPlusInput() {
    *  otherwise: mimic behavior of: submit answer after being prompted
    */
   const handleSubmitOnAnswering = useCallback(() => {
-    const result = getQuestionResult(question, userInput, visibleIndex);
+    const result = getQuestionResult(
+      question,
+      userInput,
+      visibleIndex,
+      getScore,
+    );
 
     // if user is prompted
     if (result.judgeResult === JudgeResult.prompt) {
@@ -170,6 +186,7 @@ export default function QuestionTextPlusInput() {
     submitResult(result);
   }, [
     focusInput,
+    getScore,
     question,
     selectInput,
     setStatus,
