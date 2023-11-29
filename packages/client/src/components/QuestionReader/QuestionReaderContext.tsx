@@ -1,11 +1,10 @@
 import { Tossup } from '@qbhub/types';
 import React, { ReactNode, useMemo, useState } from 'react';
 import { QuestionReaderStatus } from '../../utils/questionReader';
-import { JudgeResult } from '../../utils/reader';
 
 export type QuestionResult = {
   question: Tossup;
-  judgeResult: JudgeResult;
+  isCorrect: boolean;
   userAnswer: string;
   buzzIndex: number;
   score: number;
