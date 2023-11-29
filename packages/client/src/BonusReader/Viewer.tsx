@@ -8,11 +8,11 @@ import UserAnswer from '../components/reader/UserAnswer';
 import { useSettings } from '../hooks/useSettings';
 import { useAppDispatch } from '../redux/hooks';
 import { range } from '../utils/array';
-import { getTossupWords, ReaderStatus } from '../utils/reader';
+import { ReaderStatus, getTossupWords } from '../utils/reader';
 import ActiveQuestion from './ActiveQuestion';
-import { nextBonus, selectBonusReader } from './bonusReaderSlice';
 import Leadin from './Leadin';
 import PreviousQuestion from './PreviousQuestion';
+import { nextBonus, selectBonusReader } from './bonusReaderSlice';
 
 type Props = {
   setBuzz: React.Dispatch<React.SetStateAction<() => void>>;

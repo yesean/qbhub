@@ -3,7 +3,7 @@ import { log } from '@qbhub/utils';
 import { PlainTossup } from '../types/db.js';
 import { getAllClues, getUniqueClues } from '../utils/clues.js';
 import { TABLES } from '../utils/constants.js';
-import { client, QueryBuilder } from '../utils/db.js';
+import { QueryBuilder, client } from '../utils/db.js';
 
 const columns = [
   { name: TABLES.tossups.columns.text },

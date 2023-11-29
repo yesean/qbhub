@@ -2,7 +2,7 @@ import { QuestionParameters, SortOption } from '@qbhub/types';
 import { log } from '@qbhub/utils';
 import { Order, Tossup } from '../types/db.js';
 import { TABLES } from '../utils/constants.js';
-import { client, QueryBuilder } from '../utils/db.js';
+import { QueryBuilder, client } from '../utils/db.js';
 import { transformTossup } from '../utils/model.js';
 
 const columns = [

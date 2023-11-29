@@ -6,7 +6,7 @@ const About = () => {
     label,
     subheaders,
     text,
-  }: typeof headers[number]) => {
+  }: (typeof headers)[number]) => {
     let content;
     if (subheaders !== undefined) {
       content = subheaders.map((sub) => (

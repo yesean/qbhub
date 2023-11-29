@@ -16,10 +16,10 @@ import { useSettings } from '../hooks/useSettings';
 import { useAppDispatch } from '../redux/hooks';
 import { useGetURL } from '../utils/routes';
 import {
-  fetchPages,
   FreqStatus,
-  nextPage,
   PAGE_SIZE,
+  fetchPages,
+  nextPage,
   prevPage,
   selectFrequencyList,
 } from './frequencyListSlice';

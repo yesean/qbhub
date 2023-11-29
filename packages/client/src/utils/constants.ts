@@ -2729,19 +2729,19 @@ const dataReducer = <T extends { key: SelectableQuestionParameter }>(
   [key]: { ...data },
 });
 
-type CategoryInfo = typeof CATEGORY_DATA[number];
+type CategoryInfo = (typeof CATEGORY_DATA)[number];
 type CategoryInfoMap = {
   [key in CategoryInfo['key']]: Omit<CategoryInfo, 'key'>;
 };
-type SubcategoryInfo = typeof SUBCATEGORY_DATA[number];
+type SubcategoryInfo = (typeof SUBCATEGORY_DATA)[number];
 type SubcategoryInfoMap = {
   [key in SubcategoryInfo['key']]: Omit<SubcategoryInfo, 'key'>;
 };
-type DifficultyInfo = typeof DIFFICULTY_DATA[number];
+type DifficultyInfo = (typeof DIFFICULTY_DATA)[number];
 type DifficultyInfoMap = {
   [key in DifficultyInfo['key']]: Omit<DifficultyInfo, 'key'>;
 };
-type TournamentInfo = typeof TOURNAMENT_DATA[number];
+type TournamentInfo = (typeof TOURNAMENT_DATA)[number];
 type TournamentInfoMap = {
   [key in TournamentInfo['key']]: Omit<TournamentInfo, 'key'>;
 };

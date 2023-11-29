@@ -12,7 +12,7 @@ import { elementScrollIntoView } from 'seamless-scroll-polyfill';
 import FormattedQuestion from '../components/reader/FormattedQuestion';
 import { useReader } from '../hooks/useReader';
 import { useAppDispatch } from '../redux/hooks';
-import { getTossupWords, ReaderStatus } from '../utils/reader';
+import { ReaderStatus, getTossupWords } from '../utils/reader';
 import { buzz as buzzAction, selectBonusReader } from './bonusReaderSlice';
 
 type SectionProps = {

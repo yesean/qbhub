@@ -7,17 +7,17 @@ import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/hooks';
 import { ReaderStatus } from '../utils/reader';
+import Info from './Info';
+import Result from './Result';
+import Score from './Score';
+import UserInput from './UserInput';
+import Viewer from './Viewer';
 import {
   prompt,
   selectBonusReader,
   selectIsAnswering,
   submitAnswer,
 } from './bonusReaderSlice';
-import Info from './Info';
-import Result from './Result';
-import Score from './Score';
-import UserInput from './UserInput';
-import Viewer from './Viewer';
 
 const BonusReader: React.FC<React.PropsWithChildren<unknown>> = () => {
   const [progress, setProgress] = useState(100);
