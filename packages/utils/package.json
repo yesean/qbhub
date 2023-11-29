@@ -25,14 +25,14 @@
   },
   "scripts": {
     "dev": "tsc --build",
+    "format": "prettier --write src ",
+    "format:check": "prettier --check src",
     "typecheck": "tsc --noEmit",
     "eslint": "eslint src --ext .ts,.tsx",
     "eslint:debug": "DEBUG=eslint:cli-engine yarn eslint",
     "prelint": "tsc --build",
-    "lint": "yarn prelint && yarn typecheck && yarn eslint",
+    "lint": "yarn format:check && yarn prelint && yarn typecheck && yarn eslint",
     "lint:debug": "yarn prelint && yarn typecheck && yarn eslint:debug",
-    "format": "prettier --write src",
-    "format:check": "prettier --check src",
     "clean": "rm -rf dist tsconfig.tsbuildinfo"
   }
 }
