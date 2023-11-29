@@ -1,6 +1,6 @@
 import {
-  Heading,
   Modal as ChakraModal,
+  Heading,
   ModalBody,
   ModalContent,
   ModalFooter,

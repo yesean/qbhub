@@ -12,13 +12,13 @@ import Info from './Info';
 import Question from './Question';
 import Result from './Result';
 import Score from './Score';
+import UserInput from './UserInput';
 import {
   prompt,
   selectIsAnswering,
   selectTossupReader,
   submitAnswer,
 } from './tossupReaderSlice';
-import UserInput from './UserInput';
 
 const TossupReader = () => {
   const [progress, setProgress] = useState(100);

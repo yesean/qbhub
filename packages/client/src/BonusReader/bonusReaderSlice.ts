@@ -1,8 +1,8 @@
 import { Bonus, BonusPart, BonusPartResult, BonusResult } from '@qbhub/types';
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { RootState } from '../redux/store';
 import * as fetchUtils from '../utils/fetch';
-import { getBonusScore, ReaderStatus } from '../utils/reader';
+import { ReaderStatus, getBonusScore } from '../utils/reader';
 import { Settings } from '../utils/settings/types';
 import { isQuestionValid } from '../utils/settings/validate';
 
