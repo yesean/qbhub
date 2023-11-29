@@ -21,30 +21,30 @@ const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
     <IconButton
       aria-label="Tossup history"
       icon={<TimeIcon boxSize={6} />}
-      size="lg"
-      onClick={openHistoryModal}
       mr={4}
+      onClick={openHistoryModal}
+      size="lg"
     />
   ) : null;
 
   return (
     <Box p={3}>
-      <Flex justify="space-between" align="center">
+      <Flex align="center" justify="space-between">
         <Heading display="inline">QBHub</Heading>
         <Box>
           {questionHistoryButton}
           <IconButton
             aria-label="Open settings"
             icon={<SettingsIcon boxSize={6} />}
-            size="lg"
-            onClick={openSettingsModal}
             mr={4}
+            onClick={openSettingsModal}
+            size="lg"
           />
           <IconButton
             aria-label="Open menu"
             icon={<HamburgerIcon boxSize={6} />}
-            size="lg"
             onClick={openHamburgerMenu}
+            size="lg"
           />
         </Box>
       </Flex>

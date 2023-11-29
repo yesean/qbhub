@@ -14,12 +14,12 @@ const mdxComponents: MDXComponents = {
     </Link>
   ),
   h2: ({ children }) => (
-    <Heading as="h2" size="md" mb={2}>
+    <Heading as="h2" mb={2} size="md">
       {children}
     </Heading>
   ),
   h3: ({ children }) => (
-    <Heading as="h3" size="sm" color="gray.700">
+    <Heading as="h3" color="gray.700" size="sm">
       {children}
     </Heading>
   ),
@@ -29,7 +29,7 @@ const mdxComponents: MDXComponents = {
     </Box>
   ),
   ul: ({ children }) => (
-    <Box ml={6} mb={2}>
+    <Box mb={2} ml={6}>
       <ul>{children}</ul>
     </Box>
   ),
@@ -52,7 +52,7 @@ const UpdatesModal = ({ closeModal, isOpen }: UpdatesModalProps) => {
   }, [openUpdatesModal]);
 
   return (
-    <QBHubModal isOpen={isOpen} closeModal={closeModal} title="Updates 🚀">
+    <QBHubModal closeModal={closeModal} isOpen={isOpen} title="Updates 🚀">
       <Content components={mdxComponents} />
     </QBHubModal>
   );

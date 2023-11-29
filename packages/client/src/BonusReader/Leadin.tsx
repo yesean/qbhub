@@ -11,8 +11,8 @@ const Leadin = ({ buzzIndex, text }: LeadinProps) => (
   <Box>
     <b>BONUS:</b>{' '}
     <FormattedQuestion
-      words={getTossupWords(text)}
       indices={{ buzz: buzzIndex }}
+      words={getTossupWords(text)}
     />
   </Box>
 );

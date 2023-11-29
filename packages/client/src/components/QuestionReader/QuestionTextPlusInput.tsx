@@ -257,11 +257,11 @@ export default function QuestionTextPlusInput() {
 
   return (
     <>
-      <Box overflow="auto" bg="gray.100" p={4} borderRadius="md">
+      <Box bg="gray.100" borderRadius="md" overflow="auto" p={4}>
         <FormattedQuestion
-          words={tossupWords}
           indices={{ buzz: buzzIndex, visible: visibleIndex }}
           visibleRef={visibleRef}
+          words={tossupWords}
         />
       </Box>
       {shouldShowProgress && (
@@ -270,16 +270,16 @@ export default function QuestionTextPlusInput() {
           onFinish={handleSubmitOnAnswering}
         />
       )}
-      <Flex w="100%" justify="center">
+      <Flex justify="center" w="100%">
         <Input
           ref={inputRef}
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          placeholder="Answer"
-          mr={4}
-          isDisabled={shouldDisableInput}
           borderColor={getInputBorderColor(status, lastResult)}
           borderWidth={shouldShowBorder ? 2 : undefined}
+          isDisabled={shouldDisableInput}
+          mr={4}
+          onChange={(e) => setUserInput(e.target.value)}
+          placeholder="Answer"
+          value={userInput}
         />
         <TealButton onClick={handleClick}>{getButtonText(status)}</TealButton>
       </Flex>

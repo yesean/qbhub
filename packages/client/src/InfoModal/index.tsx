@@ -109,7 +109,7 @@ const InfoModal: React.FC<React.PropsWithChildren<InfoModalProps>> = ({
     return <Kbd>{label}</Kbd>;
   };
   const renderTable = (shortcuts: Shortcut[]) => (
-    <Table variant="simple" mb={4} style={{ tableLayout: 'fixed' }}>
+    <Table mb={4} style={{ tableLayout: 'fixed' }} variant="simple">
       <colgroup>
         <col style={{ width: '25%' }} />
         <col style={{ width: '75%' }} />
@@ -154,9 +154,9 @@ const InfoModal: React.FC<React.PropsWithChildren<InfoModalProps>> = ({
   };
 
   return (
-    <QBHubModal isOpen={isOpen} closeModal={closeModal} title="Info">
+    <QBHubModal closeModal={closeModal} isOpen={isOpen} title="Info">
       {renderLocalShortcuts()}
-      <Heading size="sm" color="gray.800">
+      <Heading color="gray.800" size="sm">
         Global Shortcuts
       </Heading>
       {renderTable(globalShortcuts)}

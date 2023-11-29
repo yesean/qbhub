@@ -62,7 +62,7 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
     if (startIndex === -1) {
       return (
         <>
-          <Heading size="sm" mb={1}>
+          <Heading mb={1} size="sm">
             {clue.tournament}
           </Heading>
           <Text>{clue.sentence}</Text>
@@ -71,11 +71,11 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
     }
     return (
       <>
-        <Heading size="sm" mb={1}>
+        <Heading mb={1} size="sm">
           {clue.tournament}
         </Heading>
         <Text display="inline">{clue.sentence.substring(0, startIndex)}</Text>
-        <Text display="inline" as="mark" bgColor="#fffea9">
+        <Text as="mark" bgColor="#fffea9" display="inline">
           {clue.sentence.substring(startIndex, startIndex + clue.text.length)}
         </Text>
         <Text display="inline">
@@ -87,28 +87,28 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   const renderClue = (clue: SelectedClue) => (
     <Tooltip
-      hasArrow
-      placement="top"
-      label={renderTooltip(clue)}
       borderRadius="5px"
+      hasArrow
+      label={renderTooltip(clue)}
       p={2}
+      placement="top"
     >
       <Text>{clue.text}</Text>
     </Tooltip>
   );
 
   if (status !== CluesGeneratorStatus.loaded) {
-    return <CircularProgress isIndeterminate color="cyan" />;
+    return <CircularProgress color="cyan" isIndeterminate />;
   }
 
   return (
     <Flex
-      gap={4}
+      align="center"
       direction="column"
-      w="100%"
+      gap={4}
       h="100%"
       justify="center"
-      align="center"
+      w="100%"
     >
       {clues.length === 0 ? (
         <EmptyResults answer={answer} />
@@ -116,55 +116,55 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
         <>
           <Heading
             as="h2"
-            size="md"
-            px={4}
-            textAlign="center"
             lineHeight="1.5"
             maxW="600px"
+            px={4}
+            size="md"
+            textAlign="center"
           >
             Showing clues for:{' '}
             <Box as="span" bg="cyan.200" borderRadius="sm" p={1}>
               {answer}
             </Box>
           </Heading>
-          <Box w="min(600px, 100%)" h="min(700px, 100%)" overflow="auto">
+          <Box h="min(700px, 100%)" overflow="auto" w="min(600px, 100%)">
             <KeyValueTable
               data={clues.map((clue) => ({ ...clue, clue: renderClue(clue) }))}
               headers={cluesFields}
-              width={600}
               height={700}
+              width={600}
             />
           </Box>
           <Flex
-            justify="center"
-            overflowX="auto"
             flexShrink={0}
             gap={4}
-            maxW="100%"
+            justify="center"
             justifyContent="flex-start"
+            maxW="100%"
+            overflowX="auto"
           >
             {currentQuery.length > 0 && (
               <RouterLinkButton
                 label="Results"
+                leftIcon={<ArrowBackIcon h={4} w={4} />}
                 to={getClueSearchURL({ query: currentQuery })}
-                leftIcon={<ArrowBackIcon w={4} h={4} />}
                 variant="secondary"
               />
             )}
             <RouterLinkButton
               label="Search"
+              leftIcon={<SearchIcon h={4} w={4} />}
               to={getClueSearchURL({})}
-              leftIcon={<SearchIcon w={4} h={4} />}
               variant="secondary"
             />
             <FileDownloadButton
-              href={cluesCSVURL}
               download={answer}
+              href={cluesCSVURL}
               label="CSV"
             />
             <FileDownloadButton
-              href={cluesJSONURL}
               download={answer}
+              href={cluesJSONURL}
               label="JSON"
             />
           </Flex>
@@ -181,7 +181,7 @@ function EmptyResults({ answer }: EmptyResultsProps) {
 
   return (
     <>
-      <Container bg="gray.100" p={4} borderRadius="md">
+      <Container bg="gray.100" borderRadius="md" p={4}>
         <Text>
           No clues found for <strong>{answer}</strong>. Try checking your
           network connection or tweaking the search parameters.
@@ -189,8 +189,8 @@ function EmptyResults({ answer }: EmptyResultsProps) {
       </Container>
       <RouterLinkButton
         label="Search"
+        leftIcon={<SearchIcon h={4} w={4} />}
         to={getClueSearchURL({})}
-        leftIcon={<SearchIcon w={4} h={4} />}
         variant="secondary"
       />
     </>

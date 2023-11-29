@@ -73,12 +73,12 @@ const Question = ({ setBuzz }: QuestionProps) => {
 
   return (
     <FormattedQuestion
-      words={shuffledTossupWords}
       indices={{
         buzz: buzzIndex,
         visible: visibleIndex,
       }}
       visibleRef={visibleRef}
+      words={shuffledTossupWords}
     />
   );
 };
@@ -100,10 +100,10 @@ const Container = ({ setBuzz }: ContainerProps) => {
 
   return (
     <ReaderQuestion
-      showLoading={showLoading}
-      showEmpty={showEmpty}
       emptyMessage={emptyMessage}
       onEmpty={onEmpty}
+      showEmpty={showEmpty}
+      showLoading={showLoading}
     >
       <Question setBuzz={setBuzz} />
     </ReaderQuestion>

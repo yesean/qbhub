@@ -54,28 +54,28 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
   return (
     <ModalContext.Provider value={modalContext}>
       <SettingsModal
-        isOpen={activeModal === ModalVariant.SettingsModalVariant}
         closeModal={closeModal}
+        isOpen={activeModal === ModalVariant.SettingsModalVariant}
       />
       <UpdatesModal
-        isOpen={activeModal === ModalVariant.UpdatesModalVariant}
         closeModal={closeModal}
+        isOpen={activeModal === ModalVariant.UpdatesModalVariant}
       />
       <InfoModal
-        isOpen={activeModal === ModalVariant.InfoModalVariant}
         closeModal={closeModal}
+        isOpen={activeModal === ModalVariant.InfoModalVariant}
       />
       <TossupHistoryModal
-        isOpen={activeModal === ModalVariant.TossupHistoryModalVariant}
         closeModal={closeModal}
+        isOpen={activeModal === ModalVariant.TossupHistoryModalVariant}
       />
       <BonusHistoryModal
-        isOpen={activeModal === ModalVariant.BonusHistoryModalVariant}
         closeModal={closeModal}
+        isOpen={activeModal === ModalVariant.BonusHistoryModalVariant}
       />
       <HamburgerMenu
-        isOpen={activeModal === ModalVariant.HamburgerMenuVariant}
         closeModal={closeModal}
+        isOpen={activeModal === ModalVariant.HamburgerMenuVariant}
       />
       <Toaster />
       {children}

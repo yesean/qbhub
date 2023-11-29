@@ -40,17 +40,17 @@ const TossupHistoryModal: React.FC<
 
   return (
     <Modal
+      isCentered
       isOpen={isOpen}
       onClose={closeModal}
-      size="6xl"
       scrollBehavior="inside"
-      isCentered
+      size="6xl"
     >
       <ModalOverlay />
-      <ModalContent m={4} w="min(90vw, 1400px)" h="max(75vh, 600px)">
+      <ModalContent h="max(75vh, 600px)" m={4} w="min(90vw, 1400px)">
         <ModalHeader>Tossup History</ModalHeader>
-        <ModalBody pt={0} display="flex" flexDirection="column">
-          <Table variant="simple" mb={4}>
+        <ModalBody display="flex" flexDirection="column" pt={0}>
+          <Table mb={4} variant="simple">
             <Thead>
               <Tr>
                 {scoreHeaders.map((header, i) => (

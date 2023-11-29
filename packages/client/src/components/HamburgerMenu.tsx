@@ -40,17 +40,17 @@ const HamburgerMenu: React.FC<React.PropsWithChildren<HamburgerMenuProps>> = ({
     <Drawer isOpen={isOpen} onClose={closeModal} placement="right">
       <DrawerOverlay />
       <DrawerContent>
-        <Flex direction="column" align="center" p={4}>
-          <CloseButton size="lg" onClick={closeModal} mb={4} />
+        <Flex align="center" direction="column" p={4}>
+          <CloseButton mb={4} onClick={closeModal} size="lg" />
           {links.map(({ getURL, name }) => (
             <Link
               key={name}
-              as={RouterLink}
-              to={getURL(params)}
-              p={4}
-              w="100%"
-              textAlign="center"
               _hover={{ bg: 'cyan.100' }}
+              as={RouterLink}
+              p={4}
+              textAlign="center"
+              to={getURL(params)}
+              w="100%"
             >
               <Heading size="md">{name}</Heading>
             </Link>

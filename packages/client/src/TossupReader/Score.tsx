@@ -12,8 +12,8 @@ const Score: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   return (
     <ReaderScore
-      score={score}
       delta={result.score}
+      score={score}
       showDelta={status === ReaderStatus.judged}
     />
   );

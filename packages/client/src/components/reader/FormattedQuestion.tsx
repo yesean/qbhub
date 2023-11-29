@@ -14,16 +14,16 @@ const Bell = ({ shouldDisplay }: { shouldDisplay: boolean }) => {
 
   return (
     <Container
+      alignItems="center"
       color="cyan.500"
+      display="inline-flex"
       m={0}
       p={0}
-      w="auto"
-      display="inline-flex"
-      alignItems="center"
-      whiteSpace="pre"
       verticalAlign="bottom"
+      w="auto"
+      whiteSpace="pre"
     >
-      <BellIcon w={4} h={4} />
+      <BellIcon h={4} w={4} />
       <Text display="inline"> </Text>
     </Container>
   );
@@ -41,9 +41,9 @@ const FormattedQuestion = ({
         <Text
           ref={i === visible ? visibleRef : undefined}
           display="inline-block"
-          whiteSpace="break-spaces"
-          visibility={i <= visible ? 'visible' : 'hidden'}
           fontWeight={w.bold ? 'bold' : 'normal'}
+          visibility={i <= visible ? 'visible' : 'hidden'}
+          whiteSpace="break-spaces"
         >
           {parseHTMLString(w.word)}{' '}
         </Text>

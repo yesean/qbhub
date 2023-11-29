@@ -16,14 +16,14 @@ const Footer: React.FC<React.PropsWithChildren<unknown>> = () => {
         aria-label="discord link"
         bg="white"
         icon={
-          <Link href={discordURL} isExternal w={5} h={5}>
-            <Icon as={Discord} w="115%" h="115%" color="#7289da" />
+          <Link h={5} href={discordURL} isExternal w={5}>
+            <Icon as={Discord} color="#7289da" h="115%" w="115%" />
           </Link>
         }
       />
-      <Heading textAlign="center" fontWeight="bold" size="sm" mx={2}>
+      <Heading fontWeight="bold" mx={2} size="sm" textAlign="center">
         Created by{' '}
-        <Link href="https://sye.dev" color="cyan.600" isExternal>
+        <Link color="cyan.600" href="https://sye.dev" isExternal>
           Sean Ye
         </Link>
       </Heading>
@@ -31,24 +31,24 @@ const Footer: React.FC<React.PropsWithChildren<unknown>> = () => {
         aria-label="github link"
         bg="white"
         icon={
-          <Link href="https://github.com/yesean/qbhub" isExternal w={5} h={5}>
-            <Icon as={Github} w="100%" h="100%" />
+          <Link h={5} href="https://github.com/yesean/qbhub" isExternal w={5}>
+            <Icon as={Github} h="100%" w="100%" />
           </Link>
         }
       />
       <IconButton
-        position="absolute"
-        left={4}
         aria-label="keyboard shortcuts"
-        onClick={openUpdatesModal}
         icon={<InfoOutlineIcon />}
+        left={4}
+        onClick={openUpdatesModal}
+        position="absolute"
       />
       <IconButton
+        aria-label="keyboard shortcuts"
+        icon={<QuestionOutlineIcon />}
+        onClick={openInfoModal}
         position="absolute"
         right={4}
-        aria-label="keyboard shortcuts"
-        onClick={openInfoModal}
-        icon={<QuestionOutlineIcon />}
       />
     </Flex>
   );

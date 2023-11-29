@@ -113,20 +113,20 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
 
   return (
     <ReaderUserInput
-      input={input}
-      setInput={setInput}
-      placeholder={status === ReaderStatus.prompting ? 'Prompt:' : 'Answer:'}
-      text={buttonTexts.get(status) ?? ''}
-      onClick={onClick}
-      submit={submitInput}
-      shouldSubmit={progress === 0}
-      disabled={!isAnswering}
       borderColor={getInputBorderColor(status, partResult)}
+      disabled={!isAnswering}
+      input={input}
+      inputRef={inputRef}
+      onClick={onClick}
+      placeholder={status === ReaderStatus.prompting ? 'Prompt:' : 'Answer:'}
+      setInput={setInput}
+      shouldSubmit={progress === 0}
       showBorder={[ReaderStatus.partialJudged, ReaderStatus.judged].includes(
         status,
       )}
       showInput={status !== ReaderStatus.idle}
-      inputRef={inputRef}
+      submit={submitInput}
+      text={buttonTexts.get(status) ?? ''}
     />
   );
 };

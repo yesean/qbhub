@@ -31,12 +31,12 @@ export default function QuestionReaderProgress({
 
   return (
     <ChakraProgress
+      borderRadius="sm"
+      colorScheme="cyan"
+      flexShrink={0}
       hasStripe
       isAnimated
-      colorScheme="cyan"
-      borderRadius="sm"
       value={progress}
-      flexShrink={0}
     />
   );
 }

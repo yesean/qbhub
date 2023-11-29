@@ -14,10 +14,10 @@ const FileDownloadButton: React.FC<FileDownloadButtonProps> = ({
   ...rest
 }) => (
   <LinkButton
-    href={href}
     download={download}
+    href={href}
     label={label}
-    leftIcon={<DownloadIcon w={4} h={4} />}
+    leftIcon={<DownloadIcon h={4} w={4} />}
     // eslint-disable-next-line react/jsx-props-no-spreading
     {...rest}
   />

@@ -125,20 +125,20 @@ const SettingsModal: React.FC<React.PropsWithChildren<SettingsModalProps>> = ({
   const resetFromYear = () => setSettings({ fromYear: MIN_TOURNAMENT_YEAR });
 
   return (
-    <QBHubModal isOpen={isOpen} closeModal={closeModal} title="Settings">
+    <QBHubModal closeModal={closeModal} isOpen={isOpen} title="Settings">
       <Flex direction="column" gap={4}>
         <Box>
-          <Heading size="sm" mb={2} color="gray.800">
+          <Heading color="gray.800" mb={2} size="sm">
             Reading Speed
           </Heading>
           <Slider
             aria-label="tossup reading speed"
             colorScheme="cyan"
-            min={0}
-            max={100}
-            step={5}
             defaultValue={readingSpeed ?? DEFAULT_READING_SPEED}
+            max={100}
+            min={0}
             onChangeEnd={onReadingSpeedChange}
+            step={5}
           >
             <SliderTrack>
               <SliderFilledTrack />
@@ -148,36 +148,36 @@ const SettingsModal: React.FC<React.PropsWithChildren<SettingsModalProps>> = ({
         </Box>
         <SettingsMultiSelect
           label="Category"
+          onChange={onCategoriesChange}
           options={categoriesForSelect}
           value={categoriesInSelect}
-          onChange={onCategoriesChange}
         />
         <SettingsMultiSelect
           label="Subcategories"
+          onChange={onSubcategoriesChange}
           options={subcategoriesForSelect}
           value={subcategoriesInSelect}
-          onChange={onSubcategoriesChange}
         />
         <SettingsMultiSelect
           label="Difficulties"
+          onChange={onDifficultiesChange}
           options={difficultiesForSelect}
           value={difficultiesInSelect}
-          onChange={onDifficultiesChange}
         />
         <SettingsMultiSelect
           label="Tournaments"
+          onChange={onTournamentsChange}
           options={filteredTournamentsForSelect}
           value={tournamentsInSelect}
-          onChange={onTournamentsChange}
         />
         <Box>
-          <Heading size="sm" mb={2} color="gray.800">
+          <Heading color="gray.800" mb={2} size="sm">
             From Year
           </Heading>
           <Flex gap={4}>
             <YearInput
-              value={fromYear ?? MIN_TOURNAMENT_YEAR}
               onChange={onFromYearChange}
+              value={fromYear ?? MIN_TOURNAMENT_YEAR}
             />
             <Button onClick={resetFromYear}>All Years</Button>
           </Flex>
@@ -200,7 +200,7 @@ function SettingsMultiSelect<T, U>({
 }: SettingsMultiSelectProps<T, U>) {
   return (
     <Box>
-      <Heading size="sm" mb={2} color="gray.800">
+      <Heading color="gray.800" mb={2} size="sm">
         {label}
       </Heading>
       <Select isMulti name={label} {...rest} {...selectMenuProps} />

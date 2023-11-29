@@ -11,18 +11,18 @@ type TossupResultProps = {
 
 const cells: { [key: string]: (result: TossupResult) => JSX.Element } = {
   answer: ({ tossup: { formattedAnswer } }) => (
-    <Box textAlign="center" overflowWrap="break-word">
+    <Box overflowWrap="break-word" textAlign="center">
       {parseHTMLString(formattedAnswer)}
     </Box>
   ),
   input: ({ userAnswer }) => (
-    <Box textAlign="center" overflowWrap="break-word">
+    <Box overflowWrap="break-word" textAlign="center">
       {userAnswer || '<no answer>'}
     </Box>
   ),
   question: ({ buzzIndex, words }) => (
     <Box>
-      <FormattedQuestion words={words} indices={{ buzz: buzzIndex }} />
+      <FormattedQuestion indices={{ buzz: buzzIndex }} words={words} />
     </Box>
   ),
   score: ({ score }) => <Text align="center">{score}</Text>,
@@ -75,8 +75,8 @@ const TossupResults: React.FC<React.PropsWithChildren<TossupResultProps>> = ({
   return (
     <VirtualizedTable
       columns={columns}
-      rowColor={(result) => (result.isCorrect ? 'green.200' : 'red.200')}
       results={results}
+      rowColor={(result) => (result.isCorrect ? 'green.200' : 'red.200')}
     />
   );
 };

@@ -13,7 +13,7 @@ export default function Layout({ children }: Props) {
   return (
     <Flex direction="column" h={pageHeight}>
       <Header />
-      <Center flexDir="column" overflow="auto" flex={1} px={3}>
+      <Center flex={1} flexDir="column" overflow="auto" px={3}>
         {children}
       </Center>
       <Footer />

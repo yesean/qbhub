@@ -23,7 +23,7 @@ export default function QuestionInfo() {
   }
 
   return (
-    <Heading size="sm" px={4}>
+    <Heading px={4} size="sm">
       {text}
     </Heading>
   );

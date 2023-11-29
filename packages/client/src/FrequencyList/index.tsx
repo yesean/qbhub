@@ -61,11 +61,11 @@ const FrequencyList: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   const renderTable = () => {
     if (status !== FreqStatus.idle) {
-      return <CircularProgress isIndeterminate color="cyan" />;
+      return <CircularProgress color="cyan" isIndeterminate />;
     }
     if (page.length === 0) {
       return (
-        <Text textAlign="center" fontSize="2xl">
+        <Text fontSize="2xl" textAlign="center">
           No Tossups Left.
         </Text>
       );
@@ -82,8 +82,8 @@ const FrequencyList: React.FC<React.PropsWithChildren<unknown>> = () => {
           answer: renderAnswer(answer),
         }))}
         headers={freqFields}
-        width={600}
         height={700}
+        width={600}
       />
     );
   };
@@ -98,19 +98,19 @@ const FrequencyList: React.FC<React.PropsWithChildren<unknown>> = () => {
     return (
       <Flex justify="center">
         <Button
-          colorScheme="cyan"
           color="gray.50"
-          onClick={prev}
-          mr={4}
+          colorScheme="cyan"
           disabled={shouldDisableBack}
+          mr={4}
+          onClick={prev}
         >
           Back
         </Button>
         <Button
-          colorScheme="cyan"
           color="gray.50"
-          onClick={next}
+          colorScheme="cyan"
           disabled={shouldDisableNext}
+          onClick={next}
         >
           Next
         </Button>
@@ -120,13 +120,13 @@ const FrequencyList: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   return (
     <Flex
-      w="min(600px, 100%)"
-      h="min(700px, 100%)"
-      flexDir="column"
-      justify="center"
       align="center"
+      flexDir="column"
+      h="min(700px, 100%)"
+      justify="center"
+      w="min(600px, 100%)"
     >
-      <Center mb={4} w="100%" h="100%" overflow="auto">
+      <Center h="100%" mb={4} overflow="auto" w="100%">
         {renderTable()}
       </Center>
       {renderButtons()}

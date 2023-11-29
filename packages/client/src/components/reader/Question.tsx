@@ -25,7 +25,7 @@ const Question: React.FC<React.PropsWithChildren<QuestionProps>> = ({
     if (showLoading) {
       return (
         <Center mb={8}>
-          <CircularProgress isIndeterminate color="cyan.100" />
+          <CircularProgress color="cyan.100" isIndeterminate />
         </Center>
       );
     }
@@ -33,7 +33,7 @@ const Question: React.FC<React.PropsWithChildren<QuestionProps>> = ({
     if (showEmpty) {
       return (
         <>
-          <Container bg="gray.100" p={4} borderRadius="md" mb={4}>
+          <Container bg="gray.100" borderRadius="md" mb={4} p={4}>
             {emptyMessage}
           </Container>
           <Flex justify="center">
@@ -49,17 +49,17 @@ const Question: React.FC<React.PropsWithChildren<QuestionProps>> = ({
 
     return (
       <Container
-        maxW="container.md"
-        overflow="auto"
         bg="gray.100"
-        w="100%"
-        minH="100px"
-        mb={4}
-        p={4}
+        borderRadius="md"
         display="flex"
         flexWrap="wrap"
         justifyContent="start"
-        borderRadius="md"
+        maxW="container.md"
+        mb={4}
+        minH="100px"
+        overflow="auto"
+        p={4}
+        w="100%"
       >
         {children}
       </Container>

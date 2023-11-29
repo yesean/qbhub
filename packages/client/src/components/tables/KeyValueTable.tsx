@@ -44,20 +44,20 @@ const KeyValueTable: React.FC<React.PropsWithChildren<KeyValueTableProps>> = ({
 
   return (
     <Flex
-      w={`min(${width}px, 100%)`}
-      h={`min(${height}px, 100%)`}
-      direction="column"
       bg="white"
       border="1px"
       borderColor="gray.200"
       borderRadius="12px"
+      direction="column"
+      h={`min(${height}px, 100%)`}
       overflow="hidden"
+      w={`min(${width}px, 100%)`}
     >
-      <Flex px={4} py={3} borderBottom="1px" borderColor="gray.200">
-        <Heading size="md" flex="1">
+      <Flex borderBottom="1px" borderColor="gray.200" px={4} py={3}>
+        <Heading flex="1" size="md">
           {headers[0].label}
         </Heading>
-        <Heading size="md" flex="1" textAlign="right">
+        <Heading flex="1" size="md" textAlign="right">
           {headers[1].label}
         </Heading>
       </Flex>
@@ -67,10 +67,10 @@ const KeyValueTable: React.FC<React.PropsWithChildren<KeyValueTableProps>> = ({
             <Flex
               // eslint-disable-next-line react/no-array-index-key
               key={i}
-              px={4}
-              py={2}
               borderBottom="1px"
               borderColor="gray.200"
+              px={4}
+              py={2}
               sx={{
                 '&:last-child': {
                   borderBottom: scroll > client ? 'none' : '1px',

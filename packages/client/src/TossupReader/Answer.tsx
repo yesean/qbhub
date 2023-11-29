@@ -12,14 +12,14 @@ const Answer: React.FC<React.PropsWithChildren<unknown>> = () => {
 
   return (
     <Container
-      maxW="container.md"
       bg="gray.100"
-      w="100%"
+      borderRadius="md"
+      maxW="container.md"
       mb={4}
       p={4}
-      borderRadius="md"
+      w="100%"
     >
-      <ReaderAnswer text={formattedAnswer} query={normalizedAnswer} />
+      <ReaderAnswer query={normalizedAnswer} text={formattedAnswer} />
     </Container>
   );
 };

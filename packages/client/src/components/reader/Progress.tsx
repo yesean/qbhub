@@ -30,13 +30,13 @@ const Progress: React.FC<React.PropsWithChildren<ProgressProps>> = ({
 
   return (
     <ChakraProgress
+      borderRadius="sm"
+      colorScheme="cyan"
+      flexShrink={0}
       hasStripe
       isAnimated
-      colorScheme="cyan"
-      borderRadius="sm"
       mb={4}
       value={progress}
-      flexShrink={0}
     />
   );
 };

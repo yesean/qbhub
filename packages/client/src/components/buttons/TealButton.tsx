@@ -5,7 +5,7 @@ const TealButton: React.FC<React.PropsWithChildren<ButtonProps>> = ({
   ...props
 }) => (
   // eslint-disable-next-line react/jsx-props-no-spreading
-  <Button colorScheme="cyan" color="gray.50" {...props}>
+  <Button color="gray.50" colorScheme="cyan" {...props}>
     {children}
   </Button>
 );
