@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 type KeyValueTableProps = {
   data: { [key: string]: any }[];
   headers: readonly [
-    { dataKey: string, label: string; },
-    { dataKey: string, label: string; },
+    { dataKey: string; label: string },
+    { dataKey: string; label: string },
   ];
   height: number;
   width: number;

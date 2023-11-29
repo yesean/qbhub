@@ -59,7 +59,7 @@ const client = new Client();
   console.log('Adding a `normalized_answer` field to the `tossups` table.');
 
   console.log('Retrieving all tossup answers.');
-  const { rows } = await client.query<{ answer: string, id: number; }>(
+  const { rows } = await client.query<{ answer: string; id: number }>(
     'SELECT id,answer FROM tossups;',
   );
   console.log('Finished retrieving all tossup answers.');

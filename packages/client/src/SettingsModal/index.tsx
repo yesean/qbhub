@@ -189,9 +189,9 @@ const SettingsModal: React.FC<React.PropsWithChildren<SettingsModalProps>> = ({
 
 type SettingsMultiSelectProps<T, U> = {
   label: string;
-  onChange: (value: Options<{ data: U, label: string; value: T; }>) => void;
-  options: { data: U, label: string; value: T; }[];
-  value: { data: U, label: string; value: T; }[];
+  onChange: (value: Options<{ data: U; label: string; value: T }>) => void;
+  options: { data: U; label: string; value: T }[];
+  value: { data: U; label: string; value: T }[];
 };
 
 function SettingsMultiSelect<T, U>({
