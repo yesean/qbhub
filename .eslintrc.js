@@ -1,39 +1,28 @@
 module.exports = {
+  extends: [
+    'airbnb',
+    'airbnb-typescript',
+    'airbnb/hooks',
+    'plugin:react/jsx-runtime',
+    'prettier',
+  ],
+  ignorePatterns: ['.eslintrc.js', 'vite.config.ts'],
+  parserOptions: {
+    project: './tsconfig.json',
+    tsconfigRootDir: __dirname,
+  },
   plugins: ['react-refresh', 'sort-keys-fix', 'sort-destructure-keys'],
-  extends: ['airbnb', 'airbnb-typescript', 'airbnb/hooks', 'prettier'],
   rules: {
-    'no-unused-vars': 'off', // base rule must be disabled: https://typescript-eslint.io/rules/no-unused-vars/
-    '@typescript-eslint/no-unused-vars': [
-      'error',
-      { varsIgnorePattern: '^_', argsIgnorePattern: '^_' },
-    ],
-    // adapted from: https://github.com/iamturns/eslint-config-airbnb-typescript/blob/8ef77c928c97d977f053c9c638831363a715d4a9/lib/shared.js#L41-L58
-    // allow for leading underscore
-    '@typescript-eslint/naming-convention': [
-      'error',
-      {
-        selector: 'variable',
-        format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
-        leadingUnderscore: 'allow',
-      },
-      { selector: 'function', format: ['camelCase', 'PascalCase'] },
-      { selector: 'typeLike', format: ['PascalCase'] },
-    ],
     '@typescript-eslint/lines-between-class-members': [
       'error',
       'always',
       { exceptAfterSingleLine: true },
     ],
-    '@typescript-eslint/no-use-before-define': ['error', { functions: false }],
-    '@typescript-eslint/switch-exhaustiveness-check': 'error',
+
     // reference: https://typescript-eslint.io/rules/member-ordering/#options
     '@typescript-eslint/member-ordering': [
       'error',
       {
-        default: {
-          optionalityOrder: 'required-first',
-          order: 'natural-case-insensitive',
-        },
         classes: [
           'private-field',
           'protected-field',
@@ -53,30 +42,50 @@ module.exports = {
           'protected-method',
           'private-method',
         ],
+        default: {
+          optionalityOrder: 'required-first',
+          order: 'natural-case-insensitive',
+        },
       },
     ],
+
+    // adapted from: https://github.com/iamturns/eslint-config-airbnb-typescript/blob/8ef77c928c97d977f053c9c638831363a715d4a9/lib/shared.js#L41-L58
+    // allow for leading underscore
+    '@typescript-eslint/naming-convention': [
+      'error',
+      {
+        format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
+        leadingUnderscore: 'allow',
+        selector: 'variable',
+      },
+      { format: ['camelCase', 'PascalCase'], selector: 'function' },
+      { format: ['PascalCase'], selector: 'typeLike' },
+    ],
+
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+    ],
+
+    '@typescript-eslint/no-use-before-define': ['error', { functions: false }],
     '@typescript-eslint/sort-type-constituents': 'error',
+    '@typescript-eslint/switch-exhaustiveness-check': 'error',
     'arrow-body-style': 'warn',
     'consistent-return': 'off',
     'default-case': 'off',
-    'no-param-reassign': 'off',
-    'sort-keys-fix/sort-keys-fix': 'error',
-    'sort-destructure-keys/sort-destructure-keys': 'error',
-    quotes: ['error', 'single', { avoidEscape: true }],
-    'react/function-component-definition': 'off',
-    'react/jsx-props-no-spreading': 'off',
-    'react/prop-types': 'off',
-    'react/react-in-jsx-scope': 'off',
-    'react/require-default-props': 'off',
     'import/prefer-default-export': 'off',
+    'no-param-reassign': 'off',
+    'no-unused-vars': 'off', // base rule must be disabled: https://typescript-eslint.io/rules/no-unused-vars/
+    quotes: ['error', 'single', { avoidEscape: true }],
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true },
     ],
-  },
-  ignorePatterns: ['.eslintrc.js', 'vite.config.ts'],
-  parserOptions: {
-    project: './tsconfig.json',
-    tsconfigRootDir: __dirname,
+    'react/function-component-definition': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'react/prop-types': 'off',
+    'react/require-default-props': 'off',
+    'sort-destructure-keys/sort-destructure-keys': 'error',
+    'sort-keys-fix/sort-keys-fix': 'error',
   },
 };
