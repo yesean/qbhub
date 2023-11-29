@@ -28,21 +28,21 @@ export default function QBHubModal({
 
   return (
     <ChakraModal
+      isCentered
       isOpen={isOpen}
       onClose={closeModal}
-      size="6xl"
       scrollBehavior="inside"
-      isCentered
+      size="6xl"
     >
       <ModalOverlay />
       <ModalContent
-        m={4}
-        w="min(90vw, 1400px)"
-        maxW="600px"
-        maxH={`max(0.75 * ${pageHeight}px, 500px)`}
         containerProps={{
           h: `${pageHeight}px`,
         }}
+        m={4}
+        maxH={`max(0.75 * ${pageHeight}px, 500px)`}
+        maxW="600px"
+        w="min(90vw, 1400px)"
       >
         <ModalHeader color="black">
           <Heading as="h1" size="xl" textAlign="center">

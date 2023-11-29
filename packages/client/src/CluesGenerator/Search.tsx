@@ -32,17 +32,17 @@ const Search: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Flex gap={4}>
       <Input
-        value={search}
+        ref={inputRef}
         onChange={onInputChange}
         onKeyDown={onKeyDown}
         placeholder="Search for an answerline!"
-        ref={inputRef}
+        value={search}
       />
       <RouterLinkButton
-        to={getClueSearchURL({ query: search })}
-        onClick={() => dispatch(setQuery(search))}
-        label="Search"
         h={10}
+        label="Search"
+        onClick={() => dispatch(setQuery(search))}
+        to={getClueSearchURL({ query: search })}
       />
     </Flex>
   );

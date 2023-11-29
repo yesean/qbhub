@@ -16,7 +16,7 @@ export default function QuestionAnswer() {
   const answer = parseHTMLString(question.formattedAnswer);
 
   return (
-    <Box bg="gray.100" p={4} borderRadius="md">
+    <Box bg="gray.100" borderRadius="md" p={4}>
       <Text>
         <b>ANSWER: </b>
         <Link as={RouterLink} to={clueDisplayURL}>

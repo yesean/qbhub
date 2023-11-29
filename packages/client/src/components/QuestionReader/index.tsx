@@ -16,7 +16,7 @@ const QuestionReader = () => {
   const shouldShowAnswer = status === QuestionReaderStatus.Judged;
 
   return (
-    <Flex direction="column" maxW="container.md" overflow="auto" p={2} gap={4}>
+    <Flex direction="column" gap={4} maxW="container.md" overflow="auto" p={2}>
       <QuestionInfo />
       {shouldShowAnswer && <QuestionAnswer />}
       <QuestionTextPlusInput />

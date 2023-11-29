@@ -69,7 +69,7 @@ const BonusReader: React.FC<React.PropsWithChildren<unknown>> = () => {
     );
   const renderInput = () =>
     status !== ReaderStatus.empty && (
-      <UserInput progress={progress} submit={judge} buzz={buzz} />
+      <UserInput buzz={buzz} progress={progress} submit={judge} />
     );
   const renderScore = () =>
     ![ReaderStatus.idle, ReaderStatus.empty].includes(status) && <Score />;
@@ -77,11 +77,11 @@ const BonusReader: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <Flex
       direction="column"
-      w="100%"
       maxH="100%"
       maxW="3xl"
       overflow="auto"
       p={1}
+      w="100%"
     >
       {renderInfo()}
       {renderViewer()}

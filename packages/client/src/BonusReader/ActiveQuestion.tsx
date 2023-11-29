@@ -45,15 +45,15 @@ const Section = ({
     <Box>
       <Text
         display="inline-block"
-        visibility={visibleIndex < 0 ? 'hidden' : 'visible'}
         fontWeight="bold"
+        visibility={visibleIndex < 0 ? 'hidden' : 'visible'}
       >
         {prefix}
       </Text>{' '}
       <FormattedQuestion
-        words={words}
         indices={{ buzz: buzzIndex, visible: visibleIndex }}
         visibleRef={visibleRef}
+        words={words}
       />
     </Box>
   );
@@ -125,11 +125,11 @@ const ActiveQuestion = ({ setBuzz }: ActiveQuestionProps) => {
   if (!hasLeadin) {
     return (
       <Section
-        prefix="[10]"
-        words={shuffledQuestionWords}
         buzzIndex={buzzIndex}
+        prefix="[10]"
         visibleIndex={visibleIndex}
         visibleRef={visibleRef}
+        words={shuffledQuestionWords}
       />
     );
   }
@@ -137,18 +137,18 @@ const ActiveQuestion = ({ setBuzz }: ActiveQuestionProps) => {
   return (
     <>
       <Section
-        prefix="BONUS:"
-        words={leadinWords}
         buzzIndex={buzzIndex}
+        prefix="BONUS:"
         visibleIndex={visibleIndex}
         visibleRef={visibleRef}
+        words={leadinWords}
       />
       <Section
-        prefix="[10]"
-        words={remainingWords}
         buzzIndex={buzzIndex - leadinOffset}
+        prefix="[10]"
         visibleIndex={visibleIndex - leadinOffset}
         visibleRef={visibleRef}
+        words={remainingWords}
       />
     </>
   );

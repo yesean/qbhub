@@ -49,16 +49,16 @@ const Container = ({ setBuzz }: Props) => {
 
   return (
     <ReaderQuestion
-      showLoading={showLoading}
-      showEmpty={showEmpty}
       emptyMessage={emptyMessage}
       onEmpty={onEmpty}
+      showEmpty={showEmpty}
+      showLoading={showLoading}
     >
       {number > 1 && (
         <Box mb={1}>
           <Leadin
-            text={bonus.formattedLeadin}
             buzzIndex={result.parts[0].buzzIndex}
+            text={bonus.formattedLeadin}
           />
         </Box>
       )}
@@ -81,8 +81,8 @@ const Container = ({ setBuzz }: Props) => {
           <Answer text={part.formattedAnswer} />
           <Box ref={userAnswerRef}>
             <UserAnswer
-              text={partResult.userAnswer}
               isCorrect={partResult.isCorrect}
+              text={partResult.userAnswer}
             />
           </Box>
         </Box>

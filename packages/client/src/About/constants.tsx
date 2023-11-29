@@ -12,7 +12,7 @@ const replaceLinks = (
 ) => {
   const fragments = strings.map(toStringFragments);
   const linkElements = links.map(({ href, label }) => (
-    <Link key={`${label}${href}`} href={href} color="cyan.600" isExternal>
+    <Link key={`${label}${href}`} color="cyan.600" href={href} isExternal>
       {label}
     </Link>
   ));

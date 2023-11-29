@@ -51,17 +51,17 @@ const Answers: React.FC<React.PropsWithChildren<Props>> = ({ query }) => {
   }, [query, dispatch, settings]);
 
   if (status !== CluesGeneratorStatus.loaded) {
-    return <CircularProgress isIndeterminate color="cyan" />;
+    return <CircularProgress color="cyan" isIndeterminate />;
   }
 
   return (
     <Flex
-      w="100%"
-      h="100%"
-      gap={4}
-      direction="column"
-      justify="center"
       align="center"
+      direction="column"
+      gap={4}
+      h="100%"
+      justify="center"
+      w="100%"
     >
       {answers.length === 0 ? (
         <EmptyResults query={query} />
@@ -69,11 +69,11 @@ const Answers: React.FC<React.PropsWithChildren<Props>> = ({ query }) => {
         <>
           <Heading
             as="h2"
-            size="md"
-            px={4}
-            textAlign="center"
             lineHeight="1.5"
             maxW="600px"
+            px={4}
+            size="md"
+            textAlign="center"
           >
             Showing answerlines similar to:{' '}
             <Box as="span" bg="cyan.200" borderRadius="sm" p={1}>
@@ -86,22 +86,22 @@ const Answers: React.FC<React.PropsWithChildren<Props>> = ({ query }) => {
               answer: (
                 <Link
                   as={RouterLink}
-                  to={getClueDisplayURL({ answer: answer.answer })}
                   onClick={() => dispatch(selectAnswer(answer.answer))}
+                  to={getClueDisplayURL({ answer: answer.answer })}
                 >
                   {answer.answer}
                 </Link>
               ),
             }))}
             headers={answersFields}
-            width={600}
             height={700}
+            width={600}
           />
           <RouterLinkButton
             flexShrink={0}
             label="Search"
+            leftIcon={<SearchIcon h={4} w={4} />}
             to={getClueSearchURL({ query: undefined })}
-            leftIcon={<SearchIcon w={4} h={4} />}
             variant="secondary"
           />
         </>
@@ -119,10 +119,10 @@ function EmptyResults({ query }: EmptyResultsProps) {
     <>
       <Container
         bg="gray.100"
-        p={4}
         borderRadius="md"
         maxH="100%"
         overflow="auto"
+        p={4}
       >
         <Text maxH="100%">
           No answerlines matching <strong>{query}</strong>. Try checking your
@@ -131,8 +131,8 @@ function EmptyResults({ query }: EmptyResultsProps) {
       </Container>
       <RouterLinkButton
         label="Search"
+        leftIcon={<SearchIcon h={4} w={4} />}
         to={getClueSearchURL({ query: undefined })}
-        leftIcon={<SearchIcon w={4} h={4} />}
         variant="secondary"
       />
     </>

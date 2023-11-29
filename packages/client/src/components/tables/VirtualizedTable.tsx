@@ -61,14 +61,10 @@ const Row = <T,>({
 
   return (
     <Flex
-      style={style}
-      align="center"
-      overflowX="auto"
-      ref={rowRef}
-      backgroundColor={rowColor(result)}
       key={index}
-      outline="1px solid #e2e8f0"
-      py="10px"
+      ref={rowRef}
+      align="center"
+      backgroundColor={rowColor(result)}
       onScroll={(e) => {
         if (rowHeaderRef.current != null) {
           rowHeaderRef.current.scrollLeft = e.currentTarget.scrollLeft;
@@ -78,13 +74,14 @@ const Row = <T,>({
             ref.current.scrollLeft = e.currentTarget.scrollLeft;
         });
       }}
+      outline="1px solid #e2e8f0"
+      overflowX="auto"
+      py="10px"
+      style={style}
     >
       {columns.map(({ cell, label, minWidth, proportion, useForHeight }) => (
         <Center
           key={label}
-          minW={`${minWidth}px`}
-          flex={`${proportion} 0`}
-          px={4}
           ref={(ref) => {
             if (useForHeight) {
               setTallestCell((currentHeight) =>
@@ -92,6 +89,9 @@ const Row = <T,>({
               );
             }
           }}
+          flex={`${proportion} 0`}
+          minW={`${minWidth}px`}
+          px={4}
         >
           {cell(result)}
         </Center>
@@ -144,7 +144,6 @@ const VirtualizedTable = <T,>({
     <>
       <Box
         ref={rowHeaderRef}
-        overflowX="auto"
         css={{
           '&::-webkit-scrollbar': {
             display: 'none',
@@ -156,16 +155,17 @@ const VirtualizedTable = <T,>({
               ref.current.scrollLeft = e.currentTarget.scrollLeft;
           });
         }}
+        overflowX="auto"
       >
-        <Flex w={`max(100%, ${maxRowWidth})`} mb={2}>
+        <Flex mb={2} w={`max(100%, ${maxRowWidth})`}>
           {columns.map(({ label, minWidth, proportion }, i) => (
             <Heading
-              size="sm"
               // eslint-disable-next-line react/no-array-index-key
               key={i}
               flex={proportion}
-              textAlign="center"
               minW={`${minWidth}px`}
+              size="sm"
+              textAlign="center"
             >
               {label}
             </Heading>
@@ -176,10 +176,19 @@ const VirtualizedTable = <T,>({
         <AutoSizer>
           {({ height, width }) => (
             <VariableSizeList<RowProps<T>['data']>
-              width={width}
-              height={height}
+              ref={listRef}
               estimatedItemSize={100}
+              height={height}
               itemCount={results.length}
+              itemData={{
+                columns,
+                results,
+                rowColor,
+                rowHeaderRef,
+                rowRefs,
+                setRowHeight,
+                setRowRefs,
+              }}
               itemSize={getRowSize}
               onItemsRendered={() => {
                 const rightmostScroll = rowRefs.reduce(
@@ -191,16 +200,7 @@ const VirtualizedTable = <T,>({
                     ref.current.scrollLeft = rightmostScroll;
                 });
               }}
-              ref={listRef}
-              itemData={{
-                columns,
-                results,
-                rowColor,
-                rowHeaderRef,
-                rowRefs,
-                setRowHeight,
-                setRowRefs,
-              }}
+              width={width}
             >
               {Row}
             </VariableSizeList>

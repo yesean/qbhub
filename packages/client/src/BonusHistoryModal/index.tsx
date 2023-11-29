@@ -56,18 +56,18 @@ const BonusHistoryModal: React.FC<
 
   return (
     <Modal
+      isCentered
       isOpen={isOpen}
       onClose={closeModal}
-      size="6xl"
       scrollBehavior="inside"
-      isCentered
+      size="6xl"
     >
       <ModalOverlay />
-      <ModalContent m={4} w="min(90vw, 1400px)" h="max(75vh, 600px)">
+      <ModalContent h="max(75vh, 600px)" m={4} w="min(90vw, 1400px)">
         <ModalHeader>Bonus History</ModalHeader>
-        <ModalBody pt={0} display="flex" flexDirection="column">
+        <ModalBody display="flex" flexDirection="column" pt={0}>
           <Box overflowX="auto">
-            <Table variant="simple" mb={4}>
+            <Table mb={4} variant="simple">
               <Thead>
                 <Tr>
                   {scoreHeaders.map((header, i) => (

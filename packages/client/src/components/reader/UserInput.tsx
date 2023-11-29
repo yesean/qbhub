@@ -52,21 +52,21 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
     return (
       <Input
         ref={inputRef}
-        value={input}
-        onChange={(e) => setInput(e.currentTarget.value)}
-        placeholder={placeholder}
-        mb={8}
-        mr={4}
-        isDisabled={disabled}
         borderColor={borderColor}
         borderWidth={showBorder ? 2 : undefined}
+        isDisabled={disabled}
+        mb={8}
+        mr={4}
+        onChange={(e) => setInput(e.currentTarget.value)}
+        placeholder={placeholder}
+        value={input}
       />
     );
   };
 
   return (
     <Center>
-      <Flex w="100%" justify="center">
+      <Flex justify="center" w="100%">
         {renderInput()}
         <TealButton onClick={onClick}>{text}</TealButton>
       </Flex>

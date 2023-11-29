@@ -4,7 +4,7 @@ type ResultProps = {
   text: string;
 };
 const Result: React.FC<React.PropsWithChildren<ResultProps>> = ({ text }) => (
-  <Heading pl={4} textAlign="center" size="md" whiteSpace="pre" mb={4}>
+  <Heading mb={4} pl={4} size="md" textAlign="center" whiteSpace="pre">
     {text}
   </Heading>
 );

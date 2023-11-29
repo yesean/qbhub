@@ -27,14 +27,14 @@ const PreviousQuestion = ({
     <Box mb={4}>
       <b>[10]</b>{' '}
       <FormattedQuestion
-        words={displayQuestionWords}
         indices={{ buzz: buzzIndex }}
+        words={displayQuestionWords}
       />
       <Box mt={1} py={1}>
         <Answer text={part.formattedAnswer} />
         <UserAnswer
-          text={partResult.userAnswer}
           isCorrect={partResult.isCorrect}
+          text={partResult.userAnswer}
         />
       </Box>
     </Box>

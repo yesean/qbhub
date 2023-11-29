@@ -101,12 +101,12 @@ export default function TossupReader() {
 
   return (
     <QuestionReader
-      question={current.tossup}
-      previousResults={questionResults}
-      onNextQuestion={handleNextTossup}
-      onJudged={handleQuestionResult}
-      onPrompt={handlePrompt}
       getScore={getScore}
+      onJudged={handleQuestionResult}
+      onNextQuestion={handleNextTossup}
+      onPrompt={handlePrompt}
+      previousResults={questionResults}
+      question={current.tossup}
     />
   );
 }

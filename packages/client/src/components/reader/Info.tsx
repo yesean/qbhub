@@ -4,7 +4,7 @@ type InfoProps = {
   text: string;
 };
 const Info: React.FC<React.PropsWithChildren<InfoProps>> = ({ text }) => (
-  <Heading pl={4} size="sm" mb={4}>
+  <Heading mb={4} pl={4} size="sm">
     {text}
   </Heading>
 );

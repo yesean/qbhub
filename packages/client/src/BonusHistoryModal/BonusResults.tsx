@@ -13,12 +13,12 @@ type BonusResultProps = {
 
 const cells: { [key: string]: (result: BonusPartRowResult) => JSX.Element } = {
   answer: ({ part: { formattedAnswer } }) => (
-    <Box textAlign="center" overflowWrap="break-word">
+    <Box overflowWrap="break-word" textAlign="center">
       {parseHTMLString(formattedAnswer)}
     </Box>
   ),
   input: ({ userAnswer }) => (
-    <Box textAlign="center" overflowWrap="break-word">
+    <Box overflowWrap="break-word" textAlign="center">
       {userAnswer || '<no answer>'}
     </Box>
   ),
@@ -26,8 +26,8 @@ const cells: { [key: string]: (result: BonusPartRowResult) => JSX.Element } = {
   question: ({ buzzIndex, part: { formattedText } }) => (
     <Flex flexWrap="wrap">
       <FormattedQuestion
-        words={getTossupWords(formattedText)}
         indices={{ buzz: buzzIndex }}
+        words={getTossupWords(formattedText)}
       />
     </Flex>
   ),
@@ -80,8 +80,8 @@ const BonusResults: React.FC<React.PropsWithChildren<BonusResultProps>> = ({
   return (
     <VirtualizedTable
       columns={columns}
-      rowColor={(result) => (result.isCorrect ? 'green.200' : 'red.200')}
       results={results}
+      rowColor={(result) => (result.isCorrect ? 'green.200' : 'red.200')}
     />
   );
 };

@@ -68,11 +68,11 @@ const TossupReader = () => {
   return (
     <Flex
       direction="column"
-      w="100%"
       maxH="100%"
       maxW="3xl"
       overflow="auto"
       p={1}
+      w="100%"
     >
       {shouldRenderInfo && <Info />}
       {shouldRenderAnswer && <Answer />}
@@ -86,7 +86,7 @@ const TossupReader = () => {
         />
       )}
       {shouldRenderInput && (
-        <UserInput progress={progress} submit={judge} buzz={buzz} />
+        <UserInput buzz={buzz} progress={progress} submit={judge} />
       )}
       {shouldRenderScore && <Score />}
     </Flex>

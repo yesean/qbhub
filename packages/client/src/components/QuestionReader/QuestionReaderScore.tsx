@@ -25,7 +25,7 @@ export default function QuestionReaderScore() {
       </StatLabel>
       <StatNumber textAlign="center">{score}</StatNumber>
       {shouldShowDelta && (
-        <StatHelpText textAlign="center" mb={0}>
+        <StatHelpText mb={0} textAlign="center">
           <StatArrow type={delta > 0 ? 'increase' : 'decrease'} />
           {Math.abs(delta)}
         </StatHelpText>
