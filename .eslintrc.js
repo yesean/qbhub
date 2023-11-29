@@ -3,6 +3,10 @@ module.exports = {
   extends: ['airbnb', 'airbnb-typescript', 'airbnb/hooks', 'prettier'],
   rules: {
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/naming-convention': [
+      'error',
+      { leadingUnderscore: 'allow' },
+    ],
     '@typescript-eslint/lines-between-class-members': [
       'error',
       'always',
