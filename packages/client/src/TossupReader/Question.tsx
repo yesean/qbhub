@@ -12,7 +12,7 @@ import ReaderQuestion from '../components/reader/Question';
 import { useReader } from '../hooks/useReader';
 import { useSettings } from '../hooks/useSettings';
 import { useAppDispatch } from '../redux/hooks';
-import { ReaderStatus, getTossupWords } from '../utils/reader';
+import { ReaderStatus, getFormattedWords } from '../utils/reader';
 import {
   buzz as buzzAction,
   nextTossup,
@@ -28,15 +28,15 @@ const Question = ({ setBuzz }: QuestionProps) => {
   const {
     current: {
       buzzIndex,
+      formattedWords,
       tossup: { formattedText },
-      tossupWords,
     },
     status,
   } = useSelector(selectTossupReader);
   const dispatch = useAppDispatch();
 
   const words = useMemo(
-    () => getTossupWords(formattedText).map(({ word }) => word),
+    () => getFormattedWords(formattedText).map(({ value }) => value),
     [formattedText],
   );
 
@@ -47,13 +47,13 @@ const Question = ({ setBuzz }: QuestionProps) => {
     ),
   });
 
-  const shuffledTossupWords = useMemo(
+  const shuffledFormattedWords = useMemo(
     () =>
       displayWords.map((word, i) => ({
-        bold: tossupWords[i].bold,
-        word,
+        isBold: formattedWords[i].isBold,
+        value: word,
       })),
-    [displayWords, tossupWords],
+    [displayWords, formattedWords],
   );
 
   useLayoutEffect(() => {
@@ -78,7 +78,7 @@ const Question = ({ setBuzz }: QuestionProps) => {
         visible: visibleIndex,
       }}
       visibleRef={visibleRef}
-      words={shuffledTossupWords}
+      words={shuffledFormattedWords}
     />
   );
 };

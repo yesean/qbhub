@@ -53,3 +53,8 @@ export enum SortOption {
 
 export type QuestionParameters = QuestionContentParameters &
   QuestionQueryParameters;
+
+export type FormattedWord = {
+  isBold: boolean;
+  value: string;
+};

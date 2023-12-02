@@ -1,5 +1,5 @@
 import { Box, Text } from '@chakra-ui/react';
-import { TossupWord } from '@qbhub/types';
+import { FormattedWord } from '@qbhub/types';
 import {
   useCallback,
   useEffect,
@@ -12,7 +12,7 @@ import { elementScrollIntoView } from 'seamless-scroll-polyfill';
 import FormattedQuestion from '../components/reader/FormattedQuestion';
 import { useReader } from '../hooks/useReader';
 import { useAppDispatch } from '../redux/hooks';
-import { ReaderStatus, getTossupWords } from '../utils/reader';
+import { ReaderStatus, getFormattedWords } from '../utils/reader';
 import { buzz as buzzAction, selectBonusReader } from './bonusReaderSlice';
 
 type SectionProps = {
@@ -20,7 +20,7 @@ type SectionProps = {
   prefix: string;
   visibleIndex: number;
   visibleRef: React.RefObject<HTMLParagraphElement>;
-  words: TossupWord[];
+  words: FormattedWord[];
 };
 
 const Section = ({
@@ -60,7 +60,10 @@ const Section = ({
 };
 
 // map word for FormattedQuestion
-const transformWord = (word: string) => ({ bold: false, word });
+const transformWord = (word: string): FormattedWord => ({
+  isBold: false,
+  value: word,
+});
 
 type ActiveQuestionProps = {
   setBuzz: React.Dispatch<React.SetStateAction<() => void>>;
@@ -80,14 +83,14 @@ const ActiveQuestion = ({ setBuzz }: ActiveQuestionProps) => {
   const dispatch = useAppDispatch();
 
   const { hasLeadin, leadinOffset, words } = useMemo(() => {
-    const leadin = getTossupWords(formattedLeadin);
-    const text = getTossupWords(formattedText);
+    const leadin = getFormattedWords(formattedLeadin);
+    const text = getFormattedWords(formattedText);
     const combinedWords = number === 1 ? [...leadin, ...text] : text;
 
     return {
       hasLeadin: number === 1,
       leadinOffset: leadin.length,
-      words: combinedWords.map(({ word }) => word),
+      words: combinedWords.map(({ value }) => value),
     };
   }, [formattedLeadin, formattedText, number]);
 

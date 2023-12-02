@@ -1,8 +1,8 @@
 import {
   BonusPartResult,
   BonusScore,
+  FormattedWord,
   TossupScore,
-  TossupWord,
 } from '@qbhub/types';
 import { log } from '@qbhub/utils';
 import { deburr } from 'lodash-es';
@@ -40,31 +40,31 @@ export enum ReaderStatus {
 }
 
 /**
- * Get words from string without any tags.
+ * Get words from string with formatting information, using tags
  * e.g. I <strong>love</strong> dogs => [I, love, dogs]
  */
-export const getTossupWords = (text: string): TossupWord[] => {
+export const getFormattedWords = (text: string): FormattedWord[] => {
   const boldWords = getWordsBetweenTags(text, 'strong').map(removeTags);
   const words = getWords(removeTags(text));
 
   let boldWordIndex = 0;
-  const tossupWords = words.map((word) => {
+  const formattedWords = words.map((word) => {
     if (boldWordIndex < boldWords.length && word === boldWords[boldWordIndex]) {
       boldWordIndex += 1;
-      return { bold: true, word };
+      return { isBold: true, value: word };
     }
-    return { bold: false, word };
+    return { isBold: false, value: word };
   });
 
-  return tossupWords;
+  return formattedWords;
 };
 
 /**
  * Get power index from tossup text.
  */
 const POWER_MARKER = '(*)';
-export const getPowerIndex = (tossupWords: TossupWord[]) =>
-  tossupWords.findIndex(({ word }) => word === POWER_MARKER);
+export const getPowerIndex = (words: FormattedWord[]) =>
+  words.findIndex(({ value }) => value === POWER_MARKER);
 
 /**
  * Calculate tossup score based on buzz.

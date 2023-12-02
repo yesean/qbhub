@@ -1,13 +1,8 @@
 import { BellIcon } from '@chakra-ui/icons';
 import { Container, Text } from '@chakra-ui/react';
+import { FormattedWord } from '@qbhub/types';
 import React, { Fragment } from 'react';
 import { parseHTMLString } from '../../utils/string';
-
-type Props = {
-  words: { bold: boolean; word: string }[];
-  indices?: { buzz?: number; visible?: number };
-  visibleRef?: React.RefObject<HTMLParagraphElement>;
-};
 
 const Bell = ({ shouldDisplay }: { shouldDisplay: boolean }) => {
   if (!shouldDisplay) return null;
@@ -29,6 +24,12 @@ const Bell = ({ shouldDisplay }: { shouldDisplay: boolean }) => {
   );
 };
 
+type Props = {
+  words: FormattedWord[];
+  indices?: { buzz?: number; visible?: number };
+  visibleRef?: React.RefObject<HTMLParagraphElement>;
+};
+
 const FormattedQuestion = ({
   words,
   indices: { buzz = -1, visible = words.length } = {},
@@ -41,11 +42,11 @@ const FormattedQuestion = ({
         <Text
           ref={i === visible ? visibleRef : undefined}
           display="inline-block"
-          fontWeight={w.bold ? 'bold' : 'normal'}
+          fontWeight={w.isBold ? 'bold' : 'normal'}
           visibility={i <= visible ? 'visible' : 'hidden'}
           whiteSpace="break-spaces"
         >
-          {parseHTMLString(w.word)}{' '}
+          {parseHTMLString(w.value)}{' '}
         </Text>
         <Bell shouldDisplay={i === buzz} />
       </Fragment>

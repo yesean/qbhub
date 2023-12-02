@@ -20,9 +20,9 @@ const cells: { [key: string]: (result: TossupResult) => JSX.Element } = {
       {userAnswer || '<no answer>'}
     </Box>
   ),
-  question: ({ buzzIndex, words }) => (
+  question: ({ buzzIndex, formattedWords }) => (
     <Box>
-      <FormattedQuestion indices={{ buzz: buzzIndex }} words={words} />
+      <FormattedQuestion indices={{ buzz: buzzIndex }} words={formattedWords} />
     </Box>
   ),
   score: ({ score }) => <Text align="center">{score}</Text>,

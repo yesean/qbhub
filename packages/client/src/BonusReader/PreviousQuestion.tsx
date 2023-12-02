@@ -3,7 +3,7 @@ import { BonusPart, BonusPartResult } from '@qbhub/types';
 import Answer from '../components/reader/Answer';
 import FormattedQuestion from '../components/reader/FormattedQuestion';
 import UserAnswer from '../components/reader/UserAnswer';
-import { getTossupWords } from '../utils/reader';
+import { getFormattedWords } from '../utils/reader';
 
 type PreviousQuestionProps = {
   leadinOffset: number;
@@ -16,7 +16,7 @@ const PreviousQuestion = ({
   part,
   partResult,
 }: PreviousQuestionProps) => {
-  const displayQuestionWords = getTossupWords(part.formattedText);
+  const displayQuestionWords = getFormattedWords(part.formattedText);
 
   const buzzIndex =
     part.number === 1

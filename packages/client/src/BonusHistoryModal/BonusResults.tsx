@@ -3,7 +3,7 @@ import { Bonus, BonusPart, BonusPartResult } from '@qbhub/types';
 import FormattedQuestion from '../components/reader/FormattedQuestion';
 import { VirtualizedTable, VirtualizedTableColumn } from '../components/tables';
 import { TOURNAMENT_MAP } from '../utils/constants';
-import { getTossupWords } from '../utils/reader';
+import { getFormattedWords } from '../utils/reader';
 import { parseHTMLString } from '../utils/string';
 
 type BonusPartRowResult = BonusPartResult & { bonus: Bonus; part: BonusPart };
@@ -27,7 +27,7 @@ const cells: { [key: string]: (result: BonusPartRowResult) => JSX.Element } = {
     <Flex flexWrap="wrap">
       <FormattedQuestion
         indices={{ buzz: buzzIndex }}
-        words={getTossupWords(formattedText)}
+        words={getFormattedWords(formattedText)}
       />
     </Flex>
   ),

@@ -8,7 +8,7 @@ import UserAnswer from '../components/reader/UserAnswer';
 import { useSettings } from '../hooks/useSettings';
 import { useAppDispatch } from '../redux/hooks';
 import { range } from '../utils/array';
-import { ReaderStatus, getTossupWords } from '../utils/reader';
+import { ReaderStatus, getFormattedWords } from '../utils/reader';
 import ActiveQuestion from './ActiveQuestion';
 import Leadin from './Leadin';
 import PreviousQuestion from './PreviousQuestion';
@@ -36,7 +36,7 @@ const Container = ({ setBuzz }: Props) => {
   const leadinOffset = useMemo(
     () =>
       bonus.formattedLeadin != null
-        ? getTossupWords(bonus.formattedLeadin).length
+        ? getFormattedWords(bonus.formattedLeadin).length
         : 0,
     [bonus.formattedLeadin],
   );
