@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import FormattedQuestion from '../components/reader/FormattedQuestion';
-import { getTossupWords } from '../utils/reader';
+import { getFormattedWords } from '../utils/reader';
 
 type LeadinProps = {
   buzzIndex: number;
@@ -12,7 +12,7 @@ const Leadin = ({ buzzIndex, text }: LeadinProps) => (
     <b>BONUS:</b>{' '}
     <FormattedQuestion
       indices={{ buzz: buzzIndex }}
-      words={getTossupWords(text)}
+      words={getFormattedWords(text)}
     />
   </Box>
 );

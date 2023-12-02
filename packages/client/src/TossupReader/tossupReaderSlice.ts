@@ -1,12 +1,12 @@
-import { Tossup, TossupResult, TossupWord } from '@qbhub/types';
+import { FormattedWord, Tossup, TossupResult } from '@qbhub/types';
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { RootState } from '../redux/store';
 import * as fetchUtils from '../utils/fetch';
 import {
   ReaderStatus,
+  getFormattedWords,
   getPowerIndex,
   getTossupScore,
-  getTossupWords,
 } from '../utils/reader';
 import { Settings } from '../utils/settings/types';
 import { isQuestionValid } from '../utils/settings/validate';
@@ -14,10 +14,10 @@ import { isQuestionValid } from '../utils/settings/validate';
 type TossupReaderState = {
   current: {
     buzzIndex: number;
+    formattedWords: FormattedWord[];
     powerIndex: number;
     result: TossupResult;
     tossup: Tossup;
-    tossupWords: TossupWord[];
   };
   results: TossupResult[];
   score: number;
@@ -28,10 +28,10 @@ type TossupReaderState = {
 const initialState: TossupReaderState = {
   current: {
     buzzIndex: -1,
+    formattedWords: [],
     powerIndex: -1,
     result: {} as TossupResult,
     tossup: {} as Tossup,
-    tossupWords: [],
   },
   results: [],
   score: 0,
@@ -78,10 +78,12 @@ const tossupReaderSlice = createSlice({
         } else {
           state.current = { ...initialState.current };
           [state.current.tossup] = state.tossups;
-          state.current.tossupWords = getTossupWords(
+          state.current.formattedWords = getFormattedWords(
             state.current.tossup.formattedText,
           );
-          state.current.powerIndex = getPowerIndex(state.current.tossupWords);
+          state.current.powerIndex = getPowerIndex(
+            state.current.formattedWords,
+          );
           state.tossups.shift();
           state.status = ReaderStatus.reading;
         }
@@ -124,14 +126,14 @@ const tossupReaderSlice = createSlice({
         const score = getTossupScore(
           action.payload.isCorrect,
           state.current.buzzIndex <= state.current.powerIndex,
-          state.current.buzzIndex === state.current.tossupWords.length - 1,
+          state.current.buzzIndex === state.current.formattedWords.length - 1,
         );
         state.current.result = {
           ...action.payload,
           buzzIndex: state.current.buzzIndex,
+          formattedWords: state.current.formattedWords,
           score,
           tossup: state.current.tossup,
-          words: state.current.tossupWords,
         };
 
         state.results.unshift(state.current.result);

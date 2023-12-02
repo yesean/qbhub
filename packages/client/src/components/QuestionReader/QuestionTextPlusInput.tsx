@@ -7,7 +7,7 @@ import {
   QuestionReaderStatus,
   getNextStatus,
 } from '../../utils/questionReader';
-import { Judge, JudgeResult, getTossupWords } from '../../utils/reader';
+import { Judge, JudgeResult, getFormattedWords } from '../../utils/reader';
 import TealButton from '../buttons/TealButton';
 import FormattedQuestion from '../reader/FormattedQuestion';
 import { UnscoredQuestionResult } from './QuestionReaderContext';
@@ -89,7 +89,7 @@ export default function QuestionTextPlusInput() {
   const selectInput = useCallback(() => inputRef.current?.select(), []);
 
   const tossupWords = useMemo(
-    () => getTossupWords(question.formattedText),
+    () => getFormattedWords(question.formattedText),
     [question.formattedText],
   );
 

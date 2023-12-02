@@ -14,7 +14,11 @@ import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useSettings } from '../hooks/useSettings';
 import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/hooks';
-import { getPowerIndex, getTossupScore, getTossupWords } from '../utils/reader';
+import {
+  getFormattedWords,
+  getPowerIndex,
+  getTossupScore,
+} from '../utils/reader';
 
 // evaluate user answer
 const getTossupResult = ({
@@ -24,15 +28,15 @@ const getTossupResult = ({
   score,
   userAnswer,
 }: QuestionResult): TossupResult => {
-  const tossupWords = getTossupWords(question.formattedText);
+  const formattedWords = getFormattedWords(question.formattedText);
 
   return {
     buzzIndex,
+    formattedWords,
     isCorrect,
     score,
     tossup: question,
     userAnswer,
-    words: tossupWords,
   };
 };
 
@@ -46,7 +50,7 @@ const getScore = ({
   isCorrect,
   question,
 }: UnscoredQuestionResult) => {
-  const tossupWords = getTossupWords(question.formattedText);
+  const tossupWords = getFormattedWords(question.formattedText);
   const isInPower = buzzIndex <= getPowerIndex(tossupWords);
   const isBuzzAtEnd = buzzIndex === tossupWords.length - 1;
 

@@ -1,4 +1,4 @@
-import { Question } from './question.js';
+import { FormattedWord, Question } from './question.js';
 
 export type Tossup = Question & {
   answer: string;
@@ -10,11 +10,11 @@ export type Tossup = Question & {
 
 export type TossupResult = {
   buzzIndex: number;
+  formattedWords: FormattedWord[];
   isCorrect: boolean;
   score: TossupScore;
   tossup: Tossup;
   userAnswer: string;
-  words: TossupWord[];
 };
 
 export enum TossupScore {
@@ -23,8 +23,3 @@ export enum TossupScore {
   ten = 10,
   power = 15,
 }
-
-export type TossupWord = {
-  bold: boolean;
-  word: string;
-};
