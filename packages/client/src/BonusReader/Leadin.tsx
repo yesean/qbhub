@@ -10,10 +10,7 @@ type LeadinProps = {
 const Leadin = ({ buzzIndex, text }: LeadinProps) => (
   <Box>
     <b>BONUS:</b>{' '}
-    <FormattedQuestion
-      indices={{ buzz: buzzIndex }}
-      words={getFormattedWords(text)}
-    />
+    <FormattedQuestion buzzIndex={buzzIndex} words={getFormattedWords(text)} />
   </Box>
 );
 
