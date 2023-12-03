@@ -4,7 +4,45 @@ import { FormattedWord } from '@qbhub/types';
 import React, { Fragment } from 'react';
 import { parseHTMLString } from '../../utils/string';
 
-const Bell = ({ shouldDisplay }: { shouldDisplay: boolean }) => {
+type FormattedQuestionProps = {
+  words: FormattedWord[];
+  buzzIndex?: number;
+  visibleIndex?: number;
+  visibleRef?: React.RefObject<HTMLParagraphElement>;
+};
+
+export default function FormattedQuestion({
+  words,
+  buzzIndex = -1,
+  visibleIndex = words.length,
+  visibleRef,
+}: FormattedQuestionProps) {
+  return (
+    <>
+      {words.map((word, index) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <Fragment key={`${word}${index}`}>
+          <Text
+            ref={index === visibleIndex ? visibleRef : undefined}
+            display="inline-block"
+            fontWeight={word.isBold ? 'bold' : 'normal'}
+            visibility={index <= visibleIndex ? 'visible' : 'hidden'}
+            whiteSpace="break-spaces"
+          >
+            {parseHTMLString(word.value)}{' '}
+          </Text>
+          <Bell shouldDisplay={index === buzzIndex} />
+        </Fragment>
+      ))}
+    </>
+  );
+}
+
+type BellProps = {
+  shouldDisplay: boolean;
+};
+
+function Bell({ shouldDisplay }: BellProps) {
   if (!shouldDisplay) return null;
 
   return (
@@ -22,36 +60,4 @@ const Bell = ({ shouldDisplay }: { shouldDisplay: boolean }) => {
       <Text display="inline"> </Text>
     </Container>
   );
-};
-
-type Props = {
-  words: FormattedWord[];
-  indices?: { buzz?: number; visible?: number };
-  visibleRef?: React.RefObject<HTMLParagraphElement>;
-};
-
-const FormattedQuestion = ({
-  words,
-  indices: { buzz = -1, visible = words.length } = {},
-  visibleRef,
-}: Props) => (
-  <>
-    {words.map((w, i) => (
-      // eslint-disable-next-line react/no-array-index-key
-      <Fragment key={`${w}${i}`}>
-        <Text
-          ref={i === visible ? visibleRef : undefined}
-          display="inline-block"
-          fontWeight={w.isBold ? 'bold' : 'normal'}
-          visibility={i <= visible ? 'visible' : 'hidden'}
-          whiteSpace="break-spaces"
-        >
-          {parseHTMLString(w.value)}{' '}
-        </Text>
-        <Bell shouldDisplay={i === buzz} />
-      </Fragment>
-    ))}
-  </>
-);
-
-export default FormattedQuestion;
+}

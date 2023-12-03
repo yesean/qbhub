@@ -26,10 +26,7 @@ const PreviousQuestion = ({
   return (
     <Box mb={4}>
       <b>[10]</b>{' '}
-      <FormattedQuestion
-        indices={{ buzz: buzzIndex }}
-        words={displayQuestionWords}
-      />
+      <FormattedQuestion buzzIndex={buzzIndex} words={displayQuestionWords} />
       <Box mt={1} py={1}>
         <Answer text={part.formattedAnswer} />
         <UserAnswer

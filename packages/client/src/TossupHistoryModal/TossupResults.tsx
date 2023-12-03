@@ -22,7 +22,7 @@ const cells: { [key: string]: (result: TossupResult) => JSX.Element } = {
   ),
   question: ({ buzzIndex, formattedWords }) => (
     <Box>
-      <FormattedQuestion indices={{ buzz: buzzIndex }} words={formattedWords} />
+      <FormattedQuestion buzzIndex={buzzIndex} words={formattedWords} />
     </Box>
   ),
   score: ({ score }) => <Text align="center">{score}</Text>,

@@ -26,7 +26,7 @@ const cells: { [key: string]: (result: BonusPartRowResult) => JSX.Element } = {
   question: ({ buzzIndex, part: { formattedText } }) => (
     <Flex flexWrap="wrap">
       <FormattedQuestion
-        indices={{ buzz: buzzIndex }}
+        buzzIndex={buzzIndex}
         words={getFormattedWords(formattedText)}
       />
     </Flex>

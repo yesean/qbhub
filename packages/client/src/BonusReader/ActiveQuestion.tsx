@@ -51,7 +51,8 @@ const Section = ({
         {prefix}
       </Text>{' '}
       <FormattedQuestion
-        indices={{ buzz: buzzIndex, visible: visibleIndex }}
+        buzzIndex={buzzIndex}
+        visibleIndex={visibleIndex}
         visibleRef={visibleRef}
         words={words}
       />
