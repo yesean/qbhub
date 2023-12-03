@@ -1,9 +1,9 @@
 import { Box, Flex, Input } from '@chakra-ui/react';
 import { FormattedWord, QuestionResult } from '@qbhub/types';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';
 import { ReaderStatus, getNextStatus } from '../../utils/questionReader';
-import { Judge, getFormattedWords } from '../../utils/reader';
+import { getFormattedWords } from '../../utils/reader';
 import TealButton from '../buttons/TealButton';
 import QuestionReaderProgress from './QuestionReaderProgress';
 import useQuestionReaderContext from './useQuestionReaderContext';
