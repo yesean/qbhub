@@ -6,7 +6,7 @@ import {
   StatNumber,
 } from '@chakra-ui/react';
 import { QuestionResult } from '@qbhub/types';
-import { QuestionReaderStatus } from '../../utils/questionReader';
+import { ReaderStatus } from '../../utils/questionReader';
 import useQuestionReaderContext from './useQuestionReaderContext';
 
 export default function QuestionReaderScore() {
@@ -16,7 +16,7 @@ export default function QuestionReaderScore() {
 
   const score = previousResults.reduce((acc, result) => acc + result.score, 0);
   const delta = (previousResults.at(-1) as QuestionResult).score;
-  const shouldShowDelta = status === QuestionReaderStatus.Judged;
+  const shouldShowDelta = status === ReaderStatus.Judged;
 
   return (
     <Stat>

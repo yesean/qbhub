@@ -1,5 +1,5 @@
 import { Flex } from '@chakra-ui/react';
-import { QuestionReaderStatus } from '../../utils/questionReader';
+import { ReaderStatus } from '../../utils/questionReader';
 import QuestionAnswer from './QuestionAnswer';
 import QuestionInfo from './QuestionInfo';
 import {
@@ -13,7 +13,7 @@ import useQuestionReaderContext from './useQuestionReaderContext';
 const QuestionReader = () => {
   const { status } = useQuestionReaderContext();
 
-  const shouldShowAnswer = status === QuestionReaderStatus.Judged;
+  const shouldShowAnswer = status === ReaderStatus.Judged;
 
   return (
     <Flex direction="column" gap={4} maxW="container.md" overflow="auto" p={2}>

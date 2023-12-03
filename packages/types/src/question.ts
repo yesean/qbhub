@@ -21,6 +21,8 @@ export type QuestionResult = {
   userAnswer: string;
 };
 
+export type UnscoredQuestionResult = Omit<QuestionResult, 'score'>;
+
 // question parameters in Select dropdowns in settings
 export type SelectableQuestionParameter =
   | Category
