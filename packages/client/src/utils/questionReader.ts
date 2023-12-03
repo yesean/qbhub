@@ -1,5 +1,8 @@
+import { Tossup, UnscoredQuestionResult } from '@qbhub/types';
+import { Judge, JudgeResult } from './reader';
+
 // question reader states
-export enum QuestionReaderStatus {
+export enum ReaderStatus {
   Reading,
   Answering,
   AnsweringAfterPrompt,
@@ -12,19 +15,40 @@ type NextStatusOptions = {
 
 // question reader state machine
 export const getNextStatus = (
-  prevStatus: QuestionReaderStatus,
+  prevStatus: ReaderStatus,
   { isPrompted = false }: NextStatusOptions = {},
-): QuestionReaderStatus => {
+): ReaderStatus => {
   switch (prevStatus) {
-    case QuestionReaderStatus.Reading:
-      return QuestionReaderStatus.Answering;
-    case QuestionReaderStatus.Answering:
+    case ReaderStatus.Reading:
+      return ReaderStatus.Answering;
+    case ReaderStatus.Answering:
       return isPrompted
-        ? QuestionReaderStatus.AnsweringAfterPrompt
-        : QuestionReaderStatus.Judged;
-    case QuestionReaderStatus.AnsweringAfterPrompt:
-      return QuestionReaderStatus.Judged;
-    case QuestionReaderStatus.Judged:
-      return QuestionReaderStatus.Reading;
+        ? ReaderStatus.AnsweringAfterPrompt
+        : ReaderStatus.Judged;
+    case ReaderStatus.AnsweringAfterPrompt:
+      return ReaderStatus.Judged;
+    case ReaderStatus.Judged:
+      return ReaderStatus.Reading;
   }
+};
+
+// get evaluated question result from user input
+export const getQuestionResult = (
+  question: Tossup,
+  userAnswer: string,
+  buzzIndex: number,
+  getScore: (result: UnscoredQuestionResult) => number,
+) => {
+  const judge = new Judge(question.formattedAnswer);
+  const judgeResult = judge.judge(userAnswer);
+  const isCorrect = judgeResult === JudgeResult.correct;
+  const unscoredQuestionResult = {
+    buzzIndex,
+    isCorrect,
+    judgeResult,
+    question,
+    userAnswer,
+  };
+  const score = getScore(unscoredQuestionResult);
+  return { ...unscoredQuestionResult, score };
 };

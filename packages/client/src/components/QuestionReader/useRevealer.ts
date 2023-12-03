@@ -22,10 +22,10 @@ export default ({ onChange, onFinish, words }: Props) => {
   );
 
   const pause = useCallback(() => setIsPaused(true), []);
-  const reveal = useCallback(
-    () => setVisibleIndex(words.length - 1),
-    [words.length],
-  );
+  const reveal = useCallback(() => {
+    setVisibleIndex(words.length - 1);
+    onChange(visibleIndex + 1);
+  }, [onChange, visibleIndex, words.length]);
 
   useEffect(() => {
     // stop when there is no more words

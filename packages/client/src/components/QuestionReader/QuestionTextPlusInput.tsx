@@ -1,26 +1,21 @@
 import { Box, Flex, Input } from '@chakra-ui/react';
-import { QuestionResult, Tossup } from '@qbhub/types';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { QuestionResult } from '@qbhub/types';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';
-import useKeyboardShortcut from '../../hooks/useKeyboardShortcut';
-import {
-  QuestionReaderStatus,
-  getNextStatus,
-} from '../../utils/questionReader';
-import { Judge, JudgeResult, getFormattedWords } from '../../utils/reader';
+import { ReaderStatus, getNextStatus } from '../../utils/questionReader';
+import { Judge, getFormattedWords } from '../../utils/reader';
 import TealButton from '../buttons/TealButton';
 import FormattedQuestion from '../reader/FormattedQuestion';
-import { UnscoredQuestionResult } from './QuestionReaderContext';
 import QuestionReaderProgress from './QuestionReaderProgress';
 import useQuestionReaderContext from './useQuestionReaderContext';
-import useRevealer from './useRevealer';
+import useReader from './useReader';
 
 // get input border color for tossup results, green/red for correct/incorrect
 const getInputBorderColor = (
-  status: QuestionReaderStatus,
+  status: ReaderStatus,
   questionResult?: QuestionResult,
 ): string => {
-  if (status !== QuestionReaderStatus.Judged || questionResult == null)
+  if (status !== ReaderStatus.Judged || questionResult == null)
     return 'gray.300';
 
   if (questionResult.isCorrect) return 'green.400';
@@ -28,37 +23,17 @@ const getInputBorderColor = (
 };
 
 // get button text depending on reader status
-const getButtonText = (status: QuestionReaderStatus): string => {
+const getButtonText = (status: ReaderStatus): string => {
   switch (status) {
-    case QuestionReaderStatus.Reading:
+    case ReaderStatus.Reading:
       return 'Buzz';
-    case QuestionReaderStatus.Answering:
+    case ReaderStatus.Answering:
       return 'Submit';
-    case QuestionReaderStatus.AnsweringAfterPrompt:
+    case ReaderStatus.AnsweringAfterPrompt:
       return 'Submit';
-    case QuestionReaderStatus.Judged:
+    case ReaderStatus.Judged:
       return 'Next';
   }
-};
-
-const getQuestionResult = (
-  question: Tossup,
-  userAnswer: string,
-  buzzIndex: number,
-  getScore: (result: UnscoredQuestionResult) => number,
-) => {
-  const judge = new Judge(question.formattedAnswer);
-  const judgeResult = judge.judge(userAnswer);
-  const isCorrect = judgeResult === JudgeResult.correct;
-  const unscoredQuestionResult = {
-    buzzIndex,
-    isCorrect,
-    judgeResult,
-    question,
-    userAnswer,
-  };
-  const score = getScore(unscoredQuestionResult);
-  return { ...unscoredQuestionResult, score };
 };
 
 /**
@@ -76,8 +51,11 @@ export default function QuestionTextPlusInput() {
     previousResults,
     question,
     setStatus,
-    status,
   } = useQuestionReaderContext();
+
+  useEffect(() => {
+    const _ = new Judge(question.formattedAnswer);
+  }, [question.formattedAnswer]);
 
   const focusInput = useCallback(() => {
     if (inputRef.current != null) {
@@ -88,171 +66,71 @@ export default function QuestionTextPlusInput() {
   const blurInput = useCallback(() => inputRef.current?.blur(), []);
   const selectInput = useCallback(() => inputRef.current?.select(), []);
 
-  const tossupWords = useMemo(
-    () => getFormattedWords(question.formattedText),
-    [question.formattedText],
-  );
-
-  /**
-   * @Action buzz
-   * @CausedBy spacebar press, button click, all words get revealed
-   * @Behavior focus input, set next status
-   */
-  const handleBuzz = useCallback(() => {
-    focusInput();
-    setStatus(getNextStatus(status));
-  }, [focusInput, setStatus, status]);
-
   const scrollToVisible = useCallback(() => {
     if (visibleRef.current != null)
       elementScrollIntoView(visibleRef.current, { block: 'center' });
   }, []);
 
-  const buzzIfUserHasNot = useCallback(() => {
-    if (status !== QuestionReaderStatus.Reading) return;
-
-    scrollToVisible();
-    handleBuzz();
-  }, [handleBuzz, scrollToVisible, status]);
-
-  const {
-    pause: pauseQuestionRevealing,
-    reveal: revealQuestion,
-    visibleIndex,
-  } = useRevealer({
-    onChange: scrollToVisible,
-    onFinish: buzzIfUserHasNot,
-    words: tossupWords, // manually trigger buzz, if all words are revealed before the user buzzes
-  });
-
-  const submitResult = useCallback(
-    (result: QuestionResult) => {
-      blurInput();
-      revealQuestion();
-      onJudged(result);
-      setStatus(getNextStatus(status));
-    },
-    [blurInput, onJudged, revealQuestion, setStatus, status],
+  const formattedWords = useMemo(
+    () => getFormattedWords(question.formattedText),
+    [question.formattedText],
   );
 
-  /**
-   * @Action submit answer after being prompted
-   * @CausedBy enter press, button click, answering timer finishes
-   * @Behavior blur input, reveal answer, evaluate user answer, call the passed-in submit callback, set next status
-   */
-  const handleSubmitOnAnsweringAfterPrompt = useCallback(() => {
-    // evaluate user answer
-    const result = getQuestionResult(
-      question,
-      userInput,
-      visibleIndex,
-      getScore,
-    );
-    submitResult(result);
-  }, [getScore, question, submitResult, userInput, visibleIndex]);
+  const onReveal = useCallback(() => {
+    scrollToVisible();
+  }, [scrollToVisible]);
 
-  /**
-   * @Action submit answer
-   * @CausedBy enter press, button click, answering timer finishes
-   * @Behavior
-   *  if prompted: focus input, set next status
-   *  otherwise: mimic behavior of: submit answer after being prompted
-   */
-  const handleSubmitOnAnswering = useCallback(() => {
-    const result = getQuestionResult(
-      question,
-      userInput,
-      visibleIndex,
-      getScore,
-    );
+  const onBuzz = useCallback(() => {
+    focusInput();
+    setStatus(getNextStatus);
+  }, [focusInput, setStatus]);
 
-    // if user is prompted
-    if (result.judgeResult === JudgeResult.prompt) {
+  const onJudgedWrapper = useCallback(
+    (result: QuestionResult) => {
+      blurInput();
+      onJudged(result);
+      setStatus(getNextStatus);
+    },
+    [blurInput, onJudged, setStatus],
+  );
+
+  const onPromptWrapper = useCallback(
+    (result: QuestionResult) => {
       focusInput();
       selectInput();
       onPrompt(result);
-      setStatus(getNextStatus(status, { isPrompted: true }));
-      return;
-    }
+      setStatus((status) => getNextStatus(status, { isPrompted: true }));
+    },
+    [focusInput, onPrompt, selectInput, setStatus],
+  );
 
-    // not prompted
-    submitResult(result);
-  }, [
-    focusInput,
-    getScore,
-    onPrompt,
-    question,
-    selectInput,
-    setStatus,
-    status,
-    submitResult,
-    userInput,
-    visibleIndex,
-  ]);
-
-  /**
-   * @Action next question
-   * @CausedBy n press, button click
-   * @Behavior blur input, call the passed-in next callback, set next status
-   */
-  const handleNextQuestion = useCallback(() => {
+  const onNext = useCallback(() => {
     blurInput();
     onNextQuestion();
-    setStatus(getNextStatus(status));
-  }, [blurInput, onNextQuestion, setStatus, status]);
+    setStatus(getNextStatus);
+  }, [blurInput, onNextQuestion, setStatus]);
 
-  const handleClick = useCallback(() => {
-    switch (status) {
-      case QuestionReaderStatus.Reading: {
-        pauseQuestionRevealing();
-        handleBuzz();
-        break;
-      }
-      case QuestionReaderStatus.Answering: {
-        handleSubmitOnAnswering();
-        break;
-      }
-      case QuestionReaderStatus.AnsweringAfterPrompt: {
-        handleSubmitOnAnsweringAfterPrompt();
-        break;
-      }
-      case QuestionReaderStatus.Judged: {
-        handleNextQuestion();
-        break;
-      }
-    }
-  }, [
-    handleBuzz,
-    handleNextQuestion,
-    handleSubmitOnAnswering,
-    handleSubmitOnAnsweringAfterPrompt,
-    pauseQuestionRevealing,
-    status,
-  ]);
+  const { handleClick, status, visibleIndex } = useReader({
+    getScore,
+    onBuzz,
+    onJudged: onJudgedWrapper,
+    onNext,
+    onPrompt: onPromptWrapper,
+    onReveal,
+    question,
+    userInput,
+  });
 
   const isAnswering = [
-    QuestionReaderStatus.Answering,
-    QuestionReaderStatus.AnsweringAfterPrompt,
+    ReaderStatus.Answering,
+    ReaderStatus.AnsweringAfterPrompt,
   ].includes(status);
 
-  useKeyboardShortcut(' ', handleClick, {
-    customAllowCondition: status === QuestionReaderStatus.Reading,
-  });
-
-  useKeyboardShortcut('Enter', handleClick, {
-    allowHTMLInput: true,
-    customAllowCondition: isAnswering,
-  });
-
-  useKeyboardShortcut('n', handleClick, {
-    customAllowCondition: status === QuestionReaderStatus.Judged,
-  });
-
   const shouldShowProgress = isAnswering;
-  const shouldShowBorder = status === QuestionReaderStatus.Judged;
+  const shouldShowBorder = status === ReaderStatus.Judged;
   const lastResult = previousResults.at(-1);
   const buzzIndex =
-    status === QuestionReaderStatus.Judged ? lastResult?.buzzIndex : undefined;
+    status === ReaderStatus.Judged ? lastResult?.buzzIndex : undefined;
   const shouldDisableInput = !isAnswering;
 
   return (
@@ -261,14 +139,11 @@ export default function QuestionTextPlusInput() {
         <FormattedQuestion
           indices={{ buzz: buzzIndex, visible: visibleIndex }}
           visibleRef={visibleRef}
-          words={tossupWords}
+          words={formattedWords}
         />
       </Box>
       {shouldShowProgress && (
-        <QuestionReaderProgress
-          key={status}
-          onFinish={handleSubmitOnAnswering}
-        />
+        <QuestionReaderProgress key={status} onFinish={handleClick} />
       )}
       <Flex justify="center" w="100%">
         <Input
