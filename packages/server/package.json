@@ -46,7 +46,7 @@
     "eslint": "eslint src --ext .ts,.tsx",
     "eslint:debug": "DEBUG=eslint:cli-engine yarn eslint",
     "prelint": "tsc --build",
-    "lint": "yarn format:check && yarn format:check && yarn prelint && yarn typecheck && yarn eslint",
+    "lint": "yarn format:check && yarn prelint && yarn typecheck && yarn eslint",
     "lint:debug": "yarn format:check && yarn format:check && yarn prelint && yarn typecheck && yarn eslint:debug",
     "build": "tsc --build",
     "clean": "rm -rf dist dist-client tsconfig.tsbuildinfo"
