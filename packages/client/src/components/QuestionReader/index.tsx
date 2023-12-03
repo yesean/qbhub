@@ -1,5 +1,7 @@
 import { Flex } from '@chakra-ui/react';
+import { isTossup } from '@qbhub/types';
 import { ReaderStatus } from '../../utils/questionReader';
+import FormattedQuestion from '../reader/FormattedQuestion';
 import QuestionAnswer from './QuestionAnswer';
 import QuestionInfo from './QuestionInfo';
 import {
@@ -11,15 +13,18 @@ import QuestionTextPlusInput from './QuestionTextPlusInput';
 import useQuestionReaderContext from './useQuestionReaderContext';
 
 const QuestionReader = () => {
-  const { status } = useQuestionReaderContext();
+  const { question, status } = useQuestionReaderContext();
 
   const shouldShowAnswer = status === ReaderStatus.Judged;
+  const textDisplay = isTossup(question)
+    ? FormattedQuestion
+    : FormattedQuestion;
 
   return (
     <Flex direction="column" gap={4} maxW="container.md" overflow="auto" p={2}>
       <QuestionInfo />
       {shouldShowAnswer && <QuestionAnswer />}
-      <QuestionTextPlusInput />
+      <QuestionTextPlusInput textDisplay={textDisplay} />
       <QuestionReaderScore />
     </Flex>
   );
