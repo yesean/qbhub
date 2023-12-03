@@ -1,11 +1,10 @@
 import { Box, Flex, Input } from '@chakra-ui/react';
-import { QuestionResult } from '@qbhub/types';
+import { FormattedWord, QuestionResult } from '@qbhub/types';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';
 import { ReaderStatus, getNextStatus } from '../../utils/questionReader';
 import { Judge, getFormattedWords } from '../../utils/reader';
 import TealButton from '../buttons/TealButton';
-import FormattedQuestion from '../reader/FormattedQuestion';
 import QuestionReaderProgress from './QuestionReaderProgress';
 import useQuestionReaderContext from './useQuestionReaderContext';
 import useReader from './useReader';
@@ -36,10 +35,23 @@ const getButtonText = (status: ReaderStatus): string => {
   }
 };
 
+export type TextDisplayProps = {
+  visibleIndex: number;
+  visibleRef: React.RefObject<HTMLParagraphElement>;
+  words: FormattedWord[];
+  buzzIndex?: number;
+};
+
+type QuestionTextPlusInputProps = {
+  textDisplay: React.ComponentType<TextDisplayProps>;
+};
+
 /**
  * Question text revealer + Answering input
  */
-export default function QuestionTextPlusInput() {
+export default function QuestionTextPlusInput({
+  textDisplay: TextDisplay,
+}: QuestionTextPlusInputProps) {
   const [userInput, setUserInput] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const visibleRef = useRef<HTMLParagraphElement>(null);
@@ -52,10 +64,6 @@ export default function QuestionTextPlusInput() {
     question,
     setStatus,
   } = useQuestionReaderContext();
-
-  useEffect(() => {
-    const _ = new Judge(question.formattedAnswer);
-  }, [question.formattedAnswer]);
 
   const focusInput = useCallback(() => {
     if (inputRef.current != null) {
@@ -136,8 +144,9 @@ export default function QuestionTextPlusInput() {
   return (
     <>
       <Box bg="gray.100" borderRadius="md" overflow="auto" p={4}>
-        <FormattedQuestion
-          indices={{ buzz: buzzIndex, visible: visibleIndex }}
+        <TextDisplay
+          buzzIndex={buzzIndex}
+          visibleIndex={visibleIndex}
           visibleRef={visibleRef}
           words={formattedWords}
         />
