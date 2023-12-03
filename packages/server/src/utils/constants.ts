@@ -1,16 +1,4 @@
 export const TABLES = {
-  bonusParts: {
-    columns: {
-      answer: 'bonus_parts.answer',
-      bonusId: 'bonus_parts.bonus_id',
-      formattedAnswer: 'bonus_parts.formatted_answer',
-      formattedText: 'bonus_parts.formatted_text',
-      id: 'bonus_parts.id',
-      number: 'bonus_parts.number',
-      text: 'bonus_parts.text',
-    },
-    name: 'bonus_parts',
-  },
   bonuses: {
     columns: {
       category: 'bonuses.category_id',
@@ -22,6 +10,18 @@ export const TABLES = {
       tournament: 'bonuses.tournament_id',
     },
     name: 'bonuses',
+  },
+  bonusParts: {
+    columns: {
+      answer: 'bonus_parts.answer',
+      bonusId: 'bonus_parts.bonus_id',
+      formattedAnswer: 'bonus_parts.formatted_answer',
+      formattedText: 'bonus_parts.formatted_text',
+      id: 'bonus_parts.id',
+      number: 'bonus_parts.number',
+      text: 'bonus_parts.text',
+    },
+    name: 'bonus_parts',
   },
   categories: {
     columns: {

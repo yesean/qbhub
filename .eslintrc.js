@@ -86,7 +86,10 @@ module.exports = {
     'react/jsx-sort-props': 'error',
     'react/prop-types': 'off',
     'react/require-default-props': 'off',
-    'sort-destructure-keys/sort-destructure-keys': 'error',
-    'sort-keys-fix/sort-keys-fix': 'error',
+    'sort-destructure-keys/sort-destructure-keys': [
+      'error',
+      { caseSensitive: false },
+    ],
+    'sort-keys-fix/sort-keys-fix': ['error', 'asc', { caseSensitive: false }],
   },
 };
