@@ -39,9 +39,7 @@ export const QuestionReaderContextProvider = ({
   children,
   ...rest
 }: QuestionReaderContextProviderProps) => {
-  const [status, setStatus] = useState<ReaderStatus>(
-    ReaderStatus.Reading,
-  );
+  const [status, setStatus] = useState<ReaderStatus>(ReaderStatus.Reading);
   const context = useMemo(
     () => ({
       ...rest,
