@@ -10,8 +10,8 @@
   ],
   "scripts": {
     "start": "yarn workspace @qbhub/server run start",
-    "db": "docker compose --profile dev up --detach",
-    "dev": "yarn run db && env $(grep -v '^#' .env.development) yarn workspaces foreach -pviA run dev",
+    "db": "docker compose --file docker-compose.dev.yml up --detach",
+    "dev": "yarn run db && env $(grep -v '^#' .env) yarn workspaces foreach -pviA run dev",
     "format": "yarn workspaces foreach -pviA run format",
     "lint": "yarn workspaces foreach -pviA run lint",
     "build": "yarn workspaces foreach -viA run build && yarn postbuild",

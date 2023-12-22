@@ -1,4 +1,5 @@
 import { QuestionParameters } from '@qbhub/types';
+import { log } from '@qbhub/utils';
 import pg from 'pg';
 import {
   Column,
@@ -11,7 +12,10 @@ const { Client } = pg;
 
 // connect to postgresql database
 export const client = new Client();
-client.connect();
+client.connect().catch(() => {
+  log.error('unable to connect postgresql');
+  process.exit(1);
+});
 
 // helper functions for sql syntax
 const fuzzy = (s: string) => `%${s}%`;

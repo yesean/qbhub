@@ -30,16 +30,14 @@
     "eslint-config-airbnb-typescript": "^17.1.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.29.0",
-    "nodemon": "3.0.1",
     "prettier": "^3.1.0",
     "prettier-plugin-organize-imports": "^3.2.4",
     "ts-node": "10.9.1",
     "typescript": "^5.3.2"
   },
   "scripts": {
-    "start": "pm2 start pm2.config.cjs --no-daemon",
-    "watch": "nodemon --watch src --ext .ts --exec node --loader ts-node/esm src/index.ts",
-    "dev": "NODE_ENV=development yarn watch",
+    "start": "pm2 start pm2.config.cjs --only \"server-prod\" --no-daemon",
+    "dev": "pm2 start pm2.config.cjs --only \"server-dev\" --no-daemon --silent",
     "format": "prettier --write src ",
     "format:check": "prettier --check src",
     "typecheck": "tsc --noEmit",
