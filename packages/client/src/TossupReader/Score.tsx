@@ -4,15 +4,14 @@ import { ReaderStatus } from '../utils/reader';
 import { selectTossupReader } from './tossupReaderSlice';
 
 const Score: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const {
-    current: { result },
-    score,
-    status,
-  } = useSelector(selectTossupReader);
+  const { results, score, status } = useSelector(selectTossupReader);
+
+  const lastResult = results.at(-1);
+  if (lastResult === undefined) return null;
 
   return (
     <ReaderScore
-      delta={result.score}
+      delta={lastResult.score}
       score={score}
       showDelta={status === ReaderStatus.judged}
     />

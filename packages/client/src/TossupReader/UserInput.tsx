@@ -31,10 +31,7 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
   progress,
   submit,
 }) => {
-  const {
-    current: { result },
-    status,
-  } = useSelector(selectTossupReader);
+  const { results, status } = useSelector(selectTossupReader);
   const isAnswering = useSelector(selectIsAnswering);
   const [input, setInput] = useState('');
   const dispatch = useAppDispatch();
@@ -98,9 +95,12 @@ const UserInput: React.FC<React.PropsWithChildren<UserInputProps>> = ({
     }
   }, [isAnswering, progress, submitInput]);
 
+  const lastResult = results.at(-1);
+  if (lastResult === undefined) return null;
+
   return (
     <ReaderUserInput
-      borderColor={getInputBorderColor(status, result)}
+      borderColor={getInputBorderColor(status, lastResult)}
       disabled={!isAnswering}
       input={input}
       inputRef={inputRef}

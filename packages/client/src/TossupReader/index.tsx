@@ -23,12 +23,11 @@ import {
 const TossupReader = () => {
   const [progress, setProgress] = useState(100);
   const [buzz, setBuzz] = useState(() => () => {});
-  const {
-    current: {
-      tossup: { formattedAnswer },
-    },
-    status,
-  } = useSelector(selectTossupReader);
+  const { current, status } = useSelector(selectTossupReader);
+
+  const { tossup } = current ?? {};
+  const { formattedAnswer } = tossup ?? {};
+
   const isAnswering = useSelector(selectIsAnswering);
   const { openTossupHistoryModal } = useModalContext();
   const dispatch = useAppDispatch();

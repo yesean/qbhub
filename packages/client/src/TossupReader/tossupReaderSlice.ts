@@ -11,14 +11,16 @@ import {
 import { Settings } from '../utils/settings/types';
 import { isQuestionValid } from '../utils/settings/validate';
 
+type CurrentTossupState = {
+  buzzIndex: number;
+  formattedWords: FormattedWord[];
+  powerIndex: number;
+  tossup: Tossup;
+};
+
 type TossupReaderState = {
-  current: {
-    buzzIndex: number;
-    formattedWords: FormattedWord[];
-    powerIndex: number;
-    result: TossupResult;
-    tossup: Tossup;
-  };
+  current: CurrentTossupState | null;
+  isFetching: boolean;
   results: TossupResult[];
   score: number;
   status: ReaderStatus;
@@ -26,13 +28,8 @@ type TossupReaderState = {
 };
 
 const initialState: TossupReaderState = {
-  current: {
-    buzzIndex: -1,
-    formattedWords: [],
-    powerIndex: -1,
-    result: {} as TossupResult,
-    tossup: {} as Tossup,
-  },
+  current: null,
+  isFetching: false,
   results: [],
   score: 0,
   status: ReaderStatus.idle,
@@ -69,31 +66,38 @@ const tossupReaderSlice = createSlice({
     });
     builder
       .addCase(nextTossup.pending, (state) => {
+        state.isFetching = true;
         state.status = ReaderStatus.fetching;
         state.current = initialState.current;
       })
       .addCase(nextTossup.fulfilled, (state) => {
-        if (state.tossups.length === 0) {
+        state.isFetching = false;
+        const nextCurrentTossup = state.tossups.shift();
+        if (nextCurrentTossup === undefined) {
           state.status = ReaderStatus.empty;
-        } else {
-          state.current = { ...initialState.current };
-          [state.current.tossup] = state.tossups;
-          state.current.formattedWords = getFormattedWords(
-            state.current.tossup.formattedText,
-          );
-          state.current.powerIndex = getPowerIndex(
-            state.current.formattedWords,
-          );
-          state.tossups.shift();
-          state.status = ReaderStatus.reading;
+          return;
         }
+
+        const formattedWords = getFormattedWords(
+          nextCurrentTossup.formattedText,
+        );
+        state.current = {
+          buzzIndex: -1,
+          formattedWords,
+          powerIndex: getPowerIndex(formattedWords),
+          tossup: nextCurrentTossup,
+        };
+        state.status = ReaderStatus.reading;
+      })
+      .addCase(nextTossup.rejected, (state) => {
+        state.isFetching = false;
       });
   },
   initialState,
   name: 'tossupReader',
   reducers: {
     buzz: (state, action: PayloadAction<number>) => {
-      if (state.status === ReaderStatus.reading) {
+      if (state.status === ReaderStatus.reading && state.current != null) {
         state.status = ReaderStatus.answering;
         state.current.buzzIndex = action.payload;
       }
@@ -121,6 +125,8 @@ const tossupReaderSlice = createSlice({
         state.status === ReaderStatus.answering ||
         state.status === ReaderStatus.prompting
       ) {
+        if (state.current === null) return;
+
         state.status = ReaderStatus.judged;
 
         const score = getTossupScore(
@@ -128,7 +134,7 @@ const tossupReaderSlice = createSlice({
           state.current.buzzIndex <= state.current.powerIndex,
           state.current.buzzIndex === state.current.formattedWords.length - 1,
         );
-        state.current.result = {
+        const result = {
           ...action.payload,
           buzzIndex: state.current.buzzIndex,
           formattedWords: state.current.formattedWords,
@@ -136,7 +142,7 @@ const tossupReaderSlice = createSlice({
           tossup: state.current.tossup,
         };
 
-        state.results.unshift(state.current.result);
+        state.results.unshift(result);
         state.score += score;
       }
     },
