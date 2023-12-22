@@ -40,7 +40,7 @@ jobs:
           username: ${{ secrets.DO_USERNAME }}
           key: ${{ secrets.DO_KEY }}
           script: |
-            docker compose --profile prod down
+            docker compose down
             docker compose pull
             docker system prune --force
-            docker compose --profile prod up --detach
+            docker compose up --detach
