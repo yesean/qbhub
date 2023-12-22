@@ -1,3 +1,4 @@
+import { Flex, Skeleton, Stack } from '@chakra-ui/react';
 import { QuestionResult, TossupResult, TossupScore } from '@qbhub/types';
 import { useCallback, useMemo } from 'react';
 import toast from 'react-hot-toast';
@@ -75,7 +76,7 @@ const displayPromptToast = () => {
 
 export default function TossupReader() {
   const { openTossupHistoryModal } = useModalContext();
-  const { current, results } = useSelector(selectTossupReader);
+  const { current, isFetching, results } = useSelector(selectTossupReader);
   const dispatch = useAppDispatch();
   const { settings } = useSettings();
 
@@ -97,18 +98,29 @@ export default function TossupReader() {
     [dispatch],
   );
 
-  const isTossupMissing = current.tossup.id === undefined;
+  const isTossupMissing = current == null;
 
   useKeyboardShortcut('n', handleNextTossup, {
-    customAllowCondition: isTossupMissing,
+    customAllowCondition: isTossupMissing && !isFetching,
   });
 
   useKeyboardShortcut('h', openTossupHistoryModal);
 
-  if (isTossupMissing) {
+  if (isFetching) {
     return (
-      <TealButton onClick={handleNextTossup}>click for tossups</TealButton>
+      <Stack maxW="container.md" w="100%">
+        <Skeleton h="40px" w="85%" />
+        <Skeleton h="200px" />
+        <Flex gap={2}>
+          <Skeleton flexGrow={1} h="40px" />
+          <Skeleton flexBasis="60px" h="40px" />
+        </Flex>
+      </Stack>
     );
+  }
+
+  if (isTossupMissing) {
+    return <TealButton onClick={handleNextTossup}>Start tossups</TealButton>;
   }
 
   return (
