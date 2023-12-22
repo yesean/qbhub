@@ -25,18 +25,15 @@ type QuestionProps = {
 
 const Question = ({ setBuzz }: QuestionProps) => {
   const visibleRef = useRef<HTMLParagraphElement>(null);
-  const {
-    current: {
-      buzzIndex,
-      formattedWords,
-      tossup: { formattedText },
-    },
-    status,
-  } = useSelector(selectTossupReader);
+  const { current, status } = useSelector(selectTossupReader);
+
+  const { buzzIndex, formattedWords, tossup } = current ?? {};
+  const { formattedText } = tossup ?? {};
+
   const dispatch = useAppDispatch();
 
   const words = useMemo(
-    () => getFormattedWords(formattedText).map(({ value }) => value),
+    () => getFormattedWords(formattedText ?? '').map(({ value }) => value),
     [formattedText],
   );
 
@@ -50,7 +47,7 @@ const Question = ({ setBuzz }: QuestionProps) => {
   const shuffledFormattedWords = useMemo(
     () =>
       displayWords.map((word, i) => ({
-        isBold: formattedWords[i].isBold,
+        isBold: formattedWords?.[i].isBold ?? false,
         value: word,
       })),
     [displayWords, formattedWords],

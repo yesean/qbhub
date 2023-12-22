@@ -4,11 +4,13 @@ import ReaderAnswer from '../components/reader/Answer';
 import { selectTossupReader } from './tossupReaderSlice';
 
 const Answer: React.FC<React.PropsWithChildren<unknown>> = () => {
+  const { current } = useSelector(selectTossupReader);
+
+  if (current === null) return null;
+
   const {
-    current: {
-      tossup: { formattedAnswer, normalizedAnswer },
-    },
-  } = useSelector(selectTossupReader);
+    tossup: { formattedAnswer, normalizedAnswer },
+  } = current;
 
   return (
     <Container

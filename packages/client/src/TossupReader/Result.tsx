@@ -14,12 +14,11 @@ const messages = {
 };
 
 const Result: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const {
-    current: {
-      result: { score },
-    },
-    status,
-  } = useSelector(selectTossupReader);
+  const { results, status } = useSelector(selectTossupReader);
+
+  const lastResult = results.at(-1);
+  if (lastResult === undefined) return null;
+  const { score } = lastResult;
 
   let text;
   if (status === ReaderStatus.prompting) text = random(messages.prompt);
