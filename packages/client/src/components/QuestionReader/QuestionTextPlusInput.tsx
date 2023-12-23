@@ -57,6 +57,7 @@ export default function QuestionTextPlusInput({
   const visibleRef = useRef<HTMLParagraphElement>(null);
   const {
     getScore,
+    isAnswering,
     onJudged,
     onNextQuestion,
     onPrompt,
@@ -128,11 +129,6 @@ export default function QuestionTextPlusInput({
     question,
     userInput,
   });
-
-  const isAnswering = [
-    ReaderStatus.Answering,
-    ReaderStatus.AnsweringAfterPrompt,
-  ].includes(status);
 
   const shouldShowProgress = isAnswering;
   const shouldShowBorder = status === ReaderStatus.Judged;
