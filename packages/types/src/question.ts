@@ -4,13 +4,20 @@ import { Subcategory } from './subcategory.js';
 import { Tossup } from './tossup.js';
 import { Tournament } from './tournament.js';
 
-export type Question = {
+export type QuestionMetadata = {
   category: Category;
   difficulty: Difficulty;
   id: number;
   tournament: Tournament;
   year: number;
   subcategory?: Subcategory;
+};
+
+export type QuestionContent = {
+  answer: string;
+  formattedAnswer: string;
+  formattedText: string;
+  text: string;
 };
 
 export type QuestionResult = {

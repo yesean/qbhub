@@ -1,18 +1,12 @@
-import { Question } from './question.js';
+import { QuestionContent, QuestionMetadata } from './question.js';
 
-export type Bonus = Question & {
+export type Bonus = QuestionMetadata & {
   formattedLeadin: string;
   leadin: string;
   parts: BonusPart[];
 };
 
-export type BonusPart = {
-  answer: string;
-  formattedAnswer: string;
-  formattedText: string;
-  number: number;
-  text: string;
-};
+export type BonusPart = QuestionContent & { number: number };
 
 export type BonusResult = {
   bonus: Bonus;
