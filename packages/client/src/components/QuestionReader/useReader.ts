@@ -67,8 +67,8 @@ export default function useReader({
     visibleIndex,
   } = useRevealer({
     onChange: onReveal,
-    onFinish: buzzIfUserHasNot,
-    words: formattedWords, // manually trigger buzz, if all words are revealed before the user buzzes
+    onFinish: buzzIfUserHasNot, // manually trigger buzz, if all words are revealed before the user buzzes
+    words: formattedWords,
   });
 
   const submitResult = useCallback(

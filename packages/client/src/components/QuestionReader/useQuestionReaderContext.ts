@@ -1,6 +1,29 @@
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
+import { ReaderStatus } from '../../utils/questionReader';
 import { QuestionReaderContext } from './QuestionReaderContext';
 
 export default function useQuestionReaderContext() {
-  return useContext(QuestionReaderContext);
+  const context = useContext(QuestionReaderContext);
+
+  const score = context.previousResults.reduce(
+    (acc, result) => acc + result.score,
+    0,
+  );
+
+  const isAnswering = [
+    ReaderStatus.Answering,
+    ReaderStatus.AnsweringAfterPrompt,
+  ].includes(context.status);
+
+  const latestResult = context.previousResults.at(-1);
+
+  return useMemo(
+    () => ({
+      isAnswering,
+      latestResult,
+      score,
+      ...context,
+    }),
+    [context, isAnswering, latestResult, score],
+  );
 }

@@ -5,17 +5,15 @@ import {
   StatLabel,
   StatNumber,
 } from '@chakra-ui/react';
-import { QuestionResult } from '@qbhub/types';
 import { ReaderStatus } from '../../utils/questionReader';
 import useQuestionReaderContext from './useQuestionReaderContext';
 
 export default function QuestionReaderScore() {
-  const { previousResults, status } = useQuestionReaderContext();
+  const { latestResult, score, status } = useQuestionReaderContext();
 
-  if (previousResults.length === 0) return null;
+  if (latestResult == null) return null;
 
-  const score = previousResults.reduce((acc, result) => acc + result.score, 0);
-  const delta = (previousResults.at(-1) as QuestionResult).score;
+  const latestScore = latestResult.score;
   const shouldShowDelta = status === ReaderStatus.Judged;
 
   return (
@@ -26,8 +24,8 @@ export default function QuestionReaderScore() {
       <StatNumber textAlign="center">{score}</StatNumber>
       {shouldShowDelta && (
         <StatHelpText mb={0} textAlign="center">
-          <StatArrow type={delta > 0 ? 'increase' : 'decrease'} />
-          {Math.abs(delta)}
+          <StatArrow type={latestScore > 0 ? 'increase' : 'decrease'} />
+          {Math.abs(latestScore)}
         </StatHelpText>
       )}
     </Stat>
