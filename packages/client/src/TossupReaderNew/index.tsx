@@ -4,15 +4,14 @@ import { useCallback, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import {
-  nextTossup,
   selectTossupReader,
   submitResult,
 } from '../TossupReader/tossupReaderSlice';
 import QuestionReader from '../components/QuestionReader';
 import { UnscoredQuestionResult } from '../components/QuestionReader/QuestionReaderContext';
 import TealButton from '../components/buttons/TealButton';
+import useActions from '../hooks/useActions';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
-import { useSettings } from '../hooks/useSettings';
 import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/hooks';
 import {
@@ -23,23 +22,13 @@ import {
 
 // evaluate user answer
 const getTossupResult = ({
-  buzzIndex,
-  isCorrect,
   question,
-  score,
-  userAnswer,
-}: QuestionResult): TossupResult => {
-  const formattedWords = getFormattedWords(question.formattedText);
-
-  return {
-    buzzIndex,
-    formattedWords,
-    isCorrect,
-    score,
-    tossup: question,
-    userAnswer,
-  };
-};
+  ...result
+}: QuestionResult): TossupResult => ({
+  formattedWords: getFormattedWords(question.formattedText),
+  tossup: question,
+  ...result,
+});
 
 const getQuestionResult = (result: TossupResult): QuestionResult => ({
   ...result,
@@ -61,12 +50,12 @@ const getScore = ({
 const displayJudgedToast = (result: QuestionResult) => {
   if (result.isCorrect) {
     if (result.score === TossupScore.power) {
-      toast.success('power!');
+      toast.success('Power!');
     } else if (result.score === TossupScore.ten) {
-      toast.success('ten!');
+      toast.success('Ten!');
     }
   } else {
-    toast.error('incorrect');
+    toast.error('Incorrect');
   }
 };
 
@@ -74,20 +63,16 @@ const displayPromptToast = () => {
   toast('prompt', { icon: '💭' });
 };
 
-export default function TossupReader() {
+function TossupReaderDisplay() {
+  const { current, results } = useSelector(selectTossupReader);
+
   const { openTossupHistoryModal } = useModalContext();
-  const { current, isFetching, results } = useSelector(selectTossupReader);
+  const { dispatchNextTossup } = useActions();
   const dispatch = useAppDispatch();
-  const { settings } = useSettings();
 
   const questionResults = useMemo(
     () => results.map(getQuestionResult),
     [results],
-  );
-
-  const handleNextTossup = useCallback(
-    () => dispatch(nextTossup({ settings })),
-    [dispatch, settings],
   );
 
   const handleQuestionResult = useCallback(
@@ -98,15 +83,9 @@ export default function TossupReader() {
     [dispatch],
   );
 
-  const isTossupMissing = current == null;
-
-  useKeyboardShortcut('n', handleNextTossup, {
-    customAllowCondition: isTossupMissing && !isFetching,
-  });
-
   useKeyboardShortcut('h', openTossupHistoryModal);
 
-  if (isFetching) {
+  if (current === null) {
     return (
       <Stack maxW="container.md" w="100%">
         <Skeleton h="40px" w="85%" />
@@ -119,18 +98,31 @@ export default function TossupReader() {
     );
   }
 
-  if (isTossupMissing) {
-    return <TealButton onClick={handleNextTossup}>Start tossups</TealButton>;
-  }
-
   return (
     <QuestionReader
       getScore={getScore}
       onJudged={handleQuestionResult}
-      onNextQuestion={handleNextTossup}
+      onNextQuestion={dispatchNextTossup}
       onPrompt={displayPromptToast}
       previousResults={questionResults}
       question={current.tossup}
     />
   );
+}
+
+export default function TossupReader() {
+  const { current, isFetching } = useSelector(selectTossupReader);
+  const { dispatchNextTossup } = useActions();
+
+  const isTossupAvaiableOrPending = current !== null || isFetching;
+
+  useKeyboardShortcut('n', dispatchNextTossup, {
+    customAllowCondition: !isTossupAvaiableOrPending,
+  });
+
+  if (!isTossupAvaiableOrPending) {
+    return <TealButton onClick={dispatchNextTossup}>Start tossups</TealButton>;
+  }
+
+  return <TossupReaderDisplay />;
 }
