@@ -1,4 +1,9 @@
-import { Category, Difficulty, Question, Subcategory } from '@qbhub/types';
+import {
+  Category,
+  Difficulty,
+  QuestionMetadata,
+  Subcategory,
+} from '@qbhub/types';
 import { isEmpty, isNotNullOrEmpty } from '../array';
 import { SUBCATEGORY_MAP } from '../constants';
 import { MAX_TOURNAMENT_YEAR, MIN_TOURNAMENT_YEAR } from './constants';
@@ -19,8 +24,8 @@ export const isSettingsDefault = (settings: Settings) =>
   settings.readingSpeed === undefined;
 
 // check if question passes settings filters
-export const isQuestionValid = (
-  question: Question,
+export const isQuestionValid = <T extends QuestionMetadata>(
+  question: T,
   settings: Partial<Settings>,
 ) => {
   if (

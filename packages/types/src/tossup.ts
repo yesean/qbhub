@@ -1,12 +1,11 @@
-import { FormattedWord, Question } from './question.js';
+import {
+  FormattedWord,
+  QuestionContent,
+  QuestionMetadata,
+} from './question.js';
 
-export type Tossup = Question & {
-  answer: string;
-  formattedAnswer: string;
-  formattedText: string;
-  normalizedAnswer: string;
-  text: string;
-};
+export type Tossup = QuestionContent &
+  QuestionMetadata & { normalizedAnswer: string };
 
 export type TossupResult = {
   buzzIndex: number;
