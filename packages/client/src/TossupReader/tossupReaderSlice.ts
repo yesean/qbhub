@@ -154,7 +154,14 @@ const tossupReaderSlice = createSlice({
 export const { buzz, filterTossups, prompt, submitAnswer, submitResult } =
   tossupReaderSlice.actions;
 
-export const selectTossupReader = (state: RootState) => state.tossupReader;
+export const selectTossupReader = ({ tossupReader }: RootState) => {
+  const score = tossupReader.results.reduce(
+    (acc, result) => acc + result.score,
+    0,
+  );
+
+  return { ...tossupReader, score };
+};
 export const selectIsAnswering = (state: RootState) =>
   [ReaderStatus.answering, ReaderStatus.prompting].includes(
     state.tossupReader.status,

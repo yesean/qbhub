@@ -65,7 +65,7 @@ const displayPromptToast = () => {
 };
 
 function TossupReaderDisplay() {
-  const { current, results } = useSelector(selectTossupReader);
+  const { current, results, score } = useSelector(selectTossupReader);
 
   const { openTossupHistoryModal } = useModalContext();
   const { dispatchNextTossup } = useActions();
@@ -112,6 +112,7 @@ function TossupReaderDisplay() {
       previousResults={questionResults}
       question={current.tossup}
       questionTextDisplay={TossupReaderTextDisplay}
+      score={score}
     />
   );
 }

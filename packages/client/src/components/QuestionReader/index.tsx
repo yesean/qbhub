@@ -16,13 +16,15 @@ import useQuestionReaderContext from './useQuestionReaderContext';
 type QuestionReaderProps = {
   question: Question;
   questionTextDisplay: QuestionTextDisplay;
+  score: number;
 };
 
 const QuestionReader = ({
   question,
   questionTextDisplay,
+  score,
 }: QuestionReaderProps) => {
-  const { latestResult, score, status } = useQuestionReaderContext();
+  const { latestResult, status } = useQuestionReaderContext();
 
   const shouldShowAnswer = status === QuestionReaderStatus.Judged;
 
@@ -43,12 +45,13 @@ const QuestionReader = ({
 type QuestionReaderWrapperProps = Omit<
   QuestionReaderContextProviderProps,
   'children'
-> & { questionTextDisplay: QuestionTextDisplay };
+> &
+  QuestionReaderProps;
 
 export default function QuestionReaderWrapper(
   props: QuestionReaderWrapperProps,
 ) {
-  const { question, questionTextDisplay } = props;
+  const { question, questionTextDisplay, score } = props;
 
   return (
     // use `key` to reset question reader per question
@@ -56,6 +59,7 @@ export default function QuestionReaderWrapper(
       <QuestionReader
         question={question}
         questionTextDisplay={questionTextDisplay}
+        score={score}
       />
     </QuestionReaderContextProvider>
   );
