@@ -9,19 +9,18 @@ import { QuestionResult } from '@qbhub/types';
 import { QuestionReaderStatus } from '../../utils/questionReader';
 
 type QuestionReaderScoreProps = {
-  latestResult: QuestionResult | undefined;
+  result: QuestionResult | undefined;
   score: number;
   status: QuestionReaderStatus;
 };
 
 export default function QuestionReaderScore({
-  latestResult,
+  result,
   score,
   status,
 }: QuestionReaderScoreProps) {
-  if (latestResult == null) return null;
+  if (result === undefined) return null;
 
-  const latestScore = latestResult.score;
   const shouldShowDelta = status === QuestionReaderStatus.Judged;
 
   return (
@@ -32,8 +31,8 @@ export default function QuestionReaderScore({
       <StatNumber textAlign="center">{score}</StatNumber>
       {shouldShowDelta && (
         <StatHelpText mb={0} textAlign="center">
-          <StatArrow type={latestScore > 0 ? 'increase' : 'decrease'} />
-          {Math.abs(latestScore)}
+          <StatArrow type={result.score > 0 ? 'increase' : 'decrease'} />
+          {Math.abs(result.score)}
         </StatHelpText>
       )}
     </Stat>

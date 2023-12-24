@@ -1,6 +1,6 @@
 import { Flex, Skeleton, Stack } from '@chakra-ui/react';
 import { QuestionResult, TossupResult, TossupScore } from '@qbhub/types';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import {
@@ -8,12 +8,12 @@ import {
   submitResult,
 } from '../TossupReader/tossupReaderSlice';
 import QuestionReader from '../components/QuestionReader';
-import { UnscoredQuestionResult } from '../components/QuestionReader/QuestionReaderContext';
 import TealButton from '../components/buttons/TealButton';
 import useActions from '../hooks/useActions';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/hooks';
+import { UnscoredQuestionResult } from '../utils/questionReader';
 import {
   getFormattedWords,
   getPowerIndex,
@@ -29,11 +29,6 @@ const getTossupResult = (
   formattedWords: getFormattedWords(question.formattedText),
   tossup: { ...question, normalizedAnswer },
   ...result,
-});
-
-const getQuestionResult = (result: TossupResult): QuestionResult => ({
-  ...result,
-  question: result.tossup,
 });
 
 const getScore = ({
@@ -65,16 +60,11 @@ const displayPromptToast = () => {
 };
 
 function TossupReaderDisplay() {
-  const { current, results, score } = useSelector(selectTossupReader);
+  const { current, score } = useSelector(selectTossupReader);
 
   const { openTossupHistoryModal } = useModalContext();
   const { dispatchNextTossup } = useActions();
   const dispatch = useAppDispatch();
-
-  const questionResults = useMemo(
-    () => results.map(getQuestionResult),
-    [results],
-  );
 
   const handleQuestionResult = useCallback(
     (result: QuestionResult) => {
@@ -109,7 +99,6 @@ function TossupReaderDisplay() {
       onJudged={handleQuestionResult}
       onNextQuestion={dispatchNextTossup}
       onPrompt={displayPromptToast}
-      previousResults={questionResults}
       question={current.tossup}
       questionTextDisplay={TossupReaderTextDisplay}
       score={score}
