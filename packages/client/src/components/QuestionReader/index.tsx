@@ -5,19 +5,15 @@ import useInput from '../../hooks/useInput';
 import useScrollIntoView from '../../hooks/useScrollToVisible';
 import {
   QuestionReaderStatus,
-  getNextStatus,
+  UnscoredQuestionResult,
+  getIsAnswering,
 } from '../../utils/questionReader';
 import { getFormattedWords } from '../../utils/reader';
 import QuestionAnswer from './QuestionAnswer';
 import QuestionInfo from './QuestionInfo';
-import {
-  QuestionReaderContextProvider,
-  QuestionReaderContextProviderProps,
-} from './QuestionReaderContext';
 import QuestionReaderInput from './QuestionReaderInput';
 import QuestionReaderProgress from './QuestionReaderProgress';
 import QuestionReaderScore from './QuestionReaderScore';
-import useQuestionReaderContext from './useQuestionReaderContext';
 import useReader from './useReader';
 
 export type QuestionTextDisplayProps = {
@@ -29,26 +25,26 @@ export type QuestionTextDisplayProps = {
 export type QuestionTextDisplay = React.ComponentType<QuestionTextDisplayProps>;
 
 type QuestionReaderProps = {
+  getScore: (result: UnscoredQuestionResult) => number;
+  onJudged: (result: QuestionResult) => void;
+  onNextQuestion: () => void;
+  onPrompt: (result: QuestionResult) => void;
   question: Question;
   questionTextDisplay: QuestionTextDisplay;
   score: number;
 };
 
-const QuestionReader = ({
+export default function QuestionReader({
+  getScore,
+  onJudged,
+  onNextQuestion,
+  onPrompt,
   question,
   questionTextDisplay: QuestionTextDisplay,
   score,
-}: QuestionReaderProps) => {
+}: QuestionReaderProps) {
   const [buzzIndex, setBuzzIndex] = useState<number>();
-  const {
-    getScore,
-    isAnswering,
-    latestResult,
-    onJudged,
-    onNextQuestion,
-    onPrompt,
-    setStatus,
-  } = useQuestionReaderContext();
+  const [result, setResult] = useState<QuestionResult>();
 
   const {
     blurInput,
@@ -73,34 +69,31 @@ const QuestionReader = ({
 
   const handleBuzz = useCallback(() => {
     focusInput();
-    setStatus(getNextStatus);
-  }, [focusInput, setStatus]);
+  }, [focusInput]);
 
   const handleJudged = useCallback(
-    (result: QuestionResult) => {
+    (judgedResult: QuestionResult) => {
+      setResult(judgedResult);
       blurInput();
-      setBuzzIndex(result.buzzIndex);
-      onJudged(result);
-      setStatus(getNextStatus);
+      setBuzzIndex(judgedResult.buzzIndex);
+      onJudged(judgedResult);
     },
-    [blurInput, onJudged, setStatus],
+    [blurInput, onJudged],
   );
 
   const handlePrompt = useCallback(
-    (result: QuestionResult) => {
+    (promptResult: QuestionResult) => {
       focusInput();
       selectInput();
-      onPrompt(result);
-      setStatus((status) => getNextStatus(status, { isPrompted: true }));
+      onPrompt(promptResult);
     },
-    [focusInput, onPrompt, selectInput, setStatus],
+    [focusInput, onPrompt, selectInput],
   );
 
   const handleNext = useCallback(() => {
     blurInput();
     onNextQuestion();
-    setStatus(getNextStatus);
-  }, [blurInput, onNextQuestion, setStatus]);
+  }, [blurInput, onNextQuestion]);
 
   const { handleClick, status, visibleIndex } = useReader({
     getScore,
@@ -113,7 +106,7 @@ const QuestionReader = ({
     userInput,
   });
 
-  const shouldShowProgress = isAnswering;
+  const shouldShowProgress = getIsAnswering(status);
   const shouldShowAnswer = status === QuestionReaderStatus.Judged;
 
   return (
@@ -132,39 +125,12 @@ const QuestionReader = ({
       <QuestionReaderInput
         handleClick={handleClick}
         inputRef={inputRef}
-        result={latestResult}
+        result={result}
         setUserInput={setUserInput}
         status={status}
         userInput={userInput}
       />
-      <QuestionReaderScore
-        latestResult={latestResult}
-        score={score}
-        status={status}
-      />
+      <QuestionReaderScore result={result} score={score} status={status} />
     </Flex>
-  );
-};
-
-type QuestionReaderWrapperProps = Omit<
-  QuestionReaderContextProviderProps,
-  'children'
-> &
-  QuestionReaderProps;
-
-export default function QuestionReaderWrapper(
-  props: QuestionReaderWrapperProps,
-) {
-  const { question, questionTextDisplay, score } = props;
-
-  return (
-    // use `key` to reset question reader per question
-    <QuestionReaderContextProvider key={question.id} {...props}>
-      <QuestionReader
-        question={question}
-        questionTextDisplay={questionTextDisplay}
-        score={score}
-      />
-    </QuestionReaderContextProvider>
   );
 }
