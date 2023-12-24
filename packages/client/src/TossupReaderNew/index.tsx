@@ -10,7 +10,6 @@ import {
 import QuestionReader from '../components/QuestionReader';
 import { UnscoredQuestionResult } from '../components/QuestionReader/QuestionReaderContext';
 import TealButton from '../components/buttons/TealButton';
-import FormattedQuestion from '../components/reader/FormattedQuestion';
 import useActions from '../hooks/useActions';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useModalContext } from '../providers/ModalContext';
@@ -20,6 +19,7 @@ import {
   getPowerIndex,
   getTossupScore,
 } from '../utils/reader';
+import TossupReaderTextDisplay from './TossupReaderTextDisplay';
 
 // evaluate user answer
 const getTossupResult = (
@@ -111,7 +111,7 @@ function TossupReaderDisplay() {
       onPrompt={displayPromptToast}
       previousResults={questionResults}
       question={current.tossup}
-      questionTextDisplay={FormattedQuestion}
+      questionTextDisplay={TossupReaderTextDisplay}
     />
   );
 }

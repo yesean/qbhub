@@ -1,4 +1,4 @@
-import { Box, Flex, Input } from '@chakra-ui/react';
+import { Flex, Input } from '@chakra-ui/react';
 import { FormattedWord, QuestionResult } from '@qbhub/types';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';
@@ -35,16 +35,16 @@ const getButtonText = (status: ReaderStatus): string => {
   }
 };
 
-export type TextDisplayProps = {
+export type QuestionTextDisplayProps = {
   visibleIndex: number;
   visibleRef: React.RefObject<HTMLParagraphElement>;
   words: FormattedWord[];
   buzzIndex?: number;
 };
-export type TextDisplay = React.ComponentType<TextDisplayProps>;
+export type QuestionTextDisplay = React.ComponentType<QuestionTextDisplayProps>;
 
 type QuestionTextPlusInputProps = {
-  questiontextDisplay: TextDisplay;
+  questiontextDisplay: QuestionTextDisplay;
 };
 
 /**
@@ -54,15 +54,16 @@ export default function QuestionTextPlusInput({
   questiontextDisplay: QuestionTextDisplay,
 }: QuestionTextPlusInputProps) {
   const [userInput, setUserInput] = useState('');
+  const [buzzIndex, setBuzzIndex] = useState<number>();
   const inputRef = useRef<HTMLInputElement>(null);
   const visibleRef = useRef<HTMLParagraphElement>(null);
   const {
     getScore,
     isAnswering,
+    latestResult,
     onJudged,
     onNextQuestion,
     onPrompt,
-    previousResults,
     question,
     setStatus,
   } = useQuestionReaderContext();
@@ -86,25 +87,26 @@ export default function QuestionTextPlusInput({
     [question.formattedText],
   );
 
-  const onReveal = useCallback(() => {
+  const handleReveal = useCallback(() => {
     scrollToVisible();
   }, [scrollToVisible]);
 
-  const onBuzz = useCallback(() => {
+  const handleBuzz = useCallback(() => {
     focusInput();
     setStatus(getNextStatus);
   }, [focusInput, setStatus]);
 
-  const onJudgedWrapper = useCallback(
+  const handleJudged = useCallback(
     (result: QuestionResult) => {
       blurInput();
+      setBuzzIndex(result.buzzIndex);
       onJudged(result);
       setStatus(getNextStatus);
     },
     [blurInput, onJudged, setStatus],
   );
 
-  const onPromptWrapper = useCallback(
+  const handlePrompt = useCallback(
     (result: QuestionResult) => {
       focusInput();
       selectInput();
@@ -114,7 +116,7 @@ export default function QuestionTextPlusInput({
     [focusInput, onPrompt, selectInput, setStatus],
   );
 
-  const onNext = useCallback(() => {
+  const handleNext = useCallback(() => {
     blurInput();
     onNextQuestion();
     setStatus(getNextStatus);
@@ -122,39 +124,34 @@ export default function QuestionTextPlusInput({
 
   const { handleClick, status, visibleIndex } = useReader({
     getScore,
-    onBuzz,
-    onJudged: onJudgedWrapper,
-    onNext,
-    onPrompt: onPromptWrapper,
-    onReveal,
+    onBuzz: handleBuzz,
+    onJudged: handleJudged,
+    onNext: handleNext,
+    onPrompt: handlePrompt,
+    onReveal: handleReveal,
     question,
     userInput,
   });
 
   const shouldShowProgress = isAnswering;
   const shouldShowBorder = status === ReaderStatus.Judged;
-  const lastResult = previousResults.at(-1);
-  const buzzIndex =
-    status === ReaderStatus.Judged ? lastResult?.buzzIndex : undefined;
   const shouldDisableInput = !isAnswering;
 
   return (
     <>
-      <Box bg="gray.100" borderRadius="md" overflow="auto" p={4}>
-        <QuestionTextDisplay
-          buzzIndex={buzzIndex}
-          visibleIndex={visibleIndex}
-          visibleRef={visibleRef}
-          words={formattedWords}
-        />
-      </Box>
+      <QuestionTextDisplay
+        buzzIndex={buzzIndex}
+        visibleIndex={visibleIndex}
+        visibleRef={visibleRef}
+        words={formattedWords}
+      />
       {shouldShowProgress && (
         <QuestionReaderProgress key={status} onFinish={handleClick} />
       )}
       <Flex justify="center" w="100%">
         <Input
           ref={inputRef}
-          borderColor={getInputBorderColor(status, lastResult)}
+          borderColor={getInputBorderColor(status, latestResult)}
           borderWidth={shouldShowBorder ? 2 : undefined}
           isDisabled={shouldDisableInput}
           mr={4}
