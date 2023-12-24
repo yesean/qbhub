@@ -1,8 +1,8 @@
 import { Flex, Input } from '@chakra-ui/react';
 import { FormattedWord, QuestionResult } from '@qbhub/types';
-import { useCallback, useMemo, useRef, useState } from 'react';
-import { elementScrollIntoView } from 'seamless-scroll-polyfill';
+import { useCallback, useMemo, useState } from 'react';
 import useInput from '../../hooks/useInput';
+import useScrollIntoView from '../../hooks/useScrollToVisible';
 import {
   QuestionReaderStatus,
   getNextStatus,
@@ -58,7 +58,6 @@ export default function QuestionTextPlusInput({
   questiontextDisplay: QuestionTextDisplay,
 }: QuestionTextPlusInputProps) {
   const [buzzIndex, setBuzzIndex] = useState<number>();
-  const visibleRef = useRef<HTMLParagraphElement>(null);
   const {
     getScore,
     isAnswering,
@@ -79,10 +78,8 @@ export default function QuestionTextPlusInput({
     userInput,
   } = useInput();
 
-  const scrollToVisible = useCallback(() => {
-    if (visibleRef.current != null)
-      elementScrollIntoView(visibleRef.current, { block: 'center' });
-  }, []);
+  const { scrollToVisible, visibleRef } =
+    useScrollIntoView<HTMLParagraphElement>();
 
   const formattedWords = useMemo(
     () => getFormattedWords(question.formattedText),
