@@ -6,12 +6,12 @@ import {
   StatNumber,
 } from '@chakra-ui/react';
 import { QuestionResult } from '@qbhub/types';
-import { ReaderStatus } from '../../utils/questionReader';
+import { QuestionReaderStatus } from '../../utils/questionReader';
 
 type QuestionReaderScoreProps = {
   latestResult: QuestionResult | undefined;
   score: number;
-  status: ReaderStatus;
+  status: QuestionReaderStatus;
 };
 
 export default function QuestionReaderScore({
@@ -22,7 +22,7 @@ export default function QuestionReaderScore({
   if (latestResult == null) return null;
 
   const latestScore = latestResult.score;
-  const shouldShowDelta = status === ReaderStatus.Judged;
+  const shouldShowDelta = status === QuestionReaderStatus.Judged;
 
   return (
     <Stat>

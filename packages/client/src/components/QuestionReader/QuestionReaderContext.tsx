@@ -1,6 +1,6 @@
 import { Question, QuestionResult } from '@qbhub/types';
 import React, { ReactNode, useMemo, useState } from 'react';
-import { ReaderStatus } from '../../utils/questionReader';
+import { QuestionReaderStatus } from '../../utils/questionReader';
 
 export type UnscoredQuestionResult = Omit<QuestionResult, 'score'>;
 
@@ -12,8 +12,8 @@ type QuestionReaderContextType = {
   onPrompt: (result: QuestionResult) => void;
   previousResults: QuestionResult[];
   question: Question;
-  setStatus: React.Dispatch<React.SetStateAction<ReaderStatus>>;
-  status: ReaderStatus;
+  setStatus: React.Dispatch<React.SetStateAction<QuestionReaderStatus>>;
+  status: QuestionReaderStatus;
 };
 
 export const QuestionReaderContext =
@@ -25,7 +25,7 @@ export const QuestionReaderContext =
     previousResults: [],
     question: {} as Question,
     setStatus: () => {},
-    status: ReaderStatus.Judged,
+    status: QuestionReaderStatus.Judged,
   });
 
 export type QuestionReaderContextProviderProps = Omit<
@@ -39,7 +39,9 @@ export const QuestionReaderContextProvider = ({
   children,
   ...rest
 }: QuestionReaderContextProviderProps) => {
-  const [status, setStatus] = useState<ReaderStatus>(ReaderStatus.Reading);
+  const [status, setStatus] = useState<QuestionReaderStatus>(
+    QuestionReaderStatus.Reading,
+  );
   const context = useMemo(
     () => ({
       ...rest,

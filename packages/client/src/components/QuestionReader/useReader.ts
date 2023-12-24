@@ -2,7 +2,7 @@ import { Question, QuestionResult } from '@qbhub/types';
 import { useCallback, useMemo, useState } from 'react';
 import useKeyboardShortcut from '../../hooks/useKeyboardShortcut';
 import {
-  ReaderStatus,
+  QuestionReaderStatus,
   UnscoredQuestionResult,
   getNextStatus,
   getQuestionResult,
@@ -23,7 +23,7 @@ type Props = {
 
 type Reader = {
   handleClick: () => void;
-  status: ReaderStatus;
+  status: QuestionReaderStatus;
   visibleIndex: number;
 };
 
@@ -42,7 +42,7 @@ export default function useReader({
   question,
   userInput,
 }: Props): Reader {
-  const [status, setStatus] = useState(ReaderStatus.Reading);
+  const [status, setStatus] = useState(QuestionReaderStatus.Reading);
 
   const formattedWords = getFormattedWords(question.formattedText);
 
@@ -57,7 +57,7 @@ export default function useReader({
   }, [onBuzz, status]);
 
   const buzzIfUserHasNot = useCallback(() => {
-    if (status !== ReaderStatus.Reading) return;
+    if (status !== QuestionReaderStatus.Reading) return;
 
     handleBuzz();
   }, [handleBuzz, status]);
@@ -143,20 +143,20 @@ export default function useReader({
 
   const handleClick = useCallback(() => {
     switch (status) {
-      case ReaderStatus.Reading: {
+      case QuestionReaderStatus.Reading: {
         pauseQuestionRevealing();
         handleBuzz();
         break;
       }
-      case ReaderStatus.Answering: {
+      case QuestionReaderStatus.Answering: {
         handleSubmitOnAnswering();
         break;
       }
-      case ReaderStatus.AnsweringAfterPrompt: {
+      case QuestionReaderStatus.AnsweringAfterPrompt: {
         handleSubmitOnAnsweringAfterPrompt();
         break;
       }
-      case ReaderStatus.Judged: {
+      case QuestionReaderStatus.Judged: {
         handleNextQuestion();
         break;
       }
@@ -171,12 +171,12 @@ export default function useReader({
   ]);
 
   const isAnswering = [
-    ReaderStatus.Answering,
-    ReaderStatus.AnsweringAfterPrompt,
+    QuestionReaderStatus.Answering,
+    QuestionReaderStatus.AnsweringAfterPrompt,
   ].includes(status);
 
   useKeyboardShortcut(' ', handleClick, {
-    customAllowCondition: status === ReaderStatus.Reading,
+    customAllowCondition: status === QuestionReaderStatus.Reading,
   });
 
   useKeyboardShortcut('Enter', handleClick, {
@@ -185,7 +185,7 @@ export default function useReader({
   });
 
   useKeyboardShortcut('n', handleClick, {
-    customAllowCondition: status === ReaderStatus.Judged,
+    customAllowCondition: status === QuestionReaderStatus.Judged,
   });
 
   return useMemo(

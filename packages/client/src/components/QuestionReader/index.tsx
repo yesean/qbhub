@@ -1,6 +1,6 @@
 import { Flex } from '@chakra-ui/react';
 import { Question } from '@qbhub/types';
-import { ReaderStatus } from '../../utils/questionReader';
+import { QuestionReaderStatus } from '../../utils/questionReader';
 import QuestionAnswer from './QuestionAnswer';
 import QuestionInfo from './QuestionInfo';
 import {
@@ -24,7 +24,7 @@ const QuestionReader = ({
 }: QuestionReaderProps) => {
   const { latestResult, score, status } = useQuestionReaderContext();
 
-  const shouldShowAnswer = status === ReaderStatus.Judged;
+  const shouldShowAnswer = status === QuestionReaderStatus.Judged;
 
   return (
     <Flex direction="column" gap={4} maxW="container.md" overflow="auto" p={2}>

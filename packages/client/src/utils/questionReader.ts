@@ -2,7 +2,7 @@ import { Question, QuestionResult } from '@qbhub/types';
 import { Judge, JudgeResult } from './reader';
 
 // question reader states
-export enum ReaderStatus {
+export enum QuestionReaderStatus {
   Reading,
   Answering,
   AnsweringAfterPrompt,
@@ -15,20 +15,20 @@ type NextStatusOptions = {
 
 // question reader state machine
 export const getNextStatus = (
-  prevStatus: ReaderStatus,
+  prevStatus: QuestionReaderStatus,
   { isPrompted = false }: NextStatusOptions = {},
-): ReaderStatus => {
+): QuestionReaderStatus => {
   switch (prevStatus) {
-    case ReaderStatus.Reading:
-      return ReaderStatus.Answering;
-    case ReaderStatus.Answering:
+    case QuestionReaderStatus.Reading:
+      return QuestionReaderStatus.Answering;
+    case QuestionReaderStatus.Answering:
       return isPrompted
-        ? ReaderStatus.AnsweringAfterPrompt
-        : ReaderStatus.Judged;
-    case ReaderStatus.AnsweringAfterPrompt:
-      return ReaderStatus.Judged;
-    case ReaderStatus.Judged:
-      return ReaderStatus.Reading;
+        ? QuestionReaderStatus.AnsweringAfterPrompt
+        : QuestionReaderStatus.Judged;
+    case QuestionReaderStatus.AnsweringAfterPrompt:
+      return QuestionReaderStatus.Judged;
+    case QuestionReaderStatus.Judged:
+      return QuestionReaderStatus.Reading;
   }
 };
 
