@@ -7,11 +7,13 @@ import {
   QuestionReaderContextProviderProps,
 } from './QuestionReaderContext';
 import QuestionReaderScore from './QuestionReaderScore';
-import QuestionTextPlusInput, { TextDisplay } from './QuestionTextPlusInput';
+import QuestionTextPlusInput, {
+  QuestionTextDisplay,
+} from './QuestionTextPlusInput';
 import useQuestionReaderContext from './useQuestionReaderContext';
 
 type QuestionReaderProps = {
-  questionTextDisplay: TextDisplay;
+  questionTextDisplay: QuestionTextDisplay;
 };
 
 const QuestionReader = ({ questionTextDisplay }: QuestionReaderProps) => {
@@ -32,7 +34,7 @@ const QuestionReader = ({ questionTextDisplay }: QuestionReaderProps) => {
 type QuestionReaderWrapperProps = Omit<
   QuestionReaderContextProviderProps,
   'children'
-> & { questionTextDisplay: TextDisplay };
+> & { questionTextDisplay: QuestionTextDisplay };
 
 export default function QuestionReaderWrapper(
   props: QuestionReaderWrapperProps,
