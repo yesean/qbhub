@@ -1,8 +1,9 @@
-import { QuestionResult, Tossup, UnscoredQuestionResult } from '@qbhub/types';
+import { Question, QuestionResult } from '@qbhub/types';
 import { useCallback, useMemo, useState } from 'react';
 import useKeyboardShortcut from '../../hooks/useKeyboardShortcut';
 import {
   ReaderStatus,
+  UnscoredQuestionResult,
   getNextStatus,
   getQuestionResult,
 } from '../../utils/questionReader';
@@ -16,7 +17,7 @@ type Props = {
   onNext: () => void;
   onPrompt: (result: QuestionResult) => void;
   onReveal: (visibleIndex: number) => void;
-  question: Tossup;
+  question: Question;
   userInput: string;
 };
 

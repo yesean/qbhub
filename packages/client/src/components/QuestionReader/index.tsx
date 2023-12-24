@@ -1,7 +1,5 @@
 import { Flex } from '@chakra-ui/react';
-import { isTossup } from '@qbhub/types';
 import { ReaderStatus } from '../../utils/questionReader';
-import FormattedQuestion from '../reader/FormattedQuestion';
 import QuestionAnswer from './QuestionAnswer';
 import QuestionInfo from './QuestionInfo';
 import {
@@ -9,22 +7,23 @@ import {
   QuestionReaderContextProviderProps,
 } from './QuestionReaderContext';
 import QuestionReaderScore from './QuestionReaderScore';
-import QuestionTextPlusInput from './QuestionTextPlusInput';
+import QuestionTextPlusInput, { TextDisplay } from './QuestionTextPlusInput';
 import useQuestionReaderContext from './useQuestionReaderContext';
 
-const QuestionReader = () => {
-  const { question, status } = useQuestionReaderContext();
+type QuestionReaderProps = {
+  questionTextDisplay: TextDisplay;
+};
+
+const QuestionReader = ({ questionTextDisplay }: QuestionReaderProps) => {
+  const { status } = useQuestionReaderContext();
 
   const shouldShowAnswer = status === ReaderStatus.Judged;
-  const textDisplay = isTossup(question)
-    ? FormattedQuestion
-    : FormattedQuestion;
 
   return (
     <Flex direction="column" gap={4} maxW="container.md" overflow="auto" p={2}>
       <QuestionInfo />
       {shouldShowAnswer && <QuestionAnswer />}
-      <QuestionTextPlusInput textDisplay={textDisplay} />
+      <QuestionTextPlusInput questiontextDisplay={questionTextDisplay} />
       <QuestionReaderScore />
     </Flex>
   );
@@ -33,17 +32,17 @@ const QuestionReader = () => {
 type QuestionReaderWrapperProps = Omit<
   QuestionReaderContextProviderProps,
   'children'
->;
+> & { questionTextDisplay: TextDisplay };
 
 export default function QuestionReaderWrapper(
   props: QuestionReaderWrapperProps,
 ) {
-  const { question } = props;
+  const { question, questionTextDisplay } = props;
 
   return (
     // use `key` to reset question reader per question
     <QuestionReaderContextProvider key={question.id} {...props}>
-      <QuestionReader />
+      <QuestionReader questionTextDisplay={questionTextDisplay} />
     </QuestionReaderContextProvider>
   );
 }

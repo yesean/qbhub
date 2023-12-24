@@ -1,25 +1,23 @@
 import { Box, Link, Text } from '@chakra-ui/react';
-import { isTossup } from '@qbhub/types';
 import { Link as RouterLink } from 'react-router-dom';
-import { getClueDisplayURL } from '../../utils/routes';
+import { getClueSearchURL } from '../../utils/routes';
 import { parseHTMLString } from '../../utils/string';
 import useQuestionReaderContext from './useQuestionReaderContext';
 
 export default function QuestionAnswer() {
   const { question } = useQuestionReaderContext();
 
-  if (!isTossup(question)) return null;
-
-  const clueDisplayURL = getClueDisplayURL({
-    answer: question.normalizedAnswer,
-  });
+  // const clueDisplayURL = getClueDisplayURL({
+  //   answer: question.normalizedAnswer,
+  // });
   const answer = parseHTMLString(question.formattedAnswer);
 
   return (
     <Box bg="gray.100" borderRadius="md" p={4}>
       <Text>
         <b>ANSWER: </b>
-        <Link as={RouterLink} to={clueDisplayURL}>
+        {/* <Link as={RouterLink} to={clueDisplayURL}> */}
+        <Link as={RouterLink} to={getClueSearchURL()}>
           {answer}
         </Link>
       </Text>
