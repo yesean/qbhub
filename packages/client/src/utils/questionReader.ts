@@ -54,3 +54,10 @@ export const getQuestionResult = (
   const score = getScore(unscoredQuestionResult);
   return { ...unscoredQuestionResult, score };
 };
+
+export function getIsAnswering(status: QuestionReaderStatus) {
+  return (
+    status === QuestionReaderStatus.Answering ||
+    status === QuestionReaderStatus.AnsweringAfterPrompt
+  );
+}

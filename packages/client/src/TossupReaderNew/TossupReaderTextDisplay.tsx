@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react';
-import { QuestionTextDisplayProps } from '../components/QuestionReader/QuestionTextPlusInput';
+import { QuestionTextDisplayProps } from '../components/QuestionReader';
 import FormattedQuestion from '../components/reader/FormattedQuestion';
 
 type TossupReaderTextDisplayProps = QuestionTextDisplayProps;
