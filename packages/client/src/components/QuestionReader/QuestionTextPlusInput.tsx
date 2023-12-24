@@ -2,7 +2,10 @@ import { Flex, Input } from '@chakra-ui/react';
 import { FormattedWord, QuestionResult } from '@qbhub/types';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';
-import { ReaderStatus, getNextStatus } from '../../utils/questionReader';
+import {
+  QuestionReaderStatus,
+  getNextStatus,
+} from '../../utils/questionReader';
 import { getFormattedWords } from '../../utils/reader';
 import TealButton from '../buttons/TealButton';
 import QuestionReaderProgress from './QuestionReaderProgress';
@@ -11,10 +14,10 @@ import useReader from './useReader';
 
 // get input border color for tossup results, green/red for correct/incorrect
 const getInputBorderColor = (
-  status: ReaderStatus,
+  status: QuestionReaderStatus,
   questionResult?: QuestionResult,
 ): string => {
-  if (status !== ReaderStatus.Judged || questionResult == null)
+  if (status !== QuestionReaderStatus.Judged || questionResult == null)
     return 'gray.300';
 
   if (questionResult.isCorrect) return 'green.400';
@@ -22,15 +25,15 @@ const getInputBorderColor = (
 };
 
 // get button text depending on reader status
-const getButtonText = (status: ReaderStatus): string => {
+const getButtonText = (status: QuestionReaderStatus): string => {
   switch (status) {
-    case ReaderStatus.Reading:
+    case QuestionReaderStatus.Reading:
       return 'Buzz';
-    case ReaderStatus.Answering:
+    case QuestionReaderStatus.Answering:
       return 'Submit';
-    case ReaderStatus.AnsweringAfterPrompt:
+    case QuestionReaderStatus.AnsweringAfterPrompt:
       return 'Submit';
-    case ReaderStatus.Judged:
+    case QuestionReaderStatus.Judged:
       return 'Next';
   }
 };
@@ -134,7 +137,7 @@ export default function QuestionTextPlusInput({
   });
 
   const shouldShowProgress = isAnswering;
-  const shouldShowBorder = status === ReaderStatus.Judged;
+  const shouldShowBorder = status === QuestionReaderStatus.Judged;
   const shouldDisableInput = !isAnswering;
 
   return (
