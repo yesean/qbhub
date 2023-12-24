@@ -1,4 +1,4 @@
-import { QuestionResult, Tossup } from '@qbhub/types';
+import { Question, QuestionResult } from '@qbhub/types';
 import React, { ReactNode, useMemo, useState } from 'react';
 import { ReaderStatus } from '../../utils/questionReader';
 
@@ -11,7 +11,7 @@ type QuestionReaderContextType = {
   onNextQuestion: () => void;
   onPrompt: (result: QuestionResult) => void;
   previousResults: QuestionResult[];
-  question: Tossup;
+  question: Question;
   setStatus: React.Dispatch<React.SetStateAction<ReaderStatus>>;
   status: ReaderStatus;
 };
@@ -23,7 +23,7 @@ export const QuestionReaderContext =
     onNextQuestion: () => {},
     onPrompt: () => {},
     previousResults: [],
-    question: {} as Tossup,
+    question: {} as Question,
     setStatus: () => {},
     status: ReaderStatus.Judged,
   });

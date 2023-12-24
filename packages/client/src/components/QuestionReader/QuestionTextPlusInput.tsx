@@ -41,16 +41,17 @@ export type TextDisplayProps = {
   words: FormattedWord[];
   buzzIndex?: number;
 };
+export type TextDisplay = React.ComponentType<TextDisplayProps>;
 
 type QuestionTextPlusInputProps = {
-  textDisplay: React.ComponentType<TextDisplayProps>;
+  questiontextDisplay: TextDisplay;
 };
 
 /**
  * Question text revealer + Answering input
  */
 export default function QuestionTextPlusInput({
-  textDisplay: TextDisplay,
+  questiontextDisplay: QuestionTextDisplay,
 }: QuestionTextPlusInputProps) {
   const [userInput, setUserInput] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -140,7 +141,7 @@ export default function QuestionTextPlusInput({
   return (
     <>
       <Box bg="gray.100" borderRadius="md" overflow="auto" p={4}>
-        <TextDisplay
+        <QuestionTextDisplay
           buzzIndex={buzzIndex}
           visibleIndex={visibleIndex}
           visibleRef={visibleRef}

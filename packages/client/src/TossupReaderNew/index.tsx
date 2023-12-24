@@ -10,6 +10,7 @@ import {
 import QuestionReader from '../components/QuestionReader';
 import { UnscoredQuestionResult } from '../components/QuestionReader/QuestionReaderContext';
 import TealButton from '../components/buttons/TealButton';
+import FormattedQuestion from '../components/reader/FormattedQuestion';
 import useActions from '../hooks/useActions';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useModalContext } from '../providers/ModalContext';
@@ -21,12 +22,12 @@ import {
 } from '../utils/reader';
 
 // evaluate user answer
-const getTossupResult = ({
-  question,
-  ...result
-}: QuestionResult): TossupResult => ({
+const getTossupResult = (
+  { question, ...result }: QuestionResult,
+  normalizedAnswer: string,
+): TossupResult => ({
   formattedWords: getFormattedWords(question.formattedText),
-  tossup: question,
+  tossup: { ...question, normalizedAnswer },
   ...result,
 });
 
@@ -77,10 +78,14 @@ function TossupReaderDisplay() {
 
   const handleQuestionResult = useCallback(
     (result: QuestionResult) => {
-      dispatch(submitResult(getTossupResult(result)));
+      if (current === null) return;
+
+      dispatch(
+        submitResult(getTossupResult(result, current.tossup.normalizedAnswer)),
+      );
       displayJudgedToast(result);
     },
-    [dispatch],
+    [current, dispatch],
   );
 
   useKeyboardShortcut('h', openTossupHistoryModal);
@@ -106,6 +111,7 @@ function TossupReaderDisplay() {
       onPrompt={displayPromptToast}
       previousResults={questionResults}
       question={current.tossup}
+      questionTextDisplay={FormattedQuestion}
     />
   );
 }
