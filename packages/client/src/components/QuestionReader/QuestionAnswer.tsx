@@ -1,12 +1,14 @@
 import { Box, Link, Text } from '@chakra-ui/react';
+import { Question } from '@qbhub/types';
 import { Link as RouterLink } from 'react-router-dom';
 import { getClueSearchURL } from '../../utils/routes';
 import { parseHTMLString } from '../../utils/string';
-import useQuestionReaderContext from './useQuestionReaderContext';
 
-export default function QuestionAnswer() {
-  const { question } = useQuestionReaderContext();
+type QuestionAnswerProps = {
+  question: Question;
+};
 
+export default function QuestionAnswer({ question }: QuestionAnswerProps) {
   // const clueDisplayURL = getClueDisplayURL({
   //   answer: question.normalizedAnswer,
   // });

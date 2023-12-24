@@ -5,12 +5,20 @@ import {
   StatLabel,
   StatNumber,
 } from '@chakra-ui/react';
+import { QuestionResult } from '@qbhub/types';
 import { ReaderStatus } from '../../utils/questionReader';
-import useQuestionReaderContext from './useQuestionReaderContext';
 
-export default function QuestionReaderScore() {
-  const { latestResult, score, status } = useQuestionReaderContext();
+type QuestionReaderScoreProps = {
+  latestResult: QuestionResult | undefined;
+  score: number;
+  status: ReaderStatus;
+};
 
+export default function QuestionReaderScore({
+  latestResult,
+  score,
+  status,
+}: QuestionReaderScoreProps) {
   if (latestResult == null) return null;
 
   const latestScore = latestResult.score;

@@ -1,4 +1,5 @@
 import { Flex } from '@chakra-ui/react';
+import { Question } from '@qbhub/types';
 import { ReaderStatus } from '../../utils/questionReader';
 import QuestionAnswer from './QuestionAnswer';
 import QuestionInfo from './QuestionInfo';
@@ -13,20 +14,28 @@ import QuestionTextPlusInput, {
 import useQuestionReaderContext from './useQuestionReaderContext';
 
 type QuestionReaderProps = {
+  question: Question;
   questionTextDisplay: QuestionTextDisplay;
 };
 
-const QuestionReader = ({ questionTextDisplay }: QuestionReaderProps) => {
-  const { status } = useQuestionReaderContext();
+const QuestionReader = ({
+  question,
+  questionTextDisplay,
+}: QuestionReaderProps) => {
+  const { latestResult, score, status } = useQuestionReaderContext();
 
   const shouldShowAnswer = status === ReaderStatus.Judged;
 
   return (
     <Flex direction="column" gap={4} maxW="container.md" overflow="auto" p={2}>
-      <QuestionInfo />
-      {shouldShowAnswer && <QuestionAnswer />}
+      <QuestionInfo question={question} />
+      {shouldShowAnswer && <QuestionAnswer question={question} />}
       <QuestionTextPlusInput questiontextDisplay={questionTextDisplay} />
-      <QuestionReaderScore />
+      <QuestionReaderScore
+        latestResult={latestResult}
+        score={score}
+        status={status}
+      />
     </Flex>
   );
 };
@@ -44,7 +53,10 @@ export default function QuestionReaderWrapper(
   return (
     // use `key` to reset question reader per question
     <QuestionReaderContextProvider key={question.id} {...props}>
-      <QuestionReader questionTextDisplay={questionTextDisplay} />
+      <QuestionReader
+        question={question}
+        questionTextDisplay={questionTextDisplay}
+      />
     </QuestionReaderContextProvider>
   );
 }
