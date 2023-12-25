@@ -10,12 +10,12 @@ import {
 import { JudgeResult, getFormattedWords } from '../../utils/reader';
 import useRevealer from './useRevealer';
 
-type Props = {
-  getScore: (result: UnscoredQuestionResult) => number;
+type Props<T> = {
+  getScore: (result: UnscoredQuestionResult) => T;
   onBuzz: () => void;
-  onJudged: (result: QuestionResult) => void;
+  onJudged: (result: QuestionResult<T>) => void;
   onNext: () => void;
-  onPrompt: (result: QuestionResult) => void;
+  onPrompt: (result: QuestionResult<T>) => void;
   onReveal: (visibleIndex: number) => void;
   question: Question;
   userInput: string;
@@ -32,7 +32,7 @@ type Reader = {
  * The general reader state flow is: reading -> answering -> judged
  * Consumers of the hook can attach callbacks on state changes.
  */
-export default function useReader({
+export default function useReader<T>({
   getScore,
   onBuzz,
   onJudged,
@@ -41,7 +41,7 @@ export default function useReader({
   onReveal,
   question,
   userInput,
-}: Props): Reader {
+}: Props<T>): Reader {
   const [status, setStatus] = useState(QuestionReaderStatus.Reading);
 
   const formattedWords = getFormattedWords(question.formattedText);
@@ -73,7 +73,7 @@ export default function useReader({
   });
 
   const submitResult = useCallback(
-    (result: QuestionResult) => {
+    (result: QuestionResult<T>) => {
       onJudged(result);
       revealQuestion();
       setStatus(getNextStatus(status));

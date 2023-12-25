@@ -21,11 +21,11 @@ export type QuestionContent = {
 
 export type Question = QuestionContent & QuestionMetadata;
 
-export type QuestionResult = {
+export type QuestionResult<T> = {
   buzzIndex: number;
   isCorrect: boolean;
   question: Question;
-  score: number;
+  score: T;
   userAnswer: string;
 };
 

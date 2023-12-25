@@ -7,15 +7,15 @@ import {
 } from '@chakra-ui/react';
 import { QuestionResult } from '@qbhub/types';
 
-type QuestionReaderScoreProps = {
-  result: QuestionResult | undefined;
-  score: number;
+type QuestionReaderScoreProps<T extends number> = {
+  result: QuestionResult<T> | undefined;
+  score: T;
 };
 
-export default function QuestionReaderScore({
+export default function QuestionReaderScore<T extends number>({
   result,
   score,
-}: QuestionReaderScoreProps) {
+}: QuestionReaderScoreProps<T>) {
   return (
     <Stat>
       <StatLabel fontSize="xl" textAlign="center">

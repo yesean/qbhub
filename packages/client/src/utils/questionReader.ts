@@ -1,4 +1,4 @@
-import { Question, QuestionResult } from '@qbhub/types';
+import { Question } from '@qbhub/types';
 import { Judge, JudgeResult } from './reader';
 
 // question reader states
@@ -32,14 +32,19 @@ export const getNextStatus = (
   }
 };
 
-export type UnscoredQuestionResult = Omit<QuestionResult, 'score'>;
+export type UnscoredQuestionResult = {
+  buzzIndex: number;
+  isCorrect: boolean;
+  question: Question;
+  userAnswer: string;
+};
 
 // get evaluated question result from user input
-export const getQuestionResult = (
+export const getQuestionResult = <T>(
   question: Question,
   userAnswer: string,
   buzzIndex: number,
-  getScore: (result: UnscoredQuestionResult) => number,
+  getScore: (result: UnscoredQuestionResult) => T,
 ) => {
   const judge = new Judge(question.formattedAnswer);
   const judgeResult = judge.judge(userAnswer);

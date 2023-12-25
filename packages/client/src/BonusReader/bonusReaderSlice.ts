@@ -1,4 +1,10 @@
-import { Bonus, BonusPart, BonusPartResult, BonusResult } from '@qbhub/types';
+import {
+  Bonus,
+  BonusPart,
+  BonusPartResult,
+  BonusPartScore,
+  BonusResult,
+} from '@qbhub/types';
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { RootState } from '../redux/store';
 import * as fetchUtils from '../utils/fetch';
@@ -151,6 +157,9 @@ const bonusReaderSlice = createSlice({
           ...action.payload,
           buzzIndex: state.current.buzzIndex,
           number: state.current.number,
+          score: action.payload.isCorrect
+            ? BonusPartScore.ten
+            : BonusPartScore.zero,
         };
         state.current.partResult = partResult;
         state.current.result.parts.push(partResult);
