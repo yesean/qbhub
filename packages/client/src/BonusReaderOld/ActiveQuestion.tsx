@@ -9,11 +9,14 @@ import {
 } from 'react';
 import { useSelector } from 'react-redux';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';
+import {
+  buzz as buzzAction,
+  selectBonusReader,
+} from '../BonusReader/bonusReaderSlice';
 import FormattedQuestion from '../components/reader/FormattedQuestion';
 import { useReader } from '../hooks/useReader';
 import { useAppDispatch } from '../redux/hooks';
 import { ReaderStatus, getFormattedWords } from '../utils/reader';
-import { buzz as buzzAction, selectBonusReader } from './bonusReaderSlice';
 
 type SectionProps = {
   buzzIndex: number;

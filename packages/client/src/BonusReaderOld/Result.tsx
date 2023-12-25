@@ -1,9 +1,9 @@
 import { BonusScore } from '@qbhub/types';
 import { useSelector } from 'react-redux';
+import { selectBonusReader } from '../BonusReader/bonusReaderSlice';
 import ReaderResult from '../components/reader/Result';
 import { random } from '../utils/array';
 import { ReaderStatus } from '../utils/reader';
-import { selectBonusReader } from './bonusReaderSlice';
 
 const messages = {
   correct: ['Correct!'],

@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
+import { selectBonusReader } from '../BonusReader/bonusReaderSlice';
 import ReaderScore from '../components/reader/Score';
 import { ReaderStatus } from '../utils/reader';
-import { selectBonusReader } from './bonusReaderSlice';
 
 const Score: React.FC<React.PropsWithChildren<unknown>> = () => {
   const {

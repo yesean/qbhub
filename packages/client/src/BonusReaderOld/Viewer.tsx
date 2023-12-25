@@ -2,6 +2,7 @@ import { Box, Divider } from '@chakra-ui/react';
 import { Fragment, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { elementScrollIntoView } from 'seamless-scroll-polyfill';
+import { nextBonus, selectBonusReader } from '../BonusReader/bonusReaderSlice';
 import Answer from '../components/reader/Answer';
 import ReaderQuestion from '../components/reader/Question';
 import UserAnswer from '../components/reader/UserAnswer';
@@ -12,7 +13,6 @@ import { ReaderStatus, getFormattedWords } from '../utils/reader';
 import ActiveQuestion from './ActiveQuestion';
 import Leadin from './Leadin';
 import PreviousQuestion from './PreviousQuestion';
-import { nextBonus, selectBonusReader } from './bonusReaderSlice';
 
 type Props = {
   setBuzz: React.Dispatch<React.SetStateAction<() => void>>;
