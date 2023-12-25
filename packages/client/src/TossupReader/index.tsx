@@ -55,7 +55,7 @@ const displayJudgedToast = (result: QuestionResult<TossupScore>) => {
 };
 
 const displayPromptToast = () => {
-  toast('prompt', { icon: '💭' });
+  toast('Prompt', { icon: '💭' });
 };
 
 function TossupReaderDisplay() {
