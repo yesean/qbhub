@@ -20,6 +20,7 @@ import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/hooks';
 import { UnscoredQuestionResult } from '../utils/questionReader';
+import { combineBonusPartWithLeadin } from '../utils/reader';
 import BonusReaderContentDisplay from './BonusReaderContentDisplay';
 import { selectBonusReader, submitResult } from './bonusReaderSlice';
 
@@ -135,7 +136,10 @@ function BonusReaderDisplay() {
     if (currentBonus === undefined || currentBonusPart === undefined) return;
 
     if (bonusPartNumber === 0) {
-      const formattedText = `${currentBonus.formattedLeadin} ${currentBonusPart.formattedText}`;
+      const formattedText = combineBonusPartWithLeadin(
+        currentBonusPart,
+        currentBonus,
+      );
       return { ...currentBonus, ...currentBonusPart, formattedText };
     }
 

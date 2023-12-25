@@ -1,9 +1,8 @@
-import { Box, Text } from '@chakra-ui/react';
 import { BonusPartResult } from '@qbhub/types';
 import { QuestionContentDisplayProps } from '../components/QuestionReader';
-import FormattedQuestion from '../components/reader/FormattedQuestion';
 import { QuestionReaderStatus } from '../utils/questionReader';
 import BonusReaderAnswer from './BonusReaderAnswer';
+import BonusReaderTextSection from './BonusReaderTextSection';
 
 type BonusReaderCurrentBonusPartProps = Omit<
   QuestionContentDisplayProps,
@@ -24,15 +23,12 @@ export default function BonusReaderCurrentBonusPart({
 
   return (
     <>
-      <Box>
-        <Text as="b">[10]</Text>{' '}
-        <FormattedQuestion
-          buzzIndex={buzzIndex}
-          visibleIndex={visibleIndex}
-          visibleRef={visibleRef}
-          words={words}
-        />
-      </Box>
+      <BonusReaderTextSection
+        buzzIndex={buzzIndex}
+        visibleIndex={visibleIndex}
+        visibleRef={visibleRef}
+        words={words}
+      />
       {shouldShowAnswer && bonusPartResult !== undefined && (
         <BonusReaderAnswer bonusPartResult={bonusPartResult} />
       )}
