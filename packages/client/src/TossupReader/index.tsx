@@ -1,4 +1,3 @@
-import { Flex, Skeleton, Stack } from '@chakra-ui/react';
 import { QuestionResult, TossupResult, TossupScore } from '@qbhub/types';
 import { useCallback } from 'react';
 import toast from 'react-hot-toast';
@@ -6,6 +5,7 @@ import { useSelector } from 'react-redux';
 import QuestionReader, {
   QuestionContentDisplayProps,
 } from '../components/QuestionReader';
+import QuestionReaderSkeleton from '../components/QuestionReader/QuestionReaderSkeleton';
 import TealButton from '../components/buttons/TealButton';
 import useActions from '../hooks/useActions';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
@@ -60,7 +60,6 @@ const displayPromptToast = () => {
 
 function TossupReaderDisplay() {
   const { currentTossup, score } = useSelector(selectTossupReader);
-
   const { openTossupHistoryModal } = useModalContext();
   const { dispatchNextTossup } = useActions();
   const dispatch = useAppDispatch();
@@ -93,16 +92,7 @@ function TossupReaderDisplay() {
   useKeyboardShortcut('h', openTossupHistoryModal);
 
   if (currentTossup === undefined) {
-    return (
-      <Stack maxW="container.md" w="100%">
-        <Skeleton h="40px" w="85%" />
-        <Skeleton h="200px" />
-        <Flex gap={2}>
-          <Skeleton flexGrow={1} h="40px" />
-          <Skeleton flexBasis="60px" h="40px" />
-        </Flex>
-      </Stack>
-    );
+    return <QuestionReaderSkeleton />;
   }
 
   return (

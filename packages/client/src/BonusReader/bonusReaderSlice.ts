@@ -12,16 +12,19 @@ import { ReaderStatus, getBonusScore } from '../utils/reader';
 import { Settings } from '../utils/settings/types';
 import { isQuestionValid } from '../utils/settings/validate';
 
+type CurrentBonusState = {
+  bonus: Bonus;
+  buzzIndex: number;
+  number: number;
+  part: BonusPart;
+  partResult: BonusPartResult;
+  result: BonusResult;
+};
+
 type BonusReaderState = {
   bonuses: Bonus[];
-  current: {
-    bonus: Bonus;
-    buzzIndex: number;
-    number: number;
-    part: BonusPart;
-    partResult: BonusPartResult;
-    result: BonusResult;
-  };
+  current: CurrentBonusState;
+  isFetching: boolean;
   results: BonusResult[];
   score: number;
   status: ReaderStatus;
@@ -41,6 +44,7 @@ const initialState: BonusReaderState = {
       score: 0,
     },
   },
+  isFetching: false,
   results: [],
   score: 0,
   status: ReaderStatus.idle,
@@ -59,29 +63,16 @@ export const nextBonus = createAsyncThunk<
   void,
   { settings: Settings },
   { state: RootState }
->(
-  'bonusReader/nextBonus',
-  async (args, { dispatch, getState }) => {
-    const { bonusReader } = getState();
-    // if bonus cache is low, fetch more
-    // if bonus cache is empty, keep the action pending
-    if (bonusReader.bonuses.length === 0) {
-      await dispatch(fetchBonuses(args)).unwrap();
-    } else if (bonusReader.bonuses.length < 5) {
-      dispatch(fetchBonuses(args));
-    }
-  },
-  {
-    condition: (_, { getState }) => {
-      const { bonusReader } = getState();
-      return [
-        ReaderStatus.idle,
-        ReaderStatus.judged,
-        ReaderStatus.empty,
-      ].includes(bonusReader.status);
-    },
-  },
-);
+>('bonusReader/nextBonus', async (args, { dispatch, getState }) => {
+  const { bonusReader } = getState();
+  // if bonus cache is low, fetch more
+  // if bonus cache is empty, keep the action pending
+  if (bonusReader.bonuses.length === 0) {
+    await dispatch(fetchBonuses(args)).unwrap();
+  } else if (bonusReader.bonuses.length < 5) {
+    dispatch(fetchBonuses(args));
+  }
+});
 
 const bonusReaderSlice = createSlice({
   extraReducers: (builder) => {
@@ -90,26 +81,33 @@ const bonusReaderSlice = createSlice({
     });
     builder
       .addCase(nextBonus.pending, (state) => {
+        state.isFetching = true;
         state.status = ReaderStatus.fetching;
       })
       .addCase(nextBonus.fulfilled, (state) => {
         if (state.bonuses.length === 0) {
           state.status = ReaderStatus.empty;
-        } else {
-          // reset current
-          state.current = {
-            ...initialState.current,
-            result: { ...initialState.current.result },
-          };
-
-          // initialize current
-          const currentBonus = state.bonuses.shift() as Bonus;
-          state.current.bonus = currentBonus;
-          state.current.result.bonus = state.current.bonus;
-          [state.current.part] = state.current.bonus.parts;
-
-          state.status = ReaderStatus.reading;
+          return;
         }
+
+        state.isFetching = false;
+
+        // reset current
+        state.current = {
+          ...initialState.current,
+          result: { ...initialState.current.result },
+        };
+
+        // initialize current
+        const currentBonus = state.bonuses.shift() as Bonus;
+        state.current.bonus = currentBonus;
+        state.current.result.bonus = state.current.bonus;
+        state.current.part = state.current.bonus.parts[0] as BonusPart;
+
+        state.status = ReaderStatus.reading;
+      })
+      .addCase(nextBonus.rejected, (state) => {
+        state.isFetching = false;
       });
   },
   initialState,
@@ -130,7 +128,9 @@ const bonusReaderSlice = createSlice({
       state.current.buzzIndex = initialState.current.buzzIndex;
       state.current.partResult = initialState.current.partResult;
       state.current.number += 1;
-      state.current.part = state.current.bonus.parts[state.current.number - 1];
+      state.current.part = state.current.bonus.parts[
+        state.current.number - 1
+      ] as BonusPart;
       state.status = ReaderStatus.reading;
     },
     prompt: (state) => {
@@ -173,12 +173,30 @@ const bonusReaderSlice = createSlice({
         }
       }
     },
+    submitResult(state, action: PayloadAction<BonusResult>) {
+      state.results.push(action.payload);
+    },
   },
 });
-export const { buzz, filterBonuses, nextBonusPart, prompt, submitAnswer } =
-  bonusReaderSlice.actions;
+export const {
+  buzz,
+  filterBonuses,
+  nextBonusPart,
+  prompt,
+  submitAnswer,
+  submitResult,
+} = bonusReaderSlice.actions;
 
-export const selectBonusReader = (state: RootState) => state.bonusReader;
+export const selectBonusReader = ({ bonusReader }: RootState) => {
+  const score = bonusReader.results.reduce(
+    (acc, result) => acc + result.score,
+    0,
+  );
+
+  const currentBonus = bonusReader.bonuses.at(0);
+
+  return { ...bonusReader, currentBonus, score };
+};
 export const selectIsAnswering = (state: RootState) =>
   [ReaderStatus.answering, ReaderStatus.prompting].includes(
     state.bonusReader.status,
