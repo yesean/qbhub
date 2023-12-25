@@ -107,6 +107,7 @@ function TossupReaderDisplay() {
 
   return (
     <QuestionReader
+      key={currentTossup.id}
       getScore={getScore}
       onJudged={handleQuestionResult}
       onNextQuestion={handleNextQuestion}
