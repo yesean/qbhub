@@ -12,14 +12,12 @@ import KeyboardShortcutProvider from './providers/KeyboardShortcutProvider';
 import { ModalProvider } from './providers/ModalProvider';
 import SettingsProvider from './providers/SettingsProvider';
 import TossupReader from './TossupReader';
-import TossupReaderNew from './TossupReaderNew';
 import {
   getAboutURL,
   getBonusReaderURL,
   getClueDisplayURL,
   getClueSearchURL,
   getFrequencyListURL,
-  getTossupReaderNewURL,
   getTossupReaderURL,
 } from './utils/routes';
 
@@ -27,10 +25,6 @@ const paths = [
   {
     element: <NavigateToTossupReader />,
     path: '/',
-  },
-  {
-    element: <TossupReaderNew />,
-    path: getTossupReaderNewURL(),
   },
   {
     element: <TossupReader />,

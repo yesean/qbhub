@@ -1,95 +1,134 @@
-import { Flex } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { Flex, Skeleton, Stack } from '@chakra-ui/react';
+import { QuestionResult, TossupResult, TossupScore } from '@qbhub/types';
+import { useCallback } from 'react';
+import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
-import Progress from '../components/reader/Progress';
-import useJudge from '../hooks/useJudge';
+import QuestionReader, {
+  QuestionContentDisplayProps,
+} from '../components/QuestionReader';
+import TealButton from '../components/buttons/TealButton';
+import useActions from '../hooks/useActions';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/hooks';
-import { ReaderStatus } from '../utils/reader';
-import Answer from './Answer';
-import Info from './Info';
-import Question from './Question';
-import Result from './Result';
-import Score from './Score';
-import UserInput from './UserInput';
+import { UnscoredQuestionResult } from '../utils/questionReader';
 import {
-  prompt,
-  selectIsAnswering,
-  selectTossupReader,
-  submitAnswer,
-} from './tossupReaderSlice';
+  getFormattedWords,
+  getPowerIndex,
+  getTossupScore,
+} from '../utils/reader';
+import TossupReaderContentDisplay from './TossupReaderContentDisplay';
+import { selectTossupReader, submitResult } from './tossupReaderSlice';
 
-const TossupReader = () => {
-  const [progress, setProgress] = useState(100);
-  const [buzz, setBuzz] = useState(() => () => {});
-  const { current, status } = useSelector(selectTossupReader);
+// evaluate user answer
+const getTossupResult = (
+  { question, ...result }: QuestionResult<TossupScore>,
+  normalizedAnswer: string,
+): TossupResult => ({
+  formattedWords: getFormattedWords(question.formattedText),
+  tossup: { ...question, normalizedAnswer },
+  ...result,
+});
 
-  const { tossup } = current ?? {};
-  const { formattedAnswer } = tossup ?? {};
+const getScore = ({
+  buzzIndex,
+  isCorrect,
+  question,
+}: UnscoredQuestionResult): TossupScore => {
+  const tossupWords = getFormattedWords(question.formattedText);
+  const isInPower = buzzIndex <= getPowerIndex(tossupWords);
+  const isBuzzAtEnd = buzzIndex === tossupWords.length - 1;
 
-  const isAnswering = useSelector(selectIsAnswering);
+  return getTossupScore(isCorrect, isInPower, isBuzzAtEnd);
+};
+
+const displayJudgedToast = (result: QuestionResult<TossupScore>) => {
+  if (result.isCorrect) {
+    if (result.score === TossupScore.power) {
+      toast.success('Power!');
+    } else if (result.score === TossupScore.ten) {
+      toast.success('Ten!');
+    }
+  } else {
+    toast.error('Incorrect');
+  }
+};
+
+const displayPromptToast = () => {
+  toast('prompt', { icon: '💭' });
+};
+
+function TossupReaderDisplay() {
+  const { current, score } = useSelector(selectTossupReader);
+
   const { openTossupHistoryModal } = useModalContext();
+  const { dispatchNextTossup } = useActions();
   const dispatch = useAppDispatch();
 
-  const judge = useJudge(formattedAnswer ?? '', {
-    onPrompt: () => dispatch(prompt()),
-    onSubmit: (isCorrect, userAnswer) =>
-      dispatch(submitAnswer({ isCorrect, userAnswer })),
-  });
+  const handleQuestionResult = useCallback(
+    (result: QuestionResult<TossupScore>) => {
+      if (current === undefined) return;
 
-  // reset judge and progress on new tossup
-  useEffect(() => {
-    if (status === ReaderStatus.reading) {
-      setProgress(100);
-    }
-  }, [status, formattedAnswer]);
+      dispatch(submitResult(getTossupResult(result, current.normalizedAnswer)));
+      displayJudgedToast(result);
+    },
+    [current, dispatch],
+  );
+
+  const handleNextQuestion = useCallback(() => {
+    toast.dismiss();
+    dispatchNextTossup();
+  }, [dispatchNextTossup]);
+
+  const renderQuestionContentDisplay = useCallback(
+    (props: QuestionContentDisplayProps) =>
+      current === undefined ? null : (
+        <TossupReaderContentDisplay {...props} tossup={current} />
+      ),
+    [current],
+  );
 
   useKeyboardShortcut('h', openTossupHistoryModal);
 
-  const shouldRenderInfo = ![
-    ReaderStatus.idle,
-    ReaderStatus.fetching,
-    ReaderStatus.empty,
-  ].includes(status);
-  const shouldRenderAnswer = status === ReaderStatus.judged;
-  const shouldRenderQuestion = status !== ReaderStatus.idle;
-  const shouldRenderResult = [
-    ReaderStatus.prompting,
-    ReaderStatus.judged,
-  ].includes(status);
-  const shouldRenderProgress = isAnswering;
-  const shouldRenderInput = status !== ReaderStatus.empty;
-  const shouldRenderScore = ![ReaderStatus.idle, ReaderStatus.empty].includes(
-    status,
-  );
+  if (current === undefined) {
+    return (
+      <Stack maxW="container.md" w="100%">
+        <Skeleton h="40px" w="85%" />
+        <Skeleton h="200px" />
+        <Flex gap={2}>
+          <Skeleton flexGrow={1} h="40px" />
+          <Skeleton flexBasis="60px" h="40px" />
+        </Flex>
+      </Stack>
+    );
+  }
 
   return (
-    <Flex
-      direction="column"
-      maxH="100%"
-      maxW="3xl"
-      overflow="auto"
-      p={1}
-      w="100%"
-    >
-      {shouldRenderInfo && <Info />}
-      {shouldRenderAnswer && <Answer />}
-      {shouldRenderQuestion && <Question setBuzz={setBuzz} />}
-      {shouldRenderResult && <Result />}
-      {shouldRenderProgress && (
-        <Progress
-          progress={progress}
-          setProgress={setProgress}
-          shouldTick={isAnswering}
-        />
-      )}
-      {shouldRenderInput && (
-        <UserInput buzz={buzz} progress={progress} submit={judge} />
-      )}
-      {shouldRenderScore && <Score />}
-    </Flex>
+    <QuestionReader
+      getScore={getScore}
+      onJudged={handleQuestionResult}
+      onNextQuestion={handleNextQuestion}
+      onPrompt={displayPromptToast}
+      question={current}
+      renderQuestionContentDisplay={renderQuestionContentDisplay}
+      score={score}
+    />
   );
-};
+}
 
-export default TossupReader;
+export default function TossupReader() {
+  const { current, isFetching } = useSelector(selectTossupReader);
+  const { dispatchNextTossup } = useActions();
+
+  const isTossupAvaiableOrPending = current !== undefined || isFetching;
+
+  useKeyboardShortcut('n', dispatchNextTossup, {
+    customAllowCondition: !isTossupAvaiableOrPending,
+  });
+
+  if (!isTossupAvaiableOrPending) {
+    return <TealButton onClick={dispatchNextTossup}>Start tossups</TealButton>;
+  }
+
+  return <TossupReaderDisplay />;
+}
