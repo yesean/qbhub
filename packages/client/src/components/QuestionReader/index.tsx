@@ -32,7 +32,7 @@ type QuestionReaderProps = {
   onNextQuestion: () => void;
   onPrompt: (result: QuestionResult) => void;
   question: Question;
-  questionContentDisplay: QuestionContentDisplay;
+  renderQuestionContentDisplay: QuestionContentDisplay;
   score: number;
 };
 
@@ -42,7 +42,7 @@ export default function QuestionReader({
   onNextQuestion,
   onPrompt,
   question,
-  questionContentDisplay: QuestionContentDisplay,
+  renderQuestionContentDisplay: QuestionContentDisplay,
   score,
 }: QuestionReaderProps) {
   const [buzzIndex, setBuzzIndex] = useState<number>();
