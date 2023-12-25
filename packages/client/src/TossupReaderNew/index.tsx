@@ -7,7 +7,9 @@ import {
   selectTossupReader,
   submitResult,
 } from '../TossupReader/tossupReaderSlice';
-import QuestionReader from '../components/QuestionReader';
+import QuestionReader, {
+  QuestionContentDisplayProps,
+} from '../components/QuestionReader';
 import TealButton from '../components/buttons/TealButton';
 import useActions from '../hooks/useActions';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
@@ -83,6 +85,14 @@ function TossupReaderDisplay() {
     dispatchNextTossup();
   }, [dispatchNextTossup]);
 
+  const renderQuestionContentDisplay = useCallback(
+    (props: QuestionContentDisplayProps) =>
+      current && (
+        <TossupReaderContentDisplay {...props} tossup={current.tossup} />
+      ),
+    [current],
+  );
+
   useKeyboardShortcut('h', openTossupHistoryModal);
 
   if (current === null) {
@@ -105,7 +115,7 @@ function TossupReaderDisplay() {
       onNextQuestion={handleNextQuestion}
       onPrompt={displayPromptToast}
       question={current.tossup}
-      questionContentDisplay={TossupReaderContentDisplay}
+      renderQuestionContentDisplay={renderQuestionContentDisplay}
       score={score}
     />
   );
