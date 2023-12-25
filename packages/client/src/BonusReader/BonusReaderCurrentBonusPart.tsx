@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import { BonusPartResult } from '@qbhub/types';
 import { QuestionContentDisplayProps } from '../components/QuestionReader';
 import FormattedQuestion from '../components/reader/FormattedQuestion';
@@ -25,6 +25,7 @@ export default function BonusReaderCurrentBonusPart({
   return (
     <>
       <Box>
+        <Text as="b">[10]</Text>{' '}
         <FormattedQuestion
           buzzIndex={buzzIndex}
           visibleIndex={visibleIndex}
