@@ -1,4 +1,4 @@
-import { Box, Divider } from '@chakra-ui/react';
+import { Box, Divider, Text } from '@chakra-ui/react';
 import { Bonus, BonusPartResult } from '@qbhub/types';
 import { useMemo } from 'react';
 import FormattedQuestion from '../components/reader/FormattedQuestion';
@@ -36,6 +36,7 @@ export default function BonusReaderPreviousBonusPart(
   return (
     <>
       <Box>
+        <Text as="b">[10]</Text>{' '}
         <FormattedQuestion
           buzzIndex={bonusPartResult.buzzIndex}
           words={formattedWords}
