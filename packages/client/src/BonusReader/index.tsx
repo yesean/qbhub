@@ -101,7 +101,7 @@ function BonusReaderDisplay() {
       );
       const nextBonusPartResults = [...bonusPartResults, bonusPartResult];
 
-      if (bonusPartNumber === 2) {
+      if (bonusPartNumber === currentBonus.parts.length - 1) {
         const bonusResult = getBonusResult(nextBonusPartResults, currentBonus);
         displayJudgedToast(bonusResult);
         dispatch(submitResult(bonusResult));
@@ -118,18 +118,18 @@ function BonusReaderDisplay() {
   );
 
   const handleNextQuestion = useCallback(() => {
-    toast.dismiss();
-    const nextBonusPartNumber = bonusPartNumber + 1;
+    if (currentBonus === undefined) return;
 
-    if (nextBonusPartNumber === 3) {
+    toast.dismiss();
+
+    if (bonusPartNumber === currentBonus.parts.length - 1) {
       setBonusPartNumber(0);
       setBonusPartResults([]);
       dispatchNextBonus();
       return;
     }
-
-    setBonusPartNumber(nextBonusPartNumber);
-  }, [bonusPartNumber, dispatchNextBonus]);
+    setBonusPartNumber(bonusPartNumber + 1);
+  }, [bonusPartNumber, currentBonus, dispatchNextBonus]);
 
   const currentQuestion = useMemo(() => {
     if (currentBonus === undefined || currentBonusPart === undefined) return;
