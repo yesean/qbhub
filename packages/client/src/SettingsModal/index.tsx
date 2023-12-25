@@ -137,7 +137,7 @@ const SettingsModal: React.FC<React.PropsWithChildren<SettingsModalProps>> = ({
             defaultValue={readingSpeed ?? DEFAULT_READING_SPEED}
             max={100}
             min={0}
-            onChangeEnd={onReadingSpeedChange}
+            onChange={onReadingSpeedChange}
             step={5}
           >
             <SliderTrack>
