@@ -1,47 +1,42 @@
-import { Box, Divider, Text } from '@chakra-ui/react';
+import { Divider } from '@chakra-ui/react';
 import { Bonus, BonusPartResult } from '@qbhub/types';
 import { useMemo } from 'react';
-import FormattedQuestion from '../components/reader/FormattedQuestion';
-import { getFormattedWords } from '../utils/reader';
+import { combineBonusPartWithLeadin, getFormattedWords } from '../utils/reader';
 import BonusReaderAnswer from './BonusReaderAnswer';
+import BonusReaderTextSection from './BonusReaderTextSection';
 
 type BonusReaderPreviousBonusPartProps = {
   bonus: Bonus;
   bonusPartResult: BonusPartResult;
 };
 
-export default function BonusReaderPreviousBonusPart(
-  props: BonusReaderPreviousBonusPartProps,
-) {
-  const { bonus, bonusPartResult } = props;
-  const { bonusPart } = bonusPartResult;
-
+export default function BonusReaderPreviousBonusPart({
+  bonus,
+  bonusPartResult,
+}: BonusReaderPreviousBonusPartProps) {
   const formattedWords = useMemo(() => {
-    if (bonusPart === undefined) {
+    if (bonusPartResult.bonusPart === undefined) {
       return undefined;
     }
 
     const formattedText =
       bonusPartResult.number === 0
-        ? `${bonus.formattedLeadin} ${bonusPart.formattedText}`
-        : bonusPart.formattedText;
+        ? combineBonusPartWithLeadin(bonusPartResult.bonusPart, bonus)
+        : bonusPartResult.bonusPart.formattedText;
 
     return getFormattedWords(formattedText);
-  }, [bonus.formattedLeadin, bonusPart, bonusPartResult.number]);
+  }, [bonus, bonusPartResult.bonusPart, bonusPartResult.number]);
 
-  if (bonusPart === undefined || formattedWords === undefined) {
+  if (bonusPartResult.bonusPart === undefined || formattedWords === undefined) {
     return null;
   }
 
   return (
     <>
-      <Box>
-        <Text as="b">[10]</Text>{' '}
-        <FormattedQuestion
-          buzzIndex={bonusPartResult.buzzIndex}
-          words={formattedWords}
-        />
-      </Box>
+      <BonusReaderTextSection
+        buzzIndex={bonusPartResult.buzzIndex}
+        words={formattedWords}
+      />
       <BonusReaderAnswer bonusPartResult={bonusPartResult} />
       <Divider borderColor="gray.300" />
     </>

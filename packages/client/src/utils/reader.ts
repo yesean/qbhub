@@ -1,4 +1,6 @@
 import {
+  Bonus,
+  BonusPart,
   BonusPartResult,
   BonusScore,
   FormattedWord,
@@ -321,3 +323,23 @@ export const getReadingTimeoutDelay = (speed: number) => {
   // we also don't want delay to be 0, which is too fast
   return SLOWEST_DELAY - DELAY_RANGE * (scaledSpeed / 100);
 };
+
+export const BONUS_LEADIN_DELIMITER = '|:|';
+
+/**
+ * Combine leadin and part one text with a special delimiter, for the first bonus part
+ */
+export function combineBonusPartWithLeadin(bonusPart: BonusPart, bonus: Bonus) {
+  return [
+    bonus.formattedLeadin,
+    BONUS_LEADIN_DELIMITER,
+    bonusPart.formattedText,
+  ].join(' ');
+}
+
+export function getBonusLeadinDelimiterIndex(words: FormattedWord[]) {
+  const leadinDelimiterIndex = words.findIndex(
+    ({ value }) => value === BONUS_LEADIN_DELIMITER,
+  );
+  return leadinDelimiterIndex === -1 ? undefined : leadinDelimiterIndex;
+}
