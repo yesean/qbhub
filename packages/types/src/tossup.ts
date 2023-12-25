@@ -8,8 +8,9 @@ import {
 export type Tossup = QuestionContent &
   QuestionMetadata & { normalizedAnswer: string };
 
-export type TossupResult = Omit<QuestionResult<TossupScore>, 'question'> & {
+export type TossupResult = Omit<QuestionResult, 'question'> & {
   formattedWords: FormattedWord[];
+  score: TossupScore;
   tossup: Tossup;
 };
 

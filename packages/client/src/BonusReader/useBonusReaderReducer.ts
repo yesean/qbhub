@@ -1,6 +1,6 @@
 import { Bonus, BonusPartResult, BonusResult } from '@qbhub/types';
 import { useReducer } from 'react';
-import { getBonusResult } from '../utils/reader';
+import { getBonusResult, isLastBonusPart } from '../utils/reader';
 
 type BonusReaderState = {
   bonusPartNumber: number;
@@ -17,11 +17,11 @@ const bonusReaderInitialState: BonusReaderState = {
 type BonusReaderAction =
   | {
       payload: { bonus: Bonus };
-      type: 'next_bonus_part';
+      type: 'nextBonusPart';
     }
   | {
       payload: { bonus: Bonus; bonusPartResult: BonusPartResult };
-      type: 'new_bonus_part_result';
+      type: 'newBonusPartResult';
     };
 
 function bonusReaderReducer(
@@ -29,14 +29,15 @@ function bonusReaderReducer(
   action: BonusReaderAction,
 ) {
   switch (action.type) {
-    case 'new_bonus_part_result': {
+    case 'newBonusPartResult': {
       const nextBonusPartResults = [
         ...state.bonusPartResults,
         action.payload.bonusPartResult,
       ];
 
       let bonusResult;
-      if (state.bonusPartNumber === action.payload.bonus.parts.length - 1) {
+      // if on last bonus part, construct a bonus result from bonus part results
+      if (isLastBonusPart(state.bonusPartNumber, action.payload.bonus)) {
         bonusResult = getBonusResult(
           nextBonusPartResults,
           action.payload.bonus,
@@ -45,18 +46,14 @@ function bonusReaderReducer(
 
       return { ...state, bonusPartResults: nextBonusPartResults, bonusResult };
     }
-    case 'next_bonus_part': {
-      if (state.bonusPartNumber === action.payload.bonus.parts.length - 1) {
+    case 'nextBonusPart': {
+      // if on last bonus part, reset state
+      if (isLastBonusPart(state.bonusPartNumber, action.payload.bonus)) {
         return bonusReaderInitialState;
       }
 
       const nextBonusPartNumber = state.bonusPartNumber + 1;
-      const currentBonusPart = action.payload.bonus.parts[nextBonusPartNumber];
-      return {
-        ...state,
-        bonusPartNumber: nextBonusPartNumber,
-        currentBonusPart,
-      };
+      return { ...state, bonusPartNumber: nextBonusPartNumber };
     }
   }
 }

@@ -3,19 +3,17 @@ import { useCallback, useMemo, useState } from 'react';
 import useKeyboardShortcut from '../../hooks/useKeyboardShortcut';
 import {
   QuestionReaderStatus,
-  UnscoredQuestionResult,
   getNextStatus,
   getQuestionResult,
 } from '../../utils/questionReader';
 import { JudgeResult, getFormattedWords } from '../../utils/reader';
 import useRevealer from './useRevealer';
 
-type Props<T> = {
-  getScore: (result: UnscoredQuestionResult) => T;
+type Props = {
   onBuzz: () => void;
-  onJudged: (result: QuestionResult<T>) => void;
+  onJudged: (result: QuestionResult) => void;
   onNext: () => void;
-  onPrompt: (result: QuestionResult<T>) => void;
+  onPrompt: (result: QuestionResult) => void;
   onReveal: (visibleIndex: number) => void;
   question: Question;
   userInput: string;
@@ -32,8 +30,7 @@ type Reader = {
  * The general reader state flow is: reading -> answering -> judged
  * Consumers of the hook can attach callbacks on state changes.
  */
-export default function useReader<T>({
-  getScore,
+export default function useReader({
   onBuzz,
   onJudged,
   onNext,
@@ -41,7 +38,7 @@ export default function useReader<T>({
   onReveal,
   question,
   userInput,
-}: Props<T>): Reader {
+}: Props): Reader {
   const [status, setStatus] = useState(QuestionReaderStatus.Reading);
 
   const formattedWords = getFormattedWords(question.formattedText);
@@ -73,7 +70,7 @@ export default function useReader<T>({
   });
 
   const submitResult = useCallback(
-    (result: QuestionResult<T>) => {
+    (result: QuestionResult) => {
       onJudged(result);
       revealQuestion();
       setStatus(getNextStatus(status));
@@ -88,14 +85,9 @@ export default function useReader<T>({
    */
   const handleSubmitOnAnsweringAfterPrompt = useCallback(() => {
     // evaluate user answer
-    const result = getQuestionResult(
-      question,
-      userInput,
-      visibleIndex,
-      getScore,
-    );
+    const result = getQuestionResult(question, userInput, visibleIndex);
     submitResult(result);
-  }, [getScore, question, submitResult, userInput, visibleIndex]);
+  }, [question, submitResult, userInput, visibleIndex]);
 
   /**
    * @Action submit answer
@@ -105,12 +97,7 @@ export default function useReader<T>({
    *  otherwise: mimic behavior of: submit answer after being prompted
    */
   const handleSubmitOnAnswering = useCallback(() => {
-    const result = getQuestionResult(
-      question,
-      userInput,
-      visibleIndex,
-      getScore,
-    );
+    const result = getQuestionResult(question, userInput, visibleIndex);
 
     // if user is prompted
     if (result.judgeResult === JudgeResult.prompt) {
@@ -121,15 +108,7 @@ export default function useReader<T>({
 
     // not prompted
     submitResult(result);
-  }, [
-    getScore,
-    onPrompt,
-    question,
-    status,
-    submitResult,
-    userInput,
-    visibleIndex,
-  ]);
+  }, [onPrompt, question, status, submitResult, userInput, visibleIndex]);
 
   /**
    * @Action next question
