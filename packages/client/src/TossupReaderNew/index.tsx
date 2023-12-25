@@ -78,6 +78,11 @@ function TossupReaderDisplay() {
     [current, dispatch],
   );
 
+  const handleNextQuestion = useCallback(() => {
+    toast.dismiss();
+    dispatchNextTossup();
+  }, [dispatchNextTossup]);
+
   useKeyboardShortcut('h', openTossupHistoryModal);
 
   if (current === null) {
@@ -97,7 +102,7 @@ function TossupReaderDisplay() {
     <QuestionReader
       getScore={getScore}
       onJudged={handleQuestionResult}
-      onNextQuestion={dispatchNextTossup}
+      onNextQuestion={handleNextQuestion}
       onPrompt={displayPromptToast}
       question={current.tossup}
       questionContentDisplay={TossupReaderContentDisplay}
