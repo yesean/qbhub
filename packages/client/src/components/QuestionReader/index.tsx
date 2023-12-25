@@ -132,7 +132,7 @@ export default function QuestionReader({
         status={status}
         userInput={userInput}
       />
-      <QuestionReaderScore result={result} score={score} status={status} />
+      <QuestionReaderScore result={result} score={score} />
     </Flex>
   );
 }
