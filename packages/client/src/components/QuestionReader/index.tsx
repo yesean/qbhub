@@ -12,7 +12,7 @@ import { getFormattedWords } from '../../utils/reader';
 import QuestionInfo from './QuestionInfo';
 import QuestionReaderInput from './QuestionReaderInput';
 import QuestionReaderProgress from './QuestionReaderProgress';
-import QuestionReaderScore from './QuestionReaderScore';
+import QuestionReaderScore, { DisplayResult } from './QuestionReaderScore';
 import useReader from './useReader';
 
 export type QuestionContentDisplayProps = {
@@ -27,6 +27,7 @@ export type QuestionContentDisplay =
   React.ComponentType<QuestionContentDisplayProps>;
 
 type QuestionReaderProps<T extends number> = {
+  displayResult: DisplayResult;
   getScore: (result: UnscoredQuestionResult) => T;
   onJudged: (result: QuestionResult<T>) => void;
   onNextQuestion: () => void;
@@ -37,6 +38,7 @@ type QuestionReaderProps<T extends number> = {
 };
 
 export default function QuestionReader<T extends number>({
+  displayResult,
   getScore,
   onJudged,
   onNextQuestion,
@@ -124,7 +126,7 @@ export default function QuestionReader<T extends number>({
         status={status}
         userInput={userInput}
       />
-      <QuestionReaderScore result={result} score={score} />
+      <QuestionReaderScore result={displayResult} score={score} />
     </Flex>
   );
 }

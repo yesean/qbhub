@@ -1,5 +1,5 @@
 import { QuestionResult, TossupResult, TossupScore } from '@qbhub/types';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import QuestionReader, {
@@ -59,25 +59,30 @@ const displayPromptToast = () => {
 };
 
 function TossupReaderDisplay() {
+  const [tossupResult, setTossupResult] = useState<TossupResult>();
   const { currentTossup, score } = useSelector(selectTossupReader);
   const { openTossupHistoryModal } = useModalContext();
   const { dispatchNextTossup } = useActions();
   const dispatch = useAppDispatch();
 
   const handleQuestionResult = useCallback(
-    (result: QuestionResult<TossupScore>) => {
+    (questionResult: QuestionResult<TossupScore>) => {
       if (currentTossup === undefined) return;
 
-      dispatch(
-        submitResult(getTossupResult(result, currentTossup.normalizedAnswer)),
+      const newTossupResult = getTossupResult(
+        questionResult,
+        currentTossup.normalizedAnswer,
       );
-      displayJudgedToast(result);
+      setTossupResult(newTossupResult);
+      dispatch(submitResult(newTossupResult));
+      displayJudgedToast(questionResult);
     },
     [currentTossup, dispatch],
   );
 
   const handleNextQuestion = useCallback(() => {
     toast.dismiss();
+    setTossupResult(undefined);
     dispatchNextTossup();
   }, [dispatchNextTossup]);
 
@@ -98,6 +103,7 @@ function TossupReaderDisplay() {
   return (
     <QuestionReader
       key={currentTossup.id}
+      displayResult={tossupResult}
       getScore={getScore}
       onJudged={handleQuestionResult}
       onNextQuestion={handleNextQuestion}
