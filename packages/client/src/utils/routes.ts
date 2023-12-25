@@ -50,7 +50,6 @@ const ROUTES = {
   },
   frequencyList: buildRoute('/frequency'),
   tossupReader: buildRoute('/tossup'),
-  tossupReaderNew: buildRoute('/tossup-new'),
 };
 
 type RouteConfig<T extends QueryParamConfigMap> = {
@@ -91,7 +90,6 @@ const buildUseRouteContext = <T extends QueryParamConfigMap>(
     );
   };
 
-export const getTossupReaderNewURL = buildGetURL(ROUTES.tossupReaderNew);
 export const getTossupReaderURL = buildGetURL(ROUTES.tossupReader);
 export const getBonusReaderURL = buildGetURL(ROUTES.bonusReader);
 export const getFrequencyListURL = buildGetURL(ROUTES.frequencyList);
