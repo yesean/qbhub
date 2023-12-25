@@ -9,3 +9,4 @@ export * from './question.js';
 export * from './subcategory.js';
 export * from './tossup.js';
 export * from './tournament.js';
+export * from './utils.js';
