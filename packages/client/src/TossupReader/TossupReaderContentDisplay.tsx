@@ -1,7 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { Tossup } from '@qbhub/types';
+import FormattedQuestion from '../components/FormattedQuestion';
 import { QuestionContentDisplayProps } from '../components/QuestionReader';
-import FormattedQuestion from '../components/reader/FormattedQuestion';
 import { QuestionReaderStatus } from '../utils/questionReader';
 import TossupReaderAnswerDisplay from './TossupReaderAnswerDisplay';
 

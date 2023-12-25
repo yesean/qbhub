@@ -1,6 +1,6 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { Bonus, BonusPart, BonusPartResult } from '@qbhub/types';
-import FormattedQuestion from '../components/reader/FormattedQuestion';
+import FormattedQuestion from '../components/FormattedQuestion';
 import { VirtualizedTable, VirtualizedTableColumn } from '../components/tables';
 import { TOURNAMENT_MAP } from '../utils/constants';
 import { getFormattedWords } from '../utils/reader';

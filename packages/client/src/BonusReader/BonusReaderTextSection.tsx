@@ -1,7 +1,7 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { PartialOptional } from '@qbhub/types';
+import FormattedQuestion from '../components/FormattedQuestion';
 import { QuestionContentDisplayProps } from '../components/QuestionReader';
-import FormattedQuestion from '../components/reader/FormattedQuestion';
 import { getBonusLeadinDelimiterIndex } from '../utils/reader';
 
 type SelectedQuestionContentDisplayProps = Omit<

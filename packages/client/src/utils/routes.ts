@@ -44,7 +44,6 @@ const buildRoute = <T extends QueryParamConfigMap>(
 const ROUTES = {
   about: buildRoute('/about'),
   bonusReader: buildRoute('/bonus'),
-  bonusReaderOld: buildRoute('/bonus-old'),
   clue: {
     display: buildRoute('/clue/display', { answer: NeverNullStringParam }),
     search: buildRoute('/clue', { query: NeverNullStringParam }),
@@ -93,7 +92,6 @@ const buildUseRouteContext = <T extends QueryParamConfigMap>(
 
 export const getTossupReaderURL = buildGetURL(ROUTES.tossupReader);
 export const getBonusReaderURL = buildGetURL(ROUTES.bonusReader);
-export const getBonusReaderOldURL = buildGetURL(ROUTES.bonusReaderOld);
 export const getFrequencyListURL = buildGetURL(ROUTES.frequencyList);
 export const getClueSearchURL = buildGetURL(ROUTES.clue.search);
 export const getClueDisplayURL = buildGetURL(ROUTES.clue.display);
