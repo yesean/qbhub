@@ -9,20 +9,22 @@ import {
   getIsAnswering,
 } from '../../utils/questionReader';
 import { getFormattedWords } from '../../utils/reader';
-import QuestionAnswer from './QuestionAnswer';
 import QuestionInfo from './QuestionInfo';
 import QuestionReaderInput from './QuestionReaderInput';
 import QuestionReaderProgress from './QuestionReaderProgress';
 import QuestionReaderScore from './QuestionReaderScore';
 import useReader from './useReader';
 
-export type QuestionTextDisplayProps = {
+export type QuestionContentDisplayProps = {
+  question: Question;
+  status: QuestionReaderStatus;
   visibleIndex: number;
   visibleRef: React.RefObject<HTMLParagraphElement>;
   words: FormattedWord[];
   buzzIndex?: number;
 };
-export type QuestionTextDisplay = React.ComponentType<QuestionTextDisplayProps>;
+export type QuestionContentDisplay =
+  React.ComponentType<QuestionContentDisplayProps>;
 
 type QuestionReaderProps = {
   getScore: (result: UnscoredQuestionResult) => number;
@@ -30,7 +32,7 @@ type QuestionReaderProps = {
   onNextQuestion: () => void;
   onPrompt: (result: QuestionResult) => void;
   question: Question;
-  questionTextDisplay: QuestionTextDisplay;
+  questionContentDisplay: QuestionContentDisplay;
   score: number;
 };
 
@@ -40,7 +42,7 @@ export default function QuestionReader({
   onNextQuestion,
   onPrompt,
   question,
-  questionTextDisplay: QuestionTextDisplay,
+  questionContentDisplay: QuestionContentDisplay,
   score,
 }: QuestionReaderProps) {
   const [buzzIndex, setBuzzIndex] = useState<number>();
@@ -107,14 +109,14 @@ export default function QuestionReader({
   });
 
   const shouldShowProgress = getIsAnswering(status);
-  const shouldShowAnswer = status === QuestionReaderStatus.Judged;
 
   return (
     <Flex direction="column" gap={4} maxW="container.md" overflow="auto" p={2}>
       <QuestionInfo question={question} />
-      {shouldShowAnswer && <QuestionAnswer question={question} />}
-      <QuestionTextDisplay
+      <QuestionContentDisplay
         buzzIndex={buzzIndex}
+        question={question}
+        status={status}
         visibleIndex={visibleIndex}
         visibleRef={visibleRef}
         words={formattedWords}

@@ -19,7 +19,7 @@ import {
   getPowerIndex,
   getTossupScore,
 } from '../utils/reader';
-import TossupReaderTextDisplay from './TossupReaderTextDisplay';
+import TossupReaderContentDisplay from './TossupReaderContentDisplay';
 
 // evaluate user answer
 const getTossupResult = (
@@ -100,7 +100,7 @@ function TossupReaderDisplay() {
       onNextQuestion={dispatchNextTossup}
       onPrompt={displayPromptToast}
       question={current.tossup}
-      questionTextDisplay={TossupReaderTextDisplay}
+      questionContentDisplay={TossupReaderContentDisplay}
       score={score}
     />
   );
