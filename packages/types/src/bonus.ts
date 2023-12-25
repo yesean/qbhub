@@ -22,6 +22,7 @@ export type BonusPartResult = Omit<
   QuestionResult<BonusPartScore>,
   'question'
 > & {
+  bonusPart: BonusPart;
   number: number;
 };
 

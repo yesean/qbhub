@@ -153,8 +153,12 @@ const bonusReaderSlice = createSlice({
       ) {
         state.status = ReaderStatus.partialJudged;
 
+        const bonusPart = state.current.bonus.parts[
+          state.current.number
+        ] as BonusPart;
         const partResult = {
           ...action.payload,
+          bonusPart,
           buzzIndex: state.current.buzzIndex,
           number: state.current.number,
           score: action.payload.isCorrect
