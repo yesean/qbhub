@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react';
+import { nextBonus } from '../BonusReader/bonusReaderSlice';
 import { nextTossup } from '../TossupReader/tossupReaderSlice';
 import { useAppDispatch } from '../redux/hooks';
 import { useSettings } from './useSettings';
@@ -13,5 +14,13 @@ export default function useActions() {
     [dispatch, settings],
   );
 
-  return useMemo(() => ({ dispatchNextTossup }), [dispatchNextTossup]);
+  const dispatchNextBonus = useCallback(
+    () => dispatch(nextBonus({ settings })),
+    [dispatch, settings],
+  );
+
+  return useMemo(
+    () => ({ dispatchNextBonus, dispatchNextTossup }),
+    [dispatchNextTossup, dispatchNextBonus],
+  );
 }
