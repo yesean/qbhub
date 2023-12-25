@@ -125,6 +125,11 @@ function BonusReaderDisplay() {
 
     if (currentBonus === undefined || currentBonusPart === undefined) return;
 
+    if (bonusPartNumber === 0) {
+      const formattedText = `${currentBonus.formattedLeadin} ${currentBonusPart.formattedText}`;
+      return { ...currentBonus, ...currentBonusPart, formattedText };
+    }
+
     return { ...currentBonus, ...currentBonusPart };
   }, [bonusPartNumber, currentBonus]);
 
