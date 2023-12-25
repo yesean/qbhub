@@ -1,36 +1,51 @@
-import { Box, Flex } from '@chakra-ui/react';
-import { Bonus } from '@qbhub/types';
+import { Flex } from '@chakra-ui/react';
+import { Bonus, BonusPartResult } from '@qbhub/types';
 import { QuestionContentDisplayProps } from '../components/QuestionReader';
-import FormattedQuestion from '../components/reader/FormattedQuestion';
-import { QuestionReaderStatus } from '../utils/questionReader';
+import BonusReaderCurrentBonusPart from './BonusReaderCurrentBonusPart';
+import BonusReaderPreviousBonusPart from './BonusReaderPreviousBonusPart';
 
 type BonusReaderTextDisplayProps = QuestionContentDisplayProps & {
   bonus: Bonus;
   bonusPartNumber: number;
+  bonusPartResults: BonusPartResult[];
 };
 
 export default function BonusReaderContentDisplay({
   bonus,
   bonusPartNumber,
+  bonusPartResults,
   buzzIndex,
   status,
   visibleIndex,
   visibleRef,
   words,
 }: BonusReaderTextDisplayProps) {
-  const shouldShowAnswer = status === QuestionReaderStatus.Judged;
-  const bonusPart = bonus.parts[bonusPartNumber];
   return (
     <Flex direction="column" gap={4}>
-      {shouldShowAnswer && <div>{bonusPart?.answer}</div>}
-      <Box bg="gray.100" borderRadius="md" overflow="auto" p={4}>
-        <FormattedQuestion
+      <Flex
+        bg="gray.100"
+        borderRadius="md"
+        direction="column"
+        gap={4}
+        overflow="auto"
+        p={4}
+      >
+        {bonusPartResults.slice(0, bonusPartNumber).map((bonusPartResult) => (
+          <BonusReaderPreviousBonusPart
+            key={bonusPartResult.number}
+            bonus={bonus}
+            bonusPartResult={bonusPartResult}
+          />
+        ))}
+        <BonusReaderCurrentBonusPart
+          bonusPartResult={bonusPartResults.at(-1)}
           buzzIndex={buzzIndex}
+          status={status}
           visibleIndex={visibleIndex}
           visibleRef={visibleRef}
           words={words}
         />
-      </Box>
+      </Flex>
     </Flex>
   );
 }

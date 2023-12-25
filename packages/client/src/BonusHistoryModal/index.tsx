@@ -48,7 +48,7 @@ const BonusHistoryModal: React.FC<
         res.parts.map((part) => ({
           ...part,
           bonus: res.bonus,
-          part: res.bonus.parts[part.number - 1],
+          part: part.bonusPart,
         })),
       ),
     [results],

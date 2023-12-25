@@ -1,6 +1,6 @@
-import { Box } from '@chakra-ui/react';
 import {
   Bonus,
+  BonusPart,
   BonusPartResult,
   BonusPartScore,
   BonusResult,
@@ -15,7 +15,6 @@ import QuestionReader, {
 } from '../components/QuestionReader';
 import QuestionReaderSkeleton from '../components/QuestionReader/QuestionReaderSkeleton';
 import TealButton from '../components/buttons/TealButton';
-import FormattedQuestion from '../components/reader/FormattedQuestion';
 import useActions from '../hooks/useActions';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useModalContext } from '../providers/ModalContext';
@@ -27,8 +26,9 @@ import { selectBonusReader, submitResult } from './bonusReaderSlice';
 function getBonusPartResult(
   result: QuestionResult<BonusPartScore>,
   number: number,
+  bonusPart: BonusPart,
 ): BonusPartResult {
-  return { ...result, number };
+  return { ...result, bonusPart, number };
 }
 
 function getBonusResult(results: BonusPartResult[], bonus: Bonus): BonusResult {
@@ -88,22 +88,33 @@ function BonusReaderDisplay() {
   const { dispatchNextBonus } = useActions();
   const dispatch = useAppDispatch();
 
+  const currentBonusPart = currentBonus?.parts[bonusPartNumber];
+
   const handleQuestionResult = useCallback(
     (result: QuestionResult<BonusPartScore>) => {
-      if (currentBonus === undefined) return;
+      if (currentBonus === undefined || currentBonusPart === undefined) return;
 
-      const bonusPartResult = getBonusPartResult(result, bonusPartNumber);
+      const bonusPartResult = getBonusPartResult(
+        result,
+        bonusPartNumber,
+        currentBonusPart,
+      );
       const nextBonusPartResults = [...bonusPartResults, bonusPartResult];
 
       if (bonusPartNumber === 2) {
         const bonusResult = getBonusResult(nextBonusPartResults, currentBonus);
         displayJudgedToast(bonusResult);
         dispatch(submitResult(bonusResult));
-      } else {
-        setBonusPartResults(nextBonusPartResults);
       }
+      setBonusPartResults(nextBonusPartResults);
     },
-    [bonusPartResults, currentBonus, bonusPartNumber, dispatch],
+    [
+      currentBonus,
+      currentBonusPart,
+      bonusPartNumber,
+      bonusPartResults,
+      dispatch,
+    ],
   );
 
   const handleNextQuestion = useCallback(() => {
@@ -121,8 +132,6 @@ function BonusReaderDisplay() {
   }, [bonusPartNumber, dispatchNextBonus]);
 
   const currentQuestion = useMemo(() => {
-    const currentBonusPart = currentBonus?.parts[bonusPartNumber];
-
     if (currentBonus === undefined || currentBonusPart === undefined) return;
 
     if (bonusPartNumber === 0) {
@@ -131,7 +140,7 @@ function BonusReaderDisplay() {
     }
 
     return { ...currentBonus, ...currentBonusPart };
-  }, [bonusPartNumber, currentBonus]);
+  }, [bonusPartNumber, currentBonus, currentBonusPart]);
 
   const renderQuestionContentDisplay = useCallback(
     (props: QuestionContentDisplayProps) =>
@@ -140,9 +149,10 @@ function BonusReaderDisplay() {
           {...props}
           bonus={currentBonus}
           bonusPartNumber={bonusPartNumber}
+          bonusPartResults={bonusPartResults}
         />
       ),
-    [bonusPartNumber, currentBonus],
+    [bonusPartNumber, bonusPartResults, currentBonus],
   );
 
   useKeyboardShortcut('h', openBonusHistoryModal);
