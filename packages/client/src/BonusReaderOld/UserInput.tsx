@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import ReaderUserInput from '../components/reader/UserInput';
-import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
-import { useSettings } from '../hooks/useSettings';
-import { useAppDispatch } from '../redux/hooks';
-import { ReaderStatus, getInputBorderColor } from '../utils/reader';
 import {
   nextBonus as nextBonusAction,
   nextBonusPart as nextBonusPartAction,
   selectBonusReader,
   selectIsAnswering,
-} from './bonusReaderSlice';
+} from '../BonusReader/bonusReaderSlice';
+import ReaderUserInput from '../components/reader/UserInput';
+import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
+import { useSettings } from '../hooks/useSettings';
+import { useAppDispatch } from '../redux/hooks';
+import { ReaderStatus, getInputBorderColor } from '../utils/reader';
 
 // button text depending on the status
 const buttonTexts = new Map([
