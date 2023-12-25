@@ -65,19 +65,11 @@ export default function QuestionReader({
     [question.formattedText],
   );
 
-  const handleReveal = useCallback(() => {
-    scrollToVisible();
-  }, [scrollToVisible]);
-
-  const handleBuzz = useCallback(() => {
-    focusInput();
-  }, [focusInput]);
-
   const handleJudged = useCallback(
     (judgedResult: QuestionResult) => {
       setResult(judgedResult);
-      blurInput();
       setBuzzIndex(judgedResult.buzzIndex);
+      blurInput();
       onJudged(judgedResult);
     },
     [blurInput, onJudged],
@@ -99,11 +91,11 @@ export default function QuestionReader({
 
   const { handleClick, status, visibleIndex } = useReader({
     getScore,
-    onBuzz: handleBuzz,
+    onBuzz: focusInput,
     onJudged: handleJudged,
     onNext: handleNext,
     onPrompt: handlePrompt,
-    onReveal: handleReveal,
+    onReveal: scrollToVisible,
     question,
     userInput,
   });
