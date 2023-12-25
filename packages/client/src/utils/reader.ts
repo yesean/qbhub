@@ -2,6 +2,7 @@ import {
   Bonus,
   BonusPart,
   BonusPartResult,
+  BonusResult,
   BonusScore,
   FormattedWord,
   TossupScore,
@@ -81,6 +82,33 @@ export const getTossupScore = (
   }
   return didBuzzAtEnd ? TossupScore.incorrect : TossupScore.neg;
 };
+
+export function getBonusResult(
+  results: BonusPartResult[],
+  bonus: Bonus,
+): BonusResult {
+  const score = (() => {
+    const correctPartsCount = results.filter(
+      ({ isCorrect }) => isCorrect,
+    ).length;
+    switch (correctPartsCount) {
+      case 3:
+        return BonusScore.thirty;
+      case 2:
+        return BonusScore.twenty;
+      case 1:
+        return BonusScore.ten;
+      default:
+        return BonusScore.zero;
+    }
+  })();
+
+  return {
+    bonus,
+    parts: results,
+    score,
+  };
+}
 
 export const getBonusScore = (results: BonusPartResult[]) => {
   const correctCount = results.reduce(

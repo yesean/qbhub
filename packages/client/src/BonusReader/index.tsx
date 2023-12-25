@@ -1,5 +1,4 @@
 import {
-  Bonus,
   BonusPart,
   BonusPartResult,
   BonusPartScore,
@@ -7,7 +6,7 @@ import {
   BonusScore,
   QuestionResult,
 } from '@qbhub/types';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import QuestionReader, {
@@ -20,9 +19,10 @@ import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/hooks';
 import { UnscoredQuestionResult } from '../utils/questionReader';
-import { combineBonusPartWithLeadin } from '../utils/reader';
+import { combineBonusPartWithLeadin, getBonusResult } from '../utils/reader';
 import BonusReaderContentDisplay from './BonusReaderContentDisplay';
 import { selectBonusReader, submitResult } from './bonusReaderSlice';
+import useBonusReaderReducer from './useBonusReaderReducer';
 
 function getBonusPartResult(
   result: QuestionResult<BonusPartScore>,
@@ -30,30 +30,6 @@ function getBonusPartResult(
   bonusPart: BonusPart,
 ): BonusPartResult {
   return { ...result, bonusPart, number };
-}
-
-function getBonusResult(results: BonusPartResult[], bonus: Bonus): BonusResult {
-  const score = (() => {
-    const correctPartsCount = results.filter(
-      ({ isCorrect }) => isCorrect,
-    ).length;
-    switch (correctPartsCount) {
-      case 3:
-        return BonusScore.thirty;
-      case 2:
-        return BonusScore.twenty;
-      case 1:
-        return BonusScore.ten;
-      default:
-        return BonusScore.zero;
-    }
-  })();
-
-  return {
-    bonus,
-    parts: results,
-    score,
-  };
 }
 
 function getBonusPartResultScore({
@@ -80,10 +56,10 @@ function displayPromptToast() {
 }
 
 function BonusReaderDisplay() {
-  const [bonusPartNumber, setBonusPartNumber] = useState(0);
-  const [bonusPartResults, setBonusPartResults] = useState<BonusPartResult[]>(
-    [],
-  );
+  const [
+    { bonusPartNumber, bonusPartResults, bonusResult },
+    dispatchBonusReader,
+  ] = useBonusReaderReducer();
   const { currentBonus, score } = useSelector(selectBonusReader);
   const { openBonusHistoryModal } = useModalContext();
   const { dispatchNextBonus } = useActions();
@@ -102,35 +78,43 @@ function BonusReaderDisplay() {
       );
       const nextBonusPartResults = [...bonusPartResults, bonusPartResult];
 
+      dispatchBonusReader({
+        payload: { bonus: currentBonus, bonusPartResult },
+        type: 'new_bonus_part_result',
+      });
+
       if (bonusPartNumber === currentBonus.parts.length - 1) {
-        const bonusResult = getBonusResult(nextBonusPartResults, currentBonus);
-        displayJudgedToast(bonusResult);
-        dispatch(submitResult(bonusResult));
+        const newBonusResult = getBonusResult(
+          nextBonusPartResults,
+          currentBonus,
+        );
+        displayJudgedToast(newBonusResult);
+        dispatch(submitResult(newBonusResult));
       }
-      setBonusPartResults(nextBonusPartResults);
     },
     [
-      currentBonus,
-      currentBonusPart,
       bonusPartNumber,
       bonusPartResults,
+      currentBonus,
+      currentBonusPart,
       dispatch,
+      dispatchBonusReader,
     ],
   );
 
   const handleNextQuestion = useCallback(() => {
     if (currentBonus === undefined) return;
 
-    toast.dismiss();
+    dispatchBonusReader({
+      payload: { bonus: currentBonus },
+      type: 'next_bonus_part',
+    });
 
+    toast.dismiss();
     if (bonusPartNumber === currentBonus.parts.length - 1) {
-      setBonusPartNumber(0);
-      setBonusPartResults([]);
       dispatchNextBonus();
-      return;
     }
-    setBonusPartNumber(bonusPartNumber + 1);
-  }, [bonusPartNumber, currentBonus, dispatchNextBonus]);
+  }, [bonusPartNumber, currentBonus, dispatchBonusReader, dispatchNextBonus]);
 
   const currentQuestion = useMemo(() => {
     if (currentBonus === undefined || currentBonusPart === undefined) return;
@@ -168,6 +152,7 @@ function BonusReaderDisplay() {
   return (
     <QuestionReader
       key={bonusPartNumber}
+      displayResult={bonusResult}
       getScore={getBonusPartResultScore}
       onJudged={handleQuestionResult}
       onNextQuestion={handleNextQuestion}
