@@ -6,14 +6,12 @@ import { Settings } from '../utils/settings/types';
 import { isQuestionValid } from '../utils/settings/validate';
 
 type TossupReaderState = {
-  current: Tossup | undefined;
   isFetching: boolean;
   results: TossupResult[];
   tossups: Tossup[];
 };
 
 const initialState: TossupReaderState = {
-  current: undefined,
   isFetching: false,
   results: [],
   tossups: [],
@@ -50,13 +48,10 @@ const tossupReaderSlice = createSlice({
     builder
       .addCase(nextTossup.pending, (state) => {
         state.isFetching = true;
-        state.current = initialState.current;
       })
       .addCase(nextTossup.fulfilled, (state) => {
         state.isFetching = false;
-        const nextCurrentTossup = state.tossups.shift();
-
-        state.current = nextCurrentTossup;
+        state.tossups.shift();
       })
       .addCase(nextTossup.rejected, (state) => {
         state.isFetching = false;
@@ -83,7 +78,9 @@ export const selectTossupReader = ({ tossupReader }: RootState) => {
     0,
   );
 
-  return { ...tossupReader, score };
+  const currentTossup = tossupReader.tossups.at(0);
+
+  return { ...tossupReader, currentTossup, score };
 };
 
 export default tossupReaderSlice.reducer;

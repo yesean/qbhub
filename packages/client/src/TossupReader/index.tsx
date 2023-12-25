@@ -59,7 +59,7 @@ const displayPromptToast = () => {
 };
 
 function TossupReaderDisplay() {
-  const { current, score } = useSelector(selectTossupReader);
+  const { currentTossup, score } = useSelector(selectTossupReader);
 
   const { openTossupHistoryModal } = useModalContext();
   const { dispatchNextTossup } = useActions();
@@ -67,12 +67,14 @@ function TossupReaderDisplay() {
 
   const handleQuestionResult = useCallback(
     (result: QuestionResult<TossupScore>) => {
-      if (current === undefined) return;
+      if (currentTossup === undefined) return;
 
-      dispatch(submitResult(getTossupResult(result, current.normalizedAnswer)));
+      dispatch(
+        submitResult(getTossupResult(result, currentTossup.normalizedAnswer)),
+      );
       displayJudgedToast(result);
     },
-    [current, dispatch],
+    [currentTossup, dispatch],
   );
 
   const handleNextQuestion = useCallback(() => {
@@ -82,15 +84,15 @@ function TossupReaderDisplay() {
 
   const renderQuestionContentDisplay = useCallback(
     (props: QuestionContentDisplayProps) =>
-      current === undefined ? null : (
-        <TossupReaderContentDisplay {...props} tossup={current} />
+      currentTossup === undefined ? null : (
+        <TossupReaderContentDisplay {...props} tossup={currentTossup} />
       ),
-    [current],
+    [currentTossup],
   );
 
   useKeyboardShortcut('h', openTossupHistoryModal);
 
-  if (current === undefined) {
+  if (currentTossup === undefined) {
     return (
       <Stack maxW="container.md" w="100%">
         <Skeleton h="40px" w="85%" />
@@ -109,7 +111,7 @@ function TossupReaderDisplay() {
       onJudged={handleQuestionResult}
       onNextQuestion={handleNextQuestion}
       onPrompt={displayPromptToast}
-      question={current}
+      question={currentTossup}
       renderQuestionContentDisplay={renderQuestionContentDisplay}
       score={score}
     />
@@ -117,10 +119,10 @@ function TossupReaderDisplay() {
 }
 
 export default function TossupReader() {
-  const { current, isFetching } = useSelector(selectTossupReader);
+  const { currentTossup, isFetching } = useSelector(selectTossupReader);
   const { dispatchNextTossup } = useActions();
 
-  const isTossupAvaiableOrPending = current !== undefined || isFetching;
+  const isTossupAvaiableOrPending = currentTossup !== undefined || isFetching;
 
   useKeyboardShortcut('n', dispatchNextTossup, {
     customAllowCondition: !isTossupAvaiableOrPending,
