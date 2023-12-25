@@ -2,18 +2,15 @@ import {
   FormattedWord,
   QuestionContent,
   QuestionMetadata,
+  QuestionResult,
 } from './question.js';
 
 export type Tossup = QuestionContent &
   QuestionMetadata & { normalizedAnswer: string };
 
-export type TossupResult = {
-  buzzIndex: number;
+export type TossupResult = Omit<QuestionResult<TossupScore>, 'question'> & {
   formattedWords: FormattedWord[];
-  isCorrect: boolean;
-  score: TossupScore;
   tossup: Tossup;
-  userAnswer: string;
 };
 
 export enum TossupScore {

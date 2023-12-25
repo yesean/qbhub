@@ -7,9 +7,9 @@ import {
 import TealButton from '../buttons/TealButton';
 
 // get input border color for tossup results, green/red for correct/incorrect
-const getInputBorderColor = (
+const getInputBorderColor = <T,>(
   status: QuestionReaderStatus,
-  questionResult?: QuestionResult,
+  questionResult?: QuestionResult<T>,
 ): string => {
   if (status !== QuestionReaderStatus.Judged || questionResult == null)
     return 'gray.300';
@@ -32,23 +32,23 @@ const getButtonText = (status: QuestionReaderStatus): string => {
   }
 };
 
-type QuestionReaderInputProps = {
+type QuestionReaderInputProps<T> = {
   handleClick: () => void;
   inputRef: React.RefObject<HTMLInputElement>;
-  result: QuestionResult | undefined;
+  result: QuestionResult<T> | undefined;
   setUserInput: React.Dispatch<React.SetStateAction<string>>;
   status: QuestionReaderStatus;
   userInput: string;
 };
 
-export default function QuestionReaderInput({
+export default function QuestionReaderInput<T>({
   handleClick,
   inputRef,
   result,
   setUserInput,
   status,
   userInput,
-}: QuestionReaderInputProps) {
+}: QuestionReaderInputProps<T>) {
   const shouldShowBorder = status === QuestionReaderStatus.Judged;
   const shouldDisableInput = !getIsAnswering(status);
 

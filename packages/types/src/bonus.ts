@@ -1,4 +1,8 @@
-import { QuestionContent, QuestionMetadata } from './question.js';
+import {
+  QuestionContent,
+  QuestionMetadata,
+  QuestionResult,
+} from './question.js';
 
 export type Bonus = QuestionMetadata & {
   formattedLeadin: string;
@@ -14,11 +18,11 @@ export type BonusResult = {
   score: BonusScore;
 };
 
-export type BonusPartResult = {
-  buzzIndex: number;
-  isCorrect: boolean;
+export type BonusPartResult = Omit<
+  QuestionResult<BonusPartScore>,
+  'question'
+> & {
   number: number;
-  userAnswer: string;
 };
 
 export enum BonusScore {
@@ -26,4 +30,9 @@ export enum BonusScore {
   ten = 10,
   twenty = 20,
   thirty = 30,
+}
+
+export enum BonusPartScore {
+  zero = 0,
+  ten = 10,
 }

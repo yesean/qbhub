@@ -25,7 +25,7 @@ import TossupReaderContentDisplay from './TossupReaderContentDisplay';
 
 // evaluate user answer
 const getTossupResult = (
-  { question, ...result }: QuestionResult,
+  { question, ...result }: QuestionResult<TossupScore>,
   normalizedAnswer: string,
 ): TossupResult => ({
   formattedWords: getFormattedWords(question.formattedText),
@@ -37,7 +37,7 @@ const getScore = ({
   buzzIndex,
   isCorrect,
   question,
-}: UnscoredQuestionResult) => {
+}: UnscoredQuestionResult): TossupScore => {
   const tossupWords = getFormattedWords(question.formattedText);
   const isInPower = buzzIndex <= getPowerIndex(tossupWords);
   const isBuzzAtEnd = buzzIndex === tossupWords.length - 1;
@@ -45,7 +45,7 @@ const getScore = ({
   return getTossupScore(isCorrect, isInPower, isBuzzAtEnd);
 };
 
-const displayJudgedToast = (result: QuestionResult) => {
+const displayJudgedToast = (result: QuestionResult<TossupScore>) => {
   if (result.isCorrect) {
     if (result.score === TossupScore.power) {
       toast.success('Power!');
@@ -69,7 +69,7 @@ function TossupReaderDisplay() {
   const dispatch = useAppDispatch();
 
   const handleQuestionResult = useCallback(
-    (result: QuestionResult) => {
+    (result: QuestionResult<TossupScore>) => {
       if (current === null) return;
 
       dispatch(

@@ -26,17 +26,17 @@ export type QuestionContentDisplayProps = {
 export type QuestionContentDisplay =
   React.ComponentType<QuestionContentDisplayProps>;
 
-type QuestionReaderProps = {
-  getScore: (result: UnscoredQuestionResult) => number;
-  onJudged: (result: QuestionResult) => void;
+type QuestionReaderProps<T extends number> = {
+  getScore: (result: UnscoredQuestionResult) => T;
+  onJudged: (result: QuestionResult<T>) => void;
   onNextQuestion: () => void;
-  onPrompt: (result: QuestionResult) => void;
+  onPrompt: (result: QuestionResult<T>) => void;
   question: Question;
   renderQuestionContentDisplay: QuestionContentDisplay;
   score: number;
 };
 
-export default function QuestionReader({
+export default function QuestionReader<T extends number>({
   getScore,
   onJudged,
   onNextQuestion,
@@ -44,9 +44,9 @@ export default function QuestionReader({
   question,
   renderQuestionContentDisplay: QuestionContentDisplay,
   score,
-}: QuestionReaderProps) {
+}: QuestionReaderProps<T>) {
   const [buzzIndex, setBuzzIndex] = useState<number>();
-  const [result, setResult] = useState<QuestionResult>();
+  const [result, setResult] = useState<QuestionResult<T>>();
 
   const {
     blurInput,
@@ -66,7 +66,7 @@ export default function QuestionReader({
   );
 
   const handleJudged = useCallback(
-    (judgedResult: QuestionResult) => {
+    (judgedResult: QuestionResult<T>) => {
       setResult(judgedResult);
       setBuzzIndex(judgedResult.buzzIndex);
       blurInput();
@@ -76,7 +76,7 @@ export default function QuestionReader({
   );
 
   const handlePrompt = useCallback(
-    (promptResult: QuestionResult) => {
+    (promptResult: QuestionResult<T>) => {
       focusInput();
       selectInput();
       onPrompt(promptResult);
