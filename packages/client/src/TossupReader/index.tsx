@@ -20,29 +20,31 @@ import {
 import TossupReaderContentDisplay from './TossupReaderContentDisplay';
 import { selectTossupReader, submitResult } from './tossupReaderSlice';
 
-// evaluate user answer
-const getTossupResult = (
-  { question, ...result }: QuestionResult<TossupScore>,
-  normalizedAnswer: string,
-): TossupResult => ({
-  formattedWords: getFormattedWords(question.formattedText),
-  tossup: { ...question, normalizedAnswer },
-  ...result,
-});
-
-const getScore = ({
+function getTossupResultScore({
   buzzIndex,
   isCorrect,
   question,
-}: UnscoredQuestionResult): TossupScore => {
+}: UnscoredQuestionResult): TossupScore {
   const tossupWords = getFormattedWords(question.formattedText);
   const isInPower = buzzIndex <= getPowerIndex(tossupWords);
   const isBuzzAtEnd = buzzIndex === tossupWords.length - 1;
 
   return getTossupScore(isCorrect, isInPower, isBuzzAtEnd);
-};
+}
 
-const displayJudgedToast = (result: QuestionResult<TossupScore>) => {
+function getTossupResult(
+  result: QuestionResult,
+  normalizedAnswer: string,
+): TossupResult {
+  return {
+    formattedWords: getFormattedWords(result.question.formattedText),
+    score: getTossupResultScore(result),
+    tossup: { ...result.question, normalizedAnswer },
+    ...result,
+  };
+}
+
+function displayJudgedToast(result: TossupResult) {
   if (result.isCorrect) {
     if (result.score === TossupScore.power) {
       toast.success('Power!');
@@ -52,11 +54,11 @@ const displayJudgedToast = (result: QuestionResult<TossupScore>) => {
   } else {
     toast.error('Incorrect');
   }
-};
+}
 
-const displayPromptToast = () => {
+function displayPromptToast() {
   toast('Prompt', { icon: '💭' });
-};
+}
 
 function TossupReaderDisplay() {
   const [tossupResult, setTossupResult] = useState<TossupResult>();
@@ -66,7 +68,7 @@ function TossupReaderDisplay() {
   const dispatch = useAppDispatch();
 
   const handleQuestionResult = useCallback(
-    (questionResult: QuestionResult<TossupScore>) => {
+    (questionResult: QuestionResult) => {
       if (currentTossup === undefined) return;
 
       const newTossupResult = getTossupResult(
@@ -75,7 +77,7 @@ function TossupReaderDisplay() {
       );
       setTossupResult(newTossupResult);
       dispatch(submitResult(newTossupResult));
-      displayJudgedToast(questionResult);
+      displayJudgedToast(newTossupResult);
     },
     [currentTossup, dispatch],
   );
@@ -104,7 +106,6 @@ function TossupReaderDisplay() {
     <QuestionReader
       key={currentTossup.id}
       displayResult={tossupResult}
-      getScore={getScore}
       onJudged={handleQuestionResult}
       onNextQuestion={handleNextQuestion}
       onPrompt={displayPromptToast}

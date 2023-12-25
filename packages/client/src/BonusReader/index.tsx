@@ -19,23 +19,32 @@ import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/hooks';
 import { UnscoredQuestionResult } from '../utils/questionReader';
-import { combineBonusPartWithLeadin, getBonusResult } from '../utils/reader';
+import {
+  combineBonusPartWithLeadin,
+  getBonusResult,
+  isLastBonusPart,
+} from '../utils/reader';
 import BonusReaderContentDisplay from './BonusReaderContentDisplay';
 import { selectBonusReader, submitResult } from './bonusReaderSlice';
 import useBonusReaderReducer from './useBonusReaderReducer';
-
-function getBonusPartResult(
-  result: QuestionResult<BonusPartScore>,
-  number: number,
-  bonusPart: BonusPart,
-): BonusPartResult {
-  return { ...result, bonusPart, number };
-}
 
 function getBonusPartResultScore({
   isCorrect,
 }: UnscoredQuestionResult): BonusPartScore {
   return isCorrect ? BonusPartScore.ten : BonusPartScore.zero;
+}
+
+function getBonusPartResult(
+  result: QuestionResult,
+  number: number,
+  bonusPart: BonusPart,
+): BonusPartResult {
+  return {
+    ...result,
+    bonusPart,
+    number,
+    score: getBonusPartResultScore(result),
+  };
 }
 
 const displayJudgedToast = (result: BonusResult) => {
@@ -68,7 +77,7 @@ function BonusReaderDisplay() {
   const currentBonusPart = currentBonus?.parts[bonusPartNumber];
 
   const handleQuestionResult = useCallback(
-    (result: QuestionResult<BonusPartScore>) => {
+    (result: QuestionResult) => {
       if (currentBonus === undefined || currentBonusPart === undefined) return;
 
       const bonusPartResult = getBonusPartResult(
@@ -76,13 +85,13 @@ function BonusReaderDisplay() {
         bonusPartNumber,
         currentBonusPart,
       );
-      const nextBonusPartResults = [...bonusPartResults, bonusPartResult];
 
       dispatchBonusReader({
         payload: { bonus: currentBonus, bonusPartResult },
-        type: 'new_bonus_part_result',
+        type: 'newBonusPartResult',
       });
 
+      const nextBonusPartResults = [...bonusPartResults, bonusPartResult];
       if (bonusPartNumber === currentBonus.parts.length - 1) {
         const newBonusResult = getBonusResult(
           nextBonusPartResults,
@@ -107,11 +116,11 @@ function BonusReaderDisplay() {
 
     dispatchBonusReader({
       payload: { bonus: currentBonus },
-      type: 'next_bonus_part',
+      type: 'nextBonusPart',
     });
 
     toast.dismiss();
-    if (bonusPartNumber === currentBonus.parts.length - 1) {
+    if (isLastBonusPart(bonusPartNumber, currentBonus)) {
       dispatchNextBonus();
     }
   }, [bonusPartNumber, currentBonus, dispatchBonusReader, dispatchNextBonus]);
@@ -153,7 +162,6 @@ function BonusReaderDisplay() {
     <QuestionReader
       key={bonusPartNumber}
       displayResult={bonusResult}
-      getScore={getBonusPartResultScore}
       onJudged={handleQuestionResult}
       onNextQuestion={handleNextQuestion}
       onPrompt={displayPromptToast}

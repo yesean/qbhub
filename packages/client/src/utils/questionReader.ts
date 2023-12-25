@@ -40,11 +40,10 @@ export type UnscoredQuestionResult = {
 };
 
 // get evaluated question result from user input
-export const getQuestionResult = <T>(
+export const getQuestionResult = (
   question: Question,
   userAnswer: string,
   buzzIndex: number,
-  getScore: (result: UnscoredQuestionResult) => T,
 ) => {
   const judge = new Judge(question.formattedAnswer);
   const judgeResult = judge.judge(userAnswer);
@@ -56,8 +55,7 @@ export const getQuestionResult = <T>(
     question,
     userAnswer,
   };
-  const score = getScore(unscoredQuestionResult);
-  return { ...unscoredQuestionResult, score };
+  return { ...unscoredQuestionResult };
 };
 
 export function getIsAnswering(status: QuestionReaderStatus) {

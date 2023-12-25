@@ -5,7 +5,6 @@ import useInput from '../../hooks/useInput';
 import useScrollIntoView from '../../hooks/useScrollToVisible';
 import {
   QuestionReaderStatus,
-  UnscoredQuestionResult,
   getIsAnswering,
 } from '../../utils/questionReader';
 import { getFormattedWords } from '../../utils/reader';
@@ -26,29 +25,27 @@ export type QuestionContentDisplayProps = {
 export type QuestionContentDisplay =
   React.ComponentType<QuestionContentDisplayProps>;
 
-type QuestionReaderProps<T extends number> = {
+type QuestionReaderProps = {
   displayResult: DisplayResult;
-  getScore: (result: UnscoredQuestionResult) => T;
-  onJudged: (result: QuestionResult<T>) => void;
+  onJudged: (result: QuestionResult) => void;
   onNextQuestion: () => void;
-  onPrompt: (result: QuestionResult<T>) => void;
+  onPrompt: (result: QuestionResult) => void;
   question: Question;
   renderQuestionContentDisplay: QuestionContentDisplay;
   score: number;
 };
 
-export default function QuestionReader<T extends number>({
+export default function QuestionReader({
   displayResult,
-  getScore,
   onJudged,
   onNextQuestion,
   onPrompt,
   question,
   renderQuestionContentDisplay: QuestionContentDisplay,
   score,
-}: QuestionReaderProps<T>) {
+}: QuestionReaderProps) {
   const [buzzIndex, setBuzzIndex] = useState<number>();
-  const [result, setResult] = useState<QuestionResult<T>>();
+  const [result, setResult] = useState<QuestionResult>();
 
   const {
     blurInput,
@@ -68,7 +65,7 @@ export default function QuestionReader<T extends number>({
   );
 
   const handleJudged = useCallback(
-    (judgedResult: QuestionResult<T>) => {
+    (judgedResult: QuestionResult) => {
       setResult(judgedResult);
       setBuzzIndex(judgedResult.buzzIndex);
       blurInput();
@@ -78,7 +75,7 @@ export default function QuestionReader<T extends number>({
   );
 
   const handlePrompt = useCallback(
-    (promptResult: QuestionResult<T>) => {
+    (promptResult: QuestionResult) => {
       focusInput();
       selectInput();
       onPrompt(promptResult);
@@ -92,7 +89,6 @@ export default function QuestionReader<T extends number>({
   }, [blurInput, onNextQuestion]);
 
   const { handleClick, status, visibleIndex } = useReader({
-    getScore,
     onBuzz: focusInput,
     onJudged: handleJudged,
     onNext: handleNext,

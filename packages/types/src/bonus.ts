@@ -18,12 +18,10 @@ export type BonusResult = {
   score: BonusScore;
 };
 
-export type BonusPartResult = Omit<
-  QuestionResult<BonusPartScore>,
-  'question'
-> & {
+export type BonusPartResult = Omit<QuestionResult, 'question'> & {
   bonusPart: BonusPart;
   number: number;
+  score: BonusPartScore;
 };
 
 export enum BonusScore {

@@ -371,3 +371,7 @@ export function getBonusLeadinDelimiterIndex(words: FormattedWord[]) {
   );
   return leadinDelimiterIndex === -1 ? undefined : leadinDelimiterIndex;
 }
+
+export function isLastBonusPart(bonusPartNumber: number, bonus: Bonus) {
+  return bonusPartNumber === bonus.parts.length - 1;
+}
