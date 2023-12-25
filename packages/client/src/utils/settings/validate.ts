@@ -20,8 +20,7 @@ export const isSettingsDefault = (settings: Settings) =>
   isEmpty(settings.subcategories) &&
   isEmpty(settings.difficulties) &&
   isEmpty(settings.tournaments) &&
-  settings.fromYear === undefined &&
-  settings.readingSpeed === undefined;
+  settings.fromYear === undefined;
 
 // check if question passes settings filters
 export const isQuestionValid = <T extends QuestionMetadata>(
