@@ -19,7 +19,7 @@ export default function BonusReaderAnswer({
       <Box>
         <Text as="b">YOU SAID:</Text>{' '}
         <Text as="mark" backgroundColor={isCorrect ? 'green.100' : 'red.100'}>
-          {userAnswer.length === 0 ? '<no answer>' : userAnswer}
+          {userAnswer.trim().length === 0 ? '<no answer>' : userAnswer}
         </Text>
       </Box>
     </Box>
