@@ -2,7 +2,7 @@ import { BellIcon } from '@chakra-ui/icons';
 import { Container, Text } from '@chakra-ui/react';
 import { FormattedWord } from '@qbhub/types';
 import React, { Fragment } from 'react';
-import { parseHTMLString } from '../../utils/string';
+import { parseHTMLString } from '../utils/string';
 
 type FormattedQuestionProps = {
   words: FormattedWord[];
