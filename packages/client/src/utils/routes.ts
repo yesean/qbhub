@@ -29,13 +29,15 @@ const GLOBAL_QUERY_PARAMS = {
   tournaments: buildNumericEnumArrayParam(Tournament),
 };
 
-const buildRoute = <T extends QueryParamConfigMap>(
+function buildRoute<T extends QueryParamConfigMap>(
   path: string,
   extraQueryParams: T = {} as T,
-) => ({
-  path,
-  queryParams: { ...GLOBAL_QUERY_PARAMS, ...extraQueryParams },
-});
+) {
+  return {
+    path,
+    queryParams: { ...GLOBAL_QUERY_PARAMS, ...extraQueryParams },
+  };
+}
 
 const ROUTES = {
   about: buildRoute('/about'),
@@ -56,19 +58,22 @@ type RouteConfig<T extends QueryParamConfigMap> = {
   queryParams: T;
 };
 
-const buildGetURL =
-  <T extends QueryParamConfigMap>({ path, queryParams }: RouteConfig<T>) =>
-  (query?: Partial<DecodedValueMap<T>>) => {
+function buildGetURL<T extends QueryParamConfigMap>({
+  path,
+  queryParams,
+}: RouteConfig<T>) {
+  return function getURL(query?: Partial<DecodedValueMap<T>>) {
     if (query === undefined) return path;
 
     const encodedQuery = encodeQueryParams(queryParams, query);
     return `${path}?${queryString.stringify(encodedQuery)}`;
   };
+}
 
-const buildUseRouteContext = <T extends QueryParamConfigMap>(
+function buildUseRouteContext<T extends QueryParamConfigMap>(
   routeConfig: RouteConfig<T>,
-) =>
-  function useRouteContext() {
+) {
+  return function useRouteContext() {
     const [params] = useQueryParams<T>(routeConfig.queryParams);
 
     const getURL = useCallback(
@@ -85,6 +90,7 @@ const buildUseRouteContext = <T extends QueryParamConfigMap>(
       [getURL, params],
     );
   };
+}
 
 export const getTossupReaderURL = buildGetURL(ROUTES.tossupReader);
 export const getBonusReaderURL = buildGetURL(ROUTES.bonusReader);
@@ -110,9 +116,11 @@ export const useClueDisplayRouteContext = buildUseRouteContext(
 );
 export const useAboutRouteContext = buildUseRouteContext(ROUTES.about);
 
-export const useGlobalQueryParams = () => useQueryParams(GLOBAL_QUERY_PARAMS);
+export function useGlobalQueryParams() {
+  return useQueryParams(GLOBAL_QUERY_PARAMS);
+}
 
-export const useGetURL = () => {
+export function useGetURL() {
   const [params] = useGlobalQueryParams();
 
   return useMemo(
@@ -137,9 +145,9 @@ export const useGetURL = () => {
     }),
     [params],
   );
-};
+}
 
-export const usePage = () => {
+export function usePage() {
   const { pathname } = useLocation();
 
   const isTossupReader = pathname.startsWith(ROUTES.tossupReader.path);
@@ -156,4 +164,4 @@ export const usePage = () => {
     }),
     [isBonusReader, isTossupReader, pathname],
   );
-};
+}
