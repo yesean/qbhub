@@ -44,7 +44,7 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
   }, [dispatch, answer, settings]);
 
   if (answer === undefined) {
-    return <Navigate to={getClueSearchURL({ query })} />;
+    return <Navigate to={getClueSearchURL({ query }).href} />;
   }
 
   if (clues === undefined || isFetching) {
