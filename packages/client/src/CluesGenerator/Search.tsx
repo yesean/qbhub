@@ -1,6 +1,5 @@
 import { Flex, Input } from '@chakra-ui/react';
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import RouterLinkButton from '../components/buttons/RouterLinkButton';
 import useInput from '../hooks/useInput';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
@@ -9,12 +8,11 @@ import Answers from './Answers';
 
 const Search: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { focusInput, inputRef, setUserInput, userInput } = useInput();
-  const navigate = useNavigate();
   const { getURL: getClueSearchURL } = useClueSearchRouteContext();
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      navigate(getClueSearchURL({ query: userInput }));
+      getClueSearchURL({ query: userInput }).go();
     }
   };
 

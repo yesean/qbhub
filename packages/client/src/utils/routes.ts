@@ -1,7 +1,7 @@
 import { Category, Difficulty, Subcategory, Tournament } from '@qbhub/types';
 import queryString from 'query-string';
 import { useCallback, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   DecodedValueMap,
   QueryParamConfigMap,
@@ -70,16 +70,33 @@ function buildGetURL<T extends QueryParamConfigMap>({
   };
 }
 
+export type RouteURL = {
+  go: () => void;
+  href: string;
+};
+
+export function isRouteURL(url: RouteURL | string): url is RouteURL {
+  return (url as RouteURL).href !== undefined;
+}
+
 function buildUseRouteContext<T extends QueryParamConfigMap>(
   routeConfig: RouteConfig<T>,
 ) {
   return function useRouteContext() {
     const [params] = useQueryParams<T>(routeConfig.queryParams);
+    const navigate = useNavigate();
 
     const getURL = useCallback(
-      (newParams: Partial<DecodedValueMap<T>>) =>
-        buildGetURL(routeConfig)({ ...params, ...newParams }),
-      [params],
+      (newParams: Partial<DecodedValueMap<T>>) => {
+        const url = buildGetURL(routeConfig)({ ...params, ...newParams });
+        return {
+          go() {
+            navigate(url);
+          },
+          href: url,
+        } as RouteURL;
+      },
+      [navigate, params],
     );
 
     return useMemo(

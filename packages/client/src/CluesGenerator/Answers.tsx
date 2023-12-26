@@ -5,12 +5,11 @@ import {
   Container,
   Flex,
   Heading,
-  Link,
   Text,
 } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Link as RouterLink } from 'react-router-dom';
+import { RouterLink } from '../components/RouterLink';
 import RouterLinkButton from '../components/buttons/RouterLinkButton';
 import { KeyValueTable } from '../components/tables';
 import { useSettings } from '../hooks/useSettings';
@@ -75,12 +74,9 @@ const Answers: React.FC<React.PropsWithChildren<Props>> = ({ query }) => {
             data={answers.map((answer) => ({
               ...answer,
               answer: (
-                <Link
-                  as={RouterLink}
-                  to={getClueDisplayURL({ answer: answer.answer })}
-                >
+                <RouterLink to={getClueDisplayURL({ answer: answer.answer })}>
                   {answer.answer}
-                </Link>
+                </RouterLink>
               ),
             }))}
             headers={answersFields}
