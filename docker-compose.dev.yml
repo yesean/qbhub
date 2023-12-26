@@ -1,6 +1,6 @@
 version: '3.9'
 services:
-  postgres.dev:
+  postgres:
     image: seanye24/qbhub-postgres
     restart: always
     env_file: .env
