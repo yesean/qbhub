@@ -29,10 +29,6 @@ const GLOBAL_QUERY_PARAMS = {
   tournaments: buildNumericEnumArrayParam(Tournament),
 };
 
-const QUERY_PARAM_OPTIONS = {
-  updateType: 'replace',
-} as const;
-
 const buildRoute = <T extends QueryParamConfigMap>(
   path: string,
   extraQueryParams: T = {} as T,
@@ -63,7 +59,7 @@ type RouteConfig<T extends QueryParamConfigMap> = {
 const buildGetURL =
   <T extends QueryParamConfigMap>({ path, queryParams }: RouteConfig<T>) =>
   (query?: Partial<DecodedValueMap<T>>) => {
-    if (query == null) return path;
+    if (query === undefined) return path;
 
     const encodedQuery = encodeQueryParams(queryParams, query);
     return `${path}?${queryString.stringify(encodedQuery)}`;
@@ -73,10 +69,7 @@ const buildUseRouteContext = <T extends QueryParamConfigMap>(
   routeConfig: RouteConfig<T>,
 ) =>
   function useRouteContext() {
-    const [params] = useQueryParams<T>(
-      routeConfig.queryParams,
-      QUERY_PARAM_OPTIONS,
-    );
+    const [params] = useQueryParams<T>(routeConfig.queryParams);
 
     const getURL = useCallback(
       (newParams: Partial<DecodedValueMap<T>>) =>
@@ -117,8 +110,7 @@ export const useClueDisplayRouteContext = buildUseRouteContext(
 );
 export const useAboutRouteContext = buildUseRouteContext(ROUTES.about);
 
-export const useGlobalQueryParams = () =>
-  useQueryParams(GLOBAL_QUERY_PARAMS, QUERY_PARAM_OPTIONS);
+export const useGlobalQueryParams = () => useQueryParams(GLOBAL_QUERY_PARAMS);
 
 export const useGetURL = () => {
   const [params] = useGlobalQueryParams();
