@@ -72,9 +72,7 @@ const buildSkipEncodeNumberParam = <T extends typeof NumberParam>(
   },
 });
 
-const buildNeverNullParam = <T extends QueryParamConfig<any, any>>(
-  param: T,
-) => ({
+const buildNeverNullParam = <T>(param: QueryParamConfig<T>) => ({
   decode(...args: Parameters<typeof param.decode>) {
     const decodedValue = param.decode(...args);
     if (decodedValue == null) return undefined;
