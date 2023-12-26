@@ -27,18 +27,19 @@ export const isQuestionValid = <T extends QuestionMetadata>(
   question: T,
   settings: Partial<Settings>,
 ) => {
-  if (
+  const isCategoryInvalid =
     isNotNullOrEmpty(settings.categories) &&
-    !settings.categories.includes(question.category)
-  )
-    return false;
+    !settings.categories.includes(question.category);
 
-  if (
+  const isSubcategoryInvalid =
     isNotNullOrEmpty(settings.subcategories) &&
     (question.subcategory == null ||
-      !settings.subcategories.includes(question.subcategory))
-  )
+      !settings.subcategories.includes(question.subcategory));
+
+  // category and subcategory are mutually exclusive, question can pass by matching either category or subcategory
+  if (isCategoryInvalid && isSubcategoryInvalid) {
     return false;
+  }
 
   if (
     isNotNullOrEmpty(settings.difficulties) &&
