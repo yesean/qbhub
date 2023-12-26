@@ -1,48 +1,47 @@
 import { Flex, Input } from '@chakra-ui/react';
-import { useRef, useState } from 'react';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RouterLinkButton from '../components/buttons/RouterLinkButton';
-import { useAppDispatch } from '../redux/hooks';
+import useInput from '../hooks/useInput';
+import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useClueSearchRouteContext } from '../utils/routes';
 import Answers from './Answers';
-import { setQuery } from './cluesGeneratorSlice';
 
 const Search: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const [search, setSearch] = useState('');
-  const inputRef = useRef<HTMLInputElement>(null);
+  const { focusInput, inputRef, setUserInput, userInput } = useInput();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const { getURL: getClueSearchURL } = useClueSearchRouteContext();
-
-  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-  };
-
-  const submitSearch = async () => {
-    dispatch(setQuery(search));
-    navigate(getClueSearchURL({ query: search }));
-  };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      submitSearch();
+      navigate(getClueSearchURL({ query: userInput }));
     }
   };
+
+  useKeyboardShortcut(
+    '/',
+    useCallback(
+      (e) => {
+        focusInput();
+        e.preventDefault();
+      },
+      [focusInput],
+    ),
+  );
 
   return (
     <Flex gap={4}>
       <Input
         ref={inputRef}
-        onChange={onInputChange}
+        onChange={(e) => setUserInput(e.target.value)}
         onKeyDown={onKeyDown}
         placeholder="Search for an answerline!"
-        value={search}
+        value={userInput}
       />
       <RouterLinkButton
         h={10}
         label="Search"
-        onClick={() => dispatch(setQuery(search))}
-        to={getClueSearchURL({ query: search })}
+        to={getClueSearchURL({ query: userInput })}
       />
     </Flex>
   );
@@ -53,5 +52,5 @@ export default function SearchWrapper() {
     params: { query },
   } = useClueSearchRouteContext();
 
-  return query == null ? <Search /> : <Answers query={query} />;
+  return query === undefined ? <Search /> : <Answers query={query} />;
 }

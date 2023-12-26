@@ -8,7 +8,7 @@ import {
   Link,
   Text,
 } from '@chakra-ui/react';
-import { useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import RouterLinkButton from '../components/buttons/RouterLinkButton';
@@ -19,14 +19,7 @@ import {
   useClueDisplayRouteContext,
   useClueSearchRouteContext,
 } from '../utils/routes';
-import {
-  CluesGeneratorStatus,
-  fetchAnswers,
-  resetStatus,
-  selectAnswer,
-  selectCluesGenerator,
-  setQuery,
-} from './cluesGeneratorSlice';
+import { fetchAnswers, selectCluesGenerator } from './cluesGeneratorSlice';
 
 const answersFields = [
   { dataKey: 'answer', label: 'Answer' },
@@ -38,19 +31,17 @@ type Props = {
 };
 
 const Answers: React.FC<React.PropsWithChildren<Props>> = ({ query }) => {
-  const { answers, status } = useSelector(selectCluesGenerator);
-  const dispatch = useAppDispatch();
+  const { answers, isFetching } = useSelector(selectCluesGenerator);
   const { getURL: getClueSearchURL } = useClueSearchRouteContext();
   const { getURL: getClueDisplayURL } = useClueDisplayRouteContext();
   const { settings } = useSettings();
+  const dispatch = useAppDispatch();
 
-  useLayoutEffect(() => {
-    dispatch(resetStatus());
-    dispatch(setQuery(query));
+  useEffect(() => {
     dispatch(fetchAnswers({ answer: query, settings }));
-  }, [query, dispatch, settings]);
+  }, [dispatch, query, settings]);
 
-  if (status !== CluesGeneratorStatus.loaded) {
+  if (answers === undefined || isFetching) {
     return <CircularProgress color="cyan" isIndeterminate />;
   }
 
@@ -86,7 +77,6 @@ const Answers: React.FC<React.PropsWithChildren<Props>> = ({ query }) => {
               answer: (
                 <Link
                   as={RouterLink}
-                  onClick={() => dispatch(selectAnswer(answer.answer))}
                   to={getClueDisplayURL({ answer: answer.answer })}
                 >
                   {answer.answer}

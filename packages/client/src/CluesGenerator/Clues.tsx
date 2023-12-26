@@ -9,7 +9,8 @@ import {
   Tooltip,
 } from '@chakra-ui/react';
 import { SelectedClue } from '@qbhub/types';
-import { useLayoutEffect } from 'react';
+import { useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import FileDownloadButton from '../components/buttons/FileDownloadButton';
 import RouterLinkButton from '../components/buttons/RouterLinkButton';
 import { KeyValueTable } from '../components/tables';
@@ -20,13 +21,7 @@ import {
   useClueDisplayRouteContext,
   useClueSearchRouteContext,
 } from '../utils/routes';
-import {
-  CluesGeneratorStatus,
-  fetchClues,
-  resetStatus,
-  selectAnswer,
-  selectCluesGenerator,
-} from './cluesGeneratorSlice';
+import { fetchClues, selectCluesGenerator } from './cluesGeneratorSlice';
 
 const cluesFields = [
   { dataKey: 'clue', label: 'Clue' },
@@ -34,12 +29,27 @@ const cluesFields = [
 ] as const;
 
 const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const { clues, currentQuery, status } = useAppSelector(selectCluesGenerator);
+  const { clues, isFetching } = useAppSelector(selectCluesGenerator);
   const dispatch = useAppDispatch();
   const { getURL: getClueSearchURL } = useClueSearchRouteContext();
-  const { params } = useClueDisplayRouteContext();
-  const answer = params.answer as string;
+  const {
+    params: { answer, query },
+  } = useClueDisplayRouteContext();
   const { settings } = useSettings();
+
+  useEffect(() => {
+    if (answer === undefined) return;
+
+    dispatch(fetchClues({ answer, settings }));
+  }, [dispatch, answer, settings]);
+
+  if (answer === undefined) {
+    return <Navigate to={getClueSearchURL({ query })} />;
+  }
+
+  if (clues === undefined || isFetching) {
+    return <CircularProgress color="cyan" isIndeterminate />;
+  }
 
   const cluesCSVURL = getCSVURL(
     clues
@@ -50,12 +60,6 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
   const cluesJSONURL = getJSONURL(
     clues.filter((clue) => clue.score > 0).map((clue) => ({ ...clue, answer })),
   );
-
-  useLayoutEffect(() => {
-    dispatch(resetStatus());
-    dispatch(selectAnswer(answer));
-    dispatch(fetchClues({ answer, settings }));
-  }, [dispatch, answer, settings]);
 
   const renderTooltip = (clue: SelectedClue) => {
     const startIndex = clue.sentence.indexOf(clue.text);
@@ -96,10 +100,6 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
       <Text>{clue.text}</Text>
     </Tooltip>
   );
-
-  if (status !== CluesGeneratorStatus.loaded) {
-    return <CircularProgress color="cyan" isIndeterminate />;
-  }
 
   return (
     <Flex
@@ -143,11 +143,11 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
             maxW="100%"
             overflowX="auto"
           >
-            {currentQuery.length > 0 && (
+            {query !== undefined && (
               <RouterLinkButton
                 label="Results"
                 leftIcon={<ArrowBackIcon h={4} w={4} />}
-                to={getClueSearchURL({ query: currentQuery })}
+                to={getClueSearchURL({ query })}
                 variant="secondary"
               />
             )}
