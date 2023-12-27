@@ -1,9 +1,11 @@
 import { Link as ChakraLink } from '@chakra-ui/react';
-import { ComponentProps } from 'react';
-import { Link as ReactRouterLink } from 'react-router-dom';
+import {
+  Link as ReactRouterLink,
+  LinkProps as ReactRouterLinkProps,
+} from 'react-router-dom';
 import { RouteURL, isRouteURL } from '../utils/routes';
 
-type RouterLinkProps = Omit<ComponentProps<typeof ReactRouterLink>, 'to'> & {
+type RouterLinkProps = Omit<ReactRouterLinkProps, 'to'> & {
   children: React.ReactNode;
   to: RouteURL | string;
 };

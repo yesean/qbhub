@@ -1,5 +1,9 @@
 import { useCallback, useMemo } from 'react';
 import { nextBonus } from '../BonusReader/bonusReaderSlice';
+import {
+  fetchAnswers,
+  fetchClues,
+} from '../CluesGenerator/cluesGeneratorSlice';
 import { nextTossup } from '../TossupReader/tossupReaderSlice';
 import { useAppDispatch } from '../redux/hooks';
 import { useSettings } from './useSettings';
@@ -19,8 +23,28 @@ export default function useActions() {
     [dispatch, settings],
   );
 
+  const dispatchFetchAnswers = useCallback(
+    (query: string) => dispatch(fetchAnswers({ answer: query, settings })),
+    [dispatch, settings],
+  );
+
+  const dispatchFetchClues = useCallback(
+    (query: string) => dispatch(fetchClues({ answer: query, settings })),
+    [dispatch, settings],
+  );
+
   return useMemo(
-    () => ({ dispatchNextBonus, dispatchNextTossup }),
-    [dispatchNextTossup, dispatchNextBonus],
+    () => ({
+      dispatchFetchAnswers,
+      dispatchFetchClues,
+      dispatchNextBonus,
+      dispatchNextTossup,
+    }),
+    [
+      dispatchFetchAnswers,
+      dispatchFetchClues,
+      dispatchNextBonus,
+      dispatchNextTossup,
+    ],
   );
 }

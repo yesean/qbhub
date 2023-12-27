@@ -12,13 +12,12 @@ import { useSelector } from 'react-redux';
 import { RouterLink } from '../components/RouterLink';
 import RouterLinkButton from '../components/buttons/RouterLinkButton';
 import { KeyValueTable } from '../components/tables';
-import { useSettings } from '../hooks/useSettings';
-import { useAppDispatch } from '../redux/hooks';
+import useActions from '../hooks/useActions';
 import {
   useClueDisplayRouteContext,
   useClueSearchRouteContext,
 } from '../utils/routes';
-import { fetchAnswers, selectCluesGenerator } from './cluesGeneratorSlice';
+import { selectCluesGenerator } from './cluesGeneratorSlice';
 
 const answersFields = [
   { dataKey: 'answer', label: 'Answer' },
@@ -33,12 +32,11 @@ const Answers: React.FC<React.PropsWithChildren<Props>> = ({ query }) => {
   const { answers, isFetching } = useSelector(selectCluesGenerator);
   const { getURL: getClueSearchURL } = useClueSearchRouteContext();
   const { getURL: getClueDisplayURL } = useClueDisplayRouteContext();
-  const { settings } = useSettings();
-  const dispatch = useAppDispatch();
+  const { dispatchFetchAnswers } = useActions();
 
   useEffect(() => {
-    dispatch(fetchAnswers({ answer: query, settings }));
-  }, [dispatch, query, settings]);
+    dispatchFetchAnswers(query);
+  }, [dispatchFetchAnswers, query]);
 
   if (answers === undefined || isFetching) {
     return <CircularProgress color="cyan" isIndeterminate />;
