@@ -10,18 +10,18 @@ import {
 } from '@chakra-ui/react';
 import { SelectedClue } from '@qbhub/types';
 import { useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
+import RouterRedirect from '../components/RouterRedirect';
 import FileDownloadButton from '../components/buttons/FileDownloadButton';
 import RouterLinkButton from '../components/buttons/RouterLinkButton';
 import { KeyValueTable } from '../components/tables';
-import { useSettings } from '../hooks/useSettings';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import useActions from '../hooks/useActions';
+import { useAppSelector } from '../redux/hooks';
 import { getCSVURL, getJSONURL } from '../utils/array';
 import {
   useClueDisplayRouteContext,
   useClueSearchRouteContext,
 } from '../utils/routes';
-import { fetchClues, selectCluesGenerator } from './cluesGeneratorSlice';
+import { selectCluesGenerator } from './cluesGeneratorSlice';
 
 const cluesFields = [
   { dataKey: 'clue', label: 'Clue' },
@@ -30,21 +30,20 @@ const cluesFields = [
 
 const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { clues, isFetching } = useAppSelector(selectCluesGenerator);
-  const dispatch = useAppDispatch();
   const { getURL: getClueSearchURL } = useClueSearchRouteContext();
   const {
     params: { answer, query },
   } = useClueDisplayRouteContext();
-  const { settings } = useSettings();
+  const { dispatchFetchClues } = useActions();
 
   useEffect(() => {
     if (answer === undefined) return;
 
-    dispatch(fetchClues({ answer, settings }));
-  }, [dispatch, answer, settings]);
+    dispatchFetchClues(answer);
+  }, [answer, dispatchFetchClues]);
 
   if (answer === undefined) {
-    return <Navigate to={getClueSearchURL({ query }).href} />;
+    return <RouterRedirect to={getClueSearchURL({ query })} />;
   }
 
   if (clues === undefined || isFetching) {

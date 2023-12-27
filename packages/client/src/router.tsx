@@ -6,7 +6,7 @@ import BonusReader from './BonusReader';
 import Clues from './CluesGenerator/Clues';
 import Search from './CluesGenerator/Search';
 import Layout from './components/Layout';
-import NavigateToTossupReader from './components/NavigateToTossupReader';
+import RedirectToTossupReader from './components/RedirectToTossupReader';
 import FrequencyList from './FrequencyList';
 import KeyboardShortcutProvider from './providers/KeyboardShortcutProvider';
 import { ModalProvider } from './providers/ModalProvider';
@@ -23,7 +23,7 @@ import {
 
 const paths = [
   {
-    element: <NavigateToTossupReader />,
+    element: <RedirectToTossupReader />,
     path: '/',
   },
   {
