@@ -11,6 +11,7 @@ import {
 import { SelectedClue } from '@qbhub/types';
 import { useEffect } from 'react';
 import RouterRedirect from '../components/RouterRedirect';
+import TableSkeleton from '../components/TableSkeleton';
 import FileDownloadButton from '../components/buttons/FileDownloadButton';
 import RouterLinkButton from '../components/buttons/RouterLinkButton';
 import { KeyValueTable } from '../components/tables';
@@ -28,27 +29,13 @@ const cluesFields = [
   { dataKey: 'score', label: 'Score' },
 ] as const;
 
-const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const { clues, isFetching } = useAppSelector(selectCluesGenerator);
+type CluesDisplayProps = {
+  answer: string;
+  clues: SelectedClue[];
+};
+
+function CluesDisplay({ answer, clues }: CluesDisplayProps) {
   const { getURL: getClueSearchURL } = useClueSearchRouteContext();
-  const {
-    params: { answer, query },
-  } = useClueDisplayRouteContext();
-  const { dispatchFetchClues } = useActions();
-
-  useEffect(() => {
-    if (answer === undefined) return;
-
-    dispatchFetchClues(answer);
-  }, [answer, dispatchFetchClues]);
-
-  if (answer === undefined) {
-    return <RouterRedirect to={getClueSearchURL({ query })} />;
-  }
-
-  if (clues === undefined || isFetching) {
-    return <CircularProgress color="cyan" isIndeterminate />;
-  }
 
   const cluesCSVURL = getCSVURL(
     clues
@@ -142,17 +129,9 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
             maxW="100%"
             overflowX="auto"
           >
-            {query !== undefined && (
-              <RouterLinkButton
-                label="Results"
-                leftIcon={<ArrowBackIcon h={4} w={4} />}
-                to={getClueSearchURL({ query })}
-                variant="secondary"
-              />
-            )}
             <RouterLinkButton
               label="Search"
-              leftIcon={<SearchIcon h={4} w={4} />}
+              leftIcon={<ArrowBackIcon h={4} w={4} />}
               to={getClueSearchURL({})}
               variant="secondary"
             />
@@ -171,7 +150,7 @@ const Clues: React.FC<React.PropsWithChildren<unknown>> = () => {
       )}
     </Flex>
   );
-};
+}
 
 type EmptyResultsProps = { answer: string };
 
@@ -196,4 +175,32 @@ function EmptyResults({ answer }: EmptyResultsProps) {
   );
 }
 
-export default Clues;
+export default function Clues() {
+  const { clues, isFetching } = useAppSelector(selectCluesGenerator);
+  const { getURL: getClueSearchURL } = useClueSearchRouteContext();
+  const {
+    params: { answer },
+  } = useClueDisplayRouteContext();
+  const { dispatchFetchClues } = useActions();
+
+  useEffect(() => {
+    if (answer === undefined) return;
+
+    const promise = dispatchFetchClues(answer);
+    return () => promise.abort();
+  }, [answer, dispatchFetchClues]);
+
+  if (answer === undefined) {
+    return <RouterRedirect to={getClueSearchURL({})} />;
+  }
+
+  if (clues === undefined || isFetching) {
+    return (
+      <Box maxW="container.md" minW="300px" w="60%">
+        <TableSkeleton />
+      </Box>
+    );
+  }
+
+  return <CluesDisplay answer={answer} clues={clues} />;
+}
