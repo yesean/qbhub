@@ -2,6 +2,7 @@ import { Flex } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RouterLink } from '../components/RouterLink';
+import TableSkeleton from '../components/TableSkeleton';
 import { KeyValueTable } from '../components/tables';
 import useActions from '../hooks/useActions';
 import {
@@ -9,7 +10,6 @@ import {
   useClueSearchRouteContext,
 } from '../utils/routes';
 import EmptySearchResults from './EmptySearchResults';
-import SearchResultsSkeleton from './SearchResultsSkeleton';
 import { selectCluesGenerator } from './cluesGeneratorSlice';
 
 const answersFields = [
@@ -30,7 +30,7 @@ export default function SearchResults() {
   }, [dispatchFetchAnswers, query]);
 
   if (answers === undefined || isFetching) {
-    return <SearchResultsSkeleton />;
+    return <TableSkeleton />;
   }
 
   if (answers.length === 0) {

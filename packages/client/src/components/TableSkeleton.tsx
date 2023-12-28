@@ -1,7 +1,7 @@
 import { Skeleton, Stack } from '@chakra-ui/react';
 import { range } from '../utils/array';
 
-export default function SearchResultsSkeleton() {
+export default function TableSkeleton() {
   return (
     <Stack>
       {range(5).map((_, index) => (
