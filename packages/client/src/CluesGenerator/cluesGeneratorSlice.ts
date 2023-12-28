@@ -48,8 +48,13 @@ const cluesGeneratorSlice = createSlice({
         state.isFetching = false;
         state.answers = action.payload;
       })
-      .addCase(fetchAnswers.rejected, (state) => {
+      .addCase(fetchAnswers.rejected, (state, action) => {
+        if (action.meta.aborted) {
+          return;
+        }
+
         state.isFetching = false;
+        state.answers = [];
       });
 
     builder
@@ -60,8 +65,13 @@ const cluesGeneratorSlice = createSlice({
         state.isFetching = false;
         state.clues = action.payload;
       })
-      .addCase(fetchClues.rejected, (state) => {
+      .addCase(fetchClues.rejected, (state, action) => {
+        if (action.meta.aborted) {
+          return;
+        }
+
         state.isFetching = false;
+        state.clues = [];
       });
   },
   initialState,
