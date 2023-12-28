@@ -1,18 +1,10 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
+import useInputHandle from './useInputHandle';
 
 // Hook for managing input state with focus/blur/select support
-export default function useInput() {
-  const [userInput, setUserInput] = useState('');
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const focusInput = useCallback(() => {
-    if (inputRef.current != null) {
-      inputRef.current.disabled = false;
-      inputRef.current.focus();
-    }
-  }, []);
-  const blurInput = useCallback(() => inputRef.current?.blur(), []);
-  const selectInput = useCallback(() => inputRef.current?.select(), []);
+export default function useInput(initialUserInput: string = '') {
+  const [userInput, setUserInput] = useState(initialUserInput);
+  const { blurInput, focusInput, inputRef, selectInput } = useInputHandle();
 
   return useMemo(
     () => ({
@@ -23,6 +15,6 @@ export default function useInput() {
       setUserInput,
       userInput,
     }),
-    [blurInput, focusInput, selectInput, userInput],
+    [blurInput, focusInput, inputRef, selectInput, userInput],
   );
 }
