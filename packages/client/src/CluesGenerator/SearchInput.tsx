@@ -7,9 +7,12 @@ import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useClueSearchRouteContext } from '../utils/routes';
 
 export default function SearchInput() {
-  const { getURL: getClueSearchURL } = useClueSearchRouteContext();
+  const {
+    getURL: getClueSearchURL,
+    params: { query },
+  } = useClueSearchRouteContext();
   const { blurInput, focusInput, inputRef, setUserInput, userInput } =
-    useInput();
+    useInput(query);
   const debouncedUserInput = useDebounce(userInput, 300);
 
   useEffect(() => {
