@@ -1,54 +1,12 @@
-import { Flex, Input } from '@chakra-ui/react';
-import { useCallback } from 'react';
-import RouterLinkButton from '../components/buttons/RouterLinkButton';
-import useInput from '../hooks/useInput';
-import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
-import { useClueSearchRouteContext } from '../utils/routes';
-import Answers from './Answers';
+import { Flex } from '@chakra-ui/react';
+import SearchInput from './SearchInput';
+import SearchResults from './SearchResults';
 
-const Search: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const { focusInput, inputRef, setUserInput, userInput } = useInput();
-  const { getURL: getClueSearchURL } = useClueSearchRouteContext();
-
-  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      getClueSearchURL({ query: userInput }).go();
-    }
-  };
-
-  useKeyboardShortcut(
-    '/',
-    useCallback(
-      (e) => {
-        focusInput();
-        e.preventDefault();
-      },
-      [focusInput],
-    ),
-  );
-
+export default function Search() {
   return (
-    <Flex gap={4}>
-      <Input
-        ref={inputRef}
-        onChange={(e) => setUserInput(e.target.value)}
-        onKeyDown={onKeyDown}
-        placeholder="Search for an answerline!"
-        value={userInput}
-      />
-      <RouterLinkButton
-        h={10}
-        label="Search"
-        to={getClueSearchURL({ query: userInput })}
-      />
+    <Flex direction="column" gap={4} maxW="container.md" minW="300px" w="60%">
+      <SearchInput />
+      <SearchResults />
     </Flex>
   );
-};
-
-export default function SearchWrapper() {
-  const {
-    params: { query },
-  } = useClueSearchRouteContext();
-
-  return query === undefined ? <Search /> : <Answers query={query} />;
 }
