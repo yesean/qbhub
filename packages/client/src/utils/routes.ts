@@ -9,6 +9,7 @@ import {
   useQueryParams,
 } from 'use-query-params';
 import {
+  NeverNullOrUndefinedStringParam,
   NeverNullStringParam,
   buildNeverNullRangedNumberParamWithSkip,
   buildNumericEnumArrayParam,
@@ -47,7 +48,7 @@ const ROUTES = {
       answer: NeverNullStringParam,
       query: NeverNullStringParam,
     }),
-    search: buildRoute('/clue', { query: NeverNullStringParam }),
+    search: buildRoute('/clue', { query: NeverNullOrUndefinedStringParam }),
   },
   frequencyList: buildRoute('/frequency'),
   tossupReader: buildRoute('/tossup'),
