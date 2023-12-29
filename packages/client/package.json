@@ -34,7 +34,6 @@
     "react-select": "5.4.0",
     "react-virtualized-auto-sizer": "1.0.7",
     "react-window": "1.8.7",
-    "seamless-scroll-polyfill": "2.2.0",
     "stream-browserify": "3.0.0",
     "string-similarity": "4.0.4",
     "use-query-params": "^2.2.1",

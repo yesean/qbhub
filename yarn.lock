@@ -2358,7 +2358,6 @@ __metadata:
     react-virtualized-auto-sizer: "npm:1.0.7"
     react-window: "npm:1.8.7"
     rollup-plugin-visualizer: "npm:^5.8.2"
-    seamless-scroll-polyfill: "npm:2.2.0"
     stream-browserify: "npm:3.0.0"
     string-similarity: "npm:4.0.4"
     typescript: "npm:^5.3.2"
@@ -9911,13 +9910,6 @@ __metadata:
   dependencies:
     loose-envify: "npm:^1.1.0"
   checksum: 0c4557aa37bafca44ff21dc0ea7c92e2dbcb298bc62eae92b29a39b029134f02fb23917d6ebc8b1fa536b4184934314c20d8864d156a9f6357f3398aaf7bfda8
-  languageName: node
-  linkType: hard
-
-"seamless-scroll-polyfill@npm:2.2.0":
-  version: 2.2.0
-  resolution: "seamless-scroll-polyfill@npm:2.2.0"
-  checksum: b4a4f1bbd3c2abc818784d7d91e787c3d5f1e01aa9044951dc231002895fbb520ce065b52d49b2f45b11ad1134d58b93bf3a84e646cdcb5e01ae215cb864b126
   languageName: node
   linkType: hard
 
