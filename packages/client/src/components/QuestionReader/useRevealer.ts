@@ -4,9 +4,9 @@ import { getReadingTimeoutDelay } from '../../utils/reader';
 import { DEFAULT_READING_SPEED } from '../../utils/settings/constants';
 
 type Props = {
-  onChange: (visibleIndex: number) => void;
   onFinish: () => void;
   words: unknown[];
+  onChange?: (visibleIndex: number) => void;
 };
 
 export default ({ onChange, onFinish, words }: Props) => {
@@ -24,7 +24,7 @@ export default ({ onChange, onFinish, words }: Props) => {
   const pause = useCallback(() => setIsPaused(true), []);
   const reveal = useCallback(() => {
     setVisibleIndex(words.length - 1);
-    onChange(visibleIndex + 1);
+    onChange?.(visibleIndex + 1);
   }, [onChange, visibleIndex, words.length]);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export default ({ onChange, onFinish, words }: Props) => {
 
     const timeoutID = setTimeout(() => {
       setVisibleIndex((prevIndex) => prevIndex + 1);
-      onChange(visibleIndex + 1);
+      onChange?.(visibleIndex + 1);
     }, readingDelay);
 
     // eslint-disable-next-line consistent-return
