@@ -14,9 +14,9 @@ type Props = {
   onJudged: (result: QuestionResult) => void;
   onNext: () => void;
   onPrompt: (result: QuestionResult) => void;
-  onReveal: (visibleIndex: number) => void;
   question: Question;
   userInput: string;
+  onReveal?: (visibleIndex: number) => void;
 };
 
 type Reader = {
@@ -53,9 +53,10 @@ export default function useReader({
     setStatus(getNextStatus(status));
   }, [onBuzz, status]);
 
-  const buzzIfUserHasNot = useCallback(() => {
+  const handleFinish = useCallback(() => {
     if (status !== QuestionReaderStatus.Reading) return;
 
+    // buzz, if the user has not
     handleBuzz();
   }, [handleBuzz, status]);
 
@@ -65,7 +66,7 @@ export default function useReader({
     visibleIndex,
   } = useRevealer({
     onChange: onReveal,
-    onFinish: buzzIfUserHasNot, // manually trigger buzz, if all words are revealed before the user buzzes
+    onFinish: handleFinish, // manually trigger buzz, if all words are revealed before the user buzzes
     words: formattedWords,
   });
 
