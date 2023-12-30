@@ -14,19 +14,19 @@ import {
   useClueDisplayRouteContext,
   useClueSearchRouteContext,
 } from '../utils/routes';
-import { selectCluesGenerator } from './cluesGeneratorSlice';
+import { selectClueGenerator } from './clueGeneratorSlice';
 
-const cluesFields = [
+const clueFields = [
   { dataKey: 'clue', label: 'Clue' },
   { dataKey: 'score', label: 'Score' },
 ] as const;
 
-type CluesDisplayProps = {
+type ClueDisplayDisplayProps = {
   answer: string;
   clues: SelectedClue[];
 };
 
-function CluesDisplay({ answer, clues }: CluesDisplayProps) {
+function ClueDisplayDisplay({ answer, clues }: ClueDisplayDisplayProps) {
   const { getURL: getClueSearchURL } = useClueSearchRouteContext();
 
   const cluesCSVURL = getCSVURL(
@@ -108,7 +108,7 @@ function CluesDisplay({ answer, clues }: CluesDisplayProps) {
           <Box h="min(700px, 100%)" overflow="auto" w="min(600px, 100%)">
             <KeyValueTable
               data={clues.map((clue) => ({ ...clue, clue: renderClue(clue) }))}
-              headers={cluesFields}
+              headers={clueFields}
               height={700}
               width={600}
             />
@@ -167,8 +167,8 @@ function EmptyResults({ answer }: EmptyResultsProps) {
   );
 }
 
-export default function Clues() {
-  const { clues, isFetching } = useAppSelector(selectCluesGenerator);
+export default function ClueDisplay() {
+  const { clues, isFetching } = useAppSelector(selectClueGenerator);
   const { getURL: getClueSearchURL } = useClueSearchRouteContext();
   const {
     params: { answer },
@@ -208,5 +208,5 @@ export default function Clues() {
     );
   }
 
-  return <CluesDisplay answer={answer} clues={clues} />;
+  return <ClueDisplayDisplay answer={answer} clues={clues} />;
 }
