@@ -4,7 +4,7 @@ import {
   QuestionMetadata,
   Subcategory,
 } from '@qbhub/types';
-import { isEmpty, isNotNullOrEmpty } from '../array';
+import { isEmpty } from '../array';
 import { SUBCATEGORY_MAP } from '../constants';
 import { MAX_TOURNAMENT_YEAR, MIN_TOURNAMENT_YEAR } from './constants';
 import {
@@ -22,33 +22,41 @@ export const isSettingsDefault = (settings: Settings) =>
   isEmpty(settings.tournaments) &&
   settings.fromYear === undefined;
 
+function isCategorySubcategoryInvalid<T extends QuestionMetadata>(
+  question: T,
+  settings: Settings,
+) {
+  if (isEmpty(settings.categories) && isEmpty(settings.subcategories)) {
+    return false;
+  }
+
+  const isCategoryInvalid = !settings.categories.includes(question.category);
+
+  const isSubcategoryInvalid =
+    question.subcategory == null ||
+    !settings.subcategories.includes(question.subcategory);
+
+  // category and subcategory are mutually exclusive, question can pass by matching either category or subcategory
+  return isCategoryInvalid && isSubcategoryInvalid;
+}
+
 // check if question passes settings filters
 export const isQuestionValid = <T extends QuestionMetadata>(
   question: T,
-  settings: Partial<Settings>,
+  settings: Settings,
 ) => {
-  const isCategoryInvalid =
-    isNotNullOrEmpty(settings.categories) &&
-    !settings.categories.includes(question.category);
-
-  const isSubcategoryInvalid =
-    isNotNullOrEmpty(settings.subcategories) &&
-    (question.subcategory == null ||
-      !settings.subcategories.includes(question.subcategory));
-
-  // category and subcategory are mutually exclusive, question can pass by matching either category or subcategory
-  if (isCategoryInvalid && isSubcategoryInvalid) {
+  if (isCategorySubcategoryInvalid(question, settings)) {
     return false;
   }
 
   if (
-    isNotNullOrEmpty(settings.difficulties) &&
+    !isEmpty(settings.difficulties) &&
     !settings.difficulties.includes(question.difficulty)
   )
     return false;
 
   if (
-    isNotNullOrEmpty(settings.tournaments) &&
+    !isEmpty(settings.tournaments) &&
     !settings.tournaments.includes(question.tournament)
   )
     return false;
