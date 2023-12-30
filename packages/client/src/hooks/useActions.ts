@@ -1,9 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { nextBonus } from '../BonusReader/bonusReaderSlice';
-import {
-  fetchAnswers,
-  fetchClues,
-} from '../CluesGenerator/cluesGeneratorSlice';
+import { fetchAnswers, fetchClues } from '../ClueGenerator/clueGeneratorSlice';
 import { nextTossup } from '../TossupReader/tossupReaderSlice';
 import { useAppDispatch } from '../redux/hooks';
 import { useSettings } from './useSettings';

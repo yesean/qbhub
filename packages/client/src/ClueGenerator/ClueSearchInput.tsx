@@ -6,7 +6,7 @@ import useInput from '../hooks/useInput';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useClueSearchRouteContext } from '../utils/routes';
 
-export default function SearchInput() {
+export default function ClueSearchInput() {
   const {
     getURL: getClueSearchURL,
     params: { query },

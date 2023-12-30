@@ -1,8 +1,8 @@
 import { Flex } from '@chakra-ui/react';
-import SearchInput from './SearchInput';
-import SearchResults from './SearchResults';
+import ClueSearchInput from './ClueSearchInput';
+import ClueSearchResults from './ClueSearchResults';
 
-export default function Search() {
+export default function ClueSearch() {
   return (
     <Flex
       direction="column"
@@ -14,8 +14,8 @@ export default function Search() {
       py={4}
       w="60%"
     >
-      <SearchInput />
-      <SearchResults />
+      <ClueSearchInput />
+      <ClueSearchResults />
     </Flex>
   );
 }

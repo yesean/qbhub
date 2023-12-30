@@ -1,13 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import bonusReaderReducer from '../BonusReader/bonusReaderSlice';
-import cluesGeneatorReducer from '../CluesGenerator/cluesGeneratorSlice';
+import clueGeneratorReducer from '../ClueGenerator/clueGeneratorSlice';
 import frequencyListReducer from '../FrequencyList/frequencyListSlice';
 import tossupReaderReducer from '../TossupReader/tossupReaderSlice';
 
 export const store = configureStore({
   reducer: {
     bonusReader: bonusReaderReducer,
-    cluesGenerator: cluesGeneatorReducer,
+    clueGenerator: clueGeneratorReducer,
     frequencyList: frequencyListReducer,
     tossupReader: tossupReaderReducer,
   },

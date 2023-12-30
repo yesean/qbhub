@@ -10,18 +10,18 @@ import {
   useClueSearchRouteContext,
 } from '../utils/routes';
 import EmptySearchResults from './EmptySearchResults';
-import { selectCluesGenerator } from './cluesGeneratorSlice';
+import { selectClueGenerator } from './clueGeneratorSlice';
 
 const answersFields = [
   { dataKey: 'answer', label: 'Answer' },
   { dataKey: 'frequency', label: 'Frequency' },
 ] as const;
 
-type SearchResultsDisplayProps = {
+type ClueSearchResultsDisplayProps = {
   answers: FrequencyListEntry[];
 };
 
-function SearchResultsDisplay({ answers }: SearchResultsDisplayProps) {
+function ClueSearchResultsDisplay({ answers }: ClueSearchResultsDisplayProps) {
   const { getURL: getClueDisplayURL } = useClueDisplayRouteContext();
   const {
     params: { query },
@@ -48,8 +48,8 @@ function SearchResultsDisplay({ answers }: SearchResultsDisplayProps) {
   );
 }
 
-export default function SearchResults() {
-  const { answers, isFetching } = useSelector(selectCluesGenerator);
+export default function ClueSearchResults() {
+  const { answers, isFetching } = useSelector(selectClueGenerator);
   const {
     params: { query },
   } = useClueSearchRouteContext();
@@ -64,5 +64,5 @@ export default function SearchResults() {
     return <TableSkeleton />;
   }
 
-  return <SearchResultsDisplay answers={answers} />;
+  return <ClueSearchResultsDisplay answers={answers} />;
 }

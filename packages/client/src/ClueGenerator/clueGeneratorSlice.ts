@@ -6,13 +6,13 @@ import { Settings } from '../utils/settings/types';
 
 const FETCH_LIMIT = 200;
 
-type CluesGeneratorSlice = {
+type ClueGeneratorSlice = {
   answers: FrequencyListEntry[] | undefined;
   clues: SelectedClue[] | undefined;
   isFetching: boolean;
 };
 
-const initialState: CluesGeneratorSlice = {
+const initialState: ClueGeneratorSlice = {
   answers: undefined,
   clues: undefined,
   isFetching: false,
@@ -22,7 +22,7 @@ export const fetchAnswers = createAsyncThunk<
   FrequencyListEntry[],
   { answer: string; settings: Settings },
   { state: RootState }
->('cluesGenerator/fetchAnswers', async ({ answer, settings }) => {
+>('clueGenerator/fetchAnswers', async ({ answer, settings }) => {
   const fetchParams = { ...settings, answer, limit: FETCH_LIMIT };
   const answers = await fetchUtils.fetchAnswers(fetchParams);
   return answers;
@@ -32,13 +32,13 @@ export const fetchClues = createAsyncThunk<
   SelectedClue[],
   { answer: string; settings: Settings },
   { state: RootState }
->('cluesGenerator/fetchClues', async ({ answer, settings }) => {
+>('clueGenerator/fetchClues', async ({ answer, settings }) => {
   const fetchParams = { ...settings, answer, limit: FETCH_LIMIT };
   const clues = await fetchUtils.fetchClues(fetchParams);
   return clues;
 });
 
-const cluesGeneratorSlice = createSlice({
+const clueGeneratorSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchAnswers.pending, (state) => {
@@ -75,10 +75,10 @@ const cluesGeneratorSlice = createSlice({
       });
   },
   initialState,
-  name: 'cluesGenerator',
+  name: 'clueGenerator',
   reducers: {},
 });
 
-export const selectCluesGenerator = (state: RootState) => state.cluesGenerator;
+export const selectClueGenerator = (state: RootState) => state.clueGenerator;
 
-export default cluesGeneratorSlice.reducer;
+export default clueGeneratorSlice.reducer;

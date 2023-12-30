@@ -3,8 +3,8 @@ import { QueryParamProvider } from 'use-query-params';
 import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
 import About from './About';
 import BonusReader from './BonusReader';
-import Clues from './CluesGenerator/Clues';
-import Search from './CluesGenerator/Search';
+import ClueDisplay from './ClueGenerator/ClueDisplay';
+import ClueSearch from './ClueGenerator/ClueSearch';
 import Layout from './components/Layout';
 import RedirectToTossupReader from './components/RedirectToTossupReader';
 import FrequencyList from './FrequencyList';
@@ -39,11 +39,11 @@ const paths = [
     path: getFrequencyListURL(),
   },
   {
-    element: <Search />,
+    element: <ClueSearch />,
     path: getClueSearchURL(),
   },
   {
-    element: <Clues />,
+    element: <ClueDisplay />,
     path: getClueDisplayURL(),
   },
   {
