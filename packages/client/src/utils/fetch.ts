@@ -8,7 +8,7 @@ import {
 } from '@qbhub/types';
 import { log } from '@qbhub/utils';
 import axios from 'axios';
-import { MIN_TOURNAMENT_YEAR } from './settings/constants';
+import qs from 'qs';
 import { cleanTossupText, normalizeTags } from './string';
 
 const ENDPOINTS = {
@@ -18,34 +18,7 @@ const ENDPOINTS = {
   tossup: '/api/tossups',
 };
 
-export const combineParams = (...params: string[]) =>
-  params.filter(Boolean).join('&');
-export const createParamsFromArray = (field: string, values: any[]) =>
-  combineParams(...values.map((val) => `${field}[]=${val}`));
-export const addParams = (url: string, params: string) => `${url}?${params}`;
-
-const createParams = ({
-  answer = '',
-  categories = [],
-  difficulties = [],
-  from = MIN_TOURNAMENT_YEAR,
-  limit = 10,
-  offset = 0,
-  subcategories = [],
-  text = '',
-  tournaments = [],
-}: Partial<QuestionFilters>) =>
-  combineParams(
-    createParamsFromArray('categories', categories),
-    createParamsFromArray('subcategories', subcategories),
-    createParamsFromArray('difficulties', difficulties),
-    createParamsFromArray('tournaments', tournaments),
-    `from=${from}`,
-    text.length ? `text=${text}` : '',
-    answer.length ? `answer=${answer}` : '',
-    `limit=${limit}`,
-    `offset=${offset}`,
-  );
+const addParams = (url: string, params: string) => `${url}?${params}`;
 
 type TossupQuestionFilters = PartialOptional<
   QuestionFilters,
@@ -54,7 +27,7 @@ type TossupQuestionFilters = PartialOptional<
 export const fetchTossups = async (
   params: TossupQuestionFilters,
 ): Promise<Tossup[]> => {
-  const url = addParams(ENDPOINTS.tossup, createParams(params));
+  const url = addParams(ENDPOINTS.tossup, qs.stringify(params));
 
   try {
     log.info('Fetching tossups');
@@ -80,7 +53,7 @@ type BonusQuestionFilters = PartialOptional<
 export const fetchBonuses = async (
   params: BonusQuestionFilters,
 ): Promise<Bonus[]> => {
-  const url = addParams(ENDPOINTS.bonus, createParams(params));
+  const url = addParams(ENDPOINTS.bonus, qs.stringify(params));
 
   try {
     log.info('Fetching bonuses');
@@ -109,7 +82,7 @@ type FreqQuestionFilters = PartialOptional<
 export const fetchFreq = async (
   params: FreqQuestionFilters,
 ): Promise<FrequencyListEntry[]> => {
-  const url = addParams(ENDPOINTS.frequencyList, createParams(params));
+  const url = addParams(ENDPOINTS.frequencyList, qs.stringify(params));
 
   try {
     log.info('Fetching frequency list');
@@ -129,7 +102,7 @@ type AnswerlineQuestionFilters = PartialOptional<
 export const fetchAnswerlines = async (
   params: AnswerlineQuestionFilters,
 ): Promise<FrequencyListEntry[]> => {
-  const url = addParams(ENDPOINTS.frequencyList, createParams(params));
+  const url = addParams(ENDPOINTS.frequencyList, qs.stringify(params));
 
   try {
     log.info('Fetching answers');
@@ -149,7 +122,7 @@ type ClueQuestionFilters = PartialOptional<
 export const fetchClues = async (
   params: ClueQuestionFilters,
 ): Promise<SelectedClue[]> => {
-  const url = addParams(ENDPOINTS.clue, createParams(params));
+  const url = addParams(ENDPOINTS.clue, qs.stringify(params));
 
   try {
     log.info('Fetching clues');
