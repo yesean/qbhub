@@ -1,13 +1,5 @@
 import { ArrowBackIcon, SearchIcon } from '@chakra-ui/icons';
-import {
-  Box,
-  Container,
-  Flex,
-  Heading,
-  Highlight,
-  Text,
-  Tooltip,
-} from '@chakra-ui/react';
+import { Box, Container, Flex, Heading, Text, Tooltip } from '@chakra-ui/react';
 import { SelectedClue } from '@qbhub/types';
 import { useEffect } from 'react';
 import RouterRedirect from '../components/RouterRedirect';
