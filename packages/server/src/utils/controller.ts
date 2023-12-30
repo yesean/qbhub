@@ -18,13 +18,13 @@ import {
  */
 const parseQuestionFilters = (
   q: qs.ParsedQs,
-  { answer = false, limit = false },
+  { answer } = { answer: false },
 ): QuestionFilters => ({
   answer: parseAnswer(q, answer),
   categories: parseCategories(q),
   difficulties: parseDifficulties(q),
   from: parseFrom(q),
-  limit: parseLimit(q, limit),
+  limit: parseLimit(q),
   offset: parseOffset(q),
   sort: parseSort(q),
   subcategories: parseSubcategories(q),
@@ -36,25 +36,23 @@ const parseQuestionFilters = (
 /**
  * Parse query string for the /tossups endpoint.
  */
-const parseTossups = (q: qs.ParsedQs) =>
-  parseQuestionFilters(q, { limit: true });
+const parseTossups = (q: qs.ParsedQs) => parseQuestionFilters(q);
 
 /**
  * Parse query string for the /bonuses endpoint.
  */
-const parseBonuses = (q: qs.ParsedQs) =>
-  parseQuestionFilters(q, { limit: true });
+const parseBonuses = (q: qs.ParsedQs) => parseQuestionFilters(q);
 
 /**
  * Parse query string for the /freq endpoint.
  */
-const parseFreq = (q: qs.ParsedQs) => parseQuestionFilters(q, { limit: true });
+const parseFreq = (q: qs.ParsedQs) => parseQuestionFilters(q);
 
 /**
  * Parse query string for the /clues endpoint.
  */
 const parseClues = (q: qs.ParsedQs) =>
-  parseQuestionFilters(q, { answer: true, limit: true });
+  parseQuestionFilters(q, { answer: true });
 
 export const parseQueryString = {
   bonuses: parseBonuses,

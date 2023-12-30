@@ -16,6 +16,7 @@ import {
 } from '@qbhub/types';
 import { QueryStringParsingError } from '../types/errors.js';
 import {
+  DEFAULT_LIMIT,
   MAX_LIMIT,
   MAX_TOURNAMENT_YEAR,
   MIN_LIMIT,
@@ -223,12 +224,10 @@ export const parseOffset = (q: qs.ParsedQs): number => {
 /**
  * Parses the `limit` query string field.
  */
-export const parseLimit = (q: qs.ParsedQs, required = false): number => {
+export const parseLimit = (q: qs.ParsedQs): number => {
   const { limit } = q;
 
-  if (limit === undefined)
-    if (required) throw new QueryStringParsingError(requiredMessage('limit'));
-    else return -1;
+  if (limit === undefined) return DEFAULT_LIMIT;
 
   if (!isNumeric(limit))
     throw new QueryStringParsingError(typeErrorMessage('limit', 'number'));
