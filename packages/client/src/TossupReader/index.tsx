@@ -1,6 +1,6 @@
+import { useToast } from '@chakra-ui/react';
 import { QuestionResult, TossupResult, TossupScore } from '@qbhub/types';
 import { useCallback, useState } from 'react';
-import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import QuestionReader, {
   QuestionContentDisplayProps,
@@ -44,28 +44,44 @@ function getTossupResult(
   };
 }
 
-function displayJudgedToast(result: TossupResult) {
-  if (result.isCorrect) {
-    if (result.score === TossupScore.power) {
-      toast.success('Power!');
-    } else if (result.score === TossupScore.ten) {
-      toast.success('Ten!');
-    }
-  } else {
-    toast.error('Incorrect');
-  }
-}
-
-function displayPromptToast() {
-  toast('Prompt', { icon: '💭' });
-}
-
 function TossupReaderDisplay() {
   const [tossupResult, setTossupResult] = useState<TossupResult>();
   const { currentTossup, score } = useSelector(selectTossupReader);
   const { openTossupHistoryModal } = useModalContext();
   const { dispatchNextTossup } = useActions();
   const dispatch = useAppDispatch();
+  const toast = useToast();
+
+  const displayJudgedToast = useCallback(
+    (result: TossupResult) => {
+      if (result.isCorrect) {
+        if (result.score === TossupScore.power) {
+          toast({
+            status: 'success',
+            title: 'Power!',
+          });
+        } else if (result.score === TossupScore.ten) {
+          toast({
+            status: 'success',
+            title: 'Ten!',
+          });
+        }
+      } else {
+        toast({
+          status: 'error',
+          title: 'Incorrect',
+        });
+      }
+    },
+    [toast],
+  );
+
+  const displayPromptToast = useCallback(() => {
+    toast({
+      status: 'info',
+      title: 'Prompt',
+    });
+  }, [toast]);
 
   const handleQuestionResult = useCallback(
     (questionResult: QuestionResult) => {
@@ -79,14 +95,14 @@ function TossupReaderDisplay() {
       dispatch(submitResult(newTossupResult));
       displayJudgedToast(newTossupResult);
     },
-    [currentTossup, dispatch],
+    [currentTossup, dispatch, displayJudgedToast],
   );
 
   const handleNextQuestion = useCallback(() => {
-    toast.dismiss();
+    toast.closeAll();
     setTossupResult(undefined);
     dispatchNextTossup();
-  }, [dispatchNextTossup]);
+  }, [dispatchNextTossup, toast]);
 
   const renderQuestionContentDisplay = useCallback(
     (props: QuestionContentDisplayProps) =>

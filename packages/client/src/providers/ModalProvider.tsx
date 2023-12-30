@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Toaster } from 'react-hot-toast';
 import BonusHistoryModal from '../BonusHistoryModal';
 import InfoModal from '../InfoModal';
 import SettingsModal from '../SettingsModal';
@@ -77,7 +76,6 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
         closeModal={closeModal}
         isOpen={activeModal === ModalVariant.HamburgerMenuVariant}
       />
-      <Toaster />
       {children}
     </ModalContext.Provider>
   );
