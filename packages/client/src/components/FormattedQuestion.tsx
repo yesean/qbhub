@@ -4,7 +4,7 @@ import { FormattedWord } from '@qbhub/types';
 import React, { Fragment } from 'react';
 import { parseHTMLString } from '../utils/string';
 
-type FormattedQuestionProps = {
+export type FormattedQuestionProps = {
   words: FormattedWord[];
   buzzIndex?: number;
   visibleIndex?: number;

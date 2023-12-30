@@ -1,18 +1,10 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
-import { PartialOptional } from '@qbhub/types';
-import FormattedQuestion from '../components/FormattedQuestion';
-import { QuestionContentDisplayProps } from '../components/QuestionReader';
+import FormattedQuestion, {
+  FormattedQuestionProps,
+} from '../components/FormattedQuestion';
 import { getBonusLeadinDelimiterIndex } from '../utils/reader';
 
-type SelectedQuestionContentDisplayProps = Omit<
-  QuestionContentDisplayProps,
-  'question' | 'status'
->;
-
-type BonusReaderTextSectionProps = PartialOptional<
-  SelectedQuestionContentDisplayProps,
-  'visibleIndex' | 'visibleRef'
->;
+type BonusReaderTextSectionProps = FormattedQuestionProps;
 
 // Display bonus part text
 // part one is displayed as two sections: leadin + part one text
@@ -67,7 +59,9 @@ export default function BonusReaderTextSection({
   );
 }
 
-type TextSectionProps = BonusReaderTextSectionProps & { prefix: string };
+type PrefixedFormattedQuestionProps = FormattedQuestionProps & {
+  prefix: string;
+};
 
 // Display a formatted question with a bold prefix
 function PrefixedFormattedQuestion({
@@ -76,7 +70,7 @@ function PrefixedFormattedQuestion({
   visibleIndex,
   visibleRef,
   words,
-}: TextSectionProps) {
+}: PrefixedFormattedQuestionProps) {
   return (
     <Box>
       <Text as="b">{prefix}</Text>{' '}

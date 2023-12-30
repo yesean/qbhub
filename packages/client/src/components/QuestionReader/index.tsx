@@ -2,7 +2,6 @@ import { Flex } from '@chakra-ui/react';
 import { FormattedWord, Question, QuestionResult } from '@qbhub/types';
 import { useCallback, useMemo, useState } from 'react';
 import useInput from '../../hooks/useInput';
-import useScrollIntoView from '../../hooks/useScrollToVisible';
 import {
   QuestionReaderStatus,
   getIsAnswering,
@@ -18,7 +17,6 @@ export type QuestionContentDisplayProps = {
   question: Question;
   status: QuestionReaderStatus;
   visibleIndex: number;
-  visibleRef: React.RefObject<HTMLParagraphElement>;
   words: FormattedWord[];
   buzzIndex?: number;
 };
@@ -56,9 +54,6 @@ export default function QuestionReader({
     userInput,
   } = useInput();
 
-  const { scrollToVisible, visibleRef } =
-    useScrollIntoView<HTMLParagraphElement>();
-
   const formattedWords = useMemo(
     () => getFormattedWords(question.formattedText),
     [question.formattedText],
@@ -93,7 +88,6 @@ export default function QuestionReader({
     onJudged: handleJudged,
     onNext: handleNext,
     onPrompt: handlePrompt,
-    onReveal: scrollToVisible,
     question,
     userInput,
   });
@@ -108,7 +102,6 @@ export default function QuestionReader({
         question={question}
         status={status}
         visibleIndex={visibleIndex}
-        visibleRef={visibleRef}
         words={formattedWords}
       />
       {shouldShowProgress && (

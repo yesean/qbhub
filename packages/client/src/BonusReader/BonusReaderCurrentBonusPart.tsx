@@ -1,14 +1,12 @@
 import { BonusPartResult } from '@qbhub/types';
-import { QuestionContentDisplayProps } from '../components/QuestionReader';
+import { FormattedQuestionProps } from '../components/FormattedQuestion';
 import { QuestionReaderStatus } from '../utils/questionReader';
 import BonusReaderAnswer from './BonusReaderAnswer';
 import BonusReaderTextSection from './BonusReaderTextSection';
 
-type BonusReaderCurrentBonusPartProps = Omit<
-  QuestionContentDisplayProps,
-  'question'
-> & {
+type BonusReaderCurrentBonusPartProps = FormattedQuestionProps & {
   bonusPartResult: BonusPartResult | undefined;
+  status: QuestionReaderStatus;
 };
 
 export default function BonusReaderCurrentBonusPart({
@@ -26,11 +24,14 @@ export default function BonusReaderCurrentBonusPart({
       <BonusReaderTextSection
         buzzIndex={buzzIndex}
         visibleIndex={visibleIndex}
-        visibleRef={visibleRef}
+        visibleRef={shouldShowAnswer ? undefined : visibleRef}
         words={words}
       />
       {shouldShowAnswer && bonusPartResult !== undefined && (
-        <BonusReaderAnswer bonusPartResult={bonusPartResult} />
+        <BonusReaderAnswer
+          bonusPartResult={bonusPartResult}
+          visibleRef={shouldShowAnswer ? visibleRef : undefined}
+        />
       )}
     </>
   );
