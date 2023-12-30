@@ -1,6 +1,8 @@
 import { Flex } from '@chakra-ui/react';
 import { Bonus, BonusPartResult } from '@qbhub/types';
+import { useMemo } from 'react';
 import { QuestionContentDisplayProps } from '../components/QuestionReader';
+import useAutoScrollIntoView from '../hooks/useAutoScrollIntoView';
 import BonusReaderCurrentBonusPart from './BonusReaderCurrentBonusPart';
 import BonusReaderPreviousBonusPart from './BonusReaderPreviousBonusPart';
 
@@ -17,9 +19,16 @@ export default function BonusReaderContentDisplay({
   buzzIndex,
   status,
   visibleIndex,
-  visibleRef,
   words,
 }: BonusReaderTextDisplayProps) {
+  const autoScrollDependencies = useMemo(
+    () => [visibleIndex, status],
+    [status, visibleIndex],
+  );
+  const visibleRef = useAutoScrollIntoView<HTMLParagraphElement>(
+    autoScrollDependencies,
+  );
+
   return (
     <Flex
       bg="gray.100"

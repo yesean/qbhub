@@ -4,10 +4,12 @@ import { parseHTMLString } from '../utils/string';
 
 type BonusReaderAnswerProps = {
   bonusPartResult: BonusPartResult;
+  visibleRef?: React.RefObject<HTMLParagraphElement>;
 };
 
 export default function BonusReaderAnswer({
   bonusPartResult: { bonusPart, isCorrect, userAnswer },
+  visibleRef,
 }: BonusReaderAnswerProps) {
   const formattedAnswerDisplay = parseHTMLString(bonusPart.formattedAnswer);
 
@@ -18,7 +20,11 @@ export default function BonusReaderAnswer({
       </Box>
       <Box>
         <Text as="b">YOU SAID:</Text>{' '}
-        <Text as="mark" backgroundColor={isCorrect ? 'green.100' : 'red.100'}>
+        <Text
+          ref={visibleRef}
+          as="mark"
+          backgroundColor={isCorrect ? 'green.100' : 'red.100'}
+        >
           {userAnswer.trim().length === 0 ? '<no answer>' : userAnswer}
         </Text>
       </Box>
