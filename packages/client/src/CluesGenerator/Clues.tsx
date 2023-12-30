@@ -1,5 +1,13 @@
 import { ArrowBackIcon, SearchIcon } from '@chakra-ui/icons';
-import { Box, Container, Flex, Heading, Text, Tooltip } from '@chakra-ui/react';
+import {
+  Box,
+  Container,
+  Flex,
+  Heading,
+  Highlight,
+  Text,
+  Tooltip,
+} from '@chakra-ui/react';
 import { SelectedClue } from '@qbhub/types';
 import { useEffect } from 'react';
 import RouterRedirect from '../components/RouterRedirect';
@@ -189,6 +197,20 @@ export default function Clues() {
   if (clues === undefined || isFetching) {
     return (
       <Box maxW="container.md" minW="300px" w="60%">
+        <Heading
+          as="h2"
+          lineHeight="1.5"
+          maxW="600px"
+          mb={4}
+          px={4}
+          size="md"
+          textAlign="center"
+        >
+          Searching clues for:{' '}
+          <Box as="span" bg="cyan.200" borderRadius="sm" p={1}>
+            {answer}
+          </Box>
+        </Heading>
         <TableSkeleton />
       </Box>
     );
