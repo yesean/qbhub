@@ -1,20 +1,20 @@
 import { Bonus, BonusResult } from '@qbhub/types';
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import type { RootState } from '../redux/store';
+import { PayloadAction, createAction, createSlice } from '@reduxjs/toolkit';
+import type { AppDispatch, RootState } from '../redux/store';
 import { createAppAsyncThunk } from '../redux/utils';
 import * as fetchUtils from '../utils/fetch';
 import { Settings } from '../utils/settings/types';
 import { isQuestionValid } from '../utils/settings/validate';
 
 type BonusReaderState = {
-  bonuses: Bonus[];
+  bonuses: Bonus[] | undefined;
   isFetching: boolean;
   results: BonusResult[];
   score: number;
 };
 
 const initialState: BonusReaderState = {
-  bonuses: [],
+  bonuses: undefined,
   isFetching: false,
   results: [],
   score: 0,
@@ -29,24 +29,60 @@ const fetchBonuses = createAppAsyncThunk<Bonus[], FetchBonusesArgs>(
   },
 );
 
+async function fetchBonusesIfNeeded(
+  bonuses: Bonus[],
+  dispatch: AppDispatch,
+  args: FetchBonusesArgs,
+) {
+  // if bonus cache is low, fetch more
+  // if bonus cache is empty, keep the action pending
+  if (bonuses.length === 0) {
+    await dispatch(fetchBonuses(args)).unwrap();
+  } else if (bonuses.length < 5) {
+    dispatch(fetchBonuses(args));
+  }
+}
+
 export const nextBonus = createAppAsyncThunk<void, FetchBonusesArgs>(
   'bonusReader/nextBonus',
   async (args, { dispatch, getState }) => {
-    const { bonusReader } = getState();
-    // if bonus cache is low, fetch more
-    // if bonus cache is empty, keep the action pending
-    if (bonusReader.bonuses.length === 0) {
+    const {
+      bonusReader: { bonuses },
+    } = getState();
+
+    if (bonuses === undefined) {
       await dispatch(fetchBonuses(args)).unwrap();
-    } else if (bonusReader.bonuses.length < 5) {
-      dispatch(fetchBonuses(args));
+      return;
     }
+    fetchBonusesIfNeeded(bonuses, dispatch, args);
   },
 );
+
+type FilterBonusesArgs = { settings: Settings };
+const filterBonuses = createAction<FilterBonusesArgs>(
+  'bonusReader/filterBonuses',
+);
+
+export const filterBonusesWithRefetch = createAppAsyncThunk<
+  void,
+  FetchBonusesArgs & FilterBonusesArgs
+>('bonusReader/filterBonusesWithRefetch', (args, { dispatch, getState }) => {
+  dispatch(filterBonuses(args));
+
+  const {
+    bonusReader: { bonuses },
+  } = getState();
+
+  if (bonuses === undefined) {
+    return;
+  }
+  fetchBonusesIfNeeded(bonuses, dispatch, args);
+});
 
 const bonusReaderSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchBonuses.fulfilled, (state, action) => {
-      state.bonuses.push(...action.payload);
+      state.bonuses = [...(state.bonuses ?? []), ...action.payload];
     });
     builder
       .addCase(nextBonus.pending, (state) => {
@@ -54,26 +90,26 @@ const bonusReaderSlice = createSlice({
       })
       .addCase(nextBonus.fulfilled, (state) => {
         state.isFetching = false;
-        state.bonuses.shift();
+        state.bonuses?.shift();
       })
       .addCase(nextBonus.rejected, (state) => {
         state.isFetching = false;
       });
+    builder.addCase(filterBonuses, (state, { payload: { settings } }) => {
+      state.bonuses = state.bonuses?.filter((bn) =>
+        isQuestionValid(bn, settings),
+      );
+    });
   },
   initialState,
   name: 'bonusReader',
   reducers: {
-    filterBonuses: (state, { payload: settings }: PayloadAction<Settings>) => {
-      state.bonuses = state.bonuses.filter((bn) =>
-        isQuestionValid(bn, settings),
-      );
-    },
     submitResult(state, action: PayloadAction<BonusResult>) {
       state.results.push(action.payload);
     },
   },
 });
-export const { filterBonuses, submitResult } = bonusReaderSlice.actions;
+export const { submitResult } = bonusReaderSlice.actions;
 
 export const selectBonusReader = ({ bonusReader }: RootState) => {
   const score = bonusReader.results.reduce(
@@ -81,7 +117,7 @@ export const selectBonusReader = ({ bonusReader }: RootState) => {
     0,
   );
 
-  const currentBonus = bonusReader.bonuses.at(0);
+  const currentBonus = bonusReader.bonuses?.at(0);
 
   return { ...bonusReader, currentBonus, score };
 };
