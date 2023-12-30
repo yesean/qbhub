@@ -1,7 +1,8 @@
 import { SearchIcon } from '@chakra-ui/icons';
-import { Container, Text } from '@chakra-ui/react';
+import { Container, Flex, Text } from '@chakra-ui/react';
 import RouterLinkButton from '../components/buttons/RouterLinkButton';
 import { useClueSearchRouteContext } from '../utils/routes';
+import ClueDisplayHeadline from './ClueDisplayHeadline';
 
 type ClueDisplayEmptyResultsProps = { answer: string };
 
@@ -11,11 +12,12 @@ export default function ClueDisplayEmptyResults({
   const { getURL: getClueSearchURL } = useClueSearchRouteContext();
 
   return (
-    <>
-      <Container bg="gray.100" borderRadius="md" mb={4} p={4}>
+    <Flex align="center" direction="column" gap={4}>
+      <ClueDisplayHeadline headline={answer} leadingText="Showing clues for:" />
+      <Container bg="gray.100" borderRadius="md" p={4}>
         <Text>
-          No clues found for: <strong>{answer}</strong>. Try checking your
-          network connection or tweaking the search parameters.
+          No clues found for this answerline. Try searching for another
+          answerline or adjusting your question settings.
         </Text>
       </Container>
       <RouterLinkButton
@@ -24,6 +26,6 @@ export default function ClueDisplayEmptyResults({
         to={getClueSearchURL({})}
         variant="secondary"
       />
-    </>
+    </Flex>
   );
 }

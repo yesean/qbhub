@@ -1,5 +1,5 @@
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { Box, Flex, Heading } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import { SelectedClue } from '@qbhub/types';
 import { useEffect } from 'react';
 import RouterRedirect from '../components/RouterRedirect';
@@ -16,6 +16,7 @@ import {
 } from '../utils/routes';
 import ClueDisplayClue from './ClueDisplayClue';
 import ClueDisplayEmptyResults from './ClueDisplayEmptyResults';
+import ClueDisplayHeadline from './ClueDisplayHeadline';
 import { selectClueGenerator } from './clueGeneratorSlice';
 
 const clueFields = [
@@ -54,30 +55,16 @@ function ClueDisplayDisplay({ answer, clues }: ClueDisplayDisplayProps) {
       justify="center"
       w="100%"
     >
-      <Heading
-        as="h2"
-        lineHeight="1.5"
-        maxW="600px"
-        px={4}
-        size="md"
-        textAlign="center"
-      >
-        Showing clues for:{' '}
-        <Box as="span" bg="cyan.200" borderRadius="sm" p={1}>
-          {answer}
-        </Box>
-      </Heading>
-      <Box h="min(700px, 100%)" overflow="auto" w="min(600px, 100%)">
-        <KeyValueTable
-          data={clues.map((clue) => ({
-            ...clue,
-            clue: <ClueDisplayClue clue={clue} />,
-          }))}
-          headers={clueFields}
-          height={700}
-          width={600}
-        />
-      </Box>
+      <ClueDisplayHeadline headline={answer} leadingText="Showing clues for:" />
+      <KeyValueTable
+        data={clues.map((clue) => ({
+          ...clue,
+          clue: <ClueDisplayClue clue={clue} />,
+        }))}
+        headers={clueFields}
+        height={700}
+        width={600}
+      />
       <Flex
         flexShrink={0}
         gap={4}
@@ -124,23 +111,13 @@ export default function ClueDisplay() {
 
   if (clues === undefined || isFetching) {
     return (
-      <Box maxW="container.md" minW="300px" w="60%">
-        <Heading
-          as="h2"
-          lineHeight="1.5"
-          maxW="600px"
-          mb={4}
-          px={4}
-          size="md"
-          textAlign="center"
-        >
-          Searching clues for:{' '}
-          <Box as="span" bg="cyan.200" borderRadius="sm" p={1}>
-            {answer}
-          </Box>
-        </Heading>
+      <Flex direction="column" gap={4} maxW="container.md" minW="300px" w="60%">
+        <ClueDisplayHeadline
+          headline={answer}
+          leadingText="Searching clues for:"
+        />
         <TableSkeleton />
-      </Box>
+      </Flex>
     );
   }
 

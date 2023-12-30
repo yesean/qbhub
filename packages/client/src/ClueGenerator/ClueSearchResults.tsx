@@ -9,7 +9,7 @@ import {
   useClueDisplayRouteContext,
   useClueSearchRouteContext,
 } from '../utils/routes';
-import EmptySearchResults from './EmptySearchResults';
+import ClueSearchEmptyResults from './ClueSearchEmptyResults';
 import { selectClueGenerator } from './clueGeneratorSlice';
 
 const answersFields = [
@@ -28,7 +28,7 @@ function ClueSearchResultsDisplay({ answers }: ClueSearchResultsDisplayProps) {
   } = useClueSearchRouteContext();
 
   if (answers.length === 0) {
-    return <EmptySearchResults query={query} />;
+    return <ClueSearchEmptyResults query={query} />;
   }
 
   return (
