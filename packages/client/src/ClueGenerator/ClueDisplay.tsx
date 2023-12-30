@@ -51,9 +51,11 @@ function ClueDisplayDisplay({ answer, clues }: ClueDisplayDisplayProps) {
       align="center"
       direction="column"
       gap={4}
-      h="100%"
       justify="center"
-      w="100%"
+      maxW="container.md"
+      minW="351px"
+      overflow="auto"
+      w="60%"
     >
       <ClueDisplayHeadline headline={answer} leadingText="Showing clues for:" />
       <KeyValueTable
@@ -63,16 +65,9 @@ function ClueDisplayDisplay({ answer, clues }: ClueDisplayDisplayProps) {
         }))}
         headers={clueFields}
         height={700}
-        width={600}
+        width={1000}
       />
-      <Flex
-        flexShrink={0}
-        gap={4}
-        justify="center"
-        justifyContent="flex-start"
-        maxW="100%"
-        overflowX="auto"
-      >
+      <Flex flexShrink={0} gap={4} justify="start">
         <RouterLinkButton
           label="Search"
           leftIcon={<ArrowBackIcon h={4} w={4} />}
@@ -111,7 +106,15 @@ export default function ClueDisplay() {
 
   if (clues === undefined || isFetching) {
     return (
-      <Flex direction="column" gap={4} maxW="container.md" minW="300px" w="60%">
+      <Flex
+        direction="column"
+        gap={4}
+        justify="center"
+        maxW="container.md"
+        minW="351px"
+        overflow="auto"
+        w="60%"
+      >
         <ClueDisplayHeadline
           headline={answer}
           leadingText="Searching clues for:"
