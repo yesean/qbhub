@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { filterBonuses } from '../BonusReader/bonusReaderSlice';
 import { reset } from '../FrequencyList/frequencyListSlice';
-import { filterTossups } from '../TossupReader/tossupReaderSlice';
+import { filterTossupsWithRefetch } from '../TossupReader/tossupReaderSlice';
 import { useAppDispatch } from '../redux/hooks';
 import { useGlobalQueryParams } from '../utils/routes';
 import { restoreSettings, saveSettings } from '../utils/settings/storage';
@@ -62,7 +62,7 @@ export const useSettings = (): SettingsHook => {
           );
 
         // update questions
-        dispatch(filterTossups(nextSettings));
+        dispatch(filterTossupsWithRefetch({ settings: nextSettings }));
         dispatch(filterBonuses(nextSettings));
 
         // reset frequency list if question params change

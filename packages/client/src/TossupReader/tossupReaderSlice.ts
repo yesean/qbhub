@@ -1,6 +1,11 @@
 import { Tossup, TossupResult } from '@qbhub/types';
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import type { RootState } from '../redux/store';
+import {
+  PayloadAction,
+  createAction,
+  createAsyncThunk,
+  createSlice,
+} from '@reduxjs/toolkit';
+import type { AppDispatch, RootState } from '../redux/store';
 import * as fetchUtils from '../utils/fetch';
 import { Settings } from '../utils/settings/types';
 import { isQuestionValid } from '../utils/settings/validate';
@@ -8,16 +13,22 @@ import { isQuestionValid } from '../utils/settings/validate';
 type TossupReaderState = {
   isFetching: boolean;
   results: TossupResult[];
-  tossups: Tossup[];
+  tossups: Tossup[] | undefined;
 };
 
 const initialState: TossupReaderState = {
   isFetching: false,
   results: [],
-  tossups: [],
+  tossups: undefined,
 };
 
-const fetchTossups = createAsyncThunk<Tossup[], { settings: Settings }>(
+type FilterTossupsArgs = { settings: Settings };
+const filterTossups = createAction<FilterTossupsArgs>(
+  'tossupReader/filterTossups',
+);
+
+type FetchTossupsArgs = { settings: Settings };
+const fetchTossups = createAsyncThunk<Tossup[], FetchTossupsArgs>(
   'tossupReader/fetchTossups',
   async ({ settings }) => {
     const tossups = await fetchUtils.fetchTossups(settings);
@@ -25,25 +36,57 @@ const fetchTossups = createAsyncThunk<Tossup[], { settings: Settings }>(
   },
 );
 
-export const nextTossup = createAsyncThunk<
-  void,
-  { settings: Settings },
-  { state: RootState }
->('tossupReader/nextTossup', async (args, { dispatch, getState }) => {
-  const { tossupReader } = getState();
+async function fetchTossupsIfNeeded(
+  tossups: Tossup[],
+  dispatch: AppDispatch,
+  args: FetchTossupsArgs,
+) {
   // if tossup cache is low, fetch more
   // if tossup cache is empty, keep the action pending
-  if (tossupReader.tossups.length === 0) {
+  if (tossups.length === 0) {
     await dispatch(fetchTossups(args)).unwrap();
-  } else if (tossupReader.tossups.length < 5) {
+  } else if (tossups.length < 5) {
     dispatch(fetchTossups(args));
   }
+}
+
+export const filterTossupsWithRefetch = createAsyncThunk<
+  void,
+  FilterTossupsArgs,
+  { dispatch: AppDispatch; state: RootState }
+>('tossupReader/filterTossupsWithRefetch', (args, { dispatch, getState }) => {
+  dispatch(filterTossups(args));
+
+  const {
+    tossupReader: { tossups },
+  } = getState();
+
+  if (tossups === undefined) {
+    return;
+  }
+  fetchTossupsIfNeeded(tossups, dispatch, args);
+});
+
+export const nextTossup = createAsyncThunk<
+  void,
+  FetchTossupsArgs,
+  { dispatch: AppDispatch; state: RootState }
+>('tossupReader/nextTossup', async (args, { dispatch, getState }) => {
+  const {
+    tossupReader: { tossups },
+  } = getState();
+
+  if (tossups === undefined) {
+    await dispatch(fetchTossups(args)).unwrap();
+    return;
+  }
+  fetchTossupsIfNeeded(tossups, dispatch, args);
 });
 
 const tossupReaderSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchTossups.fulfilled, (state, action) => {
-      state.tossups.push(...action.payload);
+      state.tossups = [...(state.tossups ?? []), ...action.payload];
     });
     builder
       .addCase(nextTossup.pending, (state) => {
@@ -51,26 +94,26 @@ const tossupReaderSlice = createSlice({
       })
       .addCase(nextTossup.fulfilled, (state) => {
         state.isFetching = false;
-        state.tossups.shift();
+        state.tossups?.shift();
       })
       .addCase(nextTossup.rejected, (state) => {
         state.isFetching = false;
       });
+    builder.addCase(filterTossups, (state, { payload: { settings } }) => {
+      state.tossups = state.tossups?.filter((tu) =>
+        isQuestionValid(tu, settings),
+      );
+    });
   },
   initialState,
   name: 'tossupReader',
   reducers: {
-    filterTossups: (state, { payload: settings }: PayloadAction<Settings>) => {
-      state.tossups = state.tossups.filter((tu) =>
-        isQuestionValid(tu, settings),
-      );
-    },
     submitResult: (state, action: PayloadAction<TossupResult>) => {
       state.results.push(action.payload);
     },
   },
 });
-export const { filterTossups, submitResult } = tossupReaderSlice.actions;
+export const { submitResult } = tossupReaderSlice.actions;
 
 export const selectTossupReader = ({ tossupReader }: RootState) => {
   const score = tossupReader.results.reduce(
@@ -78,7 +121,7 @@ export const selectTossupReader = ({ tossupReader }: RootState) => {
     0,
   );
 
-  const currentTossup = tossupReader.tossups.at(0);
+  const currentTossup = tossupReader.tossups?.at(0);
 
   return { ...tossupReader, currentTossup, score };
 };
