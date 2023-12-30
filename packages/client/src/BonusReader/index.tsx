@@ -1,3 +1,4 @@
+import { useToast } from '@chakra-ui/react';
 import {
   BonusPart,
   BonusPartResult,
@@ -7,7 +8,6 @@ import {
   QuestionResult,
 } from '@qbhub/types';
 import { useCallback, useMemo } from 'react';
-import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import QuestionReader, {
   QuestionContentDisplayProps,
@@ -47,23 +47,6 @@ function getBonusPartResult(
   };
 }
 
-const displayJudgedToast = (result: BonusResult) => {
-  switch (result.score) {
-    case BonusScore.thirty:
-      return toast.success('All thirty!');
-    case BonusScore.twenty:
-      return toast.success('Twenty!');
-    case BonusScore.ten:
-      return toast.success('Ten');
-    case BonusScore.zero:
-      return toast.error('Zero');
-  }
-};
-
-function displayPromptToast() {
-  toast('Prompt', { icon: '💭' });
-}
-
 function BonusReaderDisplay() {
   const [
     { bonusPartNumber, bonusPartResults, bonusResult },
@@ -73,8 +56,44 @@ function BonusReaderDisplay() {
   const { openBonusHistoryModal } = useModalContext();
   const { dispatchNextBonus } = useActions();
   const dispatch = useAppDispatch();
+  const toast = useToast();
 
   const currentBonusPart = currentBonus?.parts[bonusPartNumber];
+
+  const displayJudgedToast = useCallback(
+    (result: BonusResult) => {
+      switch (result.score) {
+        case BonusScore.thirty:
+          return toast({
+            status: 'success',
+            title: 'All thirty!',
+          });
+        case BonusScore.twenty:
+          return toast({
+            status: 'success',
+            title: 'Twenty!',
+          });
+        case BonusScore.ten:
+          return toast({
+            status: 'success',
+            title: 'Ten',
+          });
+        case BonusScore.zero:
+          return toast({
+            status: 'error',
+            title: 'Zero',
+          });
+      }
+    },
+    [toast],
+  );
+
+  const displayPromptToast = useCallback(() => {
+    toast({
+      status: 'info',
+      title: 'Prompt',
+    });
+  }, [toast]);
 
   const handleQuestionResult = useCallback(
     (result: QuestionResult) => {
@@ -108,6 +127,7 @@ function BonusReaderDisplay() {
       currentBonusPart,
       dispatch,
       dispatchBonusReader,
+      displayJudgedToast,
     ],
   );
 
@@ -119,11 +139,17 @@ function BonusReaderDisplay() {
       type: 'nextBonusPart',
     });
 
-    toast.dismiss();
+    toast.closeAll();
     if (isLastBonusPart(bonusPartNumber, currentBonus)) {
       dispatchNextBonus();
     }
-  }, [bonusPartNumber, currentBonus, dispatchBonusReader, dispatchNextBonus]);
+  }, [
+    bonusPartNumber,
+    currentBonus,
+    dispatchBonusReader,
+    dispatchNextBonus,
+    toast,
+  ]);
 
   const currentQuestion = useMemo(() => {
     if (currentBonus === undefined || currentBonusPart === undefined) return;
