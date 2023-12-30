@@ -34,7 +34,7 @@ export default function ClueSearchInput() {
     <Flex gap={4}>
       <Input
         ref={inputRef}
-        h="100%"
+        h="auto" // fill the height of the flexbox container, height: 100% doesn't work because there's no parent height
         onChange={(e) => setUserInput(e.target.value)}
         placeholder="Search for an answerline!"
         value={userInput}

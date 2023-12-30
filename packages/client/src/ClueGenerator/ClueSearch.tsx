@@ -8,10 +8,9 @@ export default function ClueSearch() {
       direction="column"
       gap={4}
       justify="center"
-      maxH="100%"
       maxW="container.md"
-      minW="300px"
-      py={4}
+      minW="351px"
+      overflow="auto"
       w="60%"
     >
       <ClueSearchInput />
