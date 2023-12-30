@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { filterBonuses } from '../BonusReader/bonusReaderSlice';
 import { reset } from '../FrequencyList/frequencyListSlice';
 import { filterTossupsWithRefetch } from '../TossupReader/tossupReaderSlice';
-import { useAppDispatch } from '../redux/hooks';
+import { useAppDispatch } from '../redux/utils';
 import { useGlobalQueryParams } from '../utils/routes';
 import { restoreSettings, saveSettings } from '../utils/settings/storage';
 import { Settings } from '../utils/settings/types';
