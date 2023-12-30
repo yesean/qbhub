@@ -11,11 +11,12 @@ import axios from 'axios';
 import { MIN_TOURNAMENT_YEAR } from './settings/constants';
 import { cleanTossupText, normalizeTags } from './string';
 
-const API_URL = '/api';
-const TOSSUP_URL = `${API_URL}/tossups`;
-const BONUS_URL = `${API_URL}/bonuses`;
-const FREQ_URL = `${API_URL}/freq`;
-const CLUES_URL = `${API_URL}/clues`;
+const ENDPOINTS = {
+  bonus: '/api/bonuses',
+  clue: '/api/clues',
+  frequencyList: '/api/freq',
+  tossup: '/api/tossups',
+};
 
 export const combineParams = (...params: string[]) =>
   params.filter(Boolean).join('&');
@@ -53,7 +54,7 @@ type TossupQuestionFilters = PartialOptional<
 export const fetchTossups = async (
   params: TossupQuestionFilters,
 ): Promise<Tossup[]> => {
-  const url = addParams(TOSSUP_URL, createParams(params));
+  const url = addParams(ENDPOINTS.tossup, createParams(params));
 
   try {
     log.info('Fetching tossups');
@@ -79,7 +80,7 @@ type BonusQuestionFilters = PartialOptional<
 export const fetchBonuses = async (
   params: BonusQuestionFilters,
 ): Promise<Bonus[]> => {
-  const url = addParams(BONUS_URL, createParams(params));
+  const url = addParams(ENDPOINTS.bonus, createParams(params));
 
   try {
     log.info('Fetching bonuses');
@@ -108,7 +109,7 @@ type FreqQuestionFilters = PartialOptional<
 export const fetchFreq = async (
   params: FreqQuestionFilters,
 ): Promise<FrequencyListEntry[]> => {
-  const url = addParams(FREQ_URL, createParams(params));
+  const url = addParams(ENDPOINTS.frequencyList, createParams(params));
 
   try {
     log.info('Fetching frequency list');
@@ -128,7 +129,7 @@ type AnswerlineQuestionFilters = PartialOptional<
 export const fetchAnswerlines = async (
   params: AnswerlineQuestionFilters,
 ): Promise<FrequencyListEntry[]> => {
-  const url = addParams(FREQ_URL, createParams(params));
+  const url = addParams(ENDPOINTS.frequencyList, createParams(params));
 
   try {
     log.info('Fetching answers');
@@ -148,7 +149,7 @@ type ClueQuestionFilters = PartialOptional<
 export const fetchClues = async (
   params: ClueQuestionFilters,
 ): Promise<SelectedClue[]> => {
-  const url = addParams(CLUES_URL, createParams(params));
+  const url = addParams(ENDPOINTS.clue, createParams(params));
 
   try {
     log.info('Fetching clues');
