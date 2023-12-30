@@ -30,8 +30,6 @@ const requiredMessage = (field: string) =>
   `The query string field '${field}' is required.`;
 const typeErrorMessage = (field: string, T: string) =>
   `The query string field '${field}' must be of type '${T}'.`;
-const noEmptyStringMessage = (field: string) =>
-  `The query string field '${field}' cannot be an empty string.`;
 const rangeErrorMessage = (field: string, low: number, high?: number) =>
   high !== undefined
     ? `The query string field '${field}' must be between ${low} and ${high}.`
