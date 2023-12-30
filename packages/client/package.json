@@ -14,7 +14,7 @@
     "@fontsource/raleway": "^5.0.15",
     "@qbhub/types": "workspace:^",
     "@qbhub/utils": "workspace:^",
-    "@reduxjs/toolkit": "^1.8.5",
+    "@reduxjs/toolkit": "^2.0.1",
     "@uidotdev/usehooks": "^2.4.1",
     "@vitejs/plugin-react": "^4.2.0",
     "axios": "1.6.2",
