@@ -54,7 +54,7 @@ export const nextBonus = createAppAsyncThunk<void, FetchBonusesArgs>(
       await dispatch(fetchBonuses(args)).unwrap();
       return;
     }
-    fetchBonusesIfNeeded(bonuses, dispatch, args);
+    await fetchBonusesIfNeeded(bonuses, dispatch, args);
   },
 );
 
@@ -81,20 +81,20 @@ export const filterBonusesWithRefetch = createAppAsyncThunk<
 
 const bonusReaderSlice = createSlice({
   extraReducers: (builder) => {
-    builder.addCase(fetchBonuses.fulfilled, (state, action) => {
-      state.bonuses = [...(state.bonuses ?? []), ...action.payload];
-    });
     builder
-      .addCase(nextBonus.pending, (state) => {
+      .addCase(fetchBonuses.pending, (state) => {
         state.isFetching = true;
       })
-      .addCase(nextBonus.fulfilled, (state) => {
+      .addCase(fetchBonuses.fulfilled, (state, action) => {
         state.isFetching = false;
-        state.bonuses?.shift();
+        state.bonuses = [...(state.bonuses ?? []), ...action.payload];
       })
-      .addCase(nextBonus.rejected, (state) => {
+      .addCase(fetchBonuses.rejected, (state) => {
         state.isFetching = false;
       });
+    builder.addCase(nextBonus.fulfilled, (state) => {
+      state.bonuses?.shift();
+    });
     builder.addCase(filterBonuses, (state, { payload: { settings } }) => {
       state.bonuses = state.bonuses?.filter((bn) =>
         isQuestionValid(bn, settings),
