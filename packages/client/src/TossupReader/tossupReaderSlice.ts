@@ -1,11 +1,7 @@
 import { Tossup, TossupResult } from '@qbhub/types';
-import {
-  PayloadAction,
-  createAction,
-  createAsyncThunk,
-  createSlice,
-} from '@reduxjs/toolkit';
+import { PayloadAction, createAction, createSlice } from '@reduxjs/toolkit';
 import type { AppDispatch, RootState } from '../redux/store';
+import { createAppAsyncThunk } from '../redux/utils';
 import * as fetchUtils from '../utils/fetch';
 import { Settings } from '../utils/settings/types';
 import { isQuestionValid } from '../utils/settings/validate';
@@ -22,13 +18,8 @@ const initialState: TossupReaderState = {
   tossups: undefined,
 };
 
-type FilterTossupsArgs = { settings: Settings };
-const filterTossups = createAction<FilterTossupsArgs>(
-  'tossupReader/filterTossups',
-);
-
 type FetchTossupsArgs = { settings: Settings };
-const fetchTossups = createAsyncThunk<Tossup[], FetchTossupsArgs>(
+const fetchTossups = createAppAsyncThunk<Tossup[], FetchTossupsArgs>(
   'tossupReader/fetchTossups',
   async ({ settings }) => {
     const tossups = await fetchUtils.fetchTossups(settings);
@@ -50,10 +41,29 @@ async function fetchTossupsIfNeeded(
   }
 }
 
-export const filterTossupsWithRefetch = createAsyncThunk<
+export const nextTossup = createAppAsyncThunk<void, FetchTossupsArgs>(
+  'tossupReader/nextTossup',
+  async (args, { dispatch, getState }) => {
+    const {
+      tossupReader: { tossups },
+    } = getState();
+
+    if (tossups === undefined) {
+      await dispatch(fetchTossups(args)).unwrap();
+      return;
+    }
+    fetchTossupsIfNeeded(tossups, dispatch, args);
+  },
+);
+
+type FilterTossupsArgs = { settings: Settings };
+const filterTossups = createAction<FilterTossupsArgs>(
+  'tossupReader/filterTossups',
+);
+
+export const filterTossupsWithRefetch = createAppAsyncThunk<
   void,
-  FilterTossupsArgs,
-  { dispatch: AppDispatch; state: RootState }
+  FetchTossupsArgs & FilterTossupsArgs
 >('tossupReader/filterTossupsWithRefetch', (args, { dispatch, getState }) => {
   dispatch(filterTossups(args));
 
@@ -62,22 +72,6 @@ export const filterTossupsWithRefetch = createAsyncThunk<
   } = getState();
 
   if (tossups === undefined) {
-    return;
-  }
-  fetchTossupsIfNeeded(tossups, dispatch, args);
-});
-
-export const nextTossup = createAsyncThunk<
-  void,
-  FetchTossupsArgs,
-  { dispatch: AppDispatch; state: RootState }
->('tossupReader/nextTossup', async (args, { dispatch, getState }) => {
-  const {
-    tossupReader: { tossups },
-  } = getState();
-
-  if (tossups === undefined) {
-    await dispatch(fetchTossups(args)).unwrap();
     return;
   }
   fetchTossupsIfNeeded(tossups, dispatch, args);
