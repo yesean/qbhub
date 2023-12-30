@@ -64,25 +64,18 @@ export const fetchTossups = async (params: FetchParams): Promise<Tossup[]> => {
   const url = addParams(TOSSUP_URL, createParams(params));
 
   try {
-    log.info('fetching tossups');
+    log.info('Fetching tossups');
     const { data } = await axios.get<Tossup[]>(url);
-    const tossups = data.map((tu) => ({
-      answer: tu.answer,
-      category: tu.category,
-      difficulty: tu.difficulty,
-      formattedAnswer: normalizeTags(tu.formattedAnswer),
-      formattedText: cleanTossupText(tu.formattedText),
-      id: tu.id,
-      normalizedAnswer: tu.normalizedAnswer,
-      subcategory: tu.subcategory,
-      text: cleanTossupText(tu.text),
-      tournament: tu.tournament,
-      year: tu.year,
+    const tossups = data.map((tossup) => ({
+      ...tossup,
+      formattedAnswer: normalizeTags(tossup.formattedAnswer),
+      formattedText: cleanTossupText(tossup.formattedText),
+      text: cleanTossupText(tossup.text),
     }));
-    log.info('finished fetching tossups');
+    log.info('Finished fetching tossups');
     return tossups;
   } catch (err) {
-    log.error('error fetching tossups', err);
+    log.error('Error fetching tossups', err);
     return [];
   }
 };
@@ -91,27 +84,21 @@ export const fetchBonuses = async (params: FetchParams): Promise<Bonus[]> => {
   const url = addParams(BONUS_URL, createParams(params));
 
   try {
-    log.info('fetching bonuses');
+    log.info('Fetching bonuses');
     const { data } = await axios.get<Bonus[]>(url);
-    const bonuses = data.map((bn) => ({
-      category: bn.category,
-      difficulty: bn.difficulty,
-      formattedLeadin: normalizeTags(bn.formattedLeadin),
-      id: bn.id,
-      leadin: bn.leadin,
-      parts: bn.parts.map((part) => ({
+    const bonuses = data.map((bonus) => ({
+      ...bonus,
+      formattedLeadin: normalizeTags(bonus.formattedLeadin),
+      parts: bonus.parts.map((part) => ({
         ...part,
         formattedAnswer: normalizeTags(part.formattedAnswer),
         formattedText: normalizeTags(part.formattedText),
       })),
-      subcategory: bn.subcategory,
-      tournament: bn.tournament,
-      year: bn.year,
     }));
-    log.info('finished fetching bonuses');
+    log.info('Finished fetching bonuses');
     return bonuses;
   } catch (err) {
-    log.error('error fetching bonuses', err);
+    log.error('Error fetching bonuses', err);
     return [];
   }
 };
@@ -122,12 +109,12 @@ export const fetchFreq = async (
   const url = addParams(FREQ_URL, createParams(params));
 
   try {
-    log.info('fetching frequency list');
+    log.info('Fetching frequency list');
     const { data } = await axios.get<FrequencyListEntry[]>(url);
-    log.info('finished fetching frequency list');
+    log.info('Finished fetching frequency list');
     return data;
   } catch (err) {
-    log.error('error fetching frequency list', err);
+    log.error('Error fetching frequency list', err);
     return [];
   }
 };
@@ -138,12 +125,12 @@ export const fetchAnswers = async (
   const url = addParams(FREQ_URL, createParams(params));
 
   try {
-    log.info('fetching answers');
+    log.info('Fetching answers');
     const { data } = await axios.get<FrequencyListEntry[]>(url);
-    log.info('finished fetching answers');
+    log.info('Finished fetching answers');
     return data;
   } catch (err) {
-    log.error('error fetching answers', err);
+    log.error('Error fetching answers', err);
     return [];
   }
 };
@@ -154,12 +141,12 @@ export const fetchClues = async (
   const url = addParams(CLUES_URL, createParams(params));
 
   try {
-    log.info('fetching clues');
+    log.info('Fetching clues');
     const { data } = await axios.get<SelectedClue[]>(url);
-    log.info('finished fetching clues');
+    log.info('Finished fetching clues');
     return data;
   } catch (err) {
-    log.error('error fetching clues');
+    log.error('Error fetching clues');
     return [];
   }
 };
