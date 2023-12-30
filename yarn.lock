@@ -2317,6 +2317,7 @@ __metadata:
     "@types/mdx": "npm:^2.0.3"
     "@types/node": "npm:^20.10.0"
     "@types/number-to-words": "npm:^1.2.1"
+    "@types/qs": "npm:^6"
     "@types/react": "npm:^18.0.21"
     "@types/react-dom": "npm:^18.0.6"
     "@types/react-html-parser": "npm:^2.0.2"
@@ -2347,6 +2348,7 @@ __metadata:
     number-to-words: "npm:1.2.4"
     prettier: "npm:3.1.0"
     prettier-plugin-organize-imports: "npm:3.1.1"
+    qs: "npm:^6.11.2"
     query-string: "npm:^8.1.0"
     react: "npm:18.2.0"
     react-dom: "npm:18.2.0"
@@ -3187,6 +3189,13 @@ __metadata:
   version: 6.9.7
   resolution: "@types/qs@npm:6.9.7"
   checksum: 7fd6f9c25053e9b5bb6bc9f9f76c1d89e6c04f7707a7ba0e44cc01f17ef5284adb82f230f542c2d5557d69407c9a40f0f3515e8319afd14e1e16b5543ac6cdba
+  languageName: node
+  linkType: hard
+
+"@types/qs@npm:^6":
+  version: 6.9.11
+  resolution: "@types/qs@npm:6.9.11"
+  checksum: 620ca1628bf3da65662c54ed6ebb120b18a3da477d0bfcc872b696685a9bb1893c3c92b53a1190a8f54d52eaddb6af8b2157755699ac83164604329935e8a7f2
   languageName: node
   linkType: hard
 
@@ -9109,6 +9118,15 @@ __metadata:
   dependencies:
     side-channel: "npm:^1.0.4"
   checksum: 73d07bfd77f07bec3750dca5e6d165cba0c87ce3e4688bb26e5e462e725ab1289ecdb69164b0b4a4d1b913e2a3ae6b22acbb8b2feb5c8f31bd76f2380f3dc23d
+  languageName: node
+  linkType: hard
+
+"qs@npm:^6.11.2":
+  version: 6.11.2
+  resolution: "qs@npm:6.11.2"
+  dependencies:
+    side-channel: "npm:^1.0.4"
+  checksum: f2321d0796664d0f94e92447ccd3bdfd6b6f3a50b6b762aa79d7f5b1ea3a7a9f94063ba896b82bc2a877ed6a7426d4081e4f16568fdb04f0ee188cca9d8505b4
   languageName: node
   linkType: hard
 
