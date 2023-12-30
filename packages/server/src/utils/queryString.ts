@@ -125,18 +125,18 @@ export const parseText = (q: qs.ParsedQs): string => {
 /**
  * Parses the `answer` query string field.
  */
-export const parseAnswer = (q: qs.ParsedQs, required = false): string => {
+export const parseAnswer = (q: qs.ParsedQs, isRequired = false): string => {
   const { answer } = q;
 
-  if (answer === undefined)
-    if (required) throw new QueryStringParsingError(requiredMessage('answer'));
-    else return '';
+  if (answer === undefined) {
+    if (isRequired) {
+      throw new QueryStringParsingError(requiredMessage('answer'));
+    }
+    return '';
+  }
 
   if (!isString(answer))
     throw new QueryStringParsingError(typeErrorMessage('answer', 'string'));
-
-  if (answer.length === 0)
-    throw new QueryStringParsingError(noEmptyStringMessage('answer'));
 
   return answer;
 };
