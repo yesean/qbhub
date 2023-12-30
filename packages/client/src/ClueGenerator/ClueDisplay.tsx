@@ -1,5 +1,5 @@
-import { ArrowBackIcon, SearchIcon } from '@chakra-ui/icons';
-import { Box, Container, Flex, Heading, Text, Tooltip } from '@chakra-ui/react';
+import { ArrowBackIcon } from '@chakra-ui/icons';
+import { Box, Flex, Heading } from '@chakra-ui/react';
 import { SelectedClue } from '@qbhub/types';
 import { useEffect } from 'react';
 import RouterRedirect from '../components/RouterRedirect';
@@ -14,6 +14,8 @@ import {
   useClueDisplayRouteContext,
   useClueSearchRouteContext,
 } from '../utils/routes';
+import ClueDisplayClue from './ClueDisplayClue';
+import ClueDisplayEmptyResults from './ClueDisplayEmptyResults';
 import { selectClueGenerator } from './clueGeneratorSlice';
 
 const clueFields = [
@@ -29,6 +31,10 @@ type ClueDisplayDisplayProps = {
 function ClueDisplayDisplay({ answer, clues }: ClueDisplayDisplayProps) {
   const { getURL: getClueSearchURL } = useClueSearchRouteContext();
 
+  if (clues.length === 0) {
+    return <ClueDisplayEmptyResults answer={answer} />;
+  }
+
   const cluesCSVURL = getCSVURL(
     clues
       .filter((clue) => clue.score > 0)
@@ -37,46 +43,6 @@ function ClueDisplayDisplay({ answer, clues }: ClueDisplayDisplayProps) {
 
   const cluesJSONURL = getJSONURL(
     clues.filter((clue) => clue.score > 0).map((clue) => ({ ...clue, answer })),
-  );
-
-  const renderTooltip = (clue: SelectedClue) => {
-    const startIndex = clue.sentence.indexOf(clue.text);
-    if (startIndex === -1) {
-      return (
-        <>
-          <Heading mb={1} size="sm">
-            {clue.tournament}
-          </Heading>
-          <Text>{clue.sentence}</Text>
-        </>
-      );
-    }
-    return (
-      <>
-        <Heading mb={1} size="sm">
-          {clue.tournament}
-        </Heading>
-        <Text display="inline">{clue.sentence.substring(0, startIndex)}</Text>
-        <Text as="mark" bgColor="#fffea9" display="inline">
-          {clue.sentence.substring(startIndex, startIndex + clue.text.length)}
-        </Text>
-        <Text display="inline">
-          {clue.sentence.substring(startIndex + clue.text.length)}
-        </Text>
-      </>
-    );
-  };
-
-  const renderClue = (clue: SelectedClue) => (
-    <Tooltip
-      borderRadius="5px"
-      hasArrow
-      label={renderTooltip(clue)}
-      p={2}
-      placement="top"
-    >
-      <Text>{clue.text}</Text>
-    </Tooltip>
   );
 
   return (
@@ -88,82 +54,52 @@ function ClueDisplayDisplay({ answer, clues }: ClueDisplayDisplayProps) {
       justify="center"
       w="100%"
     >
-      {clues.length === 0 ? (
-        <EmptyResults answer={answer} />
-      ) : (
-        <>
-          <Heading
-            as="h2"
-            lineHeight="1.5"
-            maxW="600px"
-            px={4}
-            size="md"
-            textAlign="center"
-          >
-            Showing clues for:{' '}
-            <Box as="span" bg="cyan.200" borderRadius="sm" p={1}>
-              {answer}
-            </Box>
-          </Heading>
-          <Box h="min(700px, 100%)" overflow="auto" w="min(600px, 100%)">
-            <KeyValueTable
-              data={clues.map((clue) => ({ ...clue, clue: renderClue(clue) }))}
-              headers={clueFields}
-              height={700}
-              width={600}
-            />
-          </Box>
-          <Flex
-            flexShrink={0}
-            gap={4}
-            justify="center"
-            justifyContent="flex-start"
-            maxW="100%"
-            overflowX="auto"
-          >
-            <RouterLinkButton
-              label="Search"
-              leftIcon={<ArrowBackIcon h={4} w={4} />}
-              to={getClueSearchURL({})}
-              variant="secondary"
-            />
-            <FileDownloadButton
-              download={answer}
-              href={cluesCSVURL}
-              label="CSV"
-            />
-            <FileDownloadButton
-              download={answer}
-              href={cluesJSONURL}
-              label="JSON"
-            />
-          </Flex>
-        </>
-      )}
+      <Heading
+        as="h2"
+        lineHeight="1.5"
+        maxW="600px"
+        px={4}
+        size="md"
+        textAlign="center"
+      >
+        Showing clues for:{' '}
+        <Box as="span" bg="cyan.200" borderRadius="sm" p={1}>
+          {answer}
+        </Box>
+      </Heading>
+      <Box h="min(700px, 100%)" overflow="auto" w="min(600px, 100%)">
+        <KeyValueTable
+          data={clues.map((clue) => ({
+            ...clue,
+            clue: <ClueDisplayClue clue={clue} />,
+          }))}
+          headers={clueFields}
+          height={700}
+          width={600}
+        />
+      </Box>
+      <Flex
+        flexShrink={0}
+        gap={4}
+        justify="center"
+        justifyContent="flex-start"
+        maxW="100%"
+        overflowX="auto"
+      >
+        <RouterLinkButton
+          label="Search"
+          leftIcon={<ArrowBackIcon h={4} w={4} />}
+          to={getClueSearchURL({})}
+          variant="secondary"
+        />
+        <FileDownloadButton download={answer} href={cluesCSVURL} label="CSV" />
+        <FileDownloadButton
+          download={answer}
+          href={cluesJSONURL}
+          label="JSON"
+        />
+      </Flex>
     </Flex>
-  );
-}
-
-type EmptyResultsProps = { answer: string };
-
-function EmptyResults({ answer }: EmptyResultsProps) {
-  const { getURL: getClueSearchURL } = useClueSearchRouteContext();
-
-  return (
-    <>
-      <Container bg="gray.100" borderRadius="md" p={4}>
-        <Text>
-          No clues found for <strong>{answer}</strong>. Try checking your
-          network connection or tweaking the search parameters.
-        </Text>
-      </Container>
-      <RouterLinkButton
-        label="Search"
-        leftIcon={<SearchIcon h={4} w={4} />}
-        to={getClueSearchURL({})}
-        variant="secondary"
-      />
-    </>
   );
 }
 
