@@ -1,10 +1,11 @@
-import {
-  Category,
-  Difficulty,
-  SelectableQuestionParameter,
-  Subcategory,
-  Tournament,
-} from '@qbhub/types';
+import { Category, Difficulty, Subcategory, Tournament } from '@qbhub/types';
+
+// question parameters in Select dropdowns in settings
+export type SelectableQuestionParameter =
+  | Category
+  | Difficulty
+  | Subcategory
+  | Tournament;
 
 const CATEGORY_DATA = [
   { key: Category['Current Events'], name: 'Current Events' },

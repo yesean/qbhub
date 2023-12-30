@@ -1,4 +1,4 @@
-import { BonusPart, QuestionParameters, SortOption } from '@qbhub/types';
+import { BonusPart, QuestionFilters, SortOption } from '@qbhub/types';
 import { log } from '@qbhub/utils';
 import {
   Bonus as DBBonus,
@@ -40,7 +40,7 @@ const bonusPartsOrder: Order = [
  *  1. Retrieve the bonuses from the `bonuses` table. (only metadata)
  *  2. Retrieve all of the bonusParts from the `bonus_parts` table (actual content) that match the bonuses from step 1.
  */
-export const getBonuses = async (questionFilters: QuestionParameters) => {
+export const getBonuses = async (questionFilters: QuestionFilters) => {
   const bonusesOrder: Order = [
     {
       direction: questionFilters.sort === SortOption.latest ? 'desc' : 'asc',

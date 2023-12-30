@@ -1,4 +1,4 @@
-import { QuestionParameters } from '@qbhub/types';
+import { QuestionFilters } from '@qbhub/types';
 import { log } from '@qbhub/utils';
 import { PlainTossup } from '../types/db.js';
 import { getAllClues, getUniqueClues } from '../utils/clues.js';
@@ -14,7 +14,7 @@ const columns = [
 /**
  * Retrieves and formats unique clues sorted by relevance from the database.
  */
-export const getClues = async (questionFilters: QuestionParameters) => {
+export const getClues = async (questionFilters: QuestionFilters) => {
   const [query, values] = new QueryBuilder()
     .select(columns)
     .from(TABLES.tossups.name)

@@ -1,4 +1,4 @@
-import { FrequencyListEntry, QuestionParameters } from '@qbhub/types';
+import { FrequencyListEntry, QuestionFilters } from '@qbhub/types';
 import { log } from '@qbhub/utils';
 import { Order } from '../types/db.js';
 import { TABLES } from '../utils/constants.js';
@@ -16,7 +16,7 @@ const columnOrder: Order = [
 /**
  * Retrieves and formats answers sorted by frequency from the database.
  */
-export const getFreq = async (questionFilters: QuestionParameters) => {
+export const getFreq = async (questionFilters: QuestionFilters) => {
   const [query, values] = new QueryBuilder()
     .select(columns)
     .from(TABLES.tossups.name)

@@ -28,39 +28,6 @@ export type QuestionResult = {
   userAnswer: string;
 };
 
-// question parameters in Select dropdowns in settings
-export type SelectableQuestionParameter =
-  | Category
-  | Difficulty
-  | Subcategory
-  | Tournament;
-
-export type QuestionContentParameters = {
-  answer: string;
-  categories: Category[];
-  difficulties: Difficulty[];
-  subcategories: Subcategory[];
-  text: string;
-  tournaments: Tournament[];
-};
-
-export type QuestionQueryParameters = {
-  from: number;
-  limit: number;
-  offset: number;
-  sort: SortOption;
-  until: number;
-};
-
-export enum SortOption {
-  earliest = 'earliest',
-  latest = 'latest',
-  random = 'random',
-}
-
-export type QuestionParameters = QuestionContentParameters &
-  QuestionQueryParameters;
-
 export type FormattedWord = {
   isBold: boolean;
   value: string;

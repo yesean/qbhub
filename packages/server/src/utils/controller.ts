@@ -1,4 +1,4 @@
-import { QuestionParameters } from '@qbhub/types';
+import { QuestionFilters } from '@qbhub/types';
 import {
   parseAnswer,
   parseCategories,
@@ -19,7 +19,7 @@ import {
 const parseQuestionFilters = (
   q: qs.ParsedQs,
   { answer = false, limit = false },
-): QuestionParameters => ({
+): QuestionFilters => ({
   answer: parseAnswer(q, answer),
   categories: parseCategories(q),
   difficulties: parseDifficulties(q),

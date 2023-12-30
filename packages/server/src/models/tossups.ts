@@ -1,4 +1,4 @@
-import { QuestionParameters, SortOption } from '@qbhub/types';
+import { QuestionFilters, SortOption } from '@qbhub/types';
 import { log } from '@qbhub/utils';
 import { Order, Tossup } from '../types/db.js';
 import { TABLES } from '../utils/constants.js';
@@ -22,7 +22,7 @@ const columns = [
 /**
  * Retrieves and formats tossups from the database.
  */
-export const getTossups = async (questionFilters: QuestionParameters) => {
+export const getTossups = async (questionFilters: QuestionFilters) => {
   const order: Order = [
     {
       direction: questionFilters.sort === SortOption.latest ? 'desc' : 'asc',
