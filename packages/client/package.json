@@ -74,7 +74,7 @@
     "vitest": "^0.34.6"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "format": "prettier --write src ",
     "format:check": "prettier --check src",
     "typecheck": "tsc --noEmit",
