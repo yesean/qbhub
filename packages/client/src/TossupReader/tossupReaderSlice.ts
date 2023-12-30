@@ -52,7 +52,7 @@ export const nextTossup = createAppAsyncThunk<void, FetchTossupsArgs>(
       await dispatch(fetchTossups(args)).unwrap();
       return;
     }
-    fetchTossupsIfNeeded(tossups, dispatch, args);
+    await fetchTossupsIfNeeded(tossups, dispatch, args);
   },
 );
 
@@ -79,20 +79,20 @@ export const filterTossupsWithRefetch = createAppAsyncThunk<
 
 const tossupReaderSlice = createSlice({
   extraReducers: (builder) => {
-    builder.addCase(fetchTossups.fulfilled, (state, action) => {
-      state.tossups = [...(state.tossups ?? []), ...action.payload];
-    });
     builder
-      .addCase(nextTossup.pending, (state) => {
+      .addCase(fetchTossups.pending, (state) => {
         state.isFetching = true;
       })
-      .addCase(nextTossup.fulfilled, (state) => {
+      .addCase(fetchTossups.fulfilled, (state, action) => {
         state.isFetching = false;
-        state.tossups?.shift();
+        state.tossups = [...(state.tossups ?? []), ...action.payload];
       })
-      .addCase(nextTossup.rejected, (state) => {
+      .addCase(fetchTossups.rejected, (state) => {
         state.isFetching = false;
       });
+    builder.addCase(nextTossup.fulfilled, (state) => {
+      state.tossups?.shift();
+    });
     builder.addCase(filterTossups, (state, { payload: { settings } }) => {
       state.tossups = state.tossups?.filter((tu) =>
         isQuestionValid(tu, settings),
