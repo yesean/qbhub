@@ -3,6 +3,7 @@ export * from './bonus.js';
 export * from './category.js';
 export * from './clue.js';
 export * from './difficulty.js';
+export * from './fetch.js';
 export * from './guards.js';
 export * from './log.js';
 export * from './question.js';

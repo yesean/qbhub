@@ -1,12 +1,10 @@
 import {
   Bonus,
-  Category,
-  Difficulty,
   FrequencyListEntry,
+  PartialOptional,
+  QuestionFilters,
   SelectedClue,
-  Subcategory,
   Tossup,
-  Tournament,
 } from '@qbhub/types';
 import { log } from '@qbhub/utils';
 import axios from 'axios';
@@ -25,42 +23,36 @@ export const createParamsFromArray = (field: string, values: any[]) =>
   combineParams(...values.map((val) => `${field}[]=${val}`));
 export const addParams = (url: string, params: string) => `${url}?${params}`;
 
-type FetchParams = {
-  answer?: string;
-  categories?: Category[];
-  difficulties?: Difficulty[];
-  fromYear?: number;
-  limit?: number;
-  offset?: number;
-  subcategories?: Subcategory[];
-  text?: string;
-  tournaments?: Tournament[];
-};
-
 const createParams = ({
   answer = '',
   categories = [],
   difficulties = [],
-  fromYear = MIN_TOURNAMENT_YEAR,
+  from = MIN_TOURNAMENT_YEAR,
   limit = 10,
   offset = 0,
   subcategories = [],
   text = '',
   tournaments = [],
-}: FetchParams) =>
+}: Partial<QuestionFilters>) =>
   combineParams(
     createParamsFromArray('categories', categories),
     createParamsFromArray('subcategories', subcategories),
     createParamsFromArray('difficulties', difficulties),
     createParamsFromArray('tournaments', tournaments),
-    `from=${fromYear}`,
+    `from=${from}`,
     text.length ? `text=${text}` : '',
     answer.length ? `answer=${answer}` : '',
     `limit=${limit}`,
     `offset=${offset}`,
   );
 
-export const fetchTossups = async (params: FetchParams): Promise<Tossup[]> => {
+type TossupQuestionFilters = PartialOptional<
+  QuestionFilters,
+  'answer' | 'from' | 'limit' | 'offset' | 'sort' | 'text' | 'until'
+>;
+export const fetchTossups = async (
+  params: TossupQuestionFilters,
+): Promise<Tossup[]> => {
   const url = addParams(TOSSUP_URL, createParams(params));
 
   try {
@@ -80,7 +72,13 @@ export const fetchTossups = async (params: FetchParams): Promise<Tossup[]> => {
   }
 };
 
-export const fetchBonuses = async (params: FetchParams): Promise<Bonus[]> => {
+type BonusQuestionFilters = PartialOptional<
+  QuestionFilters,
+  'answer' | 'from' | 'limit' | 'offset' | 'sort' | 'text' | 'until'
+>;
+export const fetchBonuses = async (
+  params: BonusQuestionFilters,
+): Promise<Bonus[]> => {
   const url = addParams(BONUS_URL, createParams(params));
 
   try {
@@ -103,8 +101,12 @@ export const fetchBonuses = async (params: FetchParams): Promise<Bonus[]> => {
   }
 };
 
+type FreqQuestionFilters = PartialOptional<
+  QuestionFilters,
+  'answer' | 'from' | 'limit' | 'sort' | 'text' | 'until'
+>;
 export const fetchFreq = async (
-  params: FetchParams,
+  params: FreqQuestionFilters,
 ): Promise<FrequencyListEntry[]> => {
   const url = addParams(FREQ_URL, createParams(params));
 
@@ -119,8 +121,12 @@ export const fetchFreq = async (
   }
 };
 
-export const fetchAnswers = async (
-  params: FetchParams,
+type AnswerlineQuestionFilters = PartialOptional<
+  QuestionFilters,
+  'from' | 'limit' | 'offset' | 'sort' | 'text' | 'until'
+>;
+export const fetchAnswerlines = async (
+  params: AnswerlineQuestionFilters,
 ): Promise<FrequencyListEntry[]> => {
   const url = addParams(FREQ_URL, createParams(params));
 
@@ -135,8 +141,12 @@ export const fetchAnswers = async (
   }
 };
 
+type ClueQuestionFilters = PartialOptional<
+  QuestionFilters,
+  'from' | 'limit' | 'offset' | 'sort' | 'text' | 'until'
+>;
 export const fetchClues = async (
-  params: FetchParams,
+  params: ClueQuestionFilters,
 ): Promise<SelectedClue[]> => {
   const url = addParams(CLUES_URL, createParams(params));
 

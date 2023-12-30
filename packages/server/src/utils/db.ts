@@ -1,4 +1,4 @@
-import { QuestionParameters } from '@qbhub/types';
+import { QuestionFilters } from '@qbhub/types';
 import { log } from '@qbhub/utils';
 import pg from 'pg';
 import {
@@ -27,7 +27,7 @@ const columnInList = (column: string, list: any[]) =>
  * Build `where` condition for filtering by category/subcategory.
  */
 export const getCombinedCategoriesCondition = (
-  questionParameters: QuestionParameters,
+  questionParameters: QuestionFilters,
   addArg: (arg: Parameter) => string,
 ) => {
   const { categories, subcategories } = questionParameters;
@@ -67,7 +67,7 @@ export const getCombinedCategoriesCondition = (
  * Build `where` condition for filtering by difficulty.
  */
 export const getDifficultiesCondition = (
-  questionParameters: QuestionParameters,
+  questionParameters: QuestionFilters,
   addArg: (arg: Parameter) => string,
 ) => {
   const { difficulties } = questionParameters;
@@ -89,7 +89,7 @@ export const getDifficultiesCondition = (
  * Build `where` condition for filtering by tournaments.
  */
 export const getTournamentsCondition = (
-  questionParameters: QuestionParameters,
+  questionParameters: QuestionFilters,
   addArg: (arg: Parameter) => string,
 ) => {
   const { tournaments } = questionParameters;
@@ -111,7 +111,7 @@ export const getTournamentsCondition = (
  * Build `where` condition for filtering by text.
  */
 export const getTextCondition = (
-  questionParameters: QuestionParameters,
+  questionParameters: QuestionFilters,
   addArg: (arg: Parameter) => string,
 ) => {
   const { text } = questionParameters;
@@ -123,7 +123,7 @@ export const getTextCondition = (
  * Build `where` condition for filtering by answer.
  */
 export const getAnswerCondition = (
-  questionParameters: QuestionParameters,
+  questionParameters: QuestionFilters,
   addArg: (arg: Parameter) => string,
   options: QuestionFilterOptions,
 ) => {
@@ -142,7 +142,7 @@ export const getAnswerCondition = (
  * Build `where` condition for filtering by start year.
  */
 export const getFromCondition = (
-  questionParameters: QuestionParameters,
+  questionParameters: QuestionFilters,
   addArg: (arg: Parameter) => string,
 ) => {
   const { from } = questionParameters;
@@ -154,7 +154,7 @@ export const getFromCondition = (
  * Build `where` condition for filtering by end year.
  */
 export const getUntilCondition = (
-  questionParameters: QuestionParameters,
+  questionParameters: QuestionFilters,
   addArg: (arg: Parameter) => string,
 ) => {
   const { until } = questionParameters;
@@ -181,7 +181,7 @@ export const getPrimaryKeyBonusCondition = (
  * Builds the `where` condition to filter tossups.
  */
 export const getTossupCondition = (
-  questionFilters: QuestionParameters,
+  questionFilters: QuestionFilters,
   addArg: (arg: Parameter) => string,
   options: QuestionFilterOptions,
 ) => {
@@ -219,7 +219,7 @@ export const getTossupCondition = (
  * Builds the `where` condition to filter bonuses.
  */
 export const getBonusesCondition = (
-  questionFilters: QuestionParameters,
+  questionFilters: QuestionFilters,
   addArg: (arg: Parameter) => string,
 ) => {
   const combinedCategoriesCondition = getCombinedCategoriesCondition(
@@ -307,7 +307,7 @@ export class QueryBuilder {
   }
 
   filterTossups(
-    questionFilters: QuestionParameters,
+    questionFilters: QuestionFilters,
     options: QuestionFilterOptions = {},
   ) {
     const command = getTossupCondition(
@@ -318,7 +318,7 @@ export class QueryBuilder {
     return this.addCommand(`WHERE ${command}`);
   }
 
-  filterBonuses(questionFilters: QuestionParameters) {
+  filterBonuses(questionFilters: QuestionFilters) {
     const command = getBonusesCondition(
       questionFilters,
       this.register.bind(this),

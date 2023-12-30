@@ -10,13 +10,7 @@ import {
   SliderTrack,
 } from '@chakra-ui/react';
 import { CSSObject } from '@emotion/react';
-import {
-  Category,
-  Difficulty,
-  SelectableQuestionParameter,
-  Subcategory,
-  Tournament,
-} from '@qbhub/types';
+import { Category, Difficulty, Subcategory, Tournament } from '@qbhub/types';
 import Select, { Options } from 'react-select';
 import QBHubModal from '../components/QBHubModal';
 import { useSettings } from '../hooks/useSettings';
@@ -27,6 +21,7 @@ import {
   DIFFICULTY_MAP,
   SUBCATEGORIES,
   SUBCATEGORY_MAP,
+  SelectableQuestionParameter,
   TOURNAMENTS,
   TOURNAMENT_MAP,
 } from '../utils/constants';

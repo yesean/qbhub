@@ -25,7 +25,7 @@ export const fetchAnswers = createAppAsyncThunk<
   FetchAnswersArgs
 >('clueGenerator/fetchAnswers', async ({ answer, settings }) => {
   const fetchParams = { ...settings, answer, limit: FETCH_LIMIT };
-  const answers = await fetchUtils.fetchAnswers(fetchParams);
+  const answers = await fetchUtils.fetchAnswerlines(fetchParams);
   return answers;
 });
 

@@ -21,8 +21,8 @@ const initialState: TossupReaderState = {
 type FetchTossupsArgs = { settings: Settings };
 const fetchTossups = createAppAsyncThunk<Tossup[], FetchTossupsArgs>(
   'tossupReader/fetchTossups',
-  async ({ settings }) => {
-    const tossups = await fetchUtils.fetchTossups(settings);
+  async ({ settings: { fromYear: from, ...otherSettings } }) => {
+    const tossups = await fetchUtils.fetchTossups({ ...otherSettings, from });
     return tossups;
   },
 );
