@@ -10,7 +10,7 @@ import TealButton from '../components/buttons/TealButton';
 import useActions from '../hooks/useActions';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useModalContext } from '../providers/ModalContext';
-import { useAppDispatch } from '../redux/hooks';
+import { useAppDispatch } from '../redux/utils';
 import { UnscoredQuestionResult } from '../utils/questionReader';
 import {
   getFormattedWords,

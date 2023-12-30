@@ -13,7 +13,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { KeyValueTable } from '../components/tables';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useSettings } from '../hooks/useSettings';
-import { useAppDispatch } from '../redux/hooks';
+import { useAppDispatch } from '../redux/utils';
 import { useGetURL } from '../utils/routes';
 import {
   FreqStatus,

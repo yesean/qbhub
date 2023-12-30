@@ -8,7 +8,7 @@ import FileDownloadButton from '../components/buttons/FileDownloadButton';
 import RouterLinkButton from '../components/buttons/RouterLinkButton';
 import { KeyValueTable } from '../components/tables';
 import useActions from '../hooks/useActions';
-import { useAppSelector } from '../redux/hooks';
+import { useAppSelector } from '../redux/utils';
 import { getCSVURL, getJSONURL } from '../utils/array';
 import {
   useClueDisplayRouteContext,
