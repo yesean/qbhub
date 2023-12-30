@@ -1,4 +1,3 @@
-import { Flex } from '@chakra-ui/react';
 import { FrequencyListEntry } from '@qbhub/types';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -33,28 +32,19 @@ function SearchResultsDisplay({ answers }: SearchResultsDisplayProps) {
   }
 
   return (
-    <Flex
-      align="center"
-      direction="column"
-      gap={4}
-      justify="center"
-      maxH="700px"
-      w="100%"
-    >
-      <KeyValueTable
-        data={answers.map((answer) => ({
-          ...answer,
-          answer: (
-            <RouterLink to={getClueDisplayURL({ answer: answer.answer })}>
-              {answer.answer}
-            </RouterLink>
-          ),
-        }))}
-        headers={answersFields}
-        height={700}
-        width={1000}
-      />
-    </Flex>
+    <KeyValueTable
+      data={answers.map((answer) => ({
+        ...answer,
+        answer: (
+          <RouterLink to={getClueDisplayURL({ answer: answer.answer })}>
+            {answer.answer}
+          </RouterLink>
+        ),
+      }))}
+      headers={answersFields}
+      height={700}
+      width={1000}
+    />
   );
 }
 
