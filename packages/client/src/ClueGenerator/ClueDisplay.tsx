@@ -1,6 +1,7 @@
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { Flex } from '@chakra-ui/react';
 import { SelectedClue } from '@qbhub/types';
+import { getCSVURL, getJSONURL } from '@qbhub/utils';
 import { useEffect } from 'react';
 import RouterRedirect from '../components/RouterRedirect';
 import TableSkeleton from '../components/TableSkeleton';
@@ -9,7 +10,6 @@ import RouterLinkButton from '../components/buttons/RouterLinkButton';
 import { KeyValueTable } from '../components/tables';
 import useActions from '../hooks/useActions';
 import { useAppSelector } from '../redux/utils';
-import { getCSVURL, getJSONURL } from '../utils/array';
 import {
   useClueDisplayRouteContext,
   useClueSearchRouteContext,

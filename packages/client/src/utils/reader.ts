@@ -7,10 +7,9 @@ import {
   FormattedWord,
   TossupScore,
 } from '@qbhub/types';
-import { log } from '@qbhub/utils';
+import { getUniqueItems, log } from '@qbhub/utils';
 import { deburr } from 'lodash-es';
 import { findBestMatch } from 'string-similarity';
-import { combine, emptyStringFilter, getUnique } from './array';
 import {
   anyTag,
   getCaptureGroups,
@@ -30,17 +29,6 @@ import {
   parseHTMLString,
   removeFirstNames,
 } from './string';
-
-export enum ReaderStatus {
-  idle,
-  fetching,
-  reading,
-  answering,
-  partialJudged,
-  prompting,
-  judged,
-  empty,
-}
 
 /**
  * Get words from string with formatting information, using tags
@@ -109,24 +97,6 @@ export function getBonusResult(
     score,
   };
 }
-
-export const getBonusScore = (results: BonusPartResult[]) => {
-  const correctCount = results.reduce(
-    (acc, res) => acc + (res.isCorrect ? 1 : 0),
-    0,
-  );
-
-  if (correctCount === 3) {
-    return BonusScore.thirty;
-  }
-  if (correctCount === 2) {
-    return BonusScore.twenty;
-  }
-  if (correctCount === 1) {
-    return BonusScore.ten;
-  }
-  return BonusScore.zero;
-};
 
 /**
  * Clean a tossup answerline for parsing.
@@ -227,13 +197,13 @@ export const parseAcceptableAnswers = (answerline: string): string[] => {
       .map((e) => e[1]),
   ];
 
-  let allAnswers = combine(boldAnswers, answers);
+  let allAnswers = [...boldAnswers, ...answers];
   const answersWithoutFirstNames = allAnswers.flatMap(removeFirstNames);
-  allAnswers = combine(allAnswers, answersWithoutFirstNames)
+  allAnswers = [...allAnswers, ...answersWithoutFirstNames]
     .map(normalizeAnswer)
-    .filter(emptyStringFilter);
+    .filter((s) => s !== '');
 
-  return getUnique(allAnswers);
+  return getUniqueItems(allAnswers);
 };
 
 /**
@@ -259,20 +229,11 @@ export const parsePromptableAnswers = (answer: string) => {
     .filter((match) => filterNegativeAnswers(match, 'prompt'))
     .map((e) => e[1]);
 
-  const allAnswers = combine(underlinedAnswers, prompts)
+  const allAnswers = [...underlinedAnswers, ...prompts]
     .map(normalizeAnswer)
-    .filter(emptyStringFilter);
+    .filter((s) => s !== '');
 
-  return getUnique(allAnswers);
-};
-
-export const getInputBorderColor = (
-  status: ReaderStatus,
-  result: { isCorrect: boolean },
-) => {
-  if (status !== ReaderStatus.judged) return 'gray.300';
-  if (result.isCorrect) return 'green.400';
-  return 'red.400';
+  return getUniqueItems(allAnswers);
 };
 
 /**
