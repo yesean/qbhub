@@ -1,4 +1,5 @@
 import { Category, Difficulty, Subcategory, Tournament } from '@qbhub/types';
+import { objectPullWithKey } from '@qbhub/utils';
 
 export const CATEGORIES = [
   { category: Category['Current Events'], label: 'Current Events' },
@@ -2727,34 +2728,26 @@ export const TOURNAMENTS = [
   },
 ];
 
-export const CATEGORY_METADATA_BY_CATEGORY = CATEGORIES.reduce(
-  (acc, categoryMetadata) => ({
-    ...acc,
-    [categoryMetadata.category]: categoryMetadata,
-  }),
-  {} as Record<Category, (typeof CATEGORIES)[number]>,
+export const CATEGORY_METADATA_BY_CATEGORY = objectPullWithKey(
+  CATEGORIES,
+  (categoryMetadata) => categoryMetadata,
+  ({ category }) => category,
 );
 
-export const SUBCATEGORY_METADATA_BY_SUBCATEGORY = SUBCATEGORIES.reduce(
-  (acc, subcategoryMetadata) => ({
-    ...acc,
-    [subcategoryMetadata.subcategory]: subcategoryMetadata,
-  }),
-  {} as Record<Subcategory, (typeof SUBCATEGORIES)[number]>,
+export const SUBCATEGORY_METADATA_BY_SUBCATEGORY = objectPullWithKey(
+  SUBCATEGORIES,
+  (subcategoryMetadata) => subcategoryMetadata,
+  ({ subcategory }) => subcategory,
 );
 
-export const TOURNAMENT_METADATA_BY_TOURNAMENT = TOURNAMENTS.reduce(
-  (acc, tournamentMetadata) => ({
-    ...acc,
-    [tournamentMetadata.tournament]: tournamentMetadata,
-  }),
-  {} as Record<Tournament, (typeof TOURNAMENTS)[number]>,
+export const TOURNAMENT_METADATA_BY_TOURNAMENT = objectPullWithKey(
+  TOURNAMENTS,
+  (tournamentMetadata) => tournamentMetadata,
+  ({ tournament }) => tournament,
 );
 
-export const DIFFICULTY_METADATA_BY_DIFFICULTY = DIFFICULTIES.reduce(
-  (acc, difficultyMetadata) => ({
-    ...acc,
-    [difficultyMetadata.difficulty]: difficultyMetadata,
-  }),
-  {} as Record<Difficulty, (typeof DIFFICULTIES)[number]>,
+export const DIFFICULTY_METADATA_BY_DIFFICULTY = objectPullWithKey(
+  DIFFICULTIES,
+  (difficultyMetadata) => difficultyMetadata,
+  ({ difficulty }) => difficulty,
 );
