@@ -1,9 +1,16 @@
 import { Bag, Clue, ClueBagMap, SelectedClue } from '@qbhub/types';
-import { log, roundNumber } from '@qbhub/utils';
+import {
+  getMax,
+  getSum,
+  getUniqueItems,
+  log,
+  objectPull,
+  roundNumber,
+  shuffleArray,
+} from '@qbhub/utils';
 import stats from '@seanye/compromise-stats';
 import _nlp from 'compromise/three';
 import { PlainTossup } from '../types/db.js';
-import { each, max, shuffle, sum, unique } from './array.js';
 
 const nlp = _nlp.plugin(stats);
 
@@ -80,11 +87,8 @@ export const getAllClues = (tossups: PlainTossup[]): Clue[] => {
       return clues;
     })
     .flat();
-  const uniqueClues = allClues.reduce<[Clue[], Set<string>]>(
-    unique<Clue>((clue) => clue.text),
-    [[], new Set()],
-  )[0];
-  return shuffle(uniqueClues);
+  const uniqueClues = getUniqueItems(allClues, (clue) => clue.text);
+  return shuffleArray(uniqueClues);
 };
 
 /**
@@ -121,7 +125,10 @@ const getBag = (clue: string) => {
  * Gets a ClueBagMap from an array of clues, mapping each clue to its bag.
  */
 const getClueBagMap = (clues: Clue[]) =>
-  clues.map(({ text }) => text).reduce<ClueBagMap>(each(getBag), {});
+  objectPull(
+    clues.map(({ text }) => text),
+    getBag,
+  );
 
 /**
  * Gets a bag of words model from a collection of clues. The term
@@ -192,10 +199,10 @@ const scoreClue = (
   numClues: number,
 ) => {
   const words = Object.keys(clueBagMap[queryClue.text]);
-  const score = words
-    .map((word) => scoreWord(word, baseClue, clueBagMap, corpusBag, numClues))
-    .reduce(sum());
-  return score;
+  const wordScores = words.map((word) =>
+    scoreWord(word, baseClue, clueBagMap, corpusBag, numClues),
+  );
+  return getSum(wordScores);
 };
 
 /**
@@ -235,7 +242,10 @@ const combineClues = (
     const cluesCopy = [...clues];
 
     // get clue with best match
-    const bestClueIdx = similarClues.reduce(max((e) => clueScores.get(e)!));
+    const bestClueIdx = getMax(
+      similarClues,
+      (index) => clueScores.get(index) ?? -1,
+    );
     const bestClueScore = clueScores.get(bestClueIdx);
     const matches = similarClues.slice(1).map((i) => ({
       ...cluesCopy[i],

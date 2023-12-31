@@ -1,6 +1,6 @@
 import { Kbd, Link } from '@chakra-ui/react';
+import { interleaveArrays } from '@qbhub/utils';
 import { Fragment } from 'react';
-import { zip } from '../utils/array';
 
 const toStringFragments = (str: string, i: number) => (
   <Fragment key={`${str}${i}`}>{str}</Fragment>
@@ -16,13 +16,13 @@ const replaceLinks = (
       {label}
     </Link>
   ));
-  return zip(fragments, linkElements).flat().slice(0, -1);
+  return interleaveArrays(fragments, linkElements);
 };
 
 const replaceKbd = (strings: TemplateStringsArray, ...keys: string[]) => {
   const fragments = strings.map(toStringFragments);
   const keyElements = keys.map((key) => <Kbd key={`${key}`}>{key}</Kbd>);
-  return zip(fragments, keyElements).flat().slice(0, -1);
+  return interleaveArrays(fragments, keyElements);
 };
 
 export const headers = [
