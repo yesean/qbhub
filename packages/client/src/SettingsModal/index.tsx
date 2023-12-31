@@ -16,14 +16,13 @@ import QBHubModal from '../components/QBHubModal';
 import { useSettings } from '../hooks/useSettings';
 import {
   CATEGORIES,
-  CATEGORY_MAP,
+  CATEGORY_METADATA_BY_CATEGORY,
   DIFFICULTIES,
-  DIFFICULTY_MAP,
+  DIFFICULTY_METADATA_BY_DIFFICULTY,
   SUBCATEGORIES,
-  SUBCATEGORY_MAP,
-  SelectableQuestionParameter,
+  SUBCATEGORY_METADATA_BY_SUBCATEGORY,
   TOURNAMENTS,
-  TOURNAMENT_MAP,
+  TOURNAMENT_METADATA_BY_TOURNAMENT,
 } from '../utils/constants';
 import {
   DEFAULT_READING_SPEED,
@@ -32,26 +31,22 @@ import {
 import { isTournamentValid } from '../utils/settings/validate';
 import YearInput from './YearInput';
 
-const toSelect =
-  <T extends SelectableQuestionParameter, U extends { name: string }>(
-    map: Record<T, U>,
-  ) =>
-  (key: T) => ({
-    data: map[key],
-    label: map[key].name,
-    value: key,
-  });
-
-// prevent select dropdown from getting overlapped, especially on mobile
-const selectMenuProps = {
-  menuPortalTarget: document.body,
-  styles: { menuPortal: (base: CSSObject) => ({ ...base, zIndex: 9999 }) },
-};
-
-const categoriesForSelect = CATEGORIES.map(toSelect(CATEGORY_MAP));
-const subcategoriesForSelect = SUBCATEGORIES.map(toSelect(SUBCATEGORY_MAP));
-const difficultiesForSelect = DIFFICULTIES.map(toSelect(DIFFICULTY_MAP));
-const tournamentsForSelect = TOURNAMENTS.map(toSelect(TOURNAMENT_MAP));
+const categoryOptions = CATEGORIES.map(({ category, label }) => ({
+  label,
+  value: category,
+}));
+const subcategoryOptions = SUBCATEGORIES.map(({ label, subcategory }) => ({
+  label,
+  value: subcategory,
+}));
+const difficultyOptions = DIFFICULTIES.map(({ difficulty, label }) => ({
+  label,
+  value: difficulty,
+}));
+const tournamentOptions = TOURNAMENTS.map(({ label, tournament }) => ({
+  label,
+  value: tournament,
+}));
 
 type SettingsModalProps = {
   closeModal: () => void;
@@ -73,14 +68,27 @@ const SettingsModal: React.FC<React.PropsWithChildren<SettingsModalProps>> = ({
     tournaments,
   } = settings;
 
-  const filteredTournamentsForSelect = tournamentsForSelect.filter(({ data }) =>
-    isTournamentValid(data, settings),
-  );
+  const filteredTournamentsForSelect = tournamentOptions.filter(({ value }) => {
+    const tournamentMetadata = TOURNAMENT_METADATA_BY_TOURNAMENT[value];
+    return isTournamentValid(tournamentMetadata, settings);
+  });
 
-  const categoriesInSelect = categories.map(toSelect(CATEGORY_MAP));
-  const subcategoriesInSelect = subcategories.map(toSelect(SUBCATEGORY_MAP));
-  const difficultiesInSelect = difficulties.map(toSelect(DIFFICULTY_MAP));
-  const tournamentsInSelect = tournaments.map(toSelect(TOURNAMENT_MAP));
+  const categoriesInSelect = categories.map((category) => ({
+    label: CATEGORY_METADATA_BY_CATEGORY[category].label,
+    value: category,
+  }));
+  const subcategoriesInSelect = subcategories.map((subcategory) => ({
+    label: SUBCATEGORY_METADATA_BY_SUBCATEGORY[subcategory].label,
+    value: subcategory,
+  }));
+  const difficultiesInSelect = difficulties.map((difficulty) => ({
+    label: DIFFICULTY_METADATA_BY_DIFFICULTY[difficulty].label,
+    value: difficulty,
+  }));
+  const tournamentsInSelect = tournaments.map((tournament) => ({
+    label: TOURNAMENT_METADATA_BY_TOURNAMENT[tournament].label,
+    value: tournament,
+  }));
 
   const onReadingSpeedChange = (value: number) => {
     setSettings({ readingSpeed: value });
@@ -144,19 +152,19 @@ const SettingsModal: React.FC<React.PropsWithChildren<SettingsModalProps>> = ({
         <SettingsMultiSelect
           label="Category"
           onChange={onCategoriesChange}
-          options={categoriesForSelect}
+          options={categoryOptions}
           value={categoriesInSelect}
         />
         <SettingsMultiSelect
           label="Subcategories"
           onChange={onSubcategoriesChange}
-          options={subcategoriesForSelect}
+          options={subcategoryOptions}
           value={subcategoriesInSelect}
         />
         <SettingsMultiSelect
           label="Difficulties"
           onChange={onDifficultiesChange}
-          options={difficultiesForSelect}
+          options={difficultyOptions}
           value={difficultiesInSelect}
         />
         <SettingsMultiSelect
@@ -182,23 +190,29 @@ const SettingsModal: React.FC<React.PropsWithChildren<SettingsModalProps>> = ({
   );
 };
 
-type SettingsMultiSelectProps<T, U> = {
-  label: string;
-  onChange: (value: Options<{ data: U; label: string; value: T }>) => void;
-  options: { data: U; label: string; value: T }[];
-  value: { data: U; label: string; value: T }[];
+// prevent select dropdown from getting overlapped, especially on mobile
+const SELECT_MENU_PROPS = {
+  menuPortalTarget: document.body,
+  styles: { menuPortal: (base: CSSObject) => ({ ...base, zIndex: 9999 }) },
 };
 
-function SettingsMultiSelect<T, U>({
+type SettingsMultiSelectProps<T> = {
+  label: string;
+  onChange: (value: Options<{ label: string; value: T }>) => void;
+  options: { label: string; value: T }[];
+  value: { label: string; value: T }[];
+};
+
+function SettingsMultiSelect<T>({
   label,
   ...rest
-}: SettingsMultiSelectProps<T, U>) {
+}: SettingsMultiSelectProps<T>) {
   return (
     <Box>
       <Heading color="gray.800" mb={2} size="sm">
         {label}
       </Heading>
-      <Select isMulti name={label} {...rest} {...selectMenuProps} />
+      <Select isMulti name={label} {...rest} {...SELECT_MENU_PROPS} />
     </Box>
   );
 }

@@ -2,7 +2,7 @@ import { Box, Flex, Text } from '@chakra-ui/react';
 import { Bonus, BonusPart, BonusPartResult } from '@qbhub/types';
 import FormattedQuestion from '../components/FormattedQuestion';
 import { VirtualizedTable, VirtualizedTableColumn } from '../components/tables';
-import { TOURNAMENT_MAP } from '../utils/constants';
+import { TOURNAMENT_METADATA_BY_TOURNAMENT } from '../utils/constants';
 import { getFormattedWords } from '../utils/reader';
 import { parseHTMLString } from '../utils/string';
 
@@ -32,7 +32,7 @@ const cells: { [key: string]: (result: BonusPartRowResult) => JSX.Element } = {
     </Flex>
   ),
   tournament: ({ bonus: { tournament } }) => (
-    <Box>{TOURNAMENT_MAP[tournament].name}</Box>
+    <Box>{TOURNAMENT_METADATA_BY_TOURNAMENT[tournament].label}</Box>
   ),
 };
 

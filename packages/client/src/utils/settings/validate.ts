@@ -5,7 +5,7 @@ import {
   Subcategory,
 } from '@qbhub/types';
 import { isEmpty } from '../array';
-import { SUBCATEGORY_MAP } from '../constants';
+import { SUBCATEGORY_METADATA_BY_SUBCATEGORY } from '../constants';
 import { MAX_TOURNAMENT_YEAR, MIN_TOURNAMENT_YEAR } from './constants';
 import {
   FromYear,
@@ -94,7 +94,7 @@ export const getUpdatedCategoriesFromSubcategories = (
   if (newSubcategories === undefined) return categories;
 
   const invalidCategories = newSubcategories.map(
-    (sub) => SUBCATEGORY_MAP[sub].category,
+    (subcategory) => SUBCATEGORY_METADATA_BY_SUBCATEGORY[subcategory].category,
   );
   return categories.filter((cat) => !invalidCategories.includes(cat));
 };
@@ -108,7 +108,10 @@ export const getUpdatedSubcategoriesFromCategories = (
   if (newCategories === undefined) return subcategories;
 
   return subcategories.filter(
-    (sub) => !newCategories.includes(SUBCATEGORY_MAP[sub].category),
+    (subcategory) =>
+      !newCategories.includes(
+        SUBCATEGORY_METADATA_BY_SUBCATEGORY[subcategory].category,
+      ),
   );
 };
 
