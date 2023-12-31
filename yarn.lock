@@ -2313,6 +2313,7 @@ __metadata:
     "@reduxjs/toolkit": "npm:^2.0.1"
     "@testing-library/react": "npm:^14.1.2"
     "@testing-library/user-event": "npm:^14.4.3"
+    "@types/events": "npm:^3"
     "@types/lodash-es": "npm:^4.17.6"
     "@types/mdx": "npm:^2.0.3"
     "@types/node": "npm:^20.10.0"
@@ -2342,6 +2343,7 @@ __metadata:
     eslint-plugin-react-refresh: "npm:^0.4.4"
     eslint-plugin-sort-destructure-keys: "npm:^1.5.0"
     eslint-plugin-sort-keys-fix: "npm:^1.1.2"
+    events: "npm:^3.3.0"
     framer-motion: "npm:10.16.5"
     isomorphic-dompurify: "npm:^1.9.0"
     lodash-es: "npm:^4.17.21"
@@ -3012,6 +3014,13 @@ __metadata:
   version: 1.0.0
   resolution: "@types/estree@npm:1.0.0"
   checksum: 9ec366ea3b94db26a45262d7161456c9ee25fd04f3a0da482f6e97dbf90c0c8603053c311391a877027cc4ee648340f988cd04f11287886cdf8bc23366291ef9
+  languageName: node
+  linkType: hard
+
+"@types/events@npm:^3":
+  version: 3.0.3
+  resolution: "@types/events@npm:3.0.3"
+  checksum: 50af9312fab001fd6bd4bb3ff65830f940877e6778de140a92481a0d9bf5f4853d44ec758a8800ef60e0598ac43ed1b5688116a3c65906ae54e989278d6c7c82
   languageName: node
   linkType: hard
 
@@ -5825,6 +5834,13 @@ __metadata:
   version: 0.4.14
   resolution: "eventemitter2@npm:0.4.14"
   checksum: 5dc7b4903700f603226b69c7c33b55ce0dda85c1d57aba99ede5afa8ce97e22099102dbbcc6917d7fd754328e579e71dea1949a510ec9eaf712bb41358d914ac
+  languageName: node
+  linkType: hard
+
+"events@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "events@npm:3.3.0"
+  checksum: a3d47e285e28d324d7180f1e493961a2bbb4cad6412090e4dec114f4db1f5b560c7696ee8e758f55e23913ede856e3689cd3aa9ae13c56b5d8314cd3b3ddd1be
   languageName: node
   linkType: hard
 
