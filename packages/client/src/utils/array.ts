@@ -1,4 +1,4 @@
-import { getRand } from './number';
+import { getRandomNumber } from '@qbhub/utils';
 
 /**
  * checks if arrays have the same elements
@@ -28,7 +28,7 @@ export const combine = <T>(...arrs: T[][]) => arrs.flat();
 /**
  * Get a random array element.
  */
-export const random = <T>(arr: T[]) => arr[getRand(arr.length)];
+export const random = <T>(arr: T[]) => arr[getRandomNumber(0, arr.length - 1)];
 
 /**
  * Create ranged sequences, similar to Python's `range`.

@@ -1,8 +1,8 @@
+import { getRandomNumber } from '@qbhub/utils';
 import nlp from 'compromise/two';
 import DOMPurify from 'isomorphic-dompurify';
 import { toWords } from 'number-to-words';
 import ReactHTMLParser from 'react-html-parser';
-import { getRand } from './number';
 import { betweenTags, getCaptureGroups, removeExtraSpaces } from './regex';
 
 /**
@@ -12,7 +12,7 @@ export const shuffle = (s: string) => {
   const chars = s.split('');
   const shuffled = [];
   while (shuffled.length < s.length) {
-    const randomIndex = getRand(chars.length);
+    const randomIndex = getRandomNumber(0, chars.length - 1);
     const [removedChar] = chars.splice(randomIndex, 1);
     shuffled.push(removedChar);
   }

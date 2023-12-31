@@ -1,4 +1,4 @@
-import { random as randomNumber } from './number.js';
+import { getRandomNumber } from '@qbhub/utils';
 
 type Mapping<T, S> = (s: T) => S;
 type StringAccumulator = { [key: string]: any };
@@ -36,8 +36,7 @@ export const unique =
 /**
  * Selects a random element from an array.
  */
-export const random = (arr: any[], start = 0, end = arr.length) =>
-  arr[randomNumber(start, end - start - 1)];
+export const random = (arr: any[]) => arr[getRandomNumber(0, arr.length - 1)];
 
 type NumberMapping = Mapping<number, number>;
 
@@ -79,8 +78,8 @@ export const zip = (...arrs: any[][]) => {
 export const shuffle = (arr: any[]) => {
   arr.forEach((_, i) => {
     if (i >= arr.length - 1) return;
-    const randomIdx = randomNumber(i + 1, arr.length - i - 1);
-    [arr[i], arr[randomIdx]] = [arr[randomIdx], arr[i]];
+    const randomIndex = getRandomNumber(i + 1, arr.length - 1);
+    [arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]];
   });
   return arr;
 };
