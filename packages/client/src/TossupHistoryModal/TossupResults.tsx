@@ -2,7 +2,7 @@ import { Box, Text } from '@chakra-ui/react';
 import { TossupResult } from '@qbhub/types';
 import FormattedQuestion from '../components/FormattedQuestion';
 import { VirtualizedTable, VirtualizedTableColumn } from '../components/tables';
-import { TOURNAMENT_MAP } from '../utils/constants';
+import { TOURNAMENT_METADATA_BY_TOURNAMENT } from '../utils/constants';
 import { parseHTMLString } from '../utils/string';
 
 type TossupResultProps = {
@@ -27,7 +27,7 @@ const cells: { [key: string]: (result: TossupResult) => JSX.Element } = {
   ),
   score: ({ score }) => <Text align="center">{score}</Text>,
   tournament: ({ tossup: { tournament } }) => (
-    <Box>{TOURNAMENT_MAP[tournament].name}</Box>
+    <Box>{TOURNAMENT_METADATA_BY_TOURNAMENT[tournament].label}</Box>
   ),
 };
 
