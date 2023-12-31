@@ -1,10 +1,9 @@
 import { Bag, Clue, ClueBagMap, SelectedClue } from '@qbhub/types';
-import { log } from '@qbhub/utils';
+import { log, roundNumber } from '@qbhub/utils';
 import stats from '@seanye/compromise-stats';
 import _nlp from 'compromise/three';
 import { PlainTossup } from '../types/db.js';
 import { each, max, shuffle, sum, unique } from './array.js';
-import { round } from './number.js';
 
 const nlp = _nlp.plugin(stats);
 
@@ -240,7 +239,7 @@ const combineClues = (
     const bestClueScore = clueScores.get(bestClueIdx);
     const matches = similarClues.slice(1).map((i) => ({
       ...cluesCopy[i],
-      score: round(clueScores.get(i)!, 2),
+      score: roundNumber(clueScores.get(i)!, 2),
     }));
     uniqueClues.push({
       ...queryClue,
@@ -258,7 +257,7 @@ const combineClues = (
   // sort clues by score
   return uniqueClues
     .sort((a, b) => b.score - a.score)
-    .map((clue) => ({ ...clue, score: round(clue.score, 2) }));
+    .map((clue) => ({ ...clue, score: roundNumber(clue.score, 2) }));
 };
 
 /**
