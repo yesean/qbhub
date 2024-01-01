@@ -49,6 +49,7 @@ function cleanAnswerlineForParsing(answerline: string): string {
     .removePattern(/\((?!accept|or|prompt).*?\)/g) // remove parenthesized content if not important
     .normalizeBrackets()
     .normalizeWhitespace()
+    .apply((str) => (parseHTMLString(str)[0] ?? '') as unknown as string) // convert html entities to unicode
     .get();
 }
 
@@ -86,11 +87,10 @@ function processAnswers(answers: string[]): string[] {
  * that an answer isn't proceeded by 'do not' or some other form of negation.
  */
 const filterNegativeAnswers = (
-  matchArray: RegExpExecArray,
+  { 0: matchedText, index, input }: RegExpExecArray,
   answerType: 'accept' | 'prompt',
 ) => {
-  const { 0: match, index, input } = matchArray;
-  const answerPrefix = match.slice(1).split(' ')[0];
+  const answerPrefix = QBString.getWords(matchedText)[0];
 
   if (answerType === 'accept' && answerPrefix === 'accept') {
     const negatives = ['do not', 'do not prompt on or', 'do not prompt or'];
@@ -125,52 +125,42 @@ const filterNegativeAnswers = (
  * Parse all valid answers from an answerline.
  */
 export const parseAcceptableAnswers = (answerline: string): string[] => {
-  const boldedAnswers = getTextBetweenTag(answerline, 'strong');
-
-  let cleanedAnswerline = cleanAnswerlineForParsing(answerline);
-  // convert html entities to unicode
-  cleanedAnswerline = (parseHTMLString(cleanedAnswerline)[0] ??
-    '') as unknown as string;
-
   // parse acceptable answers, roughly based on acf guidelines
-  const primaryAnswer = /^(.*?)(?:$|(?:\[| or ).*)/g; // first answer up to '[' or EOL
-  const acceptableAnswers =
+  const primaryAnswerRegex = /^(.*?)(?:$|(?:\[| or ).*)/g; // first answer up to '[' or EOL
+  const acceptableRegex =
     /(?:[[,; ])(?:accept |or )(.*?)(?= (?:do not|prompt|accept|or|until|before|after) |[,;[\]]|$)/g;
+  const cleanedAnswerline = cleanAnswerlineForParsing(answerline);
   const parsedAnswers = [
-    ...getAllCaptureGroups(cleanedAnswerline, primaryAnswer),
+    ...getAllCaptureGroups(cleanedAnswerline, primaryAnswerRegex),
     ...(
       Array.from(
-        cleanedAnswerline.matchAll(acceptableAnswers),
+        cleanedAnswerline.matchAll(acceptableRegex),
       ) as RegExpExecArray[]
     )
       .filter((match) => filterNegativeAnswers(match, 'accept'))
       .map((e) => e[1]),
   ];
 
+  const boldedAnswers = getTextBetweenTag(answerline, 'strong');
   const answers = [...boldedAnswers, ...parsedAnswers];
   return processAnswers(answers);
 };
 
 /**
- * Parse all promptable answers from an answerline.
+ * Parse all promptable answers from an answerline
  */
 export const parsePromptableAnswers = (answerline: string) => {
-  const underlinedAnswers = getTextBetweenTag(answerline, 'u');
-
-  let cleanedAnswerline = cleanAnswerlineForParsing(answerline);
-  // convert html entities to unicode
-  cleanedAnswerline = (parseHTMLString(cleanedAnswerline)[0] ??
-    '') as unknown as string;
-
   // parse promptable answers, roughly based on acf guidelines
   const promptRegex =
-    /(?:[[,; ])(?:prompt on |or )(.*?)(?= (?:do not|prompt|accept|or|until|before|after) |[,;[\]]|$)/g;
+    /(?:[[,; ]prompt on| or) (.*?)(?= (?:do not|prompt|accept|or|until|before|after) |[,;[\]]|$)/g;
+  const cleanedAnswerline = cleanAnswerlineForParsing(answerline);
   const parsedAnswers = (
     Array.from(cleanedAnswerline.matchAll(promptRegex)) as RegExpExecArray[]
   )
     .filter((match) => filterNegativeAnswers(match, 'prompt'))
     .map((e) => e[1]);
 
+  const underlinedAnswers = getTextBetweenTag(answerline, 'u');
   const answers = [...underlinedAnswers, ...parsedAnswers];
   return processAnswers(answers);
 };
