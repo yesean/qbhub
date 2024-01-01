@@ -58,49 +58,6 @@ export function normalizeAnswer(answer: string): string {
 }
 
 /**
- * Filters out negated answers such as 'do not accept foo' or 'do not prompt on
- * or accept bar'. Used as a drop-in replacement for lookbehind assertions
- * (not supported in Safari) in the answer parser regex.
- * Answerlines often take the form 'do not accept foo or bar' and the answer
- * regex will match at 'accept' or 'or' so a lookup has to be performed to ensure
- * that an answer isn't proceeded by 'do not' or some other form of negation.
- */
-function filterNegativeAnswers(
-  { 0: matchedText, index, input }: RegExpExecArray,
-  answerType: 'accept' | 'prompt',
-) {
-  const answerPrefix = QBString.getWords(matchedText)[0];
-
-  if (answerType === 'accept' && answerPrefix === 'accept') {
-    const negatives = ['do not', 'do not prompt on or', 'do not prompt or'];
-    return negatives.every((neg) => !input.endsWith(neg, index));
-  }
-
-  if (answerType === 'prompt' && answerPrefix === 'prompt') {
-    const negatives = ['do not', 'do not accept or'];
-    return negatives.every((neg) => !input.endsWith(neg, index));
-  }
-
-  const startIndex = lastIndexOfMultiple(input, [';', ',', '['], index);
-  const prevString = input.slice(startIndex, index);
-
-  if (answerType === 'accept' && answerPrefix === 'or') {
-    const negatives = ['do not accept', 'prompt on', 'prompt'];
-    return negatives.every((neg) => !prevString.includes(neg));
-  }
-
-  if (answerType === 'prompt' && answerPrefix === 'or') {
-    const promptIndex = prevString.lastIndexOf('prompt on');
-    if (promptIndex === -1) return false;
-
-    const negatives = ['do not ', 'do not accept or '];
-    return negatives.every((neg) => !prevString.endsWith(neg, promptIndex));
-  }
-
-  return true;
-}
-
-/**
  * Parse all valid answers from an answerline.
  */
 export function parseAcceptableAnswers(answerline: string): string[] {
@@ -164,4 +121,47 @@ function processAnswers(answers: string[]): string[] {
     .filter((s) => s !== '');
 
   return getUniqueItems(allAnswers);
+}
+
+/**
+ * Filters out negated answers such as 'do not accept foo' or 'do not prompt on
+ * or accept bar'. Used as a drop-in replacement for lookbehind assertions
+ * (not supported in Safari) in the answer parser regex.
+ * Answerlines often take the form 'do not accept foo or bar' and the answer
+ * regex will match at 'accept' or 'or' so a lookup has to be performed to ensure
+ * that an answer isn't proceeded by 'do not' or some other form of negation.
+ */
+function filterNegativeAnswers(
+  { 0: matchedText, index, input }: RegExpExecArray,
+  answerType: 'accept' | 'prompt',
+) {
+  const answerPrefix = QBString.getWords(matchedText)[0];
+
+  if (answerType === 'accept' && answerPrefix === 'accept') {
+    const negatives = ['do not', 'do not prompt on or', 'do not prompt or'];
+    return negatives.every((neg) => !input.endsWith(neg, index));
+  }
+
+  if (answerType === 'prompt' && answerPrefix === 'prompt') {
+    const negatives = ['do not', 'do not accept or'];
+    return negatives.every((neg) => !input.endsWith(neg, index));
+  }
+
+  const startIndex = lastIndexOfMultiple(input, [';', ',', '['], index);
+  const prevString = input.slice(startIndex, index);
+
+  if (answerType === 'accept' && answerPrefix === 'or') {
+    const negatives = ['do not accept', 'prompt on', 'prompt'];
+    return negatives.every((neg) => !prevString.includes(neg));
+  }
+
+  if (answerType === 'prompt' && answerPrefix === 'or') {
+    const promptIndex = prevString.lastIndexOf('prompt on');
+    if (promptIndex === -1) return false;
+
+    const negatives = ['do not ', 'do not accept or '];
+    return negatives.every((neg) => !prevString.endsWith(neg, promptIndex));
+  }
+
+  return true;
 }
