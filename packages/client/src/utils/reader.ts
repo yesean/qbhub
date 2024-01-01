@@ -58,6 +58,7 @@ export function getPowerIndex(words: FormattedWord[]) {
  */
 export function normalizeAnswer(answer: string): string {
   return new QBString(answer)
+    .removeTags()
     .deburr()
     .replaceIntegersWithWords()
     .removeNonAlphanumeric()
