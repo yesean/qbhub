@@ -58,18 +58,6 @@ export function normalizeAnswer(answer: string): string {
 }
 
 /**
- * Post-process parsed answers
- */
-function processAnswers(answers: string[]): string[] {
-  const lastNameAnswers = answers.flatMap(removeFirstNames);
-  const allAnswers = [...answers, ...lastNameAnswers]
-    .map(normalizeAnswer)
-    .filter((s) => s !== '');
-
-  return getUniqueItems(allAnswers);
-}
-
-/**
  * Filters out negated answers such as 'do not accept foo' or 'do not prompt on
  * or accept bar'. Used as a drop-in replacement for lookbehind assertions
  * (not supported in Safari) in the answer parser regex.
@@ -110,16 +98,6 @@ function filterNegativeAnswers(
   }
 
   return true;
-}
-
-function cleanAnswerlineForParsing(answerline: string): string {
-  return new QBString(answerline)
-    .removeTags()
-    .removePattern(/\((?!accept|or|prompt).*?\)/g) // remove parenthesized content if not important
-    .normalizeBrackets()
-    .normalizeWhitespace()
-    .apply((str) => (parseHTMLString(str)[0] ?? '') as unknown as string) // convert html entities to unicode
-    .get();
 }
 
 /**
@@ -164,4 +142,26 @@ export function parsePromptableAnswers(answerline: string) {
   const underlinedAnswers = getTextBetweenTag(answerline, 'u');
   const answers = [...underlinedAnswers, ...parsedAnswers];
   return processAnswers(answers);
+}
+
+function cleanAnswerlineForParsing(answerline: string): string {
+  return new QBString(answerline)
+    .removeTags()
+    .removePattern(/\((?!accept|or|prompt).*?\)/g) // remove parenthesized content if not important
+    .normalizeBrackets()
+    .normalizeWhitespace()
+    .apply((str) => (parseHTMLString(str)[0] ?? '') as unknown as string) // convert html entities to unicode
+    .get();
+}
+
+/**
+ * Post-process parsed answers
+ */
+function processAnswers(answers: string[]): string[] {
+  const lastNameAnswers = answers.flatMap(removeFirstNames);
+  const allAnswers = [...answers, ...lastNameAnswers]
+    .map(normalizeAnswer)
+    .filter((s) => s !== '');
+
+  return getUniqueItems(allAnswers);
 }
