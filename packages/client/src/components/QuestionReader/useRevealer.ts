@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSettings } from '../../hooks/useSettings';
-import { getReadingTimeoutDelay } from '../../utils/reader';
+import { getReadingTimeoutDelay } from '../../utils/questionReader';
 import { DEFAULT_READING_SPEED } from '../../utils/settings/constants';
 
 type Props = {
