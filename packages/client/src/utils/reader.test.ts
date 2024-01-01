@@ -60,6 +60,7 @@ const acceptableAnswerlines = [
       'edward v and richard of shrewsbury',
       'any answer referring to the two princes possibly murdered by richard iii in the tower of london',
       'v and richard of shrewsbury',
+      'any answer referring to the two princes possibly murdered by iii in the tower of london',
     ],
   },
   {
@@ -127,7 +128,7 @@ const promptableAnswerlines = [
       'modulating',
       'moving between major and minor',
       'into major',
-      'into minor by asking what is the name of the relationship between the keys',
+      'into minor by asking what is the name of the relationship between the keys?',
       'changing keys',
       'changing modes',
       'mode',
@@ -148,7 +149,7 @@ const promptableAnswerlines = [
       'equivalents',
       'performing nmr',
       'hplc',
-      'chromatography by asking what is the goal of that experiment',
+      'chromatography by asking what is the goal of that experiment?',
     ],
   },
   {

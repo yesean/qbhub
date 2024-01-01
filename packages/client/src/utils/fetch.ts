@@ -6,10 +6,9 @@ import {
   SelectedClue,
   Tossup,
 } from '@qbhub/types';
-import { log } from '@qbhub/utils';
+import { QBString, cleanTossupText, log } from '@qbhub/utils';
 import axios from 'axios';
 import qs from 'qs';
-import { cleanTossupText, normalizeTags } from './string';
 
 const ENDPOINTS = {
   bonus: '/api/bonuses',
@@ -34,7 +33,7 @@ export const fetchTossups = async (
     const { data } = await axios.get<Tossup[]>(url);
     const tossups = data.map((tossup) => ({
       ...tossup,
-      formattedAnswer: normalizeTags(tossup.formattedAnswer),
+      formattedAnswer: QBString.normalizeTags(tossup.formattedAnswer),
       formattedText: cleanTossupText(tossup.formattedText),
       text: cleanTossupText(tossup.text),
     }));
@@ -60,11 +59,11 @@ export const fetchBonuses = async (
     const { data } = await axios.get<Bonus[]>(url);
     const bonuses = data.map((bonus) => ({
       ...bonus,
-      formattedLeadin: normalizeTags(bonus.formattedLeadin),
+      formattedLeadin: QBString.normalizeTags(bonus.formattedLeadin),
       parts: bonus.parts.map((part) => ({
         ...part,
-        formattedAnswer: normalizeTags(part.formattedAnswer),
-        formattedText: normalizeTags(part.formattedText),
+        formattedAnswer: QBString.normalizeTags(part.formattedAnswer),
+        formattedText: QBString.normalizeTags(part.formattedText),
       })),
     }));
     log.info('Finished fetching bonuses');

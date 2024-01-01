@@ -3,7 +3,7 @@ import { TossupResult } from '@qbhub/types';
 import FormattedQuestion from '../components/FormattedQuestion';
 import { VirtualizedTable, VirtualizedTableColumn } from '../components/tables';
 import { TOURNAMENT_METADATA_BY_TOURNAMENT } from '../utils/constants';
-import { parseHTMLString } from '../utils/string';
+import { parseHTMLString } from '../utils/reader';
 
 type TossupResultProps = {
   results: TossupResult[];
