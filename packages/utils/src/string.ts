@@ -1,6 +1,6 @@
 import nlp from 'compromise';
 import { deburr } from 'lodash-es';
-import { toWords } from 'number-to-words';
+import converter from 'number-to-words';
 
 export class QBString {
   private str: string;
@@ -124,7 +124,9 @@ export class QBString {
 
   replaceIntegersWithWords() {
     this.str = this.getWords()
-      .map((word) => (QBString.isInteger(word) ? toWords(word) : word))
+      .map((word) =>
+        QBString.isInteger(word) ? converter.toWords(word) : word,
+      )
       .join(' ');
     return this;
   }
@@ -139,7 +141,8 @@ export function cleanTossupText(text: string): string {
     .replacePattern(/(<strong>.*<\/strong>)/g, ' $1 ') // isolate bold section
     .replacePattern(/<\/strong>\s*\(\*\)/g, '(*) </strong>') // place power marking inside of bold section
     .replacePattern('(*)', ' (*) ') // isolate power marking
-    .replacePattern('(*) </strong>)', '(*) </strong>') // fix trailing closing parenthesis (common formatting quirk)
+    .normalizeWhitespace()
+    .replacePattern('(*) </strong> )', '(*) </strong>') // fix trailing closing parenthesis (common formatting quirk)
     .normalizeWhitespace()
     .get();
 }

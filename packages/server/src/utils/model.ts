@@ -1,40 +1,35 @@
 import { Bonus, BonusPart, Tossup } from '@qbhub/types';
+import { QBString, cleanTossupText } from '@qbhub/utils';
 import {
   Bonus as DBBonus,
   BonusPart as DBBonusPart,
   Tossup as DBTossup,
 } from '../types/db.js';
 
-export const transformTossup = (tossup: DBTossup): Tossup => ({
-  answer: tossup.answer,
-  category: tossup.category,
-  formattedAnswer: tossup.formatted_answer,
-  formattedText: tossup.formatted_text,
-  id: tossup.id,
-  normalizedAnswer: tossup.normalized_answer,
-  text: tossup.text,
-  ...(tossup.subcategory ? { subcategory: tossup.subcategory } : {}),
-  difficulty: tossup.difficulty,
-  tournament: tossup.tournament,
-  year: tossup.year,
+export const transformTossup = ({
+  subcategory,
+  ...restOfTossup
+}: DBTossup): Tossup => ({
+  ...restOfTossup,
+  ...(subcategory ? { subcategory } : {}),
+  formattedAnswer: QBString.normalizeTags(restOfTossup.formatted_answer),
+  formattedText: cleanTossupText(restOfTossup.formatted_text),
+  normalizedAnswer: restOfTossup.normalized_answer,
+  text: cleanTossupText(restOfTossup.text),
 });
 
-export const transformBonus = (bonus: DBBonus, parts: BonusPart[]): Bonus => ({
-  category: bonus.category,
-  formattedLeadin: bonus.formatted_leadin,
-  id: bonus.id,
-  leadin: bonus.leadin,
-  ...(bonus.subcategory ? { subcategory: bonus.subcategory } : {}),
-  difficulty: bonus.difficulty,
+export const transformBonus = (
+  { subcategory, ...restOfBonus }: DBBonus,
+  parts: BonusPart[],
+): Bonus => ({
+  ...restOfBonus,
+  ...(subcategory ? { subcategory } : {}),
+  formattedLeadin: QBString.normalizeTags(restOfBonus.formatted_leadin),
   parts,
-  tournament: bonus.tournament,
-  year: bonus.year,
 });
 
 export const transformBonusPart = (bonusPart: DBBonusPart): BonusPart => ({
-  answer: bonusPart.answer,
-  formattedAnswer: bonusPart.formatted_answer,
-  formattedText: bonusPart.formatted_text,
-  number: bonusPart.number,
-  text: bonusPart.text,
+  ...bonusPart,
+  formattedAnswer: QBString.normalizeTags(bonusPart.formatted_answer),
+  formattedText: QBString.normalizeTags(bonusPart.formatted_text),
 });

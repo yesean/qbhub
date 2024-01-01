@@ -6,7 +6,7 @@ import {
   SelectedClue,
   Tossup,
 } from '@qbhub/types';
-import { QBString, cleanTossupText, log } from '@qbhub/utils';
+import { log } from '@qbhub/utils';
 import axios from 'axios';
 import qs from 'qs';
 
@@ -31,14 +31,8 @@ export const fetchTossups = async (
   try {
     log.info('Fetching tossups');
     const { data } = await axios.get<Tossup[]>(url);
-    const tossups = data.map((tossup) => ({
-      ...tossup,
-      formattedAnswer: QBString.normalizeTags(tossup.formattedAnswer),
-      formattedText: cleanTossupText(tossup.formattedText),
-      text: cleanTossupText(tossup.text),
-    }));
     log.info('Finished fetching tossups');
-    return tossups;
+    return data;
   } catch (err) {
     log.error('Error fetching tossups', err);
     return [];
@@ -57,17 +51,8 @@ export const fetchBonuses = async (
   try {
     log.info('Fetching bonuses');
     const { data } = await axios.get<Bonus[]>(url);
-    const bonuses = data.map((bonus) => ({
-      ...bonus,
-      formattedLeadin: QBString.normalizeTags(bonus.formattedLeadin),
-      parts: bonus.parts.map((part) => ({
-        ...part,
-        formattedAnswer: QBString.normalizeTags(part.formattedAnswer),
-        formattedText: QBString.normalizeTags(part.formattedText),
-      })),
-    }));
     log.info('Finished fetching bonuses');
-    return bonuses;
+    return data;
   } catch (err) {
     log.error('Error fetching bonuses', err);
     return [];
