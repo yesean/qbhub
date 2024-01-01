@@ -7,36 +7,34 @@ import {
   FormattedWord,
   TossupScore,
 } from '@qbhub/types';
-import { getUniqueItems, log } from '@qbhub/utils';
-import { deburr } from 'lodash-es';
-import { findBestMatch } from 'string-similarity';
 import {
-  anyTag,
-  getCaptureGroups,
-  ltgt,
-  quotes,
-  remove,
-  removeNonAlphanumeric,
-  removeTags,
-} from './regex';
-import {
-  convertNumberToWords,
-  getTextBetweenTags,
-  getWords,
-  getWordsBetweenTags,
-  multipleLastIndexOf,
-  normalizeSpacing,
-  parseHTMLString,
+  QBString,
+  getAllCaptureGroups,
+  getTextBetweenTag,
+  getUniqueItems,
+  getWordsBetweenTag,
+  isEmpty,
+  lastIndexOfMultiple,
+  log,
   removeFirstNames,
-} from './string';
+} from '@qbhub/utils';
+import DOMPurify from 'isomorphic-dompurify';
+import ReactHTMLParser from 'react-html-parser';
+import { findBestMatch } from 'string-similarity';
+
+/**
+ * Sanitize and parse string into JSX
+ */
+export const parseHTMLString = (s: string) =>
+  ReactHTMLParser(DOMPurify.sanitize(s));
 
 /**
  * Get words from string with formatting information, using tags
  * e.g. I <strong>love</strong> dogs => [I, love, dogs]
  */
 export const getFormattedWords = (text: string): FormattedWord[] => {
-  const boldWords = getWordsBetweenTags(text, 'strong').map(removeTags);
-  const words = getWords(removeTags(text));
+  const boldWords = getWordsBetweenTag(text, 'strong');
+  const words = new QBString(text).removeTag('strong').getWords();
 
   let boldWordIndex = 0;
   const formattedWords = words.map((word) => {
@@ -51,14 +49,14 @@ export const getFormattedWords = (text: string): FormattedWord[] => {
 };
 
 /**
- * Get power index from tossup text.
+ * Get power index from tossup text
  */
 const POWER_MARKER = '(*)';
 export const getPowerIndex = (words: FormattedWord[]) =>
   words.findIndex(({ value }) => value === POWER_MARKER);
 
 /**
- * Calculate tossup score based on buzz.
+ * Calculate tossup score based on buzz
  */
 export const getTossupScore = (
   isCorrect: boolean,
@@ -98,27 +96,39 @@ export function getBonusResult(
   };
 }
 
-/**
- * Clean a tossup answerline for parsing.
- */
-const cleanAnswerline = (s: string) =>
-  normalizeSpacing(
-    s
-      .replaceAll(ltgt, '') // remove author metadata
-      .replaceAll(/\((?!accept|or|prompt).*?\)/g, '') // remove parenthesized stuff if the information is not important
-      .replaceAll('(', '[')
-      .replaceAll(')', ']'),
-  );
+function cleanAnswerlineForParsing(answerline: string): string {
+  return new QBString(answerline)
+    .removeTags()
+    .replacePattern(/\((?!accept|or|prompt).*?\)/g, '') // remove parenthesized content if not important
+    .normalizeBrackets()
+    .normalizeWhitespace()
+    .get();
+}
 
 /**
- * Normalize answer for comparison.
+ * Normalize answer for comparison
  */
-export const normalizeAnswer = (s: string) =>
-  normalizeSpacing(
-    removeNonAlphanumeric(
-      convertNumberToWords(deburr(s).replaceAll(quotes, '')).toLowerCase(),
-    ),
-  );
+function normalizeAnswer(answer: string): string {
+  return new QBString(answer)
+    .deburr()
+    .replaceIntegersWithWords()
+    .removeNonAlphanumeric()
+    .normalizeWhitespace()
+    .get()
+    .toLowerCase();
+}
+
+/**
+ * Post-process parsed answers
+ */
+function processAnswers(answers: string[]): string[] {
+  const lastNameAnswers = answers.flatMap(removeFirstNames);
+  const allAnswers = [...answers, ...lastNameAnswers]
+    .map(normalizeAnswer)
+    .filter((s) => s !== '');
+
+  return getUniqueItems(allAnswers);
+}
 
 /**
  * Filters out negated answers such as 'do not accept foo' or 'do not prompt on
@@ -145,7 +155,7 @@ const filterNegativeAnswers = (
     return negatives.every((neg) => !input.endsWith(neg, index));
   }
 
-  const startIndex = multipleLastIndexOf(input, [';', ',', '['], index);
+  const startIndex = lastIndexOfMultiple(input, [';', ',', '['], index);
   const prevString = input.slice(startIndex, index);
 
   if (answerType === 'accept' && answerPrefix === 'or') {
@@ -168,89 +178,54 @@ const filterNegativeAnswers = (
  * Parse all valid answers from an answerline.
  */
 export const parseAcceptableAnswers = (answerline: string): string[] => {
-  let normalizedAnswer = cleanAnswerline(answerline);
+  const boldedAnswers = getTextBetweenTag(answerline, 'strong');
 
-  // get bolded answers
-  const boldAnswers = getTextBetweenTags(normalizedAnswer, 'strong').map(
-    removeTags,
-  );
-
-  // remove tags since they are not needed anymore
-  normalizedAnswer = remove(normalizedAnswer, anyTag);
-
+  let cleanedAnswerline = cleanAnswerlineForParsing(answerline);
   // convert html entities to unicode
-  normalizedAnswer = (parseHTMLString(normalizedAnswer)[0] ??
+  cleanedAnswerline = (parseHTMLString(cleanedAnswerline)[0] ??
     '') as unknown as string;
 
   // parse acceptable answers, roughly based on acf guidelines
   const primaryAnswer = /^(.*?)(?:$|(?:\[| or ).*)/g; // first answer up to '[' or EOL
   const acceptableAnswers =
     /(?:[[,; ])(?:accept |or )(.*?)(?= (?:do not|prompt|accept|or|until|before|after) |[,;[\]]|$)/g;
-  const answers = [
-    ...getCaptureGroups(normalizedAnswer, primaryAnswer),
+  const parsedAnswers = [
+    ...getAllCaptureGroups(cleanedAnswerline, primaryAnswer),
     ...(
       Array.from(
-        normalizedAnswer.matchAll(acceptableAnswers),
+        cleanedAnswerline.matchAll(acceptableAnswers),
       ) as RegExpExecArray[]
     )
       .filter((match) => filterNegativeAnswers(match, 'accept'))
       .map((e) => e[1]),
   ];
 
-  let allAnswers = [...boldAnswers, ...answers];
-  const answersWithoutFirstNames = allAnswers.flatMap(removeFirstNames);
-  allAnswers = [...allAnswers, ...answersWithoutFirstNames]
-    .map(normalizeAnswer)
-    .filter((s) => s !== '');
-
-  return getUniqueItems(allAnswers);
+  const answers = [...boldedAnswers, ...parsedAnswers];
+  return processAnswers(answers);
 };
 
 /**
  * Parse all promptable answers from an answerline.
  */
-export const parsePromptableAnswers = (answer: string) => {
-  let normalizedAnswer = cleanAnswerline(answer);
+export const parsePromptableAnswers = (answerline: string) => {
+  const underlinedAnswers = getTextBetweenTag(answerline, 'u');
 
-  // get underlined answers
-  const underlinedAnswers = getTextBetweenTags(normalizedAnswer, 'u').map(
-    removeTags,
-  );
-
-  // remove tags since they are not needed anymore
-  normalizedAnswer = remove(normalizedAnswer, anyTag);
+  let cleanedAnswerline = cleanAnswerlineForParsing(answerline);
+  // convert html entities to unicode
+  cleanedAnswerline = (parseHTMLString(cleanedAnswerline)[0] ??
+    '') as unknown as string;
 
   // parse promptable answers, roughly based on acf guidelines
   const promptRegex =
     /(?:[[,; ])(?:prompt on |or )(.*?)(?= (?:do not|prompt|accept|or|until|before|after) |[,;[\]]|$)/g;
-  const prompts = (
-    Array.from(normalizedAnswer.matchAll(promptRegex)) as RegExpExecArray[]
+  const parsedAnswers = (
+    Array.from(cleanedAnswerline.matchAll(promptRegex)) as RegExpExecArray[]
   )
     .filter((match) => filterNegativeAnswers(match, 'prompt'))
     .map((e) => e[1]);
 
-  const allAnswers = [...underlinedAnswers, ...prompts]
-    .map(normalizeAnswer)
-    .filter((s) => s !== '');
-
-  return getUniqueItems(allAnswers);
-};
-
-/**
- * Check if an answer "approximately" matches any correct answers. Uses Dice's
- * coefficient to compare strings.
- */
-const checkAnswer = (userAnswer: string, answers: string[]) => {
-  if (answers.length === 0)
-    return {
-      bestMatch: {
-        rating: 0,
-      },
-      bestMatchIndex: -1,
-      ratings: [],
-    };
-
-  return findBestMatch(userAnswer, answers);
+  const answers = [...underlinedAnswers, ...parsedAnswers];
+  return processAnswers(answers);
 };
 
 export enum JudgeResult {
@@ -266,33 +241,49 @@ export class Judge {
   acceptableAnswers: string[];
   promptableAnswers: string[];
 
+  static ACCEPTABLE_DICE_SCORE = 0.6;
+
   constructor(answerline: string) {
     this.acceptableAnswers = parseAcceptableAnswers(answerline);
     this.promptableAnswers = parsePromptableAnswers(answerline);
-    log.debug('accepted answers:', this.acceptableAnswers);
-    log.debug('promptable answers:', this.promptableAnswers);
+    log.debug('Accepted answers:', this.acceptableAnswers);
+    log.debug('Promptable answers:', this.promptableAnswers);
   }
 
   judge(userAnswer: string): JudgeResult {
-    const MIN_RATING = 0.6;
+    if (isEmpty(this.acceptableAnswers)) {
+      return JudgeResult.incorrect;
+    }
 
-    let ratings = checkAnswer(userAnswer, this.acceptableAnswers);
-    log.debug(`acceptable answer ratings for: ${userAnswer}`, ratings.ratings);
-    if (ratings.bestMatch.rating > MIN_RATING) {
+    const normalizedUserAnswer = normalizeAnswer(userAnswer);
+    const acceptResult = findBestMatch(
+      normalizedUserAnswer,
+      this.acceptableAnswers,
+    );
+    log.debug(
+      `Acceptable answer ratings for: ${userAnswer}`,
+      acceptResult.ratings,
+    );
+    if (acceptResult.bestMatch.rating > Judge.ACCEPTABLE_DICE_SCORE) {
       return JudgeResult.correct;
     }
 
-    if (this.promptableAnswers.length > 0) {
-      ratings = checkAnswer(userAnswer, this.promptableAnswers);
-      log.debug(
-        `promptable answer ratings for: ${userAnswer}`,
-        ratings.ratings,
-      );
-      if (ratings.bestMatch.rating > MIN_RATING) {
-        // remove promptable answer, so it does not get prompted again
-        this.promptableAnswers.splice(ratings.bestMatchIndex, 1);
-        return JudgeResult.prompt;
-      }
+    if (isEmpty(this.promptableAnswers)) {
+      return JudgeResult.incorrect;
+    }
+
+    const promptResult = findBestMatch(
+      normalizedUserAnswer,
+      this.promptableAnswers,
+    );
+    log.debug(
+      `Promptable answer ratings for: ${userAnswer}`,
+      promptResult.ratings,
+    );
+    if (promptResult.bestMatch.rating > Judge.ACCEPTABLE_DICE_SCORE) {
+      // remove promptable answer, so it does not get prompted again
+      this.promptableAnswers.splice(promptResult.bestMatchIndex, 1);
+      return JudgeResult.prompt;
     }
 
     return JudgeResult.incorrect;

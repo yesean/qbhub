@@ -3,8 +3,7 @@ import { Bonus, BonusPart, BonusPartResult } from '@qbhub/types';
 import FormattedQuestion from '../components/FormattedQuestion';
 import { VirtualizedTable, VirtualizedTableColumn } from '../components/tables';
 import { TOURNAMENT_METADATA_BY_TOURNAMENT } from '../utils/constants';
-import { getFormattedWords } from '../utils/reader';
-import { parseHTMLString } from '../utils/string';
+import { getFormattedWords, parseHTMLString } from '../utils/reader';
 
 type BonusPartRowResult = BonusPartResult & { bonus: Bonus; part: BonusPart };
 type BonusResultProps = {

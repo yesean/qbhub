@@ -8,9 +8,14 @@
   "type": "module",
   "packageManager": "yarn@3.2.3",
   "dependencies": {
-    "@qbhub/types": "workspace:^"
+    "@qbhub/types": "workspace:^",
+    "compromise": "^14.11.0",
+    "lodash-es": "^4.17.21",
+    "number-to-words": "^1.2.4"
   },
   "devDependencies": {
+    "@types/lodash-es": "^4.17.6",
+    "@types/number-to-words": "^1",
     "@typescript-eslint/eslint-plugin": "^6.12.0",
     "@typescript-eslint/parser": "^6.12.0",
     "eslint": "^8.54.0",

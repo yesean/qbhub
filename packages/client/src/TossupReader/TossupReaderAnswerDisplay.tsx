@@ -1,8 +1,8 @@
 import { Box, Link, Text } from '@chakra-ui/react';
 import { Tossup } from '@qbhub/types';
 import { Link as RouterLink } from 'react-router-dom';
+import { parseHTMLString } from '../utils/reader';
 import { getClueDisplayURL } from '../utils/routes';
-import { parseHTMLString } from '../utils/string';
 
 type TossupReaderAnswerDisplayProps = {
   tossup: Tossup;
