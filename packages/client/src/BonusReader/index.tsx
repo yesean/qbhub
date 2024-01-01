@@ -1,12 +1,5 @@
 import { useToast } from '@chakra-ui/react';
-import {
-  BonusPart,
-  BonusPartResult,
-  BonusPartScore,
-  BonusResult,
-  BonusScore,
-  QuestionResult,
-} from '@qbhub/types';
+import { BonusResult, BonusScore, QuestionResult } from '@qbhub/types';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import QuestionReader, {
@@ -18,34 +11,15 @@ import useActions from '../hooks/useActions';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/utils';
-import { UnscoredQuestionResult } from '../utils/questionReader';
 import {
   combineBonusPartWithLeadin,
+  getBonusPartResult,
   getBonusResult,
   isLastBonusPart,
-} from '../utils/reader';
+} from '../utils/bonus';
 import BonusReaderContentDisplay from './BonusReaderContentDisplay';
 import { selectBonusReader, submitResult } from './bonusReaderSlice';
 import useBonusReaderReducer from './useBonusReaderReducer';
-
-function getBonusPartResultScore({
-  isCorrect,
-}: UnscoredQuestionResult): BonusPartScore {
-  return isCorrect ? BonusPartScore.ten : BonusPartScore.zero;
-}
-
-function getBonusPartResult(
-  result: QuestionResult,
-  number: number,
-  bonusPart: BonusPart,
-): BonusPartResult {
-  return {
-    ...result,
-    bonusPart,
-    number,
-    score: getBonusPartResultScore(result),
-  };
-}
 
 function BonusReaderDisplay() {
   const [

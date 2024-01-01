@@ -1,7 +1,8 @@
 import { Divider } from '@chakra-ui/react';
 import { Bonus, BonusPartResult } from '@qbhub/types';
 import { useMemo } from 'react';
-import { combineBonusPartWithLeadin, getFormattedWords } from '../utils/reader';
+import { combineBonusPartWithLeadin } from '../utils/bonus';
+import { getFormattedWords } from '../utils/reader';
 import BonusReaderAnswer from './BonusReaderAnswer';
 import BonusReaderTextSection from './BonusReaderTextSection';
 
