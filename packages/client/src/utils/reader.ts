@@ -1,26 +1,15 @@
-import {
-  Bonus,
-  BonusPart,
-  BonusPartResult,
-  BonusResult,
-  BonusScore,
-  FormattedWord,
-  TossupScore,
-} from '@qbhub/types';
+import { FormattedWord } from '@qbhub/types';
 import {
   QBString,
   getAllCaptureGroups,
   getTextBetweenTag,
   getUniqueItems,
   getWordsBetweenTag,
-  isEmpty,
   lastIndexOfMultiple,
-  log,
   removeFirstNames,
 } from '@qbhub/utils';
 import DOMPurify from 'isomorphic-dompurify';
 import ReactHTMLParser from 'react-html-parser';
-import { findBestMatch } from 'string-similarity';
 
 /**
  * Sanitize and parse string into JSX
@@ -30,7 +19,6 @@ export const parseHTMLString = (s: string) =>
 
 /**
  * Get words from string with formatting information, using tags
- * e.g. I <strong>love</strong> dogs => [I, love, dogs]
  */
 export const getFormattedWords = (text: string): FormattedWord[] => {
   const boldWords = getWordsBetweenTag(text, 'strong');
@@ -51,55 +39,14 @@ export const getFormattedWords = (text: string): FormattedWord[] => {
 /**
  * Get power index from tossup text
  */
-const POWER_MARKER = '(*)';
-export const getPowerIndex = (words: FormattedWord[]) =>
-  words.findIndex(({ value }) => value === POWER_MARKER);
-
-/**
- * Calculate tossup score based on buzz
- */
-export const getTossupScore = (
-  isCorrect: boolean,
-  isInPower: boolean,
-  didBuzzAtEnd: boolean,
-) => {
-  if (isCorrect) {
-    return isInPower ? TossupScore.power : TossupScore.ten;
-  }
-  return didBuzzAtEnd ? TossupScore.incorrect : TossupScore.neg;
-};
-
-export function getBonusResult(
-  results: BonusPartResult[],
-  bonus: Bonus,
-): BonusResult {
-  const score = (() => {
-    const correctPartsCount = results.filter(
-      ({ isCorrect }) => isCorrect,
-    ).length;
-    switch (correctPartsCount) {
-      case 3:
-        return BonusScore.thirty;
-      case 2:
-        return BonusScore.twenty;
-      case 1:
-        return BonusScore.ten;
-      default:
-        return BonusScore.zero;
-    }
-  })();
-
-  return {
-    bonus,
-    parts: results,
-    score,
-  };
+export function getPowerIndex(words: FormattedWord[]) {
+  return words.findIndex(({ value }) => value === '(*)');
 }
 
 function cleanAnswerlineForParsing(answerline: string): string {
   return new QBString(answerline)
     .removeTags()
-    .replacePattern(/\((?!accept|or|prompt).*?\)/g, '') // remove parenthesized content if not important
+    .removePattern(/\((?!accept|or|prompt).*?\)/g) // remove parenthesized content if not important
     .normalizeBrackets()
     .normalizeWhitespace()
     .get();
@@ -108,7 +55,7 @@ function cleanAnswerlineForParsing(answerline: string): string {
 /**
  * Normalize answer for comparison
  */
-function normalizeAnswer(answer: string): string {
+export function normalizeAnswer(answer: string): string {
   return new QBString(answer)
     .deburr()
     .replaceIntegersWithWords()
@@ -227,89 +174,3 @@ export const parsePromptableAnswers = (answerline: string) => {
   const answers = [...underlinedAnswers, ...parsedAnswers];
   return processAnswers(answers);
 };
-
-export enum JudgeResult {
-  correct,
-  incorrect,
-  prompt,
-}
-
-/**
- * Class for judging user answers against an answerline, supports prompts.
- */
-export class Judge {
-  acceptableAnswers: string[];
-  promptableAnswers: string[];
-
-  static ACCEPTABLE_DICE_SCORE = 0.6;
-
-  constructor(answerline: string) {
-    this.acceptableAnswers = parseAcceptableAnswers(answerline);
-    this.promptableAnswers = parsePromptableAnswers(answerline);
-    log.debug('Accepted answers:', this.acceptableAnswers);
-    log.debug('Promptable answers:', this.promptableAnswers);
-  }
-
-  judge(userAnswer: string): JudgeResult {
-    if (isEmpty(this.acceptableAnswers)) {
-      return JudgeResult.incorrect;
-    }
-
-    const normalizedUserAnswer = normalizeAnswer(userAnswer);
-    const acceptResult = findBestMatch(
-      normalizedUserAnswer,
-      this.acceptableAnswers,
-    );
-    log.debug(
-      `Acceptable answer ratings for: ${userAnswer}`,
-      acceptResult.ratings,
-    );
-    if (acceptResult.bestMatch.rating > Judge.ACCEPTABLE_DICE_SCORE) {
-      return JudgeResult.correct;
-    }
-
-    if (isEmpty(this.promptableAnswers)) {
-      return JudgeResult.incorrect;
-    }
-
-    const promptResult = findBestMatch(
-      normalizedUserAnswer,
-      this.promptableAnswers,
-    );
-    log.debug(
-      `Promptable answer ratings for: ${userAnswer}`,
-      promptResult.ratings,
-    );
-    if (promptResult.bestMatch.rating > Judge.ACCEPTABLE_DICE_SCORE) {
-      // remove promptable answer, so it does not get prompted again
-      this.promptableAnswers.splice(promptResult.bestMatchIndex, 1);
-      return JudgeResult.prompt;
-    }
-
-    return JudgeResult.incorrect;
-  }
-}
-
-export const BONUS_LEADIN_DELIMITER = '|:|';
-
-/**
- * Combine leadin and part one text with a special delimiter, for the first bonus part
- */
-export function combineBonusPartWithLeadin(bonusPart: BonusPart, bonus: Bonus) {
-  return [
-    bonus.formattedLeadin,
-    BONUS_LEADIN_DELIMITER,
-    bonusPart.formattedText,
-  ].join(' ');
-}
-
-export function getBonusLeadinDelimiterIndex(words: FormattedWord[]) {
-  const leadinDelimiterIndex = words.findIndex(
-    ({ value }) => value === BONUS_LEADIN_DELIMITER,
-  );
-  return leadinDelimiterIndex === -1 ? undefined : leadinDelimiterIndex;
-}
-
-export function isLastBonusPart(bonusPartNumber: number, bonus: Bonus) {
-  return bonusPartNumber === bonus.parts.length - 1;
-}

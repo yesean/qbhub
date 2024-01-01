@@ -1,12 +1,13 @@
 import { Question, QuestionResult } from '@qbhub/types';
 import { useCallback, useMemo, useState } from 'react';
 import useKeyboardShortcut from '../../hooks/useKeyboardShortcut';
+import { JudgeResult } from '../../utils/judge';
 import {
   QuestionReaderStatus,
   getNextStatus,
   getQuestionResult,
 } from '../../utils/questionReader';
-import { JudgeResult, getFormattedWords } from '../../utils/reader';
+import { getFormattedWords } from '../../utils/reader';
 import useRevealer from './useRevealer';
 
 type Props = {

@@ -11,38 +11,9 @@ import useActions from '../hooks/useActions';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/utils';
-import { UnscoredQuestionResult } from '../utils/questionReader';
-import {
-  getFormattedWords,
-  getPowerIndex,
-  getTossupScore,
-} from '../utils/reader';
+import { getTossupResult } from '../utils/tossup';
 import TossupReaderContentDisplay from './TossupReaderContentDisplay';
 import { selectTossupReader, submitResult } from './tossupReaderSlice';
-
-function getTossupResultScore({
-  buzzIndex,
-  isCorrect,
-  question,
-}: UnscoredQuestionResult): TossupScore {
-  const tossupWords = getFormattedWords(question.formattedText);
-  const isInPower = buzzIndex <= getPowerIndex(tossupWords);
-  const isBuzzAtEnd = buzzIndex === tossupWords.length - 1;
-
-  return getTossupScore(isCorrect, isInPower, isBuzzAtEnd);
-}
-
-function getTossupResult(
-  result: QuestionResult,
-  normalizedAnswer: string,
-): TossupResult {
-  return {
-    formattedWords: getFormattedWords(result.question.formattedText),
-    score: getTossupResultScore(result),
-    tossup: { ...result.question, normalizedAnswer },
-    ...result,
-  };
-}
 
 function TossupReaderDisplay() {
   const [tossupResult, setTossupResult] = useState<TossupResult>();

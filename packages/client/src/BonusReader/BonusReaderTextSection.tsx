@@ -2,7 +2,7 @@ import { Box, Flex, Text } from '@chakra-ui/react';
 import FormattedQuestion, {
   FormattedQuestionProps,
 } from '../components/FormattedQuestion';
-import { getBonusLeadinDelimiterIndex } from '../utils/reader';
+import { getBonusLeadinDelimiterIndex } from '../utils/bonus';
 
 type BonusReaderTextSectionProps = FormattedQuestionProps;
 

@@ -1,5 +1,5 @@
 import { Question } from '@qbhub/types';
-import { Judge, JudgeResult } from './reader';
+import { Judge, JudgeResult } from './judge';
 
 // question reader states
 export enum QuestionReaderStatus {
