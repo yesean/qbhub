@@ -5,7 +5,9 @@ import {
   getTextBetweenTag,
   getUniqueItems,
   getWordsBetweenTag,
+  groupBy,
   lastIndexOfMultiple,
+  objectMap,
   removeFirstNames,
 } from '@qbhub/utils';
 import DOMPurify from 'isomorphic-dompurify';
@@ -18,17 +20,24 @@ export function parseHTMLString(s: string) {
   return ReactHTMLParser(DOMPurify.sanitize(s));
 }
 
+const POWER_MARKER = '(*)';
+
 /**
  * Get words from string with formatting information, using tags
  */
 export function getFormattedWords(text: string): FormattedWord[] {
-  const boldWords = getWordsBetweenTag(text, 'strong');
   const words = new QBString(text).removeTag('strong').getWords();
+  const powerIndex = words.indexOf(POWER_MARKER);
 
-  let boldWordIndex = 0;
-  const formattedWords = words.map((word) => {
-    if (boldWordIndex < boldWords.length && word === boldWords[boldWordIndex]) {
-      boldWordIndex += 1;
+  const boldWords = getWordsBetweenTag(text, 'strong');
+  const boldWordCount = objectMap(
+    groupBy(boldWords, (word) => word),
+    (group) => group.length,
+  );
+
+  const formattedWords = words.map((word, index) => {
+    if (boldWordCount?.[word] > 0 && index <= powerIndex) {
+      boldWordCount[word] -= 1;
       return { isBold: true, value: word };
     }
     return { isBold: false, value: word };
@@ -41,7 +50,7 @@ export function getFormattedWords(text: string): FormattedWord[] {
  * Get power index from tossup text
  */
 export function getPowerIndex(words: FormattedWord[]) {
-  return words.findIndex(({ value }) => value === '(*)');
+  return words.findIndex(({ value }) => value === POWER_MARKER);
 }
 
 /**
