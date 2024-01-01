@@ -102,6 +102,10 @@ const acceptableAnswerlines = [
       'pharma',
     ],
   },
+  {
+    answerline: 'Linus <strong><u>Pauling</u></strong>',
+    answers: ['pauling', 'linus pauling'],
+  },
 ];
 
 describe('Parsing acceptable answers', () => {
