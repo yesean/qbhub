@@ -14,13 +14,14 @@ import ReactHTMLParser from 'react-html-parser';
 /**
  * Sanitize and parse string into JSX
  */
-export const parseHTMLString = (s: string) =>
-  ReactHTMLParser(DOMPurify.sanitize(s));
+export function parseHTMLString(s: string) {
+  return ReactHTMLParser(DOMPurify.sanitize(s));
+}
 
 /**
  * Get words from string with formatting information, using tags
  */
-export const getFormattedWords = (text: string): FormattedWord[] => {
+export function getFormattedWords(text: string): FormattedWord[] {
   const boldWords = getWordsBetweenTag(text, 'strong');
   const words = new QBString(text).removeTag('strong').getWords();
 
@@ -34,23 +35,13 @@ export const getFormattedWords = (text: string): FormattedWord[] => {
   });
 
   return formattedWords;
-};
+}
 
 /**
  * Get power index from tossup text
  */
 export function getPowerIndex(words: FormattedWord[]) {
   return words.findIndex(({ value }) => value === '(*)');
-}
-
-function cleanAnswerlineForParsing(answerline: string): string {
-  return new QBString(answerline)
-    .removeTags()
-    .removePattern(/\((?!accept|or|prompt).*?\)/g) // remove parenthesized content if not important
-    .normalizeBrackets()
-    .normalizeWhitespace()
-    .apply((str) => (parseHTMLString(str)[0] ?? '') as unknown as string) // convert html entities to unicode
-    .get();
 }
 
 /**
@@ -86,10 +77,10 @@ function processAnswers(answers: string[]): string[] {
  * regex will match at 'accept' or 'or' so a lookup has to be performed to ensure
  * that an answer isn't proceeded by 'do not' or some other form of negation.
  */
-const filterNegativeAnswers = (
+function filterNegativeAnswers(
   { 0: matchedText, index, input }: RegExpExecArray,
   answerType: 'accept' | 'prompt',
-) => {
+) {
   const answerPrefix = QBString.getWords(matchedText)[0];
 
   if (answerType === 'accept' && answerPrefix === 'accept') {
@@ -119,12 +110,22 @@ const filterNegativeAnswers = (
   }
 
   return true;
-};
+}
+
+function cleanAnswerlineForParsing(answerline: string): string {
+  return new QBString(answerline)
+    .removeTags()
+    .removePattern(/\((?!accept|or|prompt).*?\)/g) // remove parenthesized content if not important
+    .normalizeBrackets()
+    .normalizeWhitespace()
+    .apply((str) => (parseHTMLString(str)[0] ?? '') as unknown as string) // convert html entities to unicode
+    .get();
+}
 
 /**
  * Parse all valid answers from an answerline.
  */
-export const parseAcceptableAnswers = (answerline: string): string[] => {
+export function parseAcceptableAnswers(answerline: string): string[] {
   // parse acceptable answers, roughly based on acf guidelines
   const primaryAnswerRegex = /^(.*?)(?:$|(?:\[| or ).*)/g; // first answer up to '[' or EOL
   const acceptableRegex =
@@ -144,12 +145,12 @@ export const parseAcceptableAnswers = (answerline: string): string[] => {
   const boldedAnswers = getTextBetweenTag(answerline, 'strong');
   const answers = [...boldedAnswers, ...parsedAnswers];
   return processAnswers(answers);
-};
+}
 
 /**
  * Parse all promptable answers from an answerline
  */
-export const parsePromptableAnswers = (answerline: string) => {
+export function parsePromptableAnswers(answerline: string) {
   // parse promptable answers, roughly based on acf guidelines
   const promptRegex =
     /(?:[[,; ]prompt on| or) (.*?)(?= (?:do not|prompt|accept|or|until|before|after) |[,;[\]]|$)/g;
@@ -163,4 +164,4 @@ export const parsePromptableAnswers = (answerline: string) => {
   const underlinedAnswers = getTextBetweenTag(answerline, 'u');
   const answers = [...underlinedAnswers, ...parsedAnswers];
   return processAnswers(answers);
-};
+}
