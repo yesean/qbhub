@@ -28,18 +28,18 @@ export class Judge {
     log.debug('Promptable answers:', this.promptableAnswers);
   }
 
-  judge(userAnswer: string): JudgeResult {
+  judgeInput(userInput: string): JudgeResult {
     if (isEmpty(this.acceptableAnswers)) {
       return JudgeResult.incorrect;
     }
 
-    const normalizedUserAnswer = normalizeAnswer(userAnswer);
+    const normalizedUserInput = normalizeAnswer(userInput);
     const acceptResult = findBestMatch(
-      normalizedUserAnswer,
+      normalizedUserInput,
       this.acceptableAnswers,
     );
     log.debug(
-      `Acceptable answer ratings for: ${userAnswer}`,
+      `Acceptable answer ratings for: ${userInput}`,
       acceptResult.ratings,
     );
     if (acceptResult.bestMatch.rating > Judge.ACCEPTABLE_DICE_SCORE) {
@@ -51,11 +51,11 @@ export class Judge {
     }
 
     const promptResult = findBestMatch(
-      normalizedUserAnswer,
+      normalizedUserInput,
       this.promptableAnswers,
     );
     log.debug(
-      `Promptable answer ratings for: ${userAnswer}`,
+      `Promptable answer ratings for: ${userInput}`,
       promptResult.ratings,
     );
     if (promptResult.bestMatch.rating > Judge.ACCEPTABLE_DICE_SCORE) {

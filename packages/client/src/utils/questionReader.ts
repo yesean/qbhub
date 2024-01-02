@@ -1,5 +1,4 @@
 import { Question } from '@qbhub/types';
-import { Judge, JudgeResult } from './judge';
 
 // question reader states
 export enum QuestionReaderStatus {
@@ -37,25 +36,6 @@ export type UnscoredQuestionResult = {
   isCorrect: boolean;
   question: Question;
   userAnswer: string;
-};
-
-// get evaluated question result from user input
-export const getQuestionResult = (
-  question: Question,
-  userAnswer: string,
-  buzzIndex: number,
-) => {
-  const judge = new Judge(question.formattedAnswer);
-  const judgeResult = judge.judge(userAnswer);
-  const isCorrect = judgeResult === JudgeResult.correct;
-  const unscoredQuestionResult = {
-    buzzIndex,
-    isCorrect,
-    judgeResult,
-    question,
-    userAnswer,
-  };
-  return { ...unscoredQuestionResult };
 };
 
 export function getIsAnswering(status: QuestionReaderStatus) {

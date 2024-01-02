@@ -33,10 +33,7 @@ async function fetchTossupsIfNeeded(
   args: FetchTossupsArgs,
 ) {
   // if tossup cache is low, fetch more
-  // if tossup cache is empty, keep the action pending
-  if (tossups.length === 0) {
-    await dispatch(fetchTossups(args)).unwrap();
-  } else if (tossups.length < 5) {
+  if (tossups.length < 5) {
     dispatch(fetchTossups(args));
   }
 }
@@ -48,11 +45,7 @@ export const nextTossup = createAppAsyncThunk<void, FetchTossupsArgs>(
       tossupReader: { tossups },
     } = getState();
 
-    if (tossups === undefined) {
-      await dispatch(fetchTossups(args)).unwrap();
-      return;
-    }
-    await fetchTossupsIfNeeded(tossups, dispatch, args);
+    fetchTossupsIfNeeded(tossups ?? [], dispatch, args);
   },
 );
 
