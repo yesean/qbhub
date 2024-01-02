@@ -3,13 +3,23 @@ import { useSettings } from '../../hooks/useSettings';
 import { getReadingTimeoutDelay } from '../../utils/questionReader';
 import { DEFAULT_READING_SPEED } from '../../utils/settings/constants';
 
-type Props = {
+type UseRevealerType = {
+  pause: () => void;
+  reveal: () => void;
+  visibleIndex: number;
+};
+
+type UseRevealerProps = {
   onFinish: () => void;
   words: unknown[];
   onChange?: (visibleIndex: number) => void;
 };
 
-export default ({ onChange, onFinish, words }: Props) => {
+export default function useRevealer({
+  onChange,
+  onFinish,
+  words,
+}: UseRevealerProps): UseRevealerType {
   const [visibleIndex, setVisibleIndex] = useState(-1);
   const [isPaused, setIsPaused] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
@@ -24,8 +34,8 @@ export default ({ onChange, onFinish, words }: Props) => {
   const pause = useCallback(() => setIsPaused(true), []);
   const reveal = useCallback(() => {
     setVisibleIndex(words.length - 1);
-    onChange?.(visibleIndex + 1);
-  }, [onChange, visibleIndex, words.length]);
+    onChange?.(words.length - 1);
+  }, [onChange, words.length]);
 
   useEffect(() => {
     // stop when there is no more words
@@ -64,4 +74,4 @@ export default ({ onChange, onFinish, words }: Props) => {
     }),
     [pause, reveal, visibleIndex],
   );
-};
+}

@@ -11,6 +11,12 @@ import { getFormattedWords } from '../../utils/reader';
 import useJudge from './useJudge';
 import useRevealer from './useRevealer';
 
+type UseReaderType = {
+  handleClick: () => void;
+  status: QuestionReaderStatus;
+  visibleIndex: number;
+};
+
 type UseReaderProps = {
   onBuzz: () => void;
   onJudged: (result: QuestionResult) => void;
@@ -19,12 +25,6 @@ type UseReaderProps = {
   question: Question;
   userInput: string;
   onReveal?: (visibleIndex: number) => void;
-};
-
-type UseReaderType = {
-  handleClick: () => void;
-  status: QuestionReaderStatus;
-  visibleIndex: number;
 };
 
 /**
@@ -49,7 +49,6 @@ export default function useReader({
   /**
    * @Action buzz
    * @CausedBy spacebar press, button click, all words get revealed
-   * @Behavior focus input, set next status
    */
   const handleBuzz = useCallback(() => {
     onBuzz();
@@ -96,11 +95,8 @@ export default function useReader({
   /**
    * @Action submit answer
    * @CausedBy enter press, button click, answering timer finishes
-   * @Behavior
-   *  if prompted: focus input, set next status
-   *  otherwise: mimic behavior of: submit answer after being prompted
    */
-  const handleSubmitOnAnswering = useCallback(() => {
+  const handleSubmitAnswer = useCallback(() => {
     log.debug('User submitted:', userInput);
 
     const judgeResult = judgeInput(userInput);
@@ -127,7 +123,6 @@ export default function useReader({
   /**
    * @Action next question
    * @CausedBy n press, button click
-   * @Behavior blur input, call the passed-in next callback, set next status
    */
   const handleNextQuestion = useCallback(() => {
     onNext();
@@ -145,7 +140,7 @@ export default function useReader({
           break;
         }
         case QuestionReaderStatus.Answering: {
-          handleSubmitOnAnswering();
+          handleSubmitAnswer();
           break;
         }
         case QuestionReaderStatus.Judged: {
@@ -157,7 +152,7 @@ export default function useReader({
     [
       handleBuzz,
       handleNextQuestion,
-      handleSubmitOnAnswering,
+      handleSubmitAnswer,
       pauseQuestionRevealing,
       status,
     ],

@@ -1,12 +1,11 @@
 import { QuestionResult, TossupResult, TossupScore } from '@qbhub/types';
-import { UnscoredQuestionResult } from './questionReader';
 import { getFormattedWords, getPowerIndex } from './reader';
 
 function getTossupResultScore({
   buzzIndex,
   isCorrect,
   question,
-}: UnscoredQuestionResult): TossupScore {
+}: QuestionResult): TossupScore {
   const tossupWords = getFormattedWords(question.formattedText);
   const isInPower = buzzIndex <= getPowerIndex(tossupWords);
   const isBuzzAtEnd = buzzIndex === tossupWords.length - 1;
