@@ -1,9 +1,6 @@
 import { Flex, Input } from '@chakra-ui/react';
 import { QuestionResult } from '@qbhub/types';
-import {
-  QuestionReaderStatus,
-  getIsAnswering,
-} from '../../utils/questionReader';
+import { QuestionReaderStatus } from '../../utils/questionReader';
 import TealButton from '../buttons/TealButton';
 
 // get input border color for tossup results, green/red for correct/incorrect
@@ -24,8 +21,6 @@ const getButtonText = (status: QuestionReaderStatus): string => {
     case QuestionReaderStatus.Reading:
       return 'Buzz';
     case QuestionReaderStatus.Answering:
-      return 'Submit';
-    case QuestionReaderStatus.AnsweringAfterPrompt:
       return 'Submit';
     case QuestionReaderStatus.Judged:
       return 'Next';
@@ -50,7 +45,7 @@ export default function QuestionReaderInput({
   userInput,
 }: QuestionReaderInputProps) {
   const shouldShowBorder = status === QuestionReaderStatus.Judged;
-  const shouldDisableInput = !getIsAnswering(status);
+  const shouldDisableInput = status !== QuestionReaderStatus.Answering;
 
   return (
     <Flex justify="center" w="100%">

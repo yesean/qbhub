@@ -4,7 +4,6 @@ import { Question } from '@qbhub/types';
 export enum QuestionReaderStatus {
   Reading,
   Answering,
-  AnsweringAfterPrompt,
   Judged,
 }
 
@@ -22,10 +21,8 @@ export const getNextStatus = (
       return QuestionReaderStatus.Answering;
     case QuestionReaderStatus.Answering:
       return isPrompted
-        ? QuestionReaderStatus.AnsweringAfterPrompt
+        ? QuestionReaderStatus.Answering
         : QuestionReaderStatus.Judged;
-    case QuestionReaderStatus.AnsweringAfterPrompt:
-      return QuestionReaderStatus.Judged;
     case QuestionReaderStatus.Judged:
       return QuestionReaderStatus.Reading;
   }
@@ -37,13 +34,6 @@ export type UnscoredQuestionResult = {
   question: Question;
   userAnswer: string;
 };
-
-export function getIsAnswering(status: QuestionReaderStatus) {
-  return (
-    status === QuestionReaderStatus.Answering ||
-    status === QuestionReaderStatus.AnsweringAfterPrompt
-  );
-}
 
 const SLOWEST_DELAY = 500;
 const FASTEST_DELAY = 25;
