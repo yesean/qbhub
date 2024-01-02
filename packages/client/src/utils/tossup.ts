@@ -1,3 +1,4 @@
+import { useToast } from '@chakra-ui/react';
 import { QuestionResult, TossupResult, TossupScore } from '@qbhub/types';
 import { getFormattedWords, getPowerIndex } from './reader';
 
@@ -26,4 +27,42 @@ export function getTossupResult(
     tossup: { ...result.question, normalizedAnswer },
     ...result,
   };
+}
+
+type ToastTrigger =
+  | {
+      result: TossupResult;
+      type: 'judged';
+    }
+  | {
+      type: 'prompt';
+    };
+
+export function displayToast(
+  toast: ReturnType<typeof useToast>,
+  trigger: ToastTrigger,
+) {
+  toast.closeAll();
+
+  switch (trigger.type) {
+    case 'judged': {
+      if (!trigger.result.isCorrect) {
+        return toast({
+          status: 'error',
+          title: 'Incorrect',
+        });
+      }
+
+      return toast({
+        status: 'success',
+        title: trigger.result.score === TossupScore.power ? 'Power!' : 'Ten!',
+      });
+    }
+    case 'prompt': {
+      return toast({
+        status: 'info',
+        title: 'Prompt',
+      });
+    }
+  }
 }
