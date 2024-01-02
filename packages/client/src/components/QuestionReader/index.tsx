@@ -2,10 +2,7 @@ import { Flex } from '@chakra-ui/react';
 import { FormattedWord, Question, QuestionResult } from '@qbhub/types';
 import { useCallback, useMemo, useState } from 'react';
 import useInput from '../../hooks/useInput';
-import {
-  QuestionReaderStatus,
-  getIsAnswering,
-} from '../../utils/questionReader';
+import { QuestionReaderStatus } from '../../utils/questionReader';
 import { getFormattedWords } from '../../utils/reader';
 import QuestionInfo from './QuestionInfo';
 import QuestionReaderInput from './QuestionReaderInput';
@@ -44,6 +41,7 @@ export default function QuestionReader({
 }: QuestionReaderProps) {
   const [buzzIndex, setBuzzIndex] = useState<number>();
   const [result, setResult] = useState<QuestionResult>();
+  const [promptCount, setPromptCount] = useState(0);
 
   const {
     blurInput,
@@ -71,6 +69,7 @@ export default function QuestionReader({
 
   const handlePrompt = useCallback(
     (promptResult: QuestionResult) => {
+      setPromptCount((prev) => prev + 1);
       focusInput();
       selectInput();
       onPrompt(promptResult);
@@ -92,7 +91,7 @@ export default function QuestionReader({
     userInput,
   });
 
-  const shouldShowProgress = getIsAnswering(status);
+  const shouldShowProgress = status === QuestionReaderStatus.Answering;
 
   return (
     <Flex direction="column" gap={4} maxW="container.md" overflow="auto" p={2}>
@@ -105,7 +104,7 @@ export default function QuestionReader({
         words={formattedWords}
       />
       {shouldShowProgress && (
-        <QuestionReaderProgress key={status} onFinish={handleClick} />
+        <QuestionReaderProgress key={promptCount} onFinish={handleClick} />
       )}
       <QuestionReaderInput
         handleClick={handleClick}

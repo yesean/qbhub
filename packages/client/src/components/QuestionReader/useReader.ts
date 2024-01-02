@@ -11,7 +11,7 @@ import { getFormattedWords } from '../../utils/reader';
 import useJudge from './useJudge';
 import useRevealer from './useRevealer';
 
-type Props = {
+type UseReaderProps = {
   onBuzz: () => void;
   onJudged: (result: QuestionResult) => void;
   onNext: () => void;
@@ -21,7 +21,7 @@ type Props = {
   onReveal?: (visibleIndex: number) => void;
 };
 
-type Reader = {
+type UseReaderType = {
   handleClick: () => void;
   status: QuestionReaderStatus;
   visibleIndex: number;
@@ -40,7 +40,7 @@ export default function useReader({
   onReveal,
   question,
   userInput,
-}: Props): Reader {
+}: UseReaderProps): UseReaderType {
   const [status, setStatus] = useState(QuestionReaderStatus.Reading);
   const { judgeInput } = useJudge(question);
 
@@ -94,19 +94,6 @@ export default function useReader({
   );
 
   /**
-   * @Action submit answer after being prompted
-   * @CausedBy enter press, button click, answering timer finishes
-   * @Behavior blur input, reveal answer, evaluate user answer, call the passed-in submit callback, set next status
-   */
-  const handleSubmitOnAnsweringAfterPrompt = useCallback(() => {
-    log.debug('User submitted:', userInput);
-
-    // evaluate user answer
-    const judgeResult = judgeInput(userInput);
-    submitResult(getQuestionResult(judgeResult));
-  }, [getQuestionResult, judgeInput, submitResult, userInput]);
-
-  /**
    * @Action submit answer
    * @CausedBy enter press, button click, answering timer finishes
    * @Behavior
@@ -147,39 +134,34 @@ export default function useReader({
     setStatus(getNextStatus(status));
   }, [onNext, status]);
 
-  const handleClick = useCallback(() => {
-    switch (status) {
-      case QuestionReaderStatus.Reading: {
-        pauseQuestionRevealing();
-        handleBuzz();
-        break;
-      }
-      case QuestionReaderStatus.Answering: {
-        handleSubmitOnAnswering();
-        break;
-      }
-      case QuestionReaderStatus.AnsweringAfterPrompt: {
-        handleSubmitOnAnsweringAfterPrompt();
-        break;
-      }
-      case QuestionReaderStatus.Judged: {
-        handleNextQuestion();
-        break;
-      }
-    }
-  }, [
-    handleBuzz,
-    handleNextQuestion,
-    handleSubmitOnAnswering,
-    handleSubmitOnAnsweringAfterPrompt,
-    pauseQuestionRevealing,
-    status,
-  ]);
+  const handleClick = useCallback(
+    (event: KeyboardEvent) => {
+      event.preventDefault();
 
-  const isAnswering = [
-    QuestionReaderStatus.Answering,
-    QuestionReaderStatus.AnsweringAfterPrompt,
-  ].includes(status);
+      switch (status) {
+        case QuestionReaderStatus.Reading: {
+          pauseQuestionRevealing();
+          handleBuzz();
+          break;
+        }
+        case QuestionReaderStatus.Answering: {
+          handleSubmitOnAnswering();
+          break;
+        }
+        case QuestionReaderStatus.Judged: {
+          handleNextQuestion();
+          break;
+        }
+      }
+    },
+    [
+      handleBuzz,
+      handleNextQuestion,
+      handleSubmitOnAnswering,
+      pauseQuestionRevealing,
+      status,
+    ],
+  );
 
   useKeyboardShortcut(' ', handleClick, {
     customAllowCondition: status === QuestionReaderStatus.Reading,
@@ -187,7 +169,7 @@ export default function useReader({
 
   useKeyboardShortcut('Enter', handleClick, {
     allowHTMLInput: true,
-    customAllowCondition: isAnswering,
+    customAllowCondition: status === QuestionReaderStatus.Answering,
   });
 
   useKeyboardShortcut('n', handleClick, {
@@ -195,7 +177,7 @@ export default function useReader({
   });
 
   return useMemo(
-    () => ({ handleClick, status, visibleIndex }),
+    () => ({ handleClick: () => handleClick, status, visibleIndex }),
     [handleClick, status, visibleIndex],
   );
 }
