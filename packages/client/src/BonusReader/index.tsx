@@ -1,5 +1,5 @@
 import { useToast } from '@chakra-ui/react';
-import { BonusResult, BonusScore, QuestionResult } from '@qbhub/types';
+import { QuestionResult } from '@qbhub/types';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import QuestionReader, {
@@ -13,6 +13,7 @@ import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/utils';
 import {
   combineBonusPartWithLeadin,
+  displayToast,
   getBonusPartResult,
   getBonusResult,
   isLastBonusPart,
@@ -34,41 +35,6 @@ function BonusReaderDisplay() {
 
   const currentBonusPart = currentBonus?.parts[bonusPartNumber];
 
-  const displayJudgedToast = useCallback(
-    (result: BonusResult) => {
-      switch (result.score) {
-        case BonusScore.thirty:
-          return toast({
-            status: 'success',
-            title: 'All thirty!',
-          });
-        case BonusScore.twenty:
-          return toast({
-            status: 'success',
-            title: 'Twenty!',
-          });
-        case BonusScore.ten:
-          return toast({
-            status: 'success',
-            title: 'Ten',
-          });
-        case BonusScore.zero:
-          return toast({
-            status: 'error',
-            title: 'Zero',
-          });
-      }
-    },
-    [toast],
-  );
-
-  const displayPromptToast = useCallback(() => {
-    toast({
-      status: 'info',
-      title: 'Prompt',
-    });
-  }, [toast]);
-
   const handleQuestionResult = useCallback(
     (result: QuestionResult) => {
       if (currentBonus === undefined || currentBonusPart === undefined) return;
@@ -78,21 +44,24 @@ function BonusReaderDisplay() {
         bonusPartNumber,
         currentBonusPart,
       );
-
       dispatchBonusReader({
-        payload: { bonus: currentBonus, bonusPartResult },
+        bonus: currentBonus,
+        bonusPartResult,
         type: 'newBonusPartResult',
       });
-
       const nextBonusPartResults = [...bonusPartResults, bonusPartResult];
+
       if (bonusPartNumber === currentBonus.parts.length - 1) {
         const newBonusResult = getBonusResult(
           nextBonusPartResults,
           currentBonus,
         );
-        displayJudgedToast(newBonusResult);
+        displayToast(toast, { result: newBonusResult, type: 'judgedBonus' });
         dispatch(submitResult(newBonusResult));
+        return;
       }
+
+      displayToast(toast, { result: bonusPartResult, type: 'judgedBonusPart' });
     },
     [
       bonusPartNumber,
@@ -101,15 +70,19 @@ function BonusReaderDisplay() {
       currentBonusPart,
       dispatch,
       dispatchBonusReader,
-      displayJudgedToast,
+      toast,
     ],
   );
+
+  const handlePrompt = useCallback(() => {
+    displayToast(toast, { type: 'prompt' });
+  }, [toast]);
 
   const handleNextQuestion = useCallback(() => {
     if (currentBonus === undefined) return;
 
     dispatchBonusReader({
-      payload: { bonus: currentBonus },
+      bonus: currentBonus,
       type: 'nextBonusPart',
     });
 
@@ -164,7 +137,7 @@ function BonusReaderDisplay() {
       displayResult={bonusResult}
       onJudged={handleQuestionResult}
       onNextQuestion={handleNextQuestion}
-      onPrompt={displayPromptToast}
+      onPrompt={handlePrompt}
       question={currentQuestion}
       renderQuestionContentDisplay={renderQuestionContentDisplay}
       score={score}
