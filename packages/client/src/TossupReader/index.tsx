@@ -1,5 +1,5 @@
 import { useToast } from '@chakra-ui/react';
-import { QuestionResult, TossupResult, TossupScore } from '@qbhub/types';
+import { QuestionResult, TossupResult } from '@qbhub/types';
 import { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import QuestionReader, {
@@ -11,7 +11,7 @@ import useActions from '../hooks/useActions';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/utils';
-import { getTossupResult } from '../utils/tossup';
+import { displayToast, getTossupResult } from '../utils/tossup';
 import TossupReaderContentDisplay from './TossupReaderContentDisplay';
 import { selectTossupReader, submitResult } from './tossupReaderSlice';
 
@@ -23,37 +23,6 @@ function TossupReaderDisplay() {
   const dispatch = useAppDispatch();
   const toast = useToast();
 
-  const displayJudgedToast = useCallback(
-    (result: TossupResult) => {
-      if (result.isCorrect) {
-        if (result.score === TossupScore.power) {
-          toast({
-            status: 'success',
-            title: 'Power!',
-          });
-        } else if (result.score === TossupScore.ten) {
-          toast({
-            status: 'success',
-            title: 'Ten!',
-          });
-        }
-      } else {
-        toast({
-          status: 'error',
-          title: 'Incorrect',
-        });
-      }
-    },
-    [toast],
-  );
-
-  const displayPromptToast = useCallback(() => {
-    toast({
-      status: 'info',
-      title: 'Prompt',
-    });
-  }, [toast]);
-
   const handleQuestionResult = useCallback(
     (questionResult: QuestionResult) => {
       if (currentTossup === undefined) return;
@@ -64,10 +33,14 @@ function TossupReaderDisplay() {
       );
       setTossupResult(newTossupResult);
       dispatch(submitResult(newTossupResult));
-      displayJudgedToast(newTossupResult);
+      displayToast(toast, { result: newTossupResult, type: 'judged' });
     },
-    [currentTossup, dispatch, displayJudgedToast],
+    [currentTossup, dispatch, toast],
   );
+
+  const handlePrompt = useCallback(() => {
+    displayToast(toast, { type: 'prompt' });
+  }, [toast]);
 
   const handleNextQuestion = useCallback(() => {
     toast.closeAll();
@@ -95,7 +68,7 @@ function TossupReaderDisplay() {
       displayResult={tossupResult}
       onJudged={handleQuestionResult}
       onNextQuestion={handleNextQuestion}
-      onPrompt={displayPromptToast}
+      onPrompt={handlePrompt}
       question={currentTossup}
       renderQuestionContentDisplay={renderQuestionContentDisplay}
       score={score}
