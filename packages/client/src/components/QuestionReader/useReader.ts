@@ -1,13 +1,14 @@
 import { Question, QuestionResult } from '@qbhub/types';
+import { log } from '@qbhub/utils';
 import { useCallback, useMemo, useState } from 'react';
 import useKeyboardShortcut from '../../hooks/useKeyboardShortcut';
 import { JudgeResult } from '../../utils/judge';
 import {
   QuestionReaderStatus,
   getNextStatus,
-  getQuestionResult,
 } from '../../utils/questionReader';
 import { getFormattedWords } from '../../utils/reader';
+import useJudge from './useJudge';
 import useRevealer from './useRevealer';
 
 type Props = {
@@ -41,6 +42,7 @@ export default function useReader({
   userInput,
 }: Props): Reader {
   const [status, setStatus] = useState(QuestionReaderStatus.Reading);
+  const { judgeInput } = useJudge(question);
 
   const formattedWords = getFormattedWords(question.formattedText);
 
@@ -80,16 +82,29 @@ export default function useReader({
     [onJudged, revealQuestion, status],
   );
 
+  const getQuestionResult = useCallback(
+    (judgeResult: JudgeResult) => ({
+      buzzIndex: visibleIndex,
+      isCorrect: judgeResult === JudgeResult.correct,
+      judgeResult,
+      question,
+      userAnswer: userInput,
+    }),
+    [question, userInput, visibleIndex],
+  );
+
   /**
    * @Action submit answer after being prompted
    * @CausedBy enter press, button click, answering timer finishes
    * @Behavior blur input, reveal answer, evaluate user answer, call the passed-in submit callback, set next status
    */
   const handleSubmitOnAnsweringAfterPrompt = useCallback(() => {
+    log.debug('User submitted:', userInput);
+
     // evaluate user answer
-    const result = getQuestionResult(question, userInput, visibleIndex);
-    submitResult(result);
-  }, [question, submitResult, userInput, visibleIndex]);
+    const judgeResult = judgeInput(userInput);
+    submitResult(getQuestionResult(judgeResult));
+  }, [getQuestionResult, judgeInput, submitResult, userInput]);
 
   /**
    * @Action submit answer
@@ -99,18 +114,28 @@ export default function useReader({
    *  otherwise: mimic behavior of: submit answer after being prompted
    */
   const handleSubmitOnAnswering = useCallback(() => {
-    const result = getQuestionResult(question, userInput, visibleIndex);
+    log.debug('User submitted:', userInput);
+
+    const judgeResult = judgeInput(userInput);
+    const questionResult = getQuestionResult(judgeResult);
 
     // if user is prompted
-    if (result.judgeResult === JudgeResult.prompt) {
-      onPrompt(result);
+    if (judgeResult === JudgeResult.prompt) {
+      onPrompt(questionResult);
       setStatus(getNextStatus(status, { isPrompted: true }));
       return;
     }
 
     // not prompted
-    submitResult(result);
-  }, [onPrompt, question, status, submitResult, userInput, visibleIndex]);
+    submitResult(questionResult);
+  }, [
+    getQuestionResult,
+    judgeInput,
+    onPrompt,
+    status,
+    submitResult,
+    userInput,
+  ]);
 
   /**
    * @Action next question
