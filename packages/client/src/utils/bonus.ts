@@ -1,3 +1,4 @@
+import { useToast } from '@chakra-ui/react';
 import {
   Bonus,
   BonusPart,
@@ -71,4 +72,66 @@ export function getBonusLeadinDelimiterIndex(words: FormattedWord[]) {
 
 export function isLastBonusPart(bonusPartNumber: number, bonus: Bonus) {
   return bonusPartNumber === bonus.parts.length - 1;
+}
+
+type ToastTrigger =
+  | {
+      result: BonusPartResult;
+      type: 'judgedBonusPart';
+    }
+  | {
+      result: BonusResult;
+      type: 'judgedBonus';
+    }
+  | {
+      type: 'prompt';
+    };
+
+export function displayToast(
+  toast: ReturnType<typeof useToast>,
+  trigger: ToastTrigger,
+) {
+  toast.closeAll();
+
+  switch (trigger.type) {
+    case 'judgedBonus': {
+      switch (trigger.result.score) {
+        case BonusScore.thirty:
+          return toast({
+            status: 'success',
+            title: 'All thirty!',
+          });
+        case BonusScore.twenty:
+          return toast({
+            status: 'success',
+            title: 'Twenty!',
+          });
+        case BonusScore.ten:
+          return toast({
+            status: 'success',
+            title: 'Ten',
+          });
+        case BonusScore.zero:
+          return toast({
+            status: 'error',
+            title: 'Zero',
+          });
+      }
+    }
+    // the above case has an exhaustive switch which always returns, so the
+    // above case will never fall through, eslint is being dumb here
+    // eslint-disable-next-line no-fallthrough
+    case 'judgedBonusPart': {
+      return toast({
+        status: trigger.result.isCorrect ? 'success' : 'error',
+        title: trigger.result.isCorrect ? 'Correct' : 'Incorrect',
+      });
+    }
+    case 'prompt': {
+      return toast({
+        status: 'info',
+        title: 'Prompt',
+      });
+    }
+  }
 }

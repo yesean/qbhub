@@ -16,12 +16,13 @@ const bonusReaderInitialState: BonusReaderState = {
 
 type BonusReaderAction =
   | {
-      payload: { bonus: Bonus };
-      type: 'nextBonusPart';
+      bonus: Bonus;
+      bonusPartResult: BonusPartResult;
+      type: 'newBonusPartResult';
     }
   | {
-      payload: { bonus: Bonus; bonusPartResult: BonusPartResult };
-      type: 'newBonusPartResult';
+      bonus: Bonus;
+      type: 'nextBonusPart';
     };
 
 function bonusReaderReducer(
@@ -32,23 +33,20 @@ function bonusReaderReducer(
     case 'newBonusPartResult': {
       const nextBonusPartResults = [
         ...state.bonusPartResults,
-        action.payload.bonusPartResult,
+        action.bonusPartResult,
       ];
 
       let bonusResult;
       // if on last bonus part, construct a bonus result from bonus part results
-      if (isLastBonusPart(state.bonusPartNumber, action.payload.bonus)) {
-        bonusResult = getBonusResult(
-          nextBonusPartResults,
-          action.payload.bonus,
-        );
+      if (isLastBonusPart(state.bonusPartNumber, action.bonus)) {
+        bonusResult = getBonusResult(nextBonusPartResults, action.bonus);
       }
 
       return { ...state, bonusPartResults: nextBonusPartResults, bonusResult };
     }
     case 'nextBonusPart': {
       // if on last bonus part, reset state
-      if (isLastBonusPart(state.bonusPartNumber, action.payload.bonus)) {
+      if (isLastBonusPart(state.bonusPartNumber, action.bonus)) {
         return bonusReaderInitialState;
       }
 
