@@ -12,7 +12,7 @@ import useJudge from './useJudge';
 import useRevealer from './useRevealer';
 
 type UseReaderType = {
-  handleClick: () => void;
+  handleClick: (event?: KeyboardEvent) => void;
   status: QuestionReaderStatus;
   visibleIndex: number;
 };
@@ -130,8 +130,10 @@ export default function useReader({
   }, [onNext, status]);
 
   const handleClick = useCallback(
-    (event: KeyboardEvent) => {
-      event.preventDefault();
+    (event?: KeyboardEvent) => {
+      if (event instanceof KeyboardEvent) {
+        event.preventDefault();
+      }
 
       switch (status) {
         case QuestionReaderStatus.Reading: {
@@ -172,7 +174,7 @@ export default function useReader({
   });
 
   return useMemo(
-    () => ({ handleClick: () => handleClick, status, visibleIndex }),
+    () => ({ handleClick, status, visibleIndex }),
     [handleClick, status, visibleIndex],
   );
 }

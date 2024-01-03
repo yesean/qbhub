@@ -28,8 +28,8 @@ const getButtonText = (status: QuestionReaderStatus): string => {
 };
 
 type QuestionReaderInputProps = {
-  handleClick: () => void;
   inputRef: React.RefObject<HTMLInputElement>;
+  onClick: () => void;
   result: QuestionResult | undefined;
   setUserInput: React.Dispatch<React.SetStateAction<string>>;
   status: QuestionReaderStatus;
@@ -37,8 +37,8 @@ type QuestionReaderInputProps = {
 };
 
 export default function QuestionReaderInput({
-  handleClick,
   inputRef,
+  onClick,
   result,
   setUserInput,
   status,
@@ -59,7 +59,7 @@ export default function QuestionReaderInput({
         placeholder="Answer"
         value={userInput}
       />
-      <TealButton onClick={handleClick}>{getButtonText(status)}</TealButton>
+      <TealButton onClick={onClick}>{getButtonText(status)}</TealButton>
     </Flex>
   );
 }
