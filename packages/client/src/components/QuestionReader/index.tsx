@@ -107,8 +107,8 @@ export default function QuestionReader({
         <QuestionReaderProgress key={promptCount} onFinish={handleClick} />
       )}
       <QuestionReaderInput
-        handleClick={handleClick}
         inputRef={inputRef}
+        onClick={handleClick}
         result={result}
         setUserInput={setUserInput}
         status={status}
