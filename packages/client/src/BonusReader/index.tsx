@@ -1,5 +1,5 @@
 import { useToast } from '@chakra-ui/react';
-import { QuestionResult } from '@qbhub/types';
+import { Bonus, QuestionResult } from '@qbhub/types';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import QuestionReader, {
@@ -19,15 +19,20 @@ import {
   isLastBonusPart,
 } from '../utils/bonus';
 import BonusReaderContentDisplay from './BonusReaderContentDisplay';
+import EmptyBonusesNotice from './EmptyBonusesNotice';
 import { selectBonusReader, submitResult } from './bonusReaderSlice';
 import useBonusReaderReducer from './useBonusReaderReducer';
 
-function BonusReaderDisplay() {
+type BonusReaderDisplayProps = {
+  currentBonus: Bonus;
+  score: number;
+};
+
+function BonusReaderDisplay({ currentBonus, score }: BonusReaderDisplayProps) {
   const [
     { bonusPartNumber, bonusPartResults, bonusResult },
     dispatchBonusReader,
   ] = useBonusReaderReducer();
-  const { currentBonus, score } = useSelector(selectBonusReader);
   const { openBonusHistoryModal } = useModalContext();
   const { dispatchNextBonus } = useActions();
   const dispatch = useAppDispatch();
@@ -146,18 +151,25 @@ function BonusReaderDisplay() {
 }
 
 export default function BonusReader() {
-  const { currentBonus, isFetching } = useSelector(selectBonusReader);
+  const { currentBonus, isFetching, isUninitialized, isUserWaiting, score } =
+    useSelector(selectBonusReader);
   const { dispatchNextBonus } = useActions();
 
-  const isBonusAvaiableOrPending = currentBonus !== undefined || isFetching;
-
   useKeyboardShortcut('n', dispatchNextBonus, {
-    customAllowCondition: !isBonusAvaiableOrPending,
+    customAllowCondition: isUninitialized,
   });
 
-  if (!isBonusAvaiableOrPending) {
+  if (isUninitialized) {
     return <TealButton onClick={dispatchNextBonus}>Start bonuses</TealButton>;
   }
 
-  return <BonusReaderDisplay />;
+  if (isFetching && isUserWaiting) {
+    return <QuestionReaderSkeleton />;
+  }
+
+  if (currentBonus === undefined) {
+    return <EmptyBonusesNotice />;
+  }
+
+  return <BonusReaderDisplay currentBonus={currentBonus} score={score} />;
 }

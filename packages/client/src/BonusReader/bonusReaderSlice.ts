@@ -1,4 +1,5 @@
 import { Bonus, BonusResult } from '@qbhub/types';
+import { isEmpty } from '@qbhub/utils';
 import { PayloadAction, createAction, createSlice } from '@reduxjs/toolkit';
 import type { AppDispatch, RootState } from '../redux/store';
 import { createAppAsyncThunk } from '../redux/utils';
@@ -8,14 +9,18 @@ import { isQuestionValid } from '../utils/settings/validate';
 
 type BonusReaderState = {
   bonuses: Bonus[] | undefined;
+  currentBonus: Bonus | undefined;
   isFetching: boolean;
+  isUserWaiting: boolean;
   results: BonusResult[];
   score: number;
 };
 
 const initialState: BonusReaderState = {
   bonuses: undefined,
+  currentBonus: undefined,
   isFetching: false,
+  isUserWaiting: false,
   results: [],
   score: 0,
 };
@@ -34,12 +39,13 @@ async function fetchBonusesIfNeeded(
   dispatch: AppDispatch,
   args: FetchBonusesArgs,
 ) {
-  // if bonus cache is low, fetch more
-  // if bonus cache is empty, keep the action pending
-  if (bonuses.length === 0) {
-    await dispatch(fetchBonuses(args)).unwrap();
-  } else if (bonuses.length < 5) {
-    dispatch(fetchBonuses(args));
+  if (bonuses.length > 5) {
+    return;
+  }
+
+  const promise = dispatch(fetchBonuses(args));
+  if (isEmpty(bonuses)) {
+    await promise;
   }
 }
 
@@ -50,11 +56,7 @@ export const nextBonus = createAppAsyncThunk<void, FetchBonusesArgs>(
       bonusReader: { bonuses },
     } = getState();
 
-    if (bonuses === undefined) {
-      await dispatch(fetchBonuses(args)).unwrap();
-      return;
-    }
-    await fetchBonusesIfNeeded(bonuses, dispatch, args);
+    await fetchBonusesIfNeeded(bonuses ?? [], dispatch, args);
   },
 );
 
@@ -72,7 +74,6 @@ export const filterBonusesWithRefetch = createAppAsyncThunk<
   const {
     bonusReader: { bonuses },
   } = getState();
-
   if (bonuses === undefined) {
     return;
   }
@@ -92,9 +93,17 @@ const bonusReaderSlice = createSlice({
       .addCase(fetchBonuses.rejected, (state) => {
         state.isFetching = false;
       });
-    builder.addCase(nextBonus.fulfilled, (state) => {
-      state.bonuses?.shift();
-    });
+    builder
+      .addCase(nextBonus.pending, (state) => {
+        state.isUserWaiting = true;
+      })
+      .addCase(nextBonus.fulfilled, (state) => {
+        state.isUserWaiting = false;
+        state.currentBonus = state.bonuses?.shift();
+      })
+      .addCase(nextBonus.rejected, (state) => {
+        state.isUserWaiting = false;
+      });
     builder.addCase(filterBonuses, (state, { payload: { settings } }) => {
       state.bonuses = state.bonuses?.filter((bn) =>
         isQuestionValid(bn, settings),
@@ -116,10 +125,10 @@ export const selectBonusReader = ({ bonusReader }: RootState) => {
     (acc, result) => acc + result.score,
     0,
   );
+  const isUninitialized =
+    bonusReader.bonuses === undefined && !bonusReader.isFetching;
 
-  const currentBonus = bonusReader.bonuses?.at(0);
-
-  return { ...bonusReader, currentBonus, score };
+  return { ...bonusReader, isUninitialized, score };
 };
 
 export default bonusReaderSlice.reducer;
