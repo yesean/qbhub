@@ -1,4 +1,5 @@
 import { Tossup, TossupResult } from '@qbhub/types';
+import { isEmpty } from '@qbhub/utils';
 import { PayloadAction, createAction, createSlice } from '@reduxjs/toolkit';
 import type { AppDispatch, RootState } from '../redux/store';
 import { createAppAsyncThunk } from '../redux/utils';
@@ -7,13 +8,17 @@ import { Settings } from '../utils/settings/types';
 import { isQuestionValid } from '../utils/settings/validate';
 
 type TossupReaderState = {
+  currentTossup: Tossup | undefined;
   isFetching: boolean;
+  isUserWaiting: boolean;
   results: TossupResult[];
   tossups: Tossup[] | undefined;
 };
 
 const initialState: TossupReaderState = {
+  currentTossup: undefined,
   isFetching: false,
+  isUserWaiting: false,
   results: [],
   tossups: undefined,
 };
@@ -32,9 +37,13 @@ async function fetchTossupsIfNeeded(
   dispatch: AppDispatch,
   args: FetchTossupsArgs,
 ) {
-  // if tossup cache is low, fetch more
-  if (tossups.length < 5) {
-    dispatch(fetchTossups(args));
+  if (tossups.length > 5) {
+    return;
+  }
+
+  const promise = dispatch(fetchTossups(args));
+  if (isEmpty(tossups)) {
+    await promise;
   }
 }
 
@@ -45,7 +54,7 @@ export const nextTossup = createAppAsyncThunk<void, FetchTossupsArgs>(
       tossupReader: { tossups },
     } = getState();
 
-    fetchTossupsIfNeeded(tossups ?? [], dispatch, args);
+    await fetchTossupsIfNeeded(tossups ?? [], dispatch, args);
   },
 );
 
@@ -63,7 +72,6 @@ export const filterTossupsWithRefetch = createAppAsyncThunk<
   const {
     tossupReader: { tossups },
   } = getState();
-
   if (tossups === undefined) {
     return;
   }
@@ -83,9 +91,17 @@ const tossupReaderSlice = createSlice({
       .addCase(fetchTossups.rejected, (state) => {
         state.isFetching = false;
       });
-    builder.addCase(nextTossup.fulfilled, (state) => {
-      state.tossups?.shift();
-    });
+    builder
+      .addCase(nextTossup.pending, (state) => {
+        state.isUserWaiting = true;
+      })
+      .addCase(nextTossup.fulfilled, (state) => {
+        state.isUserWaiting = false;
+        state.currentTossup = state.tossups?.shift();
+      })
+      .addCase(nextTossup.rejected, (state) => {
+        state.isUserWaiting = false;
+      });
     builder.addCase(filterTossups, (state, { payload: { settings } }) => {
       state.tossups = state.tossups?.filter((tu) =>
         isQuestionValid(tu, settings),
@@ -107,10 +123,10 @@ export const selectTossupReader = ({ tossupReader }: RootState) => {
     (acc, result) => acc + result.score,
     0,
   );
+  const isUninitialized =
+    tossupReader.tossups === undefined && !tossupReader.isFetching;
 
-  const currentTossup = tossupReader.tossups?.at(0);
-
-  return { ...tossupReader, currentTossup, score };
+  return { ...tossupReader, isUninitialized, score };
 };
 
 export default tossupReaderSlice.reducer;

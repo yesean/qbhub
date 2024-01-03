@@ -1,5 +1,5 @@
 import { useToast } from '@chakra-ui/react';
-import { QuestionResult, TossupResult } from '@qbhub/types';
+import { QuestionResult, Tossup, TossupResult } from '@qbhub/types';
 import { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import QuestionReader, {
@@ -12,12 +12,20 @@ import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/utils';
 import { displayToast, getTossupResult } from '../utils/tossup';
+import EmptyTossupsNotice from './EmptyTossupsNotice';
 import TossupReaderContentDisplay from './TossupReaderContentDisplay';
 import { selectTossupReader, submitResult } from './tossupReaderSlice';
 
-function TossupReaderDisplay() {
+type TossupReaderDisplayProps = {
+  currentTossup: Tossup;
+  score: number;
+};
+
+function TossupReaderDisplay({
+  currentTossup,
+  score,
+}: TossupReaderDisplayProps) {
   const [tossupResult, setTossupResult] = useState<TossupResult>();
-  const { currentTossup, score } = useSelector(selectTossupReader);
   const { openTossupHistoryModal } = useModalContext();
   const { dispatchNextTossup } = useActions();
   const dispatch = useAppDispatch();
@@ -49,18 +57,13 @@ function TossupReaderDisplay() {
   }, [dispatchNextTossup, toast]);
 
   const renderQuestionContentDisplay = useCallback(
-    (props: QuestionContentDisplayProps) =>
-      currentTossup === undefined ? null : (
-        <TossupReaderContentDisplay {...props} tossup={currentTossup} />
-      ),
+    (props: QuestionContentDisplayProps) => (
+      <TossupReaderContentDisplay {...props} tossup={currentTossup} />
+    ),
     [currentTossup],
   );
 
   useKeyboardShortcut('h', openTossupHistoryModal);
-
-  if (currentTossup === undefined) {
-    return <QuestionReaderSkeleton />;
-  }
 
   return (
     <QuestionReader
@@ -77,18 +80,25 @@ function TossupReaderDisplay() {
 }
 
 export default function TossupReader() {
-  const { currentTossup, isFetching } = useSelector(selectTossupReader);
+  const { currentTossup, isFetching, isUninitialized, isUserWaiting, score } =
+    useSelector(selectTossupReader);
   const { dispatchNextTossup } = useActions();
 
-  const isTossupAvaiableOrPending = currentTossup !== undefined || isFetching;
-
   useKeyboardShortcut('n', dispatchNextTossup, {
-    customAllowCondition: !isTossupAvaiableOrPending,
+    customAllowCondition: isUninitialized,
   });
 
-  if (!isTossupAvaiableOrPending) {
+  if (isUninitialized) {
     return <TealButton onClick={dispatchNextTossup}>Start tossups</TealButton>;
   }
 
-  return <TossupReaderDisplay />;
+  if (isFetching && isUserWaiting) {
+    return <QuestionReaderSkeleton />;
+  }
+
+  if (currentTossup === undefined) {
+    return <EmptyTossupsNotice />;
+  }
+
+  return <TossupReaderDisplay currentTossup={currentTossup} score={score} />;
 }
