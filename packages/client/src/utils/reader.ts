@@ -145,20 +145,25 @@ function filterNegativeAnswers(
   { 0: matchedText, index, input }: RegExpExecArray,
   answerType: 'accept' | 'prompt',
 ) {
+  const lowercaseInput = input.toLowerCase();
   const answerPrefix = QBString.getWords(matchedText)[0];
 
   if (answerType === 'accept' && answerPrefix === 'accept') {
     const negatives = ['do not', 'do not prompt on or', 'do not prompt or'];
-    return negatives.every((neg) => !input.endsWith(neg, index));
+    return negatives.every((neg) => !lowercaseInput.endsWith(neg, index));
   }
 
   if (answerType === 'prompt' && answerPrefix === 'prompt') {
     const negatives = ['do not', 'do not accept or'];
-    return negatives.every((neg) => !input.endsWith(neg, index));
+    return negatives.every((neg) => !lowercaseInput.endsWith(neg, index));
   }
 
-  const startIndex = lastIndexOfMultiple(input, [';', ',', '['], index);
-  const prevString = input.slice(startIndex, index);
+  const startIndex = lastIndexOfMultiple(
+    lowercaseInput,
+    [';', ',', '['],
+    index,
+  );
+  const prevString = lowercaseInput.slice(startIndex, index);
 
   if (answerType === 'accept' && answerPrefix === 'or') {
     const negatives = ['do not accept', 'prompt on', 'prompt'];
