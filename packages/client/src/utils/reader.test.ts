@@ -106,6 +106,11 @@ const acceptableAnswerlines = [
     answerline: 'Linus <strong><u>Pauling</u></strong>',
     answers: ['pauling', 'linus pauling'],
   },
+  {
+    answerline:
+      'non-Euclidean geometry [prompt on partial answers, prompt on hyperbolic geometry, prompt on elliptical geometry, prompt on geometry, prompt on quadrilateral and accept non-Euclidean quadrilateral until Beltrami , do NOT accept or prompt on Euclidean geometry ]',
+    answers: ['noneuclidean geometry', 'noneuclidean quadrilateral'],
+  },
 ];
 
 describe('Parsing acceptable answers', () => {
@@ -212,6 +217,17 @@ const promptableAnswerlines = [
       'medical',
       'pharmacies',
       'similar terms',
+    ],
+  },
+  {
+    answerline:
+      'non-Euclidean geometry [prompt on partial answers, prompt on hyperbolic geometry, prompt on elliptical geometry, prompt on geometry, prompt on quadrilateral and accept non-Euclidean quadrilateral until Beltrami , do NOT accept or prompt on Euclidean geometry ]',
+    answers: [
+      'partial answers',
+      'hyperbolic geometry',
+      'elliptical geometry',
+      'geometry',
+      'quadrilateral and',
     ],
   },
 ];
