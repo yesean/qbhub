@@ -112,7 +112,7 @@ const tossupReaderSlice = createSlice({
   name: 'tossupReader',
   reducers: {
     submitResult: (state, action: PayloadAction<TossupResult>) => {
-      state.results.push(action.payload);
+      state.results.unshift(action.payload);
     },
   },
 });
