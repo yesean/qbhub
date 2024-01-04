@@ -114,7 +114,7 @@ const bonusReaderSlice = createSlice({
   name: 'bonusReader',
   reducers: {
     submitResult(state, action: PayloadAction<BonusResult>) {
-      state.results.push(action.payload);
+      state.results.unshift(action.payload);
     },
   },
 });
