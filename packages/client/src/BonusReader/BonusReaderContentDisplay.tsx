@@ -1,6 +1,6 @@
-import { Flex } from '@chakra-ui/react';
+import { Divider, Flex } from '@chakra-ui/react';
 import { Bonus, BonusPartResult } from '@qbhub/types';
-import { useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
 import { QuestionContentDisplayProps } from '../components/QuestionReader';
 import useAutoScrollIntoView from '../hooks/useAutoScrollIntoView';
 import BonusReaderCurrentBonusPart from './BonusReaderCurrentBonusPart';
@@ -39,11 +39,13 @@ export default function BonusReaderContentDisplay({
       p={4}
     >
       {bonusPartResults.slice(0, bonusPartNumber).map((bonusPartResult) => (
-        <BonusReaderPreviousBonusPart
-          key={bonusPartResult.number}
-          bonus={bonus}
-          bonusPartResult={bonusPartResult}
-        />
+        <Fragment key={bonusPartResult.number}>
+          <BonusReaderPreviousBonusPart
+            bonus={bonus}
+            bonusPartResult={bonusPartResult}
+          />
+          <Divider borderColor="gray.300" />
+        </Fragment>
       ))}
       <BonusReaderCurrentBonusPart
         bonusPartResult={bonusPartResults.at(-1)}

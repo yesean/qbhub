@@ -1,88 +1,20 @@
-import { Box, Flex, Text } from '@chakra-ui/react';
-import { Bonus, BonusPart, BonusPartResult } from '@qbhub/types';
-import FormattedQuestion from '../components/FormattedQuestion';
-import { VirtualizedTable, VirtualizedTableColumn } from '../components/tables';
-import { TOURNAMENT_METADATA_BY_TOURNAMENT } from '../utils/constants';
-import { getFormattedWords, parseHTMLString } from '../utils/reader';
+import { Flex } from '@chakra-ui/react';
+import { useSelector } from 'react-redux';
+import { selectBonusReader } from '../BonusReader/bonusReaderSlice';
+import BonusResultAccordion from './BonusResultAccordion';
 
-type BonusPartRowResult = BonusPartResult & { bonus: Bonus; part: BonusPart };
-type BonusResultProps = {
-  results: BonusPartRowResult[];
-};
-
-const cells: { [key: string]: (result: BonusPartRowResult) => JSX.Element } = {
-  answer: ({ part: { formattedAnswer } }) => (
-    <Box overflowWrap="break-word" textAlign="center">
-      {parseHTMLString(formattedAnswer)}
-    </Box>
-  ),
-  input: ({ userAnswer }) => (
-    <Box overflowWrap="break-word" textAlign="center">
-      {userAnswer || '<no answer>'}
-    </Box>
-  ),
-  part: ({ number }) => <Text align="center">{number}</Text>,
-  question: ({ buzzIndex, part: { formattedText } }) => (
-    <Flex flexWrap="wrap">
-      <FormattedQuestion
-        buzzIndex={buzzIndex}
-        words={getFormattedWords(formattedText)}
-      />
-    </Flex>
-  ),
-  tournament: ({ bonus: { tournament } }) => (
-    <Box>{TOURNAMENT_METADATA_BY_TOURNAMENT[tournament].label}</Box>
-  ),
-};
-
-const BonusResults: React.FC<React.PropsWithChildren<BonusResultProps>> = ({
-  results,
-}) => {
-  const columns: VirtualizedTableColumn<BonusPartRowResult>[] = [
-    {
-      cell: cells.part,
-      label: 'Part',
-      minWidth: 40,
-      proportion: 1,
-      useForHeight: false,
-    },
-    {
-      cell: cells.input,
-      label: 'Input',
-      minWidth: 120,
-      proportion: 1,
-      useForHeight: false,
-    },
-    {
-      cell: cells.answer,
-      label: 'Answer',
-      minWidth: 120,
-      proportion: 2,
-      useForHeight: true,
-    },
-    {
-      cell: cells.question,
-      label: 'Question',
-      minWidth: 150,
-      proportion: 4,
-      useForHeight: true,
-    },
-    {
-      cell: cells.tournament,
-      label: 'Tournament',
-      minWidth: 105,
-      proportion: 3,
-      useForHeight: false,
-    },
-  ];
+export default function BonusResults() {
+  const { results } = useSelector(selectBonusReader);
 
   return (
-    <VirtualizedTable
-      columns={columns}
-      results={results}
-      rowColor={(result) => (result.isCorrect ? 'green.200' : 'red.200')}
-    />
+    <Flex direction="column" overflow="auto">
+      {results.map((result, index) => (
+        <BonusResultAccordion
+          // eslint-disable-next-line react/no-array-index-key
+          key={`${result.bonus.id}${index}`}
+          result={result}
+        />
+      ))}
+    </Flex>
   );
-};
-
-export default BonusResults;
+}
