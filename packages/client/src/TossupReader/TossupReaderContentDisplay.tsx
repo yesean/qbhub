@@ -29,7 +29,11 @@ export default function TossupReaderContentDisplay({
   const shouldShowAnswer = status === QuestionReaderStatus.Judged;
   return (
     <Flex direction="column" gap={4} overflow="auto">
-      {shouldShowAnswer && <TossupReaderAnswerDisplay tossup={tossup} />}
+      {shouldShowAnswer && (
+        <Box bg="gray.100" borderRadius="md" p={4}>
+          <TossupReaderAnswerDisplay tossup={tossup} />
+        </Box>
+      )}
       <Box bg="gray.100" borderRadius="md" overflow="auto" p={4}>
         <FormattedQuestion
           buzzIndex={buzzIndex}

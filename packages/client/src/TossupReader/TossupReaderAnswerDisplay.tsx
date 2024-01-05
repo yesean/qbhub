@@ -1,4 +1,4 @@
-import { Box, Link, Text } from '@chakra-ui/react';
+import { Link, Text } from '@chakra-ui/react';
 import { Tossup } from '@qbhub/types';
 import { Link as RouterLink } from 'react-router-dom';
 import { parseHTMLString } from '../utils/reader';
@@ -17,13 +17,11 @@ export default function TossupReaderAnswerDisplay({
   const answer = parseHTMLString(tossup.formattedAnswer);
 
   return (
-    <Box bg="gray.100" borderRadius="md" p={4}>
-      <Text>
-        <Text as="b">ANSWER: </Text>
-        <Link as={RouterLink} to={clueDisplayURL}>
-          {answer}
-        </Link>
-      </Text>
-    </Box>
+    <Text>
+      <Text as="b">ANSWER: </Text>
+      <Link as={RouterLink} to={clueDisplayURL}>
+        {answer}
+      </Link>
+    </Text>
   );
 }
