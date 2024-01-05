@@ -1,11 +1,12 @@
 import { Flex } from '@chakra-ui/react';
-import { useSelector } from 'react-redux';
-import { selectTossupReader } from '../TossupReader/tossupReaderSlice';
+import { TossupResult } from '@qbhub/types';
 import TossupResultAccordion from './TossupResultAccordion';
 
-export default function TossupResults() {
-  const { results } = useSelector(selectTossupReader);
+type TossupResultsProps = {
+  results: TossupResult[];
+};
 
+export default function TossupResults({ results }: TossupResultsProps) {
   return (
     <Flex direction="column" overflow="auto">
       {results.map((result, index) => (

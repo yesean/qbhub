@@ -32,6 +32,7 @@
     "react-select": "5.4.0",
     "react-virtualized-auto-sizer": "1.0.7",
     "react-window": "1.8.7",
+    "recharts": "^2.10.3",
     "stream-browserify": "3.0.0",
     "string-similarity": "4.0.4",
     "use-query-params": "^2.2.1",
