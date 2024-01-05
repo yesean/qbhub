@@ -17,11 +17,11 @@ export default function TossupReaderAnswerDisplay({
   const answer = parseHTMLString(tossup.formattedAnswer);
 
   return (
-    <Text>
+    <>
       <Text as="b">ANSWER: </Text>
       <Link as={RouterLink} to={clueDisplayURL}>
         {answer}
       </Link>
-    </Text>
+    </>
   );
 }

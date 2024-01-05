@@ -1,8 +1,9 @@
-import { Box, Flex } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import { Tossup } from '@qbhub/types';
 import { useMemo } from 'react';
 import FormattedQuestion from '../components/FormattedQuestion';
 import { QuestionContentDisplayProps } from '../components/QuestionReader';
+import QuestionContentContainer from '../components/QuestionReader/QuestionContentContainer';
 import useAutoScrollIntoView from '../hooks/useAutoScrollIntoView';
 import { QuestionReaderStatus } from '../utils/questionReader';
 import TossupReaderAnswerDisplay from './TossupReaderAnswerDisplay';
@@ -30,18 +31,18 @@ export default function TossupReaderContentDisplay({
   return (
     <Flex direction="column" gap={4} overflow="auto">
       {shouldShowAnswer && (
-        <Box bg="gray.100" borderRadius="md" p={4}>
+        <QuestionContentContainer flex="1 0 auto" maxH="100px">
           <TossupReaderAnswerDisplay tossup={tossup} />
-        </Box>
+        </QuestionContentContainer>
       )}
-      <Box bg="gray.100" borderRadius="md" overflow="auto" p={4}>
+      <QuestionContentContainer>
         <FormattedQuestion
           buzzIndex={buzzIndex}
           visibleIndex={visibleIndex}
           visibleRef={visibleRef}
           words={words}
         />
-      </Box>
+      </QuestionContentContainer>
     </Flex>
   );
 }
