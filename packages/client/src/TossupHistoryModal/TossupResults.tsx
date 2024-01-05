@@ -9,7 +9,7 @@ type TossupResultProps = {
 const TossupResults: React.FC<React.PropsWithChildren<TossupResultProps>> = ({
   results,
 }) => (
-  <Flex direction="column" gap={4}>
+  <Flex direction="column" overflow="auto">
     {results.map((result, index) => (
       <TossupResultAccordion
         // eslint-disable-next-line react/no-array-index-key
