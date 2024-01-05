@@ -7,11 +7,9 @@ import {
   Box,
 } from '@chakra-ui/react';
 import { TossupResult } from '@qbhub/types';
-import TossupReaderAnswerDisplay from '../TossupReader/TossupReaderAnswerDisplay';
-import FormattedQuestion from '../components/FormattedQuestion';
 import QuestionInfo from '../components/QuestionReader/QuestionInfo';
+import TossupResultDisplay from './TossupResultDisplay';
 import TossupResultScoreBadge from './TossupResultScoreBadge';
-import TossupResultUserInput from './TossupResultUserInput';
 
 type TossupResultProps = {
   result: TossupResult;
@@ -28,14 +26,7 @@ export default function TossupResultAccordion({ result }: TossupResultProps) {
             <TossupResultScoreBadge result={result} />
           </AccordionButton>
           <AccordionPanel borderRadius="md" px={8}>
-            <Box mb={2}>
-              <FormattedQuestion
-                buzzIndex={result.buzzIndex}
-                words={result.formattedWords}
-              />
-            </Box>
-            <TossupReaderAnswerDisplay tossup={result.tossup} />
-            <TossupResultUserInput result={result} />
+            <TossupResultDisplay result={result} />
           </AccordionPanel>
         </Box>
       </AccordionItem>
