@@ -1,23 +1,20 @@
 import { Flex } from '@chakra-ui/react';
-import { TossupResult } from '@qbhub/types';
+import { useSelector } from 'react-redux';
+import { selectTossupReader } from '../TossupReader/tossupReaderSlice';
 import TossupResultAccordion from './TossupResultAccordion';
 
-type TossupResultProps = {
-  results: TossupResult[];
-};
+export default function TossupResults() {
+  const { results } = useSelector(selectTossupReader);
 
-const TossupResults: React.FC<React.PropsWithChildren<TossupResultProps>> = ({
-  results,
-}) => (
-  <Flex direction="column" overflow="auto">
-    {results.map((result, index) => (
-      <TossupResultAccordion
-        // eslint-disable-next-line react/no-array-index-key
-        key={`${result.tossup.id}${index}`}
-        result={result}
-      />
-    ))}
-  </Flex>
-);
-
-export default TossupResults;
+  return (
+    <Flex direction="column" overflow="auto">
+      {results.map((result, index) => (
+        <TossupResultAccordion
+          // eslint-disable-next-line react/no-array-index-key
+          key={`${result.tossup.id}${index}`}
+          result={result}
+        />
+      ))}
+    </Flex>
+  );
+}

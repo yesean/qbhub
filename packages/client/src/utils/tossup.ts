@@ -66,3 +66,32 @@ export function displayToast(
     }
   }
 }
+
+type TossupResultsSummary = {
+  score: number;
+  scoreCounts: Record<TossupScore, number>;
+};
+const INITIAL_TOSSUP_RESULTS_SUMMARY = {
+  score: 0,
+  scoreCounts: {
+    [TossupScore.power]: 0,
+    [TossupScore.ten]: 0,
+    [TossupScore.incorrect]: 0,
+    [TossupScore.neg]: 0,
+  },
+};
+
+export function getTossupResultsSummary(
+  results: TossupResult[],
+): TossupResultsSummary {
+  return results.reduce(
+    ({ score, scoreCounts }, result) => ({
+      score: score + result.score,
+      scoreCounts: {
+        ...scoreCounts,
+        [result.score]: scoreCounts[result.score] + 1,
+      },
+    }),
+    INITIAL_TOSSUP_RESULTS_SUMMARY,
+  );
+}

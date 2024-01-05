@@ -1,4 +1,4 @@
-import { Tossup, TossupResult, TossupScore } from '@qbhub/types';
+import { Tossup, TossupResult } from '@qbhub/types';
 import { isEmpty } from '@qbhub/utils';
 import { PayloadAction, createAction, createSlice } from '@reduxjs/toolkit';
 import type { AppDispatch, RootState } from '../redux/store';
@@ -118,20 +118,6 @@ const tossupReaderSlice = createSlice({
 });
 export const { submitResult } = tossupReaderSlice.actions;
 
-type TossupResultsSummary = {
-  score: number;
-  scoreCounts: Record<TossupScore, number>;
-};
-const INITIAL_TOSSUP_RESULTS_SUMMARY = {
-  score: 0,
-  scoreCounts: {
-    [TossupScore.power]: 0,
-    [TossupScore.ten]: 0,
-    [TossupScore.incorrect]: 0,
-    [TossupScore.neg]: 0,
-  },
-};
-
 export const selectTossupReader = ({ tossupReader }: RootState) => {
   const score = tossupReader.results.reduce(
     (acc, result) => acc + result.score,
@@ -140,19 +126,7 @@ export const selectTossupReader = ({ tossupReader }: RootState) => {
   const isUninitialized =
     tossupReader.tossups === undefined && !tossupReader.isFetching;
 
-  const tossupResultsSummary: TossupResultsSummary =
-    tossupReader.results.reduce(
-      ({ score, scoreCounts }, result) => ({
-        score: score + result.score,
-        scoreCounts: {
-          ...scoreCounts,
-          [result.score]: scoreCounts[result.score] + 1,
-        },
-      }),
-      INITIAL_TOSSUP_RESULTS_SUMMARY,
-    );
-
-  return { ...tossupReader, isUninitialized, score, tossupResultsSummary };
+  return { ...tossupReader, isUninitialized, score };
 };
 
 export default tossupReaderSlice.reducer;
