@@ -61,6 +61,9 @@ export function getEmptyArray(length: number) {
   return Array.from({ length });
 }
 
+/**
+ * Get an array of numbers from start (inclusive) to end (inclusive)
+ */
 export function getRange(start: number, end: number) {
   const rangeLength = end - start + 1;
   return getEmptyArray(rangeLength).map((_, index) => index + start);
