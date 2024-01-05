@@ -1,6 +1,6 @@
 import { Heading } from '@chakra-ui/react';
 import {
-  Question,
+  QuestionMetadata,
   getCategoryName,
   getDifficultyName,
   getSubcategoryName,
@@ -8,19 +8,19 @@ import {
 } from '@qbhub/types';
 
 type QuestionInfoProps = {
-  question: Question;
+  questionMetadata: QuestionMetadata;
 };
 
-export default function QuestionInfo({ question }: QuestionInfoProps) {
-  const tournament = getTournamentName(question.tournament);
-  const difficulty = getDifficultyName(question.difficulty);
-  const category = getCategoryName(question.category);
+export default function QuestionInfo({ questionMetadata }: QuestionInfoProps) {
+  const tournament = getTournamentName(questionMetadata.tournament);
+  const difficulty = getDifficultyName(questionMetadata.difficulty);
+  const category = getCategoryName(questionMetadata.category);
 
   let text = `${tournament} / ${difficulty} / ${category}`;
 
   // append subcategory if available
-  if (question.subcategory != null) {
-    const subcategory = getSubcategoryName(question.subcategory);
+  if (questionMetadata.subcategory != null) {
+    const subcategory = getSubcategoryName(questionMetadata.subcategory);
     text += `/ ${subcategory}`;
   }
 

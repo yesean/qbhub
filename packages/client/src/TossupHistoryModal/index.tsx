@@ -1,5 +1,6 @@
 import {
   Box,
+  Flex,
   Modal,
   ModalBody,
   ModalContent,
@@ -31,11 +32,13 @@ export default function TossupHistoryModal({
       <ModalOverlay />
       <ModalContent h="max(75vh, 600px)" m={4} w="min(90vw, 1400px)">
         <ModalHeader>Tossup History</ModalHeader>
-        <ModalBody display="flex" flexDirection="column" gap={4}>
-          <Box flexShrink={0}>
-            <TossupHistorySummary />
-          </Box>
-          <TossupResults />
+        <ModalBody>
+          <Flex direction="column" gap={4} h="100%">
+            <Box flexShrink={0}>
+              <TossupHistorySummary />
+            </Box>
+            <TossupResults />
+          </Flex>
         </ModalBody>
         <ModalFooter>
           <TealButton onClick={closeModal}>Done</TealButton>

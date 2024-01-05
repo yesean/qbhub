@@ -1,4 +1,3 @@
-import { Divider } from '@chakra-ui/react';
 import { Bonus, BonusPartResult } from '@qbhub/types';
 import { useMemo } from 'react';
 import { combineBonusPartWithLeadin } from '../utils/bonus';
@@ -39,7 +38,6 @@ export default function BonusReaderPreviousBonusPart({
         words={formattedWords}
       />
       <BonusReaderAnswer bonusPartResult={bonusPartResult} />
-      <Divider borderColor="gray.300" />
     </>
   );
 }

@@ -135,3 +135,32 @@ export function displayToast(
     }
   }
 }
+
+type BonusResultsSummary = {
+  score: number;
+  scoreCounts: Record<BonusScore, number>;
+};
+const INITIAL_BONUS_RESULTS_SUMMARY = {
+  score: 0,
+  scoreCounts: {
+    [BonusScore.thirty]: 0,
+    [BonusScore.twenty]: 0,
+    [BonusScore.ten]: 0,
+    [BonusScore.zero]: 0,
+  },
+};
+
+export function getBonusResultsSummary(
+  results: BonusResult[],
+): BonusResultsSummary {
+  return results.reduce(
+    ({ score, scoreCounts }, result) => ({
+      score: score + result.score,
+      scoreCounts: {
+        ...scoreCounts,
+        [result.score]: scoreCounts[result.score] + 1,
+      },
+    }),
+    INITIAL_BONUS_RESULTS_SUMMARY,
+  );
+}

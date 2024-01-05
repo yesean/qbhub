@@ -95,7 +95,7 @@ export default function QuestionReader({
 
   return (
     <Flex direction="column" gap={4} maxW="container.md" overflow="auto" p={2}>
-      <QuestionInfo question={question} />
+      <QuestionInfo questionMetadata={question} />
       <QuestionContentDisplay
         buzzIndex={buzzIndex}
         question={question}
