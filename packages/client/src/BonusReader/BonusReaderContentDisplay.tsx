@@ -1,7 +1,8 @@
-import { Divider, Flex } from '@chakra-ui/react';
+import { Box, Divider, Flex } from '@chakra-ui/react';
 import { Bonus, BonusPartResult } from '@qbhub/types';
 import { Fragment, useMemo } from 'react';
 import { QuestionContentDisplayProps } from '../components/QuestionReader';
+import QuestionContentContainer from '../components/QuestionReader/QuestionContentContainer';
 import useAutoScrollIntoView from '../hooks/useAutoScrollIntoView';
 import BonusReaderCurrentBonusPart from './BonusReaderCurrentBonusPart';
 import BonusReaderPreviousBonusPart from './BonusReaderPreviousBonusPart';
@@ -30,31 +31,26 @@ export default function BonusReaderContentDisplay({
   );
 
   return (
-    <Flex
-      bg="gray.100"
-      borderRadius="md"
-      direction="column"
-      gap={4}
-      overflow="auto"
-      p={4}
-    >
-      {bonusPartResults.slice(0, bonusPartNumber).map((bonusPartResult) => (
-        <Fragment key={bonusPartResult.number}>
-          <BonusReaderPreviousBonusPart
-            bonus={bonus}
-            bonusPartResult={bonusPartResult}
-          />
-          <Divider borderColor="gray.300" />
-        </Fragment>
-      ))}
-      <BonusReaderCurrentBonusPart
-        bonusPartResult={bonusPartResults.at(-1)}
-        buzzIndex={buzzIndex}
-        status={status}
-        visibleIndex={visibleIndex}
-        visibleRef={visibleRef}
-        words={words}
-      />
-    </Flex>
+    <QuestionContentContainer>
+      <Flex direction="column" gap={4}>
+        {bonusPartResults.slice(0, bonusPartNumber).map((bonusPartResult) => (
+          <Fragment key={bonusPartResult.number}>
+            <BonusReaderPreviousBonusPart
+              bonus={bonus}
+              bonusPartResult={bonusPartResult}
+            />
+            <Divider borderColor="gray.300" />
+          </Fragment>
+        ))}
+        <BonusReaderCurrentBonusPart
+          bonusPartResult={bonusPartResults.at(-1)}
+          buzzIndex={buzzIndex}
+          status={status}
+          visibleIndex={visibleIndex}
+          visibleRef={visibleRef}
+          words={words}
+        />
+      </Flex>
+    </QuestionContentContainer>
   );
 }
