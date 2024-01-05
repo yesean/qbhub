@@ -21,21 +21,23 @@ export default function TossupResultAccordion({ result }: TossupResultProps) {
   return (
     <Accordion allowToggle>
       <AccordionItem>
-        <AccordionButton>
-          <AccordionIcon />
-          <QuestionInfo question={result.tossup} />
-          <TossupResultScoreBadge result={result} />
-        </AccordionButton>
-        <AccordionPanel>
-          <Box mb={2}>
-            <FormattedQuestion
-              buzzIndex={result.buzzIndex}
-              words={result.formattedWords}
-            />
-          </Box>
-          <TossupReaderAnswerDisplay tossup={result.tossup} />
-          <TossupResultUserInput result={result} />
-        </AccordionPanel>
+        <Box>
+          <AccordionButton>
+            <AccordionIcon />
+            <QuestionInfo question={result.tossup} />
+            <TossupResultScoreBadge result={result} />
+          </AccordionButton>
+          <AccordionPanel borderRadius="md" px={8}>
+            <Box mb={2}>
+              <FormattedQuestion
+                buzzIndex={result.buzzIndex}
+                words={result.formattedWords}
+              />
+            </Box>
+            <TossupReaderAnswerDisplay tossup={result.tossup} />
+            <TossupResultUserInput result={result} />
+          </AccordionPanel>
+        </Box>
       </AccordionItem>
     </Accordion>
   );

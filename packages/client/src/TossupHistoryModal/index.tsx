@@ -7,8 +7,6 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
-import { useSelector } from 'react-redux';
-import { selectTossupReader } from '../TossupReader/tossupReaderSlice';
 import TealButton from '../components/buttons/TealButton';
 import TossupHistorySummary from './TossupHistorySummary';
 import TossupResults from './TossupResults';
@@ -18,11 +16,10 @@ type TossupHistoryModalProps = {
   isOpen: boolean;
 };
 
-const TossupHistoryModal: React.FC<
-  React.PropsWithChildren<TossupHistoryModalProps>
-> = ({ closeModal, isOpen }) => {
-  const { results } = useSelector(selectTossupReader);
-
+export default function TossupHistoryModal({
+  closeModal,
+  isOpen,
+}: TossupHistoryModalProps) {
   return (
     <Modal
       isCentered
@@ -38,7 +35,7 @@ const TossupHistoryModal: React.FC<
           <Box flexShrink={0}>
             <TossupHistorySummary />
           </Box>
-          <TossupResults results={results} />
+          <TossupResults />
         </ModalBody>
         <ModalFooter>
           <TealButton onClick={closeModal}>Done</TealButton>
@@ -46,6 +43,4 @@ const TossupHistoryModal: React.FC<
       </ModalContent>
     </Modal>
   );
-};
-
-export default TossupHistoryModal;
+}
