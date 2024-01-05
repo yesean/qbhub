@@ -17,7 +17,7 @@ export default function TossupHistoryBody() {
         <TabPanel maxH="100%" overflow="auto" p={0}>
           <TossupResults results={results} />
         </TabPanel>
-        <TabPanel boxSizing="border-box" h="100%">
+        <TabPanel h="100%">
           <TossupResultsLineChart results={results} />
         </TabPanel>
       </TabPanels>

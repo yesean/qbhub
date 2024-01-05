@@ -36,11 +36,13 @@ export default function TossupResultsLineChart({
         <LineChart data={data}>
           <XAxis
             dataKey="index"
+            height={70}
             interval="equidistantPreserveStart"
+            label="Tossup number"
             tickCount={10}
           />
           <YAxis />
-          <Tooltip labelFormatter={(value) => `After ${value} bonuses`} />
+          <Tooltip labelFormatter={(value) => `After ${value} tossups`} />
           <Legend />
           <Line dataKey="score" type="monotone" />
         </LineChart>
