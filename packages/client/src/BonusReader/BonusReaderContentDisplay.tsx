@@ -1,4 +1,4 @@
-import { Box, Divider, Flex } from '@chakra-ui/react';
+import { Divider, VStack } from '@chakra-ui/react';
 import { Bonus, BonusPartResult } from '@qbhub/types';
 import { Fragment, useMemo } from 'react';
 import { QuestionContentDisplayProps } from '../components/QuestionReader';
@@ -32,7 +32,7 @@ export default function BonusReaderContentDisplay({
 
   return (
     <QuestionContentContainer>
-      <Flex direction="column" gap={4}>
+      <VStack align="stretch" spacing={4}>
         {bonusPartResults.slice(0, bonusPartNumber).map((bonusPartResult) => (
           <Fragment key={bonusPartResult.number}>
             <BonusReaderPreviousBonusPart
@@ -50,7 +50,7 @@ export default function BonusReaderContentDisplay({
           visibleRef={visibleRef}
           words={words}
         />
-      </Flex>
+      </VStack>
     </QuestionContentContainer>
   );
 }
