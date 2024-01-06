@@ -9,7 +9,6 @@ export default function useAutoScrollIntoView<T extends Element>(
   useEffect(() => {
     if (visibleRef.current != null)
       visibleRef.current?.scrollIntoView({
-        behavior: 'smooth',
         block: 'center',
       });
   }, [dependencies]);
