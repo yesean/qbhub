@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react';
+import { VStack } from '@chakra-ui/react';
 import { Tossup } from '@qbhub/types';
 import { useMemo } from 'react';
 import FormattedQuestion from '../components/FormattedQuestion';
@@ -29,7 +29,7 @@ export default function TossupReaderContentDisplay({
 
   const shouldShowAnswer = status === QuestionReaderStatus.Judged;
   return (
-    <Flex direction="column" gap={4} overflow="auto">
+    <VStack align="stretch" overflow="auto" spacing={4}>
       {shouldShowAnswer && (
         <QuestionContentContainer flex="1 0 auto" maxH="100px">
           <TossupReaderAnswerDisplay tossup={tossup} />
@@ -43,6 +43,6 @@ export default function TossupReaderContentDisplay({
           words={words}
         />
       </QuestionContentContainer>
-    </Flex>
+    </VStack>
   );
 }
