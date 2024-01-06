@@ -27,7 +27,7 @@ export default function BonusResultAccordion({
             <QuestionInfo questionMetadata={result.bonus} />
             <BonusResultScoreBadge result={result} />
           </AccordionButton>
-          <AccordionPanel borderRadius="md" px={8}>
+          <AccordionPanel>
             <BonusResultDisplay result={result} />
           </AccordionPanel>
         </Box>
