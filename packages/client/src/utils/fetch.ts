@@ -6,7 +6,7 @@ import {
   SelectedClue,
   Tossup,
 } from '@qbhub/types';
-import { log } from '@qbhub/utils';
+import { Err, Result, log, makeErr, makeOk } from '@qbhub/utils';
 import axios from 'axios';
 import qs from 'qs';
 
@@ -59,23 +59,25 @@ export const fetchBonuses = async (
   }
 };
 
+export type FetchFreqErr = Err<{ errType: 'FetchFreqErr' }>;
+
 type FreqQuestionFilters = PartialOptional<
   QuestionFilters,
   'answer' | 'from' | 'limit' | 'sort' | 'text' | 'until'
 >;
 export const fetchFreq = async (
   params: FreqQuestionFilters,
-): Promise<FrequencyListEntry[]> => {
+): Promise<Result<{ entries: FrequencyListEntry[] }, FetchFreqErr>> => {
   const url = addParams(ENDPOINTS.frequencyList, qs.stringify(params));
 
   try {
     log.info('Fetching frequency list');
     const { data } = await axios.get<FrequencyListEntry[]>(url);
     log.info('Finished fetching frequency list');
-    return data;
-  } catch (err) {
-    log.error('Error fetching frequency list', err);
-    return [];
+
+    return makeOk({ entries: data });
+  } catch (error) {
+    return makeErr({ errType: 'FetchFreqErr' as const });
   }
 };
 

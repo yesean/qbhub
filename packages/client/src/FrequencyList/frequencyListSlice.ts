@@ -1,80 +1,97 @@
 import { FrequencyListEntry } from '@qbhub/types';
-import { log } from '@qbhub/utils';
+import { Err, Result, log, makeErr, makeOk, matchResult } from '@qbhub/utils';
 import { createSlice } from '@reduxjs/toolkit';
 import type { RootState } from '../redux/store';
 import { createAppAsyncThunk } from '../redux/utils';
 import * as fetchUtils from '../utils/fetch';
+import { FetchFreqErr } from '../utils/fetch';
 import { Settings } from '../utils/settings/types';
 
-export const PAGE_SIZE = 20;
-export const FETCH_LIMIT = 5 * PAGE_SIZE;
-
-export enum FreqFetchStatus {
-  idle,
-  active,
-}
-
-export enum FreqStatus {
-  initial, // the initial state when results and page are empty
-  idle,
-  loading,
-}
-
 type FrequencyListState = {
-  fetchStatus: FreqFetchStatus;
+  hasMoreEntries: boolean;
+  isFetching: boolean;
   offset: number;
-  page: FrequencyListEntry[];
-  results: FrequencyListEntry[];
-  status: FreqStatus;
+  results: FrequencyListEntry[] | undefined;
 };
 
 const initialState: FrequencyListState = {
-  fetchStatus: FreqFetchStatus.idle,
+  hasMoreEntries: true,
+  isFetching: false,
   offset: 0,
-  page: [],
-  results: [],
-  status: FreqStatus.initial,
+  results: undefined,
 };
+
+const PAGE_SIZE = 20;
+const FETCH_LIMIT = 5 * PAGE_SIZE;
+
+type NoMoreEntriesErr = Err<{ errType: 'NoMoreEntriesErr' }>;
+type UndefinedResultsErr = Err<{ errType: 'UndefinedResultsErr' }>;
 
 type FetchPagesArgs = { offset: number; settings: Settings };
 export const fetchPages = createAppAsyncThunk<
-  FrequencyListEntry[],
+  Result<{ newEntries: FrequencyListEntry[] }, FetchFreqErr | NoMoreEntriesErr>,
   FetchPagesArgs
->(
-  'frequencyList/fetchPages',
-  async ({ offset, settings }) => {
-    const fetchParams = { ...settings, limit: FETCH_LIMIT, offset };
-    const freq = await fetchUtils.fetchFreq(fetchParams);
-    return freq;
-  },
-  {
-    condition: (_, { getState }) => {
-      const {
-        frequencyList: { fetchStatus },
-      } = getState();
-      return fetchStatus === FreqFetchStatus.idle;
-    },
-  },
-);
+>('frequencyList/fetchPages', async ({ offset, settings }, { getState }) => {
+  const fetchParams = { ...settings, limit: FETCH_LIMIT, offset };
+  if (!getState().frequencyList.hasMoreEntries) {
+    return makeErr({
+      errType: 'NoMoreEntriesErr' as const,
+    });
+  }
+
+  const fetchFreqResult = await fetchUtils.fetchFreq(fetchParams);
+  return matchResult(fetchFreqResult, ({ entries }) => {
+    const {
+      frequencyList: { results },
+    } = getState();
+    const seenAnswerlines = new Set(results?.map(({ answer }) => answer));
+    const newEntries = entries.filter(
+      ({ answer }) => !seenAnswerlines.has(answer),
+    );
+
+    if (newEntries.length === 0) {
+      return makeErr({
+        errType: 'NoMoreEntriesErr' as const,
+      });
+    }
+    return makeOk({ newEntries });
+  });
+});
 
 type NextPageArgs = Omit<FetchPagesArgs, 'offset'>;
-export const nextPage = createAppAsyncThunk<void, NextPageArgs>(
+type NextPageResult = Result<
+  { nextOffset: number },
+  FetchFreqErr | NoMoreEntriesErr | UndefinedResultsErr
+>;
+export const nextPage = createAppAsyncThunk<NextPageResult, NextPageArgs>(
   'frequencyList/nextPage',
   async (args, { dispatch, getState }) => {
     const {
-      frequencyList: { offset, results },
+      frequencyList: { isFetching, offset, results },
     } = getState();
-    if (offset + PAGE_SIZE >= results.length) {
-      // if on the last page, wait for fetch
-      await dispatch(fetchPages({ ...args, offset: results.length })).unwrap();
-    } else if (offset + 3 * PAGE_SIZE >= results.length) {
-      // if 3 pages from the last page, fetch more in the background
-      log.info('Less than 3 pages left, prefetching frequency list pages');
-      dispatch(fetchPages({ ...args, offset: results.length }))
-        .unwrap()
-        .then(() => log.info('Finished prefetching frequency list pages'))
-        .catch((e) => log.error('Error prefetching frequency list pages', e));
+
+    if (results === undefined) {
+      return makeErr({
+        errType: 'UndefinedResultsErr' as const,
+      });
     }
+
+    const nextOffset = offset + PAGE_SIZE;
+    // if on the last page, wait for fetch
+    if (nextOffset >= results.length) {
+      const fetchPagesResult = await dispatch(
+        fetchPages({ ...args, offset: results.length }),
+      ).unwrap();
+      return matchResult(fetchPagesResult, () => makeOk({ nextOffset }));
+    }
+
+    // if 3 pages from the last page, fetch more in the background
+    if (offset + 3 * PAGE_SIZE >= results.length && !isFetching) {
+      log.info('Less than 3 pages left, prefetching frequency list pages');
+      dispatch(fetchPages({ ...args, offset: results.length }));
+    }
+
+    return makeOk({ nextOffset });
   },
 );
 
@@ -82,53 +99,52 @@ const frequencyListSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchPages.pending, (state) => {
-        state.fetchStatus = FreqFetchStatus.active;
+        state.isFetching = true;
       })
-      .addCase(fetchPages.fulfilled, (state, action) => {
-        state.results.push(...action.payload);
-        state.page = state.results.slice(
-          state.offset,
-          state.offset + PAGE_SIZE,
-        );
-        state.fetchStatus = FreqFetchStatus.idle;
-        state.status = FreqStatus.idle;
-      });
-    builder
-      .addCase(nextPage.pending, (state) => {
-        state.status = FreqStatus.loading;
-      })
-      .addCase(nextPage.fulfilled, (state) => {
-        state.offset += PAGE_SIZE;
-        state.page = state.results.slice(
-          state.offset,
-          state.offset + PAGE_SIZE,
-        );
-        state.status = FreqStatus.idle;
-      })
-      .addCase(nextPage.rejected, (state) => {
-        state.offset += PAGE_SIZE;
-        state.page = state.results.slice(
-          state.offset,
-          state.offset + PAGE_SIZE,
+      .addCase(fetchPages.fulfilled, (state, { payload }) => {
+        matchResult(
+          payload,
+          ({ newEntries }) => {
+            state.results = [...(state.results ?? []), ...newEntries];
+            state.isFetching = false;
+          },
+          (err) => {
+            if (err.errType === 'NoMoreEntriesErr') {
+              state.hasMoreEntries = false;
+            }
+            state.isFetching = false;
+          },
         );
       });
+    builder.addCase(nextPage.fulfilled, (state, { payload }) => {
+      matchResult(payload, ({ nextOffset }) => {
+        log.info(`Setting nextOffset to ${nextOffset}`);
+        state.offset = nextOffset;
+      });
+    });
   },
   initialState,
   name: 'frequencyList',
   reducers: {
     prevPage: (state) => {
       state.offset = Math.max(0, state.offset - PAGE_SIZE);
-      state.page = state.results.slice(state.offset, state.offset + PAGE_SIZE);
     },
-    reset: (state) => {
-      state.status = FreqStatus.initial;
-      state.offset = 0;
-      state.page = [];
-      state.results = [];
+    reset() {
+      return initialState;
     },
   },
 });
-export const selectFrequencyList = (state: RootState) => state.frequencyList;
+export const selectFrequencyList = ({ frequencyList }: RootState) => {
+  const { hasMoreEntries, offset, results } = frequencyList;
+  const currentPage = results?.slice(offset, offset + PAGE_SIZE);
+
+  const maximumOffset =
+    hasMoreEntries || results === undefined
+      ? undefined
+      : results.length - PAGE_SIZE;
+
+  return { ...frequencyList, currentPage, maximumOffset };
+};
 export const { prevPage, reset } = frequencyListSlice.actions;
 
 export default frequencyListSlice.reducer;
