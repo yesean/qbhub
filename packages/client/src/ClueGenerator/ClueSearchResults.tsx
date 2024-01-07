@@ -1,28 +1,18 @@
 import { FrequencyListEntry } from '@qbhub/types';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { RouterLink } from '../components/RouterLink';
+import FrequencyListTable from '../FrequencyList/FrequencyListTable';
 import TableSkeleton from '../components/TableSkeleton';
-import { KeyValueTable } from '../components/tables';
 import useActions from '../hooks/useActions';
-import {
-  useClueDisplayRouteContext,
-  useClueSearchRouteContext,
-} from '../utils/routes';
+import { useClueSearchRouteContext } from '../utils/routes';
 import ClueSearchEmptyResults from './ClueSearchEmptyResults';
 import { selectClueGenerator } from './clueGeneratorSlice';
-
-const answersFields = [
-  { dataKey: 'answer', label: 'Answer' },
-  { dataKey: 'frequency', label: 'Frequency' },
-] as const;
 
 type ClueSearchResultsDisplayProps = {
   answers: FrequencyListEntry[];
 };
 
 function ClueSearchResultsDisplay({ answers }: ClueSearchResultsDisplayProps) {
-  const { getURL: getClueDisplayURL } = useClueDisplayRouteContext();
   const {
     params: { query },
   } = useClueSearchRouteContext();
@@ -31,21 +21,7 @@ function ClueSearchResultsDisplay({ answers }: ClueSearchResultsDisplayProps) {
     return <ClueSearchEmptyResults query={query} />;
   }
 
-  return (
-    <KeyValueTable
-      data={answers.map((answer) => ({
-        ...answer,
-        answer: (
-          <RouterLink to={getClueDisplayURL({ answer: answer.answer })}>
-            {answer.answer}
-          </RouterLink>
-        ),
-      }))}
-      headers={answersFields}
-      height={700}
-      width={1000}
-    />
-  );
+  return <FrequencyListTable data={answers} maxH={700} overflowY="auto" />;
 }
 
 export default function ClueSearchResults() {
