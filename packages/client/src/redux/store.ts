@@ -5,6 +5,8 @@ import frequencyListReducer from '../FrequencyList/frequencyListSlice';
 import tossupReaderReducer from '../TossupReader/tossupReaderSlice';
 
 export const store = configureStore({
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: false }),
   reducer: {
     bonusReader: bonusReaderReducer,
     clueGenerator: clueGeneratorReducer,
