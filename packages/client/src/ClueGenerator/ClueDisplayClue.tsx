@@ -14,7 +14,7 @@ export default function ClueDisplayClue({ clue }: ClueDisplayClueProps) {
       p={2}
       placement="top"
     >
-      <Text>{clue.text}</Text>
+      <Text whiteSpace="normal">{clue.text}</Text>
     </Tooltip>
   );
 }

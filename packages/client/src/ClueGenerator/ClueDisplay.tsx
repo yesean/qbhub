@@ -7,22 +7,16 @@ import RouterRedirect from '../components/RouterRedirect';
 import TableSkeleton from '../components/TableSkeleton';
 import FileDownloadButton from '../components/buttons/FileDownloadButton';
 import RouterLinkButton from '../components/buttons/RouterLinkButton';
-import { KeyValueTable } from '../components/tables';
 import useActions from '../hooks/useActions';
 import { useAppSelector } from '../redux/utils';
 import {
   useClueDisplayRouteContext,
   useClueSearchRouteContext,
 } from '../utils/routes';
-import ClueDisplayClue from './ClueDisplayClue';
 import ClueDisplayEmptyResults from './ClueDisplayEmptyResults';
 import ClueDisplayHeadline from './ClueDisplayHeadline';
+import ClueDisplayTable from './ClueDisplayTable';
 import { selectClueGenerator } from './clueGeneratorSlice';
-
-const clueFields = [
-  { dataKey: 'clue', label: 'Clue' },
-  { dataKey: 'score', label: 'Score' },
-] as const;
 
 type ClueDisplayDisplayProps = {
   answer: string;
@@ -58,15 +52,7 @@ function ClueDisplayDisplay({ answer, clues }: ClueDisplayDisplayProps) {
       w="60%"
     >
       <ClueDisplayHeadline headline={answer} leadingText="Showing clues for:" />
-      <KeyValueTable
-        data={clues.map((clue) => ({
-          ...clue,
-          clue: <ClueDisplayClue clue={clue} />,
-        }))}
-        headers={clueFields}
-        height={700}
-        width={1000}
-      />
+      <ClueDisplayTable clues={clues} maxH={700} overflowY="auto" />
       <Flex flexShrink={0} gap={4} justify="start">
         <RouterLinkButton
           label="Search"
