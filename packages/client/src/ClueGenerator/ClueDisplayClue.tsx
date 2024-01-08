@@ -1,4 +1,4 @@
-import { Heading, Text, Tooltip } from '@chakra-ui/react';
+import { HStack, Heading, Text, Tooltip } from '@chakra-ui/react';
 import { SelectedClue } from '@qbhub/types';
 
 type ClueDisplayClueProps = {
@@ -22,22 +22,32 @@ export default function ClueDisplayClue({ clue }: ClueDisplayClueProps) {
 type TooltipLabelProps = ClueDisplayClueProps;
 
 function TooltipLabel({ clue }: TooltipLabelProps) {
-  const startIndex = clue.sentence.indexOf(clue.text);
-  if (startIndex === -1) {
-    return (
-      <>
-        <Heading mb={1} size="sm">
+  const similarClueCount = clue.matches.length;
+
+  return (
+    <>
+      <HStack justify="start" spacing={2}>
+        <Heading display="inline" mb={1} size="md">
           {clue.tournament}
         </Heading>
-        <Text>{clue.sentence}</Text>
-      </>
-    );
+        <Text display="inline" mb={1}>
+          ({similarClueCount} similar clues)
+        </Text>
+      </HStack>
+      <TooltipLabelBody clue={clue} />
+    </>
+  );
+}
+
+type TooltipLabelBodyProps = ClueDisplayClueProps;
+
+function TooltipLabelBody({ clue }: TooltipLabelBodyProps) {
+  const startIndex = clue.sentence.indexOf(clue.text);
+  if (startIndex === -1) {
+    return <Text>{clue.sentence}</Text>;
   }
   return (
     <>
-      <Heading mb={1} size="sm">
-        {clue.tournament}
-      </Heading>
       <Text display="inline">{clue.sentence.substring(0, startIndex)}</Text>
       <Text as="mark" bgColor="#fffea9" display="inline">
         {clue.sentence.substring(startIndex, startIndex + clue.text.length)}
