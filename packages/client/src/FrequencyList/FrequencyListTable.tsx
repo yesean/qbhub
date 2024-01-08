@@ -1,7 +1,7 @@
 import { TableContainer, Text } from '@chakra-ui/react';
 import { FrequencyListEntry } from '@qbhub/types';
 import { Table } from '../components/Table';
-import { TableColumns } from '../hooks/useTable';
+import { TableColumns, makeProportion } from '../hooks/useTable';
 import FrequencyListTableAnswer from './FrequencyListTableAnswer';
 
 const COLUMNS: TableColumns<FrequencyListEntry> = [
@@ -9,11 +9,13 @@ const COLUMNS: TableColumns<FrequencyListEntry> = [
     cell: (entry) => <FrequencyListTableAnswer answer={entry.answer} />,
     id: 'answerline',
     label: 'Answer',
+    width: makeProportion(7),
   },
   {
     cell: ({ frequency }) => <Text align="right">{frequency}</Text>,
     id: 'frequency',
     label: <Text align="right">Frequency</Text>,
+    width: makeProportion(3),
   },
 ];
 
