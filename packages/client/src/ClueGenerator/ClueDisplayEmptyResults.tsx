@@ -1,7 +1,7 @@
 import { SearchIcon } from '@chakra-ui/icons';
 import { Container, Flex, Text } from '@chakra-ui/react';
 import RouterLinkButton from '../components/buttons/RouterLinkButton';
-import { useClueSearchRouteContext } from '../utils/routes';
+import { ROUTES } from '../routes';
 import ClueDisplayHeadline from './ClueDisplayHeadline';
 
 type ClueDisplayEmptyResultsProps = { answer: string };
@@ -9,7 +9,7 @@ type ClueDisplayEmptyResultsProps = { answer: string };
 export default function ClueDisplayEmptyResults({
   answer,
 }: ClueDisplayEmptyResultsProps) {
-  const { getURL: getClueSearchURL } = useClueSearchRouteContext();
+  const { getURL: getClueSearchURL } = ROUTES.clueSearch.useRouteContext();
 
   return (
     <Flex align="center" direction="column" gap={4}>

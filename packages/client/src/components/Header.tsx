@@ -1,10 +1,13 @@
 import { HamburgerIcon, SettingsIcon, TimeIcon } from '@chakra-ui/icons';
 import { Box, Flex, Heading, IconButton } from '@chakra-ui/react';
 import { useModalContext } from '../providers/ModalContext';
-import { usePage } from '../utils/routes';
+import { ROUTES } from '../routes';
 
 const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
-  const page = usePage();
+  const { isPage: isTossupReader } = ROUTES.tossupReader.useRouteContext();
+  const { isPage: isBonusReader } = ROUTES.bonusReader.useRouteContext();
+  const isReader = isTossupReader || isBonusReader;
+
   const {
     openBonusHistoryModal,
     openHamburgerMenu,
@@ -12,12 +15,12 @@ const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
     openTossupHistoryModal,
   } = useModalContext();
 
-  const openHistoryModal = page.isTossupReader
+  const openHistoryModal = isTossupReader
     ? openTossupHistoryModal
     : openBonusHistoryModal;
 
   // only render history icon on reader pages
-  const questionHistoryButton = page.isReader ? (
+  const questionHistoryButton = isReader ? (
     <IconButton
       aria-label="Tossup history"
       icon={<TimeIcon boxSize={6} />}

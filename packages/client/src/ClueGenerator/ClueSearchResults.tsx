@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import FrequencyListTable from '../FrequencyList/FrequencyListTable';
 import TableSkeleton from '../components/TableSkeleton';
 import useActions from '../hooks/useActions';
-import { useClueSearchRouteContext } from '../utils/routes';
+import { ROUTES } from '../routes';
 import ClueSearchEmptyResults from './ClueSearchEmptyResults';
 import { selectClueGenerator } from './clueGeneratorSlice';
 
@@ -15,7 +15,7 @@ type ClueSearchResultsDisplayProps = {
 function ClueSearchResultsDisplay({ answers }: ClueSearchResultsDisplayProps) {
   const {
     params: { query },
-  } = useClueSearchRouteContext();
+  } = ROUTES.clueSearch.useRouteContext();
 
   if (answers.length === 0) {
     return <ClueSearchEmptyResults query={query} />;
@@ -28,7 +28,7 @@ export default function ClueSearchResults() {
   const { answers, isFetching } = useSelector(selectClueGenerator);
   const {
     params: { query },
-  } = useClueSearchRouteContext();
+  } = ROUTES.clueSearch.useRouteContext();
   const { dispatchFetchAnswers } = useActions();
 
   useEffect(() => {

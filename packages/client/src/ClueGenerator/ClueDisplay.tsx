@@ -9,10 +9,7 @@ import FileDownloadButton from '../components/buttons/FileDownloadButton';
 import RouterLinkButton from '../components/buttons/RouterLinkButton';
 import useActions from '../hooks/useActions';
 import { useAppSelector } from '../redux/utils';
-import {
-  useClueDisplayRouteContext,
-  useClueSearchRouteContext,
-} from '../utils/routes';
+import { ROUTES } from '../routes';
 import ClueDisplayEmptyResults from './ClueDisplayEmptyResults';
 import ClueDisplayHeadline from './ClueDisplayHeadline';
 import ClueDisplayTable from './ClueDisplayTable';
@@ -24,7 +21,7 @@ type ClueDisplayDisplayProps = {
 };
 
 function ClueDisplayDisplay({ answer, clues }: ClueDisplayDisplayProps) {
-  const { getURL: getClueSearchURL } = useClueSearchRouteContext();
+  const { getURL: getClueSearchURL } = ROUTES.clueSearch.useRouteContext();
 
   if (clues.length === 0) {
     return <ClueDisplayEmptyResults answer={answer} />;
@@ -73,10 +70,10 @@ function ClueDisplayDisplay({ answer, clues }: ClueDisplayDisplayProps) {
 
 export default function ClueDisplay() {
   const { clues, isFetching } = useAppSelector(selectClueGenerator);
-  const { getURL: getClueSearchURL } = useClueSearchRouteContext();
+  const { getURL: getClueSearchURL } = ROUTES.clueSearch.useRouteContext();
   const {
     params: { answer },
-  } = useClueDisplayRouteContext();
+  } = ROUTES.clueDisplay.useRouteContext();
   const { dispatchFetchClues } = useActions();
 
   useEffect(() => {

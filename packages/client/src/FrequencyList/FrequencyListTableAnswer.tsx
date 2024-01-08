@@ -1,6 +1,6 @@
 import { Text } from '@chakra-ui/react';
 import { RouterLink } from '../components/RouterLink';
-import { useClueDisplayRouteContext } from '../utils/routes';
+import { ROUTES } from '../routes';
 
 type FrequencyListTableAnswerProps = {
   answer: string;
@@ -9,7 +9,7 @@ type FrequencyListTableAnswerProps = {
 export default function FrequencyListTableAnswer({
   answer,
 }: FrequencyListTableAnswerProps) {
-  const { getURL: getClueDisplayURL } = useClueDisplayRouteContext();
+  const { getURL: getClueDisplayURL } = ROUTES.clueDisplay.useRouteContext();
 
   return (
     <RouterLink to={getClueDisplayURL({ answer })}>
