@@ -10,7 +10,7 @@ export default function ClueDisplayHeadline({
   leadingText,
 }: ClueDisplayHeadlineProps) {
   return (
-    <Heading as="h2" lineHeight="1.5" maxW="600px" size="md" textAlign="center">
+    <Heading as="h2" lineHeight="1.5" size="md" textAlign="center">
       {leadingText}{' '}
       <Box as="span" bg="cyan.200" borderRadius="sm" p={1}>
         {headline}

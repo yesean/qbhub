@@ -1,7 +1,7 @@
 import { TableContainer, Text } from '@chakra-ui/react';
 import { SelectedClue } from '@qbhub/types';
 import { Table } from '../components/Table';
-import { TableColumns } from '../hooks/useTable';
+import { TableColumns, makeProportion } from '../hooks/useTable';
 import ClueDisplayClue from './ClueDisplayClue';
 
 const COLUMNS: TableColumns<SelectedClue> = [
@@ -9,11 +9,13 @@ const COLUMNS: TableColumns<SelectedClue> = [
     cell: (entry) => <ClueDisplayClue clue={entry} />,
     id: 'clue',
     label: 'Clue',
+    width: makeProportion(7),
   },
   {
     cell: ({ score }) => <Text align="right">{score}</Text>,
     id: 'score',
     label: <Text align="right">Score</Text>,
+    width: makeProportion(3),
   },
 ];
 
