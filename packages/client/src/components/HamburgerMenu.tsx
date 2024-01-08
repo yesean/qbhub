@@ -7,23 +7,9 @@ import {
   Heading,
   Link,
 } from '@chakra-ui/react';
+import { useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import {
-  getAboutURL,
-  getBonusReaderURL,
-  getClueSearchURL,
-  getFrequencyListURL,
-  getTossupReaderURL,
-  useGlobalQueryParams,
-} from '../utils/routes';
-
-const links = [
-  { getURL: getTossupReaderURL, name: 'Tossup Reader' },
-  { getURL: getBonusReaderURL, name: 'Bonus Reader' },
-  { getURL: getFrequencyListURL, name: 'Frequency List' },
-  { getURL: getClueSearchURL, name: 'Clues Generator' },
-  { getURL: getAboutURL, name: 'About' },
-];
+import { ROUTES } from '../routes';
 
 type HamburgerMenuProps = {
   closeModal: () => void;
@@ -34,7 +20,29 @@ const HamburgerMenu: React.FC<React.PropsWithChildren<HamburgerMenuProps>> = ({
   closeModal,
   isOpen,
 }) => {
-  const [params] = useGlobalQueryParams();
+  const { getURL: getTossupReaderURL } = ROUTES.tossupReader.useRouteContext();
+  const { getURL: getBonusReaderURL } = ROUTES.bonusReader.useRouteContext();
+  const { getURL: getFrequencyListURL } =
+    ROUTES.frequencyList.useRouteContext();
+  const { getURL: getClueSearchURL } = ROUTES.clueSearch.useRouteContext();
+  const { getURL: getAboutURL } = ROUTES.about.useRouteContext();
+
+  const links = useMemo(
+    () => [
+      { getURL: getTossupReaderURL, name: 'Tossup Reader' },
+      { getURL: getBonusReaderURL, name: 'Bonus Reader' },
+      { getURL: getFrequencyListURL, name: 'Frequency List' },
+      { getURL: getClueSearchURL, name: 'Clues Generator' },
+      { getURL: getAboutURL, name: 'About' },
+    ],
+    [
+      getAboutURL,
+      getBonusReaderURL,
+      getClueSearchURL,
+      getFrequencyListURL,
+      getTossupReaderURL,
+    ],
+  );
 
   return (
     <Drawer isOpen={isOpen} onClose={closeModal} placement="right">
@@ -49,7 +57,7 @@ const HamburgerMenu: React.FC<React.PropsWithChildren<HamburgerMenuProps>> = ({
               as={RouterLink}
               p={4}
               textAlign="center"
-              to={getURL(params)}
+              to={getURL({}).href}
               w="100%"
             >
               <Heading size="md">{name}</Heading>

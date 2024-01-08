@@ -10,7 +10,7 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import QBHubModal from '../components/QBHubModal';
-import { usePage } from '../utils/routes';
+import { ROUTES } from '../routes';
 
 type Shortcut = {
   description: JSX.Element | string;
@@ -96,7 +96,10 @@ const InfoModal: React.FC<React.PropsWithChildren<InfoModalProps>> = ({
   closeModal,
   isOpen,
 }) => {
-  const page = usePage();
+  const { isPage: isTossupReader } = ROUTES.tossupReader.useRouteContext();
+  const { isPage: isBonusReader } = ROUTES.bonusReader.useRouteContext();
+  const { isPage: isFrequencyList } = ROUTES.frequencyList.useRouteContext();
+  const isReader = isTossupReader || isBonusReader;
 
   const renderShortcutLabel = (label: string[] | string) => {
     if (Array.isArray(label)) {
@@ -134,7 +137,7 @@ const InfoModal: React.FC<React.PropsWithChildren<InfoModalProps>> = ({
   );
 
   const renderLocalShortcuts = () => {
-    if (page.isReader) {
+    if (isReader) {
       return (
         <>
           <Heading size="sm">Reader Shortcuts</Heading>
@@ -142,7 +145,7 @@ const InfoModal: React.FC<React.PropsWithChildren<InfoModalProps>> = ({
         </>
       );
     }
-    if (page.isFrequencyList) {
+    if (isFrequencyList) {
       return (
         <>
           <Heading size="sm">Frequency List Shortcuts</Heading>

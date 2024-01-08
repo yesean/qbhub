@@ -1,7 +1,5 @@
-import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
-import { useGetURL } from '../utils/routes';
+import { ROUTES } from '../routes';
 import { useModalContext } from './ModalContext';
 
 type Props = {
@@ -9,48 +7,25 @@ type Props = {
 };
 
 export default function KeyboardShortcutProvider({ children }: Props) {
-  const navigate = useNavigate();
   const { openInfoModal, openSettingsModal, openUpdatesModal } =
     useModalContext();
-  const {
-    getAboutURL,
-    getBonusReaderURL,
-    getClueSearchURL,
-    getFrequencyListURL,
-    getTossupReaderURL,
-  } = useGetURL();
+  const { getURL: getTossupReaderURL } = ROUTES.tossupReader.useRouteContext();
+  const { getURL: getBonusReaderURL } = ROUTES.bonusReader.useRouteContext();
+  const { getURL: getFrequencyListURL } =
+    ROUTES.frequencyList.useRouteContext();
+  const { getURL: getClueSearchURL } = ROUTES.clueSearch.useRouteContext();
+  const { getURL: getAboutURL } = ROUTES.about.useRouteContext();
 
   // open modal shortcuts
   useKeyboardShortcut('?', openInfoModal);
   useKeyboardShortcut('s', openSettingsModal);
   useKeyboardShortcut('u', openUpdatesModal);
 
-  // switch pages shortcuts
-  const goToTossupReader = useCallback(
-    () => navigate(getTossupReaderURL()),
-    [getTossupReaderURL, navigate],
-  );
-  const goToBonusReader = useCallback(
-    () => navigate(getBonusReaderURL()),
-    [getBonusReaderURL, navigate],
-  );
-  const goToFrequencyList = useCallback(
-    () => navigate(getFrequencyListURL()),
-    [getFrequencyListURL, navigate],
-  );
-  const goToClueSearch = useCallback(
-    () => navigate(getClueSearchURL()),
-    [getClueSearchURL, navigate],
-  );
-  const goToAbout = useCallback(
-    () => navigate(getAboutURL()),
-    [getAboutURL, navigate],
-  );
-  useKeyboardShortcut('1', goToTossupReader);
-  useKeyboardShortcut('2', goToBonusReader);
-  useKeyboardShortcut('3', goToFrequencyList);
-  useKeyboardShortcut('4', goToClueSearch);
-  useKeyboardShortcut('5', goToAbout);
+  useKeyboardShortcut('1', getTossupReaderURL({}).go);
+  useKeyboardShortcut('2', getBonusReaderURL({}).go);
+  useKeyboardShortcut('3', getFrequencyListURL({}).go);
+  useKeyboardShortcut('4', getClueSearchURL({}).go);
+  useKeyboardShortcut('5', getAboutURL({}).go);
 
   return children;
 }

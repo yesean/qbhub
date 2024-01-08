@@ -1,9 +1,9 @@
 import { Navigate } from 'react-router-dom';
-import { getTossupReaderURL, useGlobalQueryParams } from '../utils/routes';
+import { ROUTES } from '../routes';
 
 // Navigate wrapper for passing query params
 export default function RedirectToTossupReader() {
-  const [params] = useGlobalQueryParams();
+  const { getURL } = ROUTES.tossupReader.useRouteContext();
 
-  return <Navigate to={getTossupReaderURL(params)} />;
+  return <Navigate to={getURL({}).href} />;
 }

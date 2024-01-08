@@ -4,13 +4,13 @@ import { useCallback, useEffect } from 'react';
 import RouterLinkButton from '../components/buttons/RouterLinkButton';
 import useInput from '../hooks/useInput';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
-import { useClueSearchRouteContext } from '../utils/routes';
+import { ROUTES } from '../routes';
 
 export default function ClueSearchInput() {
   const {
     getURL: getClueSearchURL,
     params: { query },
-  } = useClueSearchRouteContext();
+  } = ROUTES.clueSearch.useRouteContext();
   const { blurInput, focusInput, inputRef, setUserInput, userInput } =
     useInput(query);
   const debouncedUserInput = useDebounce(userInput, 300);

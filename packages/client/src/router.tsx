@@ -11,15 +11,8 @@ import FrequencyList from './FrequencyList';
 import KeyboardShortcutProvider from './providers/KeyboardShortcutProvider';
 import { ModalProvider } from './providers/ModalProvider';
 import SettingsProvider from './providers/SettingsProvider';
+import { ROUTES } from './routes';
 import TossupReader from './TossupReader';
-import {
-  getAboutURL,
-  getBonusReaderURL,
-  getClueDisplayURL,
-  getClueSearchURL,
-  getFrequencyListURL,
-  getTossupReaderURL,
-} from './utils/routes';
 
 const paths = [
   {
@@ -28,27 +21,27 @@ const paths = [
   },
   {
     element: <TossupReader />,
-    path: getTossupReaderURL(),
+    path: ROUTES.tossupReader.path,
   },
   {
     element: <BonusReader />,
-    path: getBonusReaderURL(),
+    path: ROUTES.bonusReader.path,
   },
   {
     element: <FrequencyList />,
-    path: getFrequencyListURL(),
+    path: ROUTES.frequencyList.path,
   },
   {
     element: <ClueSearch />,
-    path: getClueSearchURL(),
+    path: ROUTES.clueSearch.path,
   },
   {
     element: <ClueDisplay />,
-    path: getClueDisplayURL(),
+    path: ROUTES.clueDisplay.path,
   },
   {
     element: <About />,
-    path: getAboutURL(),
+    path: ROUTES.about.path,
   },
 ];
 
