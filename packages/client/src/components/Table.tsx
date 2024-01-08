@@ -27,7 +27,9 @@ export function Table<T>({
         <Thead bgColor="white" pos="sticky" top={0}>
           <Tr>
             {headers.map((header) => (
-              <Th key={header.id}>{header.element}</Th>
+              <Th key={header.id} w={`${header.widthPercentage}%`}>
+                {header.element}
+              </Th>
             ))}
           </Tr>
         </Thead>
@@ -36,7 +38,9 @@ export function Table<T>({
             // eslint-disable-next-line react/no-array-index-key
             <Tr key={index}>
               {cells.map((cell) => (
-                <Td key={cell.columnID}>{cell.element}</Td>
+                <Td key={cell.columnID} w={`${cell.widthPercentage}%`}>
+                  {cell.element}
+                </Td>
               ))}
             </Tr>
           ))}
