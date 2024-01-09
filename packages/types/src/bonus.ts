@@ -13,8 +13,8 @@ export type Bonus = QuestionMetadata & {
 export type BonusPart = QuestionContent & { number: number };
 
 export type BonusResult = {
-  bonus: Bonus;
   parts: BonusPartResult[];
+  question: Bonus;
   score: BonusScore;
 };
 

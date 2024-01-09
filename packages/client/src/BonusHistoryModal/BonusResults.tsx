@@ -11,7 +11,7 @@ export default function BonusResults() {
       {results.map((result, index) => (
         <BonusResultAccordion
           // eslint-disable-next-line react/no-array-index-key
-          key={`${result.bonus.id}${index}`}
+          key={`${result.question.id}${index}`}
           result={result}
         />
       ))}

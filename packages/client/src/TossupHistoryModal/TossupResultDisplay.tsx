@@ -17,7 +17,7 @@ export default function TossupResultDisplay({ result }: TossupResultProps) {
           words={result.formattedWords}
         />
       </Box>
-      <TossupReaderAnswerDisplay tossup={result.tossup} />
+      <TossupReaderAnswerDisplay tossup={result.question} />
       <TossupResultUserInput result={result} />
     </>
   );

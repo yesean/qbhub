@@ -28,6 +28,8 @@ export type QuestionResult = {
   userAnswer: string;
 };
 
+export type ScoredQuestionResult = QuestionResult & { score: number };
+
 export type FormattedWord = {
   isBold: boolean;
   value: string;

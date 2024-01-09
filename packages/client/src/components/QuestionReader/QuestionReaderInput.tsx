@@ -28,18 +28,18 @@ const getButtonText = (status: QuestionReaderStatus): string => {
 };
 
 type QuestionReaderInputProps = {
+  currentResult: QuestionResult | undefined;
   inputRef: React.RefObject<HTMLInputElement>;
   onClick: () => void;
-  result: QuestionResult | undefined;
   setUserInput: React.Dispatch<React.SetStateAction<string>>;
   status: QuestionReaderStatus;
   userInput: string;
 };
 
 export default function QuestionReaderInput({
+  currentResult,
   inputRef,
   onClick,
-  result,
   setUserInput,
   status,
   userInput,
@@ -51,7 +51,7 @@ export default function QuestionReaderInput({
     <Flex justify="center" w="100%">
       <Input
         ref={inputRef}
-        borderColor={getInputBorderColor(status, result)}
+        borderColor={getInputBorderColor(status, currentResult)}
         borderWidth={shouldShowBorder ? 2 : undefined}
         isDisabled={shouldDisableInput}
         mr={4}

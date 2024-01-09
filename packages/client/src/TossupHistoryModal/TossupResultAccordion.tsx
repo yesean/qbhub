@@ -22,7 +22,7 @@ export default function TossupResultAccordion({ result }: TossupResultProps) {
         <Box>
           <AccordionButton>
             <AccordionIcon />
-            <QuestionInfo questionMetadata={result.tossup} />
+            <QuestionInfo questionMetadata={result.question} />
             <TossupResultScoreBadge result={result} />
           </AccordionButton>
           <AccordionPanel>
