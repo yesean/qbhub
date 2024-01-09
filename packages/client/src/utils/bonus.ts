@@ -8,6 +8,7 @@ import {
   BonusScore,
   FormattedWord,
   QuestionResult,
+  ScoredQuestionResult,
 } from '@qbhub/types';
 
 export function getBonusPartResult(
@@ -44,8 +45,8 @@ export function getBonusResult(
   })();
 
   return {
-    bonus,
     parts: results,
+    question: bonus,
     score,
   };
 }
@@ -163,4 +164,17 @@ export function getBonusResultsSummary(
     }),
     INITIAL_BONUS_RESULTS_SUMMARY,
   );
+}
+
+export function getBonusPartResultWithMetadata(
+  bonusPartResult: BonusPartResult,
+  bonusResult: BonusResult,
+): ScoredQuestionResult {
+  return {
+    ...bonusPartResult,
+    question: {
+      ...bonusPartResult.bonusPart,
+      ...bonusResult.question,
+    },
+  };
 }

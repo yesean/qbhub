@@ -22,10 +22,10 @@ export function getTossupResult(
   normalizedAnswer: string,
 ): TossupResult {
   return {
-    formattedWords: getFormattedWords(result.question.formattedText),
-    score: getTossupResultScore(result),
-    tossup: { ...result.question, normalizedAnswer },
     ...result,
+    formattedWords: getFormattedWords(result.question.formattedText),
+    question: { ...result.question, normalizedAnswer },
+    score: getTossupResultScore(result),
   };
 }
 

@@ -10,19 +10,23 @@ type UseRevealerType = {
 };
 
 type UseRevealerProps = {
+  isRevealed: boolean;
   onFinish: () => void;
   words: unknown[];
   onChange?: (visibleIndex: number) => void;
 };
 
 export default function useRevealer({
+  isRevealed,
   onChange,
   onFinish,
   words,
 }: UseRevealerProps): UseRevealerType {
-  const [visibleIndex, setVisibleIndex] = useState(-1);
+  const [visibleIndex, setVisibleIndex] = useState(
+    isRevealed ? words.length - 1 : -1,
+  );
   const [isPaused, setIsPaused] = useState(false);
-  const [isFinished, setIsFinished] = useState(false);
+  const [isFinished, setIsFinished] = useState(isRevealed);
   const {
     settings: { readingSpeed },
   } = useSettings();

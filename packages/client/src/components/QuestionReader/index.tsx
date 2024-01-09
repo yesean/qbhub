@@ -1,5 +1,10 @@
 import { Flex } from '@chakra-ui/react';
-import { FormattedWord, Question, QuestionResult } from '@qbhub/types';
+import {
+  FormattedWord,
+  Question,
+  QuestionResult,
+  ScoredQuestionResult,
+} from '@qbhub/types';
 import { useCallback, useMemo, useState } from 'react';
 import useInput from '../../hooks/useInput';
 import { QuestionReaderStatus } from '../../utils/questionReader';
@@ -7,7 +12,7 @@ import { getFormattedWords } from '../../utils/reader';
 import QuestionInfo from './QuestionInfo';
 import QuestionReaderInput from './QuestionReaderInput';
 import QuestionReaderProgress from './QuestionReaderProgress';
-import QuestionReaderScore, { DisplayResult } from './QuestionReaderScore';
+import QuestionReaderScore from './QuestionReaderScore';
 import useReader from './useReader';
 
 export type QuestionContentDisplayProps = {
@@ -21,7 +26,7 @@ export type QuestionContentDisplay =
   React.ComponentType<QuestionContentDisplayProps>;
 
 type QuestionReaderProps = {
-  displayResult: DisplayResult;
+  latestResult: ScoredQuestionResult | undefined;
   onJudged: (result: QuestionResult) => void;
   onNextQuestion: () => void;
   onPrompt: (result: QuestionResult) => void;
@@ -31,7 +36,7 @@ type QuestionReaderProps = {
 };
 
 export default function QuestionReader({
-  displayResult,
+  latestResult,
   onJudged,
   onNextQuestion,
   onPrompt,
@@ -39,8 +44,11 @@ export default function QuestionReader({
   renderQuestionContentDisplay: QuestionContentDisplay,
   score,
 }: QuestionReaderProps) {
-  const [buzzIndex, setBuzzIndex] = useState<number>();
-  const [result, setResult] = useState<QuestionResult>();
+  const isCurrentQuestionJudged = question.id === latestResult?.question.id;
+
+  const [buzzIndex, setBuzzIndex] = useState<number | undefined>(
+    isCurrentQuestionJudged ? latestResult?.buzzIndex : undefined,
+  );
   const [promptCount, setPromptCount] = useState(0);
 
   const {
@@ -50,7 +58,7 @@ export default function QuestionReader({
     selectInput,
     setUserInput,
     userInput,
-  } = useInput();
+  } = useInput(isCurrentQuestionJudged ? latestResult?.userAnswer : undefined);
 
   const formattedWords = useMemo(
     () => getFormattedWords(question.formattedText),
@@ -59,7 +67,6 @@ export default function QuestionReader({
 
   const handleJudged = useCallback(
     (judgedResult: QuestionResult) => {
-      setResult(judgedResult);
       setBuzzIndex(judgedResult.buzzIndex);
       blurInput();
       onJudged(judgedResult);
@@ -83,6 +90,7 @@ export default function QuestionReader({
   }, [blurInput, onNextQuestion]);
 
   const { handleClick, status, visibleIndex } = useReader({
+    isCurrentQuestionJudged,
     onBuzz: focusInput,
     onJudged: handleJudged,
     onNext: handleNext,
@@ -92,6 +100,7 @@ export default function QuestionReader({
   });
 
   const shouldShowProgress = status === QuestionReaderStatus.Answering;
+  const currentResult = isCurrentQuestionJudged ? latestResult : undefined;
 
   return (
     <Flex direction="column" gap={4} maxW="container.md" overflow="auto" p={2}>
@@ -107,14 +116,14 @@ export default function QuestionReader({
         <QuestionReaderProgress key={promptCount} onFinish={handleClick} />
       )}
       <QuestionReaderInput
+        currentResult={currentResult}
         inputRef={inputRef}
         onClick={handleClick}
-        result={result}
         setUserInput={setUserInput}
         status={status}
         userInput={userInput}
       />
-      <QuestionReaderScore result={displayResult} score={score} />
+      <QuestionReaderScore currentResult={latestResult} score={score} />
     </Flex>
   );
 }

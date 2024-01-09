@@ -1,5 +1,11 @@
 import { useToast } from '@chakra-ui/react';
-import { Bonus, QuestionResult } from '@qbhub/types';
+import {
+  Bonus,
+  BonusPartResult,
+  BonusResult,
+  QuestionResult,
+  ScoredQuestionResult,
+} from '@qbhub/types';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import QuestionReader, {
@@ -15,6 +21,7 @@ import {
   combineBonusPartWithLeadin,
   displayToast,
   getBonusPartResult,
+  getBonusPartResultWithMetadata,
   getBonusResult,
   isLastBonusPart,
 } from '../utils/bonus';
@@ -25,14 +32,25 @@ import useBonusReaderReducer from './useBonusReaderReducer';
 
 type BonusReaderDisplayProps = {
   currentBonus: Bonus;
+  latestBonusPartResult: BonusPartResult | undefined;
+  latestBonusResult: BonusResult | undefined;
   score: number;
 };
 
-function BonusReaderDisplay({ currentBonus, score }: BonusReaderDisplayProps) {
-  const [
-    { bonusPartNumber, bonusPartResults, bonusResult },
-    dispatchBonusReader,
-  ] = useBonusReaderReducer();
+function BonusReaderDisplay({
+  currentBonus,
+  latestBonusPartResult,
+  latestBonusResult,
+  score,
+}: BonusReaderDisplayProps) {
+  const isCurrentBonusJudged =
+    currentBonus.id === latestBonusResult?.question.id;
+  const initialBonusReaderState = isCurrentBonusJudged
+    ? { bonusPartNumber: 2, bonusPartResults: latestBonusResult.parts }
+    : undefined;
+
+  const [{ bonusPartNumber, bonusPartResults }, dispatchBonusReader] =
+    useBonusReaderReducer(initialBonusReaderState);
   const { openBonusHistoryModal } = useModalContext();
   const { dispatchNextBonus } = useActions();
   const dispatch = useAppDispatch();
@@ -132,14 +150,30 @@ function BonusReaderDisplay({ currentBonus, score }: BonusReaderDisplayProps) {
 
   useKeyboardShortcut('h', openBonusHistoryModal);
 
+  const latestBonusPartResultWithMetadata = useMemo<
+    ScoredQuestionResult | undefined
+  >(() => {
+    if (
+      latestBonusResult === undefined ||
+      latestBonusPartResult === undefined
+    ) {
+      return undefined;
+    }
+
+    return getBonusPartResultWithMetadata(
+      latestBonusPartResult,
+      latestBonusResult,
+    );
+  }, [latestBonusPartResult, latestBonusResult]);
+
   if (currentQuestion === undefined) {
     return <QuestionReaderSkeleton />;
   }
 
   return (
     <QuestionReader
-      key={bonusPartNumber}
-      displayResult={bonusResult}
+      key={`${currentBonus.id}-${bonusPartNumber}`}
+      latestResult={latestBonusPartResultWithMetadata}
       onJudged={handleQuestionResult}
       onNextQuestion={handleNextQuestion}
       onPrompt={handlePrompt}
@@ -151,8 +185,14 @@ function BonusReaderDisplay({ currentBonus, score }: BonusReaderDisplayProps) {
 }
 
 export default function BonusReader() {
-  const { currentBonus, isFetching, isUninitialized, isUserWaiting, score } =
-    useSelector(selectBonusReader);
+  const {
+    currentBonus,
+    isUninitialized,
+    isUserWaiting,
+    latestBonusPartResult,
+    latestBonusResult,
+    score,
+  } = useSelector(selectBonusReader);
   const { dispatchNextBonus } = useActions();
 
   useKeyboardShortcut('n', dispatchNextBonus, {
@@ -163,7 +203,7 @@ export default function BonusReader() {
     return <TealButton onClick={dispatchNextBonus}>Start bonuses</TealButton>;
   }
 
-  if (isFetching && isUserWaiting) {
+  if (isUserWaiting) {
     return <QuestionReaderSkeleton />;
   }
 
@@ -171,5 +211,12 @@ export default function BonusReader() {
     return <EmptyBonusesNotice />;
   }
 
-  return <BonusReaderDisplay currentBonus={currentBonus} score={score} />;
+  return (
+    <BonusReaderDisplay
+      currentBonus={currentBonus}
+      latestBonusPartResult={latestBonusPartResult}
+      latestBonusResult={latestBonusResult}
+      score={score}
+    />
+  );
 }

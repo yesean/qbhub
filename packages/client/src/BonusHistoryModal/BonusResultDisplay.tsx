@@ -15,7 +15,7 @@ export default function BonusResultDisplay({
       {result.parts.map((bonusPartResult, index) => (
         <Fragment key={bonusPartResult.number}>
           <BonusReaderPreviousBonusPart
-            bonus={result.bonus}
+            bonus={result.question}
             bonusPartResult={bonusPartResult}
           />
           {index < result.parts.length - 1 && (

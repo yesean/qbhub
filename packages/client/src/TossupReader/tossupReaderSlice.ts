@@ -126,7 +126,9 @@ export const selectTossupReader = ({ tossupReader }: RootState) => {
   const isUninitialized =
     tossupReader.tossups === undefined && !tossupReader.isFetching;
 
-  return { ...tossupReader, isUninitialized, score };
+  const latestTossupResult = tossupReader.results.at(0);
+
+  return { ...tossupReader, isUninitialized, latestTossupResult, score };
 };
 
 export default tossupReaderSlice.reducer;

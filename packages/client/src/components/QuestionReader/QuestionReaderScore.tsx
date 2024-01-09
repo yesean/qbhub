@@ -5,16 +5,15 @@ import {
   StatLabel,
   StatNumber,
 } from '@chakra-ui/react';
-
-export type DisplayResult = { score: number } | undefined;
+import { ScoredQuestionResult } from '@qbhub/types';
 
 type QuestionReaderScoreProps = {
-  result: DisplayResult;
+  currentResult: ScoredQuestionResult | undefined;
   score: number;
 };
 
 export default function QuestionReaderScore({
-  result,
+  currentResult,
   score,
 }: QuestionReaderScoreProps) {
   return (
@@ -23,10 +22,10 @@ export default function QuestionReaderScore({
         Score
       </StatLabel>
       <StatNumber textAlign="center">{score}</StatNumber>
-      {result !== undefined && (
+      {currentResult !== undefined && (
         <StatHelpText mb={0} textAlign="center">
-          <StatArrow type={result.score > 0 ? 'increase' : 'decrease'} />
-          {Math.abs(result.score)}
+          <StatArrow type={currentResult.score > 0 ? 'increase' : 'decrease'} />
+          {Math.abs(currentResult.score)}
         </StatHelpText>
       )}
     </Stat>

@@ -12,7 +12,7 @@ export default function TossupResults({ results }: TossupResultsProps) {
       {results.map((result, index) => (
         <TossupResultAccordion
           // eslint-disable-next-line react/no-array-index-key
-          key={`${result.tossup.id}${index}`}
+          key={`${result.question.id}${index}`}
           result={result}
         />
       ))}

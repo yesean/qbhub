@@ -1,17 +1,15 @@
-import { Bonus, BonusPartResult, BonusResult } from '@qbhub/types';
+import { Bonus, BonusPartResult } from '@qbhub/types';
 import { useReducer } from 'react';
-import { getBonusResult, isLastBonusPart } from '../utils/bonus';
+import { isLastBonusPart } from '../utils/bonus';
 
 type BonusReaderState = {
   bonusPartNumber: number;
   bonusPartResults: BonusPartResult[];
-  bonusResult: BonusResult | undefined;
 };
 
 const bonusReaderInitialState: BonusReaderState = {
   bonusPartNumber: 0,
   bonusPartResults: [],
-  bonusResult: undefined,
 };
 
 type BonusReaderAction =
@@ -36,13 +34,7 @@ function bonusReaderReducer(
         action.bonusPartResult,
       ];
 
-      let bonusResult;
-      // if on last bonus part, construct a bonus result from bonus part results
-      if (isLastBonusPart(state.bonusPartNumber, action.bonus)) {
-        bonusResult = getBonusResult(nextBonusPartResults, action.bonus);
-      }
-
-      return { ...state, bonusPartResults: nextBonusPartResults, bonusResult };
+      return { ...state, bonusPartResults: nextBonusPartResults };
     }
     case 'nextBonusPart': {
       // if on last bonus part, reset state
@@ -58,6 +50,9 @@ function bonusReaderReducer(
 
 // Reducer hook for managing bonus reader state
 // State for switching between bonus parts is managed here, while switching between bonuses in managed in redux store
-export default function useBonusReaderReducer() {
-  return useReducer(bonusReaderReducer, bonusReaderInitialState);
+export default function useBonusReaderReducer(initialState?: BonusReaderState) {
+  return useReducer(
+    bonusReaderReducer,
+    initialState ?? bonusReaderInitialState,
+  );
 }

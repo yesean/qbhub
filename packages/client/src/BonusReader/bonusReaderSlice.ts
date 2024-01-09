@@ -128,7 +128,16 @@ export const selectBonusReader = ({ bonusReader }: RootState) => {
   const isUninitialized =
     bonusReader.bonuses === undefined && !bonusReader.isFetching;
 
-  return { ...bonusReader, isUninitialized, score };
+  const latestBonusResult = bonusReader.results.at(0);
+  const latestBonusPartResult = latestBonusResult?.parts.at(-1);
+
+  return {
+    ...bonusReader,
+    isUninitialized,
+    latestBonusPartResult,
+    latestBonusResult,
+    score,
+  };
 };
 
 export default bonusReaderSlice.reducer;

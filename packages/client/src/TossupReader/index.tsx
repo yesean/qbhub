@@ -1,6 +1,6 @@
 import { useToast } from '@chakra-ui/react';
 import { QuestionResult, Tossup, TossupResult } from '@qbhub/types';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import QuestionReader, {
   QuestionContentDisplayProps,
@@ -18,14 +18,15 @@ import { selectTossupReader, submitResult } from './tossupReaderSlice';
 
 type TossupReaderDisplayProps = {
   currentTossup: Tossup;
+  latestTossupResult: TossupResult | undefined;
   score: number;
 };
 
 function TossupReaderDisplay({
   currentTossup,
+  latestTossupResult,
   score,
-}: TossupReaderDisplayProps) {
-  const [tossupResult, setTossupResult] = useState<TossupResult>();
+}: TossupReaderDisplayProps): JSX.Element {
   const { openTossupHistoryModal } = useModalContext();
   const { dispatchNextTossup } = useActions();
   const dispatch = useAppDispatch();
@@ -39,7 +40,6 @@ function TossupReaderDisplay({
         questionResult,
         currentTossup.normalizedAnswer,
       );
-      setTossupResult(newTossupResult);
       dispatch(submitResult(newTossupResult));
       displayToast(toast, { result: newTossupResult, type: 'judged' });
     },
@@ -52,7 +52,6 @@ function TossupReaderDisplay({
 
   const handleNextQuestion = useCallback(() => {
     toast.closeAll();
-    setTossupResult(undefined);
     dispatchNextTossup();
   }, [dispatchNextTossup, toast]);
 
@@ -68,7 +67,7 @@ function TossupReaderDisplay({
   return (
     <QuestionReader
       key={currentTossup.id}
-      displayResult={tossupResult}
+      latestResult={latestTossupResult}
       onJudged={handleQuestionResult}
       onNextQuestion={handleNextQuestion}
       onPrompt={handlePrompt}
@@ -80,8 +79,13 @@ function TossupReaderDisplay({
 }
 
 export default function TossupReader() {
-  const { currentTossup, isFetching, isUninitialized, isUserWaiting, score } =
-    useSelector(selectTossupReader);
+  const {
+    currentTossup,
+    isUninitialized,
+    isUserWaiting,
+    latestTossupResult,
+    score,
+  } = useSelector(selectTossupReader);
   const { dispatchNextTossup } = useActions();
 
   useKeyboardShortcut('n', dispatchNextTossup, {
@@ -92,7 +96,7 @@ export default function TossupReader() {
     return <TealButton onClick={dispatchNextTossup}>Start tossups</TealButton>;
   }
 
-  if (isFetching && isUserWaiting) {
+  if (isUserWaiting) {
     return <QuestionReaderSkeleton />;
   }
 
@@ -100,5 +104,11 @@ export default function TossupReader() {
     return <EmptyTossupsNotice />;
   }
 
-  return <TossupReaderDisplay currentTossup={currentTossup} score={score} />;
+  return (
+    <TossupReaderDisplay
+      currentTossup={currentTossup}
+      latestTossupResult={latestTossupResult}
+      score={score}
+    />
+  );
 }

@@ -18,6 +18,7 @@ type UseReaderType = {
 };
 
 type UseReaderProps = {
+  isCurrentQuestionJudged: boolean;
   onBuzz: () => void;
   onJudged: (result: QuestionResult) => void;
   onNext: () => void;
@@ -33,6 +34,7 @@ type UseReaderProps = {
  * Consumers of the hook can attach callbacks on state changes.
  */
 export default function useReader({
+  isCurrentQuestionJudged,
   onBuzz,
   onJudged,
   onNext,
@@ -41,7 +43,11 @@ export default function useReader({
   question,
   userInput,
 }: UseReaderProps): UseReaderType {
-  const [status, setStatus] = useState(QuestionReaderStatus.Reading);
+  const [status, setStatus] = useState(
+    isCurrentQuestionJudged
+      ? QuestionReaderStatus.Judged
+      : QuestionReaderStatus.Reading,
+  );
   const { judgeInput } = useJudge(question);
 
   const formattedWords = getFormattedWords(question.formattedText);
@@ -67,6 +73,7 @@ export default function useReader({
     reveal: revealQuestion,
     visibleIndex,
   } = useRevealer({
+    isRevealed: isCurrentQuestionJudged,
     onChange: onReveal,
     onFinish: handleFinish, // manually trigger buzz, if all words are revealed before the user buzzes
     words: formattedWords,

@@ -10,8 +10,8 @@ export type Tossup = QuestionContent &
 
 export type TossupResult = Omit<QuestionResult, 'question'> & {
   formattedWords: FormattedWord[];
+  question: Tossup;
   score: TossupScore;
-  tossup: Tossup;
 };
 
 export enum TossupScore {
