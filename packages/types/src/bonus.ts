@@ -1,7 +1,9 @@
 import {
+  InstanceOf,
   QuestionContent,
   QuestionMetadata,
-  QuestionResult,
+  QuestionResultContent,
+  QuestionResultMetadata,
 } from './question.js';
 
 export type Bonus = QuestionMetadata & {
@@ -10,15 +12,17 @@ export type Bonus = QuestionMetadata & {
   parts: BonusPart[];
 };
 
+export type BonusInstance = InstanceOf<Bonus>;
+
 export type BonusPart = QuestionContent & { number: number };
 
-export type BonusResult = {
+export type BonusResult = Omit<QuestionResultMetadata, 'question'> & {
   parts: BonusPartResult[];
   question: Bonus;
   score: BonusScore;
 };
 
-export type BonusPartResult = Omit<QuestionResult, 'question'> & {
+export type BonusPartResult = QuestionResultContent & {
   bonusPart: BonusPart;
   number: number;
   score: BonusPartScore;

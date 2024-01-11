@@ -1,5 +1,6 @@
 import {
   FormattedWord,
+  InstanceOf,
   QuestionContent,
   QuestionMetadata,
   QuestionResult,
@@ -7,6 +8,8 @@ import {
 
 export type Tossup = QuestionContent &
   QuestionMetadata & { normalizedAnswer: string };
+
+export type TossupInstance = InstanceOf<Tossup>;
 
 export type TossupResult = Omit<QuestionResult, 'question'> & {
   formattedWords: FormattedWord[];

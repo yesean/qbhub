@@ -9,12 +9,8 @@ type TossupResultsProps = {
 export default function TossupResults({ results }: TossupResultsProps) {
   return (
     <Flex direction="column" overflow="auto">
-      {results.map((result, index) => (
-        <TossupResultAccordion
-          // eslint-disable-next-line react/no-array-index-key
-          key={`${result.question.id}${index}`}
-          result={result}
-        />
+      {results.map((result) => (
+        <TossupResultAccordion key={result.instanceID} result={result} />
       ))}
     </Flex>
   );

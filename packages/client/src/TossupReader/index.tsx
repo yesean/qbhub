@@ -1,5 +1,5 @@
 import { useToast } from '@chakra-ui/react';
-import { QuestionResult, Tossup, TossupResult } from '@qbhub/types';
+import { QuestionResult, TossupInstance, TossupResult } from '@qbhub/types';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import QuestionReader, {
@@ -17,13 +17,13 @@ import TossupReaderContentDisplay from './TossupReaderContentDisplay';
 import { selectTossupReader, submitResult } from './tossupReaderSlice';
 
 type TossupReaderDisplayProps = {
-  currentTossup: Tossup;
+  currentTossupInstance: TossupInstance;
   latestTossupResult: TossupResult | undefined;
   score: number;
 };
 
 function TossupReaderDisplay({
-  currentTossup,
+  currentTossupInstance,
   latestTossupResult,
   score,
 }: TossupReaderDisplayProps): JSX.Element {
@@ -34,16 +34,16 @@ function TossupReaderDisplay({
 
   const handleQuestionResult = useCallback(
     (questionResult: QuestionResult) => {
-      if (currentTossup === undefined) return;
+      if (currentTossupInstance === undefined) return;
 
       const newTossupResult = getTossupResult(
         questionResult,
-        currentTossup.normalizedAnswer,
+        currentTossupInstance.normalizedAnswer,
       );
       dispatch(submitResult(newTossupResult));
       displayToast(toast, { result: newTossupResult, type: 'judged' });
     },
-    [currentTossup, dispatch, toast],
+    [currentTossupInstance, dispatch, toast],
   );
 
   const handlePrompt = useCallback(() => {
@@ -57,21 +57,21 @@ function TossupReaderDisplay({
 
   const renderQuestionContentDisplay = useCallback(
     (props: QuestionContentDisplayProps) => (
-      <TossupReaderContentDisplay {...props} tossup={currentTossup} />
+      <TossupReaderContentDisplay {...props} tossup={currentTossupInstance} />
     ),
-    [currentTossup],
+    [currentTossupInstance],
   );
 
   useKeyboardShortcut('h', openTossupHistoryModal);
 
   return (
     <QuestionReader
-      key={currentTossup.id}
+      key={currentTossupInstance.instanceID}
       latestResult={latestTossupResult}
       onJudged={handleQuestionResult}
       onNextQuestion={handleNextQuestion}
       onPrompt={handlePrompt}
-      question={currentTossup}
+      questionInstance={currentTossupInstance}
       renderQuestionContentDisplay={renderQuestionContentDisplay}
       score={score}
     />
@@ -80,7 +80,7 @@ function TossupReaderDisplay({
 
 export default function TossupReader() {
   const {
-    currentTossup,
+    currentTossupInstance,
     isUninitialized,
     isUserWaiting,
     latestTossupResult,
@@ -100,13 +100,13 @@ export default function TossupReader() {
     return <QuestionReaderSkeleton />;
   }
 
-  if (currentTossup === undefined) {
+  if (currentTossupInstance === undefined) {
     return <EmptyTossupsNotice />;
   }
 
   return (
     <TossupReaderDisplay
-      currentTossup={currentTossup}
+      currentTossupInstance={currentTossupInstance}
       latestTossupResult={latestTossupResult}
       score={score}
     />

@@ -2,6 +2,7 @@ import { Flex } from '@chakra-ui/react';
 import {
   FormattedWord,
   Question,
+  QuestionInstance,
   QuestionResult,
   ScoredQuestionResult,
 } from '@qbhub/types';
@@ -22,15 +23,15 @@ export type QuestionContentDisplayProps = {
   words: FormattedWord[];
   buzzIndex?: number;
 };
-export type QuestionContentDisplay =
-  React.ComponentType<QuestionContentDisplayProps>;
+
+type QuestionContentDisplay = React.ComponentType<QuestionContentDisplayProps>;
 
 type QuestionReaderProps = {
   latestResult: ScoredQuestionResult | undefined;
   onJudged: (result: QuestionResult) => void;
   onNextQuestion: () => void;
   onPrompt: (result: QuestionResult) => void;
-  question: Question;
+  questionInstance: QuestionInstance;
   renderQuestionContentDisplay: QuestionContentDisplay;
   score: number;
 };
@@ -40,11 +41,12 @@ export default function QuestionReader({
   onJudged,
   onNextQuestion,
   onPrompt,
-  question,
+  questionInstance,
   renderQuestionContentDisplay: QuestionContentDisplay,
   score,
 }: QuestionReaderProps) {
-  const isCurrentQuestionJudged = question.id === latestResult?.question.id;
+  const isCurrentQuestionJudged =
+    questionInstance.instanceID === latestResult?.instanceID;
 
   const [buzzIndex, setBuzzIndex] = useState<number | undefined>(
     isCurrentQuestionJudged ? latestResult?.buzzIndex : undefined,
@@ -61,8 +63,8 @@ export default function QuestionReader({
   } = useInput(isCurrentQuestionJudged ? latestResult?.userAnswer : undefined);
 
   const formattedWords = useMemo(
-    () => getFormattedWords(question.formattedText),
-    [question.formattedText],
+    () => getFormattedWords(questionInstance.formattedText),
+    [questionInstance.formattedText],
   );
 
   const handleJudged = useCallback(
@@ -95,7 +97,7 @@ export default function QuestionReader({
     onJudged: handleJudged,
     onNext: handleNext,
     onPrompt: handlePrompt,
-    question,
+    questionInstance,
     userInput,
   });
 
@@ -104,10 +106,10 @@ export default function QuestionReader({
 
   return (
     <Flex direction="column" gap={4} maxW="container.md" overflow="auto" p={2}>
-      <QuestionInfo questionMetadata={question} />
+      <QuestionInfo questionMetadata={questionInstance} />
       <QuestionContentDisplay
         buzzIndex={buzzIndex}
-        question={question}
+        question={questionInstance}
         status={status}
         visibleIndex={visibleIndex}
         words={formattedWords}

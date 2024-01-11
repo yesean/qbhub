@@ -1,6 +1,6 @@
 import { useToast } from '@chakra-ui/react';
 import {
-  Bonus,
+  BonusInstance,
   BonusPartResult,
   BonusResult,
   QuestionResult,
@@ -31,20 +31,20 @@ import { selectBonusReader, submitResult } from './bonusReaderSlice';
 import useBonusReaderReducer from './useBonusReaderReducer';
 
 type BonusReaderDisplayProps = {
-  currentBonus: Bonus;
+  currentBonusInstance: BonusInstance;
   latestBonusPartResult: BonusPartResult | undefined;
   latestBonusResult: BonusResult | undefined;
   score: number;
 };
 
 function BonusReaderDisplay({
-  currentBonus,
+  currentBonusInstance,
   latestBonusPartResult,
   latestBonusResult,
   score,
 }: BonusReaderDisplayProps) {
   const isCurrentBonusJudged =
-    currentBonus.id === latestBonusResult?.question.id;
+    currentBonusInstance.instanceID === latestBonusResult?.instanceID;
   const initialBonusReaderState = isCurrentBonusJudged
     ? { bonusPartNumber: 2, bonusPartResults: latestBonusResult.parts }
     : undefined;
@@ -56,11 +56,12 @@ function BonusReaderDisplay({
   const dispatch = useAppDispatch();
   const toast = useToast();
 
-  const currentBonusPart = currentBonus?.parts[bonusPartNumber];
+  const currentBonusPart = currentBonusInstance.parts[bonusPartNumber];
 
   const handleQuestionResult = useCallback(
     (result: QuestionResult) => {
-      if (currentBonus === undefined || currentBonusPart === undefined) return;
+      if (currentBonusInstance === undefined || currentBonusPart === undefined)
+        return;
 
       const bonusPartResult = getBonusPartResult(
         result,
@@ -68,16 +69,16 @@ function BonusReaderDisplay({
         currentBonusPart,
       );
       dispatchBonusReader({
-        bonus: currentBonus,
+        bonus: currentBonusInstance,
         bonusPartResult,
         type: 'newBonusPartResult',
       });
       const nextBonusPartResults = [...bonusPartResults, bonusPartResult];
 
-      if (bonusPartNumber === currentBonus.parts.length - 1) {
+      if (bonusPartNumber === currentBonusInstance.parts.length - 1) {
         const newBonusResult = getBonusResult(
           nextBonusPartResults,
-          currentBonus,
+          currentBonusInstance,
         );
         displayToast(toast, { result: newBonusResult, type: 'judgedBonus' });
         dispatch(submitResult(newBonusResult));
@@ -89,7 +90,7 @@ function BonusReaderDisplay({
     [
       bonusPartNumber,
       bonusPartResults,
-      currentBonus,
+      currentBonusInstance,
       currentBonusPart,
       dispatch,
       dispatchBonusReader,
@@ -102,50 +103,51 @@ function BonusReaderDisplay({
   }, [toast]);
 
   const handleNextQuestion = useCallback(() => {
-    if (currentBonus === undefined) return;
+    if (currentBonusInstance === undefined) return;
 
     dispatchBonusReader({
-      bonus: currentBonus,
+      bonus: currentBonusInstance,
       type: 'nextBonusPart',
     });
 
     toast.closeAll();
-    if (isLastBonusPart(bonusPartNumber, currentBonus)) {
+    if (isLastBonusPart(bonusPartNumber, currentBonusInstance)) {
       dispatchNextBonus();
     }
   }, [
     bonusPartNumber,
-    currentBonus,
+    currentBonusInstance,
     dispatchBonusReader,
     dispatchNextBonus,
     toast,
   ]);
 
-  const currentQuestion = useMemo(() => {
-    if (currentBonus === undefined || currentBonusPart === undefined) return;
+  const currentQuestionInstance = useMemo(() => {
+    if (currentBonusInstance === undefined || currentBonusPart === undefined)
+      return;
 
     if (bonusPartNumber === 0) {
       const formattedText = combineBonusPartWithLeadin(
         currentBonusPart,
-        currentBonus,
+        currentBonusInstance,
       );
-      return { ...currentBonus, ...currentBonusPart, formattedText };
+      return { ...currentBonusInstance, ...currentBonusPart, formattedText };
     }
 
-    return { ...currentBonus, ...currentBonusPart };
-  }, [bonusPartNumber, currentBonus, currentBonusPart]);
+    return { ...currentBonusInstance, ...currentBonusPart };
+  }, [bonusPartNumber, currentBonusInstance, currentBonusPart]);
 
   const renderQuestionContentDisplay = useCallback(
     (props: QuestionContentDisplayProps) =>
-      currentBonus === undefined ? null : (
+      currentBonusInstance === undefined ? null : (
         <BonusReaderContentDisplay
           {...props}
-          bonus={currentBonus}
+          bonus={currentBonusInstance}
           bonusPartNumber={bonusPartNumber}
           bonusPartResults={bonusPartResults}
         />
       ),
-    [bonusPartNumber, bonusPartResults, currentBonus],
+    [bonusPartNumber, bonusPartResults, currentBonusInstance],
   );
 
   useKeyboardShortcut('h', openBonusHistoryModal);
@@ -166,18 +168,18 @@ function BonusReaderDisplay({
     );
   }, [latestBonusPartResult, latestBonusResult]);
 
-  if (currentQuestion === undefined) {
+  if (currentQuestionInstance === undefined) {
     return <QuestionReaderSkeleton />;
   }
 
   return (
     <QuestionReader
-      key={`${currentBonus.id}-${bonusPartNumber}`}
+      key={`${currentBonusInstance.instanceID}-${bonusPartNumber}`}
       latestResult={latestBonusPartResultWithMetadata}
       onJudged={handleQuestionResult}
       onNextQuestion={handleNextQuestion}
       onPrompt={handlePrompt}
-      question={currentQuestion}
+      questionInstance={currentQuestionInstance}
       renderQuestionContentDisplay={renderQuestionContentDisplay}
       score={score}
     />
@@ -186,7 +188,7 @@ function BonusReaderDisplay({
 
 export default function BonusReader() {
   const {
-    currentBonus,
+    currentBonusInstance,
     isUninitialized,
     isUserWaiting,
     latestBonusPartResult,
@@ -207,13 +209,13 @@ export default function BonusReader() {
     return <QuestionReaderSkeleton />;
   }
 
-  if (currentBonus === undefined) {
+  if (currentBonusInstance === undefined) {
     return <EmptyBonusesNotice />;
   }
 
   return (
     <BonusReaderDisplay
-      currentBonus={currentBonus}
+      currentBonusInstance={currentBonusInstance}
       latestBonusPartResult={latestBonusPartResult}
       latestBonusResult={latestBonusResult}
       score={score}

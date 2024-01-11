@@ -1,4 +1,4 @@
-import { Question, QuestionResult } from '@qbhub/types';
+import { QuestionInstance, QuestionResult } from '@qbhub/types';
 import { log } from '@qbhub/utils';
 import { useCallback, useMemo, useState } from 'react';
 import useKeyboardShortcut from '../../hooks/useKeyboardShortcut';
@@ -23,7 +23,7 @@ type UseReaderProps = {
   onJudged: (result: QuestionResult) => void;
   onNext: () => void;
   onPrompt: (result: QuestionResult) => void;
-  question: Question;
+  questionInstance: QuestionInstance;
   userInput: string;
   onReveal?: (visibleIndex: number) => void;
 };
@@ -40,7 +40,7 @@ export default function useReader({
   onNext,
   onPrompt,
   onReveal,
-  question,
+  questionInstance,
   userInput,
 }: UseReaderProps): UseReaderType {
   const [status, setStatus] = useState(
@@ -48,9 +48,9 @@ export default function useReader({
       ? QuestionReaderStatus.Judged
       : QuestionReaderStatus.Reading,
   );
-  const { judgeInput } = useJudge(question);
+  const { judgeInput } = useJudge(questionInstance);
 
-  const formattedWords = getFormattedWords(question.formattedText);
+  const formattedWords = getFormattedWords(questionInstance.formattedText);
 
   /**
    * @Action buzz
@@ -91,12 +91,13 @@ export default function useReader({
   const getQuestionResult = useCallback(
     (judgeResult: JudgeResult) => ({
       buzzIndex: visibleIndex,
+      instanceID: questionInstance.instanceID,
       isCorrect: judgeResult === JudgeResult.correct,
       judgeResult,
-      question,
+      question: questionInstance,
       userAnswer: userInput,
     }),
-    [question, userInput, visibleIndex],
+    [questionInstance, userInput, visibleIndex],
   );
 
   /**
