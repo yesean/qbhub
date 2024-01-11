@@ -1,6 +1,7 @@
-import { Bonus, BonusResult } from '@qbhub/types';
+import { Bonus, BonusInstance, BonusResult } from '@qbhub/types';
 import { isEmpty } from '@qbhub/utils';
 import { PayloadAction, createAction, createSlice } from '@reduxjs/toolkit';
+import { v4 } from 'uuid';
 import type { AppDispatch, RootState } from '../redux/store';
 import { createAppAsyncThunk } from '../redux/utils';
 import * as fetchUtils from '../utils/fetch';
@@ -8,8 +9,8 @@ import { Settings } from '../utils/settings/types';
 import { isQuestionValid } from '../utils/settings/validate';
 
 type BonusReaderState = {
-  bonuses: Bonus[] | undefined;
-  currentBonus: Bonus | undefined;
+  bonusInstances: BonusInstance[] | undefined;
+  currentBonusInstance: BonusInstance | undefined;
   isFetching: boolean;
   isUserWaiting: boolean;
   results: BonusResult[];
@@ -17,8 +18,8 @@ type BonusReaderState = {
 };
 
 const initialState: BonusReaderState = {
-  bonuses: undefined,
-  currentBonus: undefined,
+  bonusInstances: undefined,
+  currentBonusInstance: undefined,
   isFetching: false,
   isUserWaiting: false,
   results: [],
@@ -35,16 +36,16 @@ const fetchBonuses = createAppAsyncThunk<Bonus[], FetchBonusesArgs>(
 );
 
 async function fetchBonusesIfNeeded(
-  bonuses: Bonus[],
+  bonusInstances: BonusInstance[],
   dispatch: AppDispatch,
   args: FetchBonusesArgs,
 ) {
-  if (bonuses.length > 5) {
+  if (bonusInstances.length > 5) {
     return;
   }
 
   const promise = dispatch(fetchBonuses(args));
-  if (isEmpty(bonuses)) {
+  if (isEmpty(bonusInstances)) {
     await promise;
   }
 }
@@ -53,10 +54,10 @@ export const nextBonus = createAppAsyncThunk<void, FetchBonusesArgs>(
   'bonusReader/nextBonus',
   async (args, { dispatch, getState }) => {
     const {
-      bonusReader: { bonuses },
+      bonusReader: { bonusInstances },
     } = getState();
 
-    await fetchBonusesIfNeeded(bonuses ?? [], dispatch, args);
+    await fetchBonusesIfNeeded(bonusInstances ?? [], dispatch, args);
   },
 );
 
@@ -72,7 +73,7 @@ export const filterBonusesWithRefetch = createAppAsyncThunk<
   dispatch(filterBonuses(args));
 
   const {
-    bonusReader: { bonuses },
+    bonusReader: { bonusInstances: bonuses },
   } = getState();
   if (bonuses === undefined) {
     return;
@@ -88,7 +89,14 @@ const bonusReaderSlice = createSlice({
       })
       .addCase(fetchBonuses.fulfilled, (state, action) => {
         state.isFetching = false;
-        state.bonuses = [...(state.bonuses ?? []), ...action.payload];
+        const newBonusInstances = action.payload.map((bonus) => ({
+          ...bonus,
+          instanceID: v4(),
+        }));
+        state.bonusInstances = [
+          ...(state.bonusInstances ?? []),
+          ...newBonusInstances,
+        ];
       })
       .addCase(fetchBonuses.rejected, (state) => {
         state.isFetching = false;
@@ -99,14 +107,14 @@ const bonusReaderSlice = createSlice({
       })
       .addCase(nextBonus.fulfilled, (state) => {
         state.isUserWaiting = false;
-        state.currentBonus = state.bonuses?.shift();
+        state.currentBonusInstance = state.bonusInstances?.shift();
       })
       .addCase(nextBonus.rejected, (state) => {
         state.isUserWaiting = false;
       });
     builder.addCase(filterBonuses, (state, { payload: { settings } }) => {
-      state.bonuses = state.bonuses?.filter((bn) =>
-        isQuestionValid(bn, settings),
+      state.bonusInstances = state.bonusInstances?.filter((bonusInstance) =>
+        isQuestionValid(bonusInstance, settings),
       );
     });
   },
@@ -126,7 +134,7 @@ export const selectBonusReader = ({ bonusReader }: RootState) => {
     0,
   );
   const isUninitialized =
-    bonusReader.bonuses === undefined && !bonusReader.isFetching;
+    bonusReader.bonusInstances === undefined && !bonusReader.isFetching;
 
   const latestBonusResult = bonusReader.results.at(0);
   const latestBonusPartResult = latestBonusResult?.parts.at(-1);

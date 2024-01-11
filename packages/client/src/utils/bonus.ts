@@ -1,6 +1,7 @@
 import { useToast } from '@chakra-ui/react';
 import {
   Bonus,
+  BonusInstance,
   BonusPart,
   BonusPartResult,
   BonusPartScore,
@@ -26,7 +27,7 @@ export function getBonusPartResult(
 
 export function getBonusResult(
   results: BonusPartResult[],
-  bonus: Bonus,
+  bonusInstance: BonusInstance,
 ): BonusResult {
   const score = (() => {
     const correctPartsCount = results.filter(
@@ -45,8 +46,9 @@ export function getBonusResult(
   })();
 
   return {
+    instanceID: bonusInstance.instanceID,
     parts: results,
-    question: bonus,
+    question: bonusInstance,
     score,
   };
 }
@@ -172,6 +174,7 @@ export function getBonusPartResultWithMetadata(
 ): ScoredQuestionResult {
   return {
     ...bonusPartResult,
+    ...bonusResult,
     question: {
       ...bonusPartResult.bonusPart,
       ...bonusResult.question,

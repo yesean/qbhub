@@ -8,12 +8,8 @@ export default function BonusResults() {
 
   return (
     <Flex direction="column" overflow="auto">
-      {results.map((result, index) => (
-        <BonusResultAccordion
-          // eslint-disable-next-line react/no-array-index-key
-          key={`${result.question.id}${index}`}
-          result={result}
-        />
+      {results.map((result) => (
+        <BonusResultAccordion key={result.instanceID} result={result} />
       ))}
     </Flex>
   );

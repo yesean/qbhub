@@ -3,6 +3,8 @@ import { Difficulty } from './difficulty.js';
 import { Subcategory } from './subcategory.js';
 import { Tournament } from './tournament.js';
 
+export type InstanceOf<T> = T & { instanceID: string };
+
 export type QuestionMetadata = {
   category: Category;
   difficulty: Difficulty;
@@ -21,12 +23,20 @@ export type QuestionContent = {
 
 export type Question = QuestionContent & QuestionMetadata;
 
-export type QuestionResult = {
+export type QuestionInstance = InstanceOf<Question>;
+
+export type QuestionResultMetadata = {
+  instanceID: string;
+  question: Question;
+};
+
+export type QuestionResultContent = {
   buzzIndex: number;
   isCorrect: boolean;
-  question: Question;
   userAnswer: string;
 };
+
+export type QuestionResult = QuestionResultContent & QuestionResultMetadata;
 
 export type ScoredQuestionResult = QuestionResult & { score: number };
 

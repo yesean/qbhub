@@ -1,6 +1,7 @@
-import { Tossup, TossupResult } from '@qbhub/types';
+import { Tossup, TossupInstance, TossupResult } from '@qbhub/types';
 import { isEmpty } from '@qbhub/utils';
 import { PayloadAction, createAction, createSlice } from '@reduxjs/toolkit';
+import { v4 } from 'uuid';
 import type { AppDispatch, RootState } from '../redux/store';
 import { createAppAsyncThunk } from '../redux/utils';
 import * as fetchUtils from '../utils/fetch';
@@ -8,19 +9,19 @@ import { Settings } from '../utils/settings/types';
 import { isQuestionValid } from '../utils/settings/validate';
 
 type TossupReaderState = {
-  currentTossup: Tossup | undefined;
+  currentTossupInstance: TossupInstance | undefined;
   isFetching: boolean;
   isUserWaiting: boolean;
   results: TossupResult[];
-  tossups: Tossup[] | undefined;
+  tossupInstances: TossupInstance[] | undefined;
 };
 
 const initialState: TossupReaderState = {
-  currentTossup: undefined,
+  currentTossupInstance: undefined,
   isFetching: false,
   isUserWaiting: false,
   results: [],
-  tossups: undefined,
+  tossupInstances: undefined,
 };
 
 type FetchTossupsArgs = { settings: Settings };
@@ -33,7 +34,7 @@ const fetchTossups = createAppAsyncThunk<Tossup[], FetchTossupsArgs>(
 );
 
 async function fetchTossupsIfNeeded(
-  tossups: Tossup[],
+  tossups: TossupInstance[],
   dispatch: AppDispatch,
   args: FetchTossupsArgs,
 ) {
@@ -51,10 +52,10 @@ export const nextTossup = createAppAsyncThunk<void, FetchTossupsArgs>(
   'tossupReader/nextTossup',
   async (args, { dispatch, getState }) => {
     const {
-      tossupReader: { tossups },
+      tossupReader: { tossupInstances },
     } = getState();
 
-    await fetchTossupsIfNeeded(tossups ?? [], dispatch, args);
+    await fetchTossupsIfNeeded(tossupInstances ?? [], dispatch, args);
   },
 );
 
@@ -70,12 +71,12 @@ export const filterTossupsWithRefetch = createAppAsyncThunk<
   dispatch(filterTossups(args));
 
   const {
-    tossupReader: { tossups },
+    tossupReader: { tossupInstances },
   } = getState();
-  if (tossups === undefined) {
+  if (tossupInstances === undefined) {
     return;
   }
-  fetchTossupsIfNeeded(tossups, dispatch, args);
+  fetchTossupsIfNeeded(tossupInstances, dispatch, args);
 });
 
 const tossupReaderSlice = createSlice({
@@ -86,7 +87,16 @@ const tossupReaderSlice = createSlice({
       })
       .addCase(fetchTossups.fulfilled, (state, action) => {
         state.isFetching = false;
-        state.tossups = [...(state.tossups ?? []), ...action.payload];
+        const newTossupInstances: TossupInstance[] = action.payload.map(
+          (tossup) => ({
+            ...tossup,
+            instanceID: v4(),
+          }),
+        );
+        state.tossupInstances = [
+          ...(state.tossupInstances ?? []),
+          ...newTossupInstances,
+        ];
       })
       .addCase(fetchTossups.rejected, (state) => {
         state.isFetching = false;
@@ -97,14 +107,14 @@ const tossupReaderSlice = createSlice({
       })
       .addCase(nextTossup.fulfilled, (state) => {
         state.isUserWaiting = false;
-        state.currentTossup = state.tossups?.shift();
+        state.currentTossupInstance = state.tossupInstances?.shift();
       })
       .addCase(nextTossup.rejected, (state) => {
         state.isUserWaiting = false;
       });
     builder.addCase(filterTossups, (state, { payload: { settings } }) => {
-      state.tossups = state.tossups?.filter((tu) =>
-        isQuestionValid(tu, settings),
+      state.tossupInstances = state.tossupInstances?.filter((tossupInstance) =>
+        isQuestionValid(tossupInstance, settings),
       );
     });
   },
@@ -120,11 +130,11 @@ export const { submitResult } = tossupReaderSlice.actions;
 
 export const selectTossupReader = ({ tossupReader }: RootState) => {
   const score = tossupReader.results.reduce(
-    (acc, result) => acc + result.score,
+    (acc, tossupResult) => acc + tossupResult.score,
     0,
   );
   const isUninitialized =
-    tossupReader.tossups === undefined && !tossupReader.isFetching;
+    tossupReader.tossupInstances === undefined && !tossupReader.isFetching;
 
   const latestTossupResult = tossupReader.results.at(0);
 
