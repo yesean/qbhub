@@ -1,5 +1,6 @@
-import { Flex, Input } from '@chakra-ui/react';
+import { HStack, Icon, IconButton, Input, Tooltip } from '@chakra-ui/react';
 import { QuestionResult } from '@qbhub/types';
+import ArrowLeftRight from '../../static/ArrowsRightLeft.svg?react';
 import { QuestionReaderStatus } from '../../utils/questionReader';
 import TealButton from '../buttons/TealButton';
 
@@ -31,6 +32,7 @@ type QuestionReaderInputProps = {
   currentResult: QuestionResult | undefined;
   inputRef: React.RefObject<HTMLInputElement>;
   onClick: () => void;
+  onJudgeResultChangeClick: () => void;
   setUserInput: React.Dispatch<React.SetStateAction<string>>;
   status: QuestionReaderStatus;
   userInput: string;
@@ -40,26 +42,43 @@ export default function QuestionReaderInput({
   currentResult,
   inputRef,
   onClick,
+  onJudgeResultChangeClick,
   setUserInput,
   status,
   userInput,
 }: QuestionReaderInputProps) {
   const shouldShowBorder = status === QuestionReaderStatus.Judged;
   const shouldDisableInput = status !== QuestionReaderStatus.Answering;
+  const shouldShowJudgeResultChange = currentResult !== undefined;
 
   return (
-    <Flex justify="center" w="100%">
+    <HStack spacing={2} w="100%">
       <Input
         ref={inputRef}
         borderColor={getInputBorderColor(status, currentResult)}
         borderWidth={shouldShowBorder ? 2 : undefined}
         isDisabled={shouldDisableInput}
-        mr={4}
         onChange={(e) => setUserInput(e.target.value)}
         placeholder="Answer"
         value={userInput}
       />
+      {shouldShowJudgeResultChange && (
+        <Tooltip
+          hasArrow
+          label={
+            currentResult.isCorrect
+              ? 'Mark answer as incorrect'
+              : 'Mark answer as correct'
+          }
+        >
+          <IconButton
+            aria-label="Change judge result"
+            icon={<Icon as={ArrowLeftRight} h="50%" w="50%" />}
+            onClick={onJudgeResultChangeClick}
+          />
+        </Tooltip>
+      )}
       <TealButton onClick={onClick}>{getButtonText(status)}</TealButton>
-    </Flex>
+    </HStack>
   );
 }

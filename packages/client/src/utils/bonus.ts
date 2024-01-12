@@ -53,6 +53,29 @@ export function getBonusResult(
   };
 }
 
+export function updateBonusPartResult(
+  result: BonusPartResult,
+  isCorrect: boolean,
+): BonusPartResult {
+  return {
+    ...result,
+    isCorrect,
+    score: isCorrect ? BonusPartScore.ten : BonusPartScore.zero,
+  };
+}
+
+export function updateBonusPartResults(
+  bonusPartResults: BonusPartResult[],
+  newBonusPartResult: BonusPartResult,
+) {
+  const index = newBonusPartResult.number;
+  if (index < 0 || index >= bonusPartResults.length) {
+    return bonusPartResults;
+  }
+
+  return bonusPartResults.toSpliced(index, 1, newBonusPartResult);
+}
+
 const BONUS_LEADIN_DELIMITER = '|:|';
 
 /**
@@ -93,8 +116,11 @@ type ToastTrigger =
 export function displayToast(
   toast: ReturnType<typeof useToast>,
   trigger: ToastTrigger,
+  shouldCloseAll: boolean = true,
 ) {
-  toast.closeAll();
+  if (shouldCloseAll) {
+    toast.closeAll();
+  }
 
   switch (trigger.type) {
     case 'judgedBonus': {
