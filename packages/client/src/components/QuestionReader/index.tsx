@@ -26,9 +26,15 @@ export type QuestionContentDisplayProps = {
 
 type QuestionContentDisplay = React.ComponentType<QuestionContentDisplayProps>;
 
+export type JudgeResultChange = {
+  instanceID: string;
+  isCorrect: boolean;
+};
+
 type QuestionReaderProps = {
   latestResult: ScoredQuestionResult | undefined;
   onJudged: (result: QuestionResult) => void;
+  onJudgeResultChange: (judgeResultChange: JudgeResultChange) => void;
   onNextQuestion: () => void;
   onPrompt: (result: QuestionResult) => void;
   questionInstance: QuestionInstance;
@@ -39,6 +45,7 @@ type QuestionReaderProps = {
 export default function QuestionReader({
   latestResult,
   onJudged,
+  onJudgeResultChange,
   onNextQuestion,
   onPrompt,
   questionInstance,
@@ -52,6 +59,9 @@ export default function QuestionReader({
     isCurrentQuestionJudged ? latestResult?.buzzIndex : undefined,
   );
   const [promptCount, setPromptCount] = useState(0);
+  const [questionResult, setQuestionResult] = useState<
+    QuestionResult | undefined
+  >(isCurrentQuestionJudged ? latestResult : undefined);
 
   const {
     blurInput,
@@ -69,6 +79,7 @@ export default function QuestionReader({
 
   const handleJudged = useCallback(
     (judgedResult: QuestionResult) => {
+      setQuestionResult(judgedResult);
       setBuzzIndex(judgedResult.buzzIndex);
       blurInput();
       onJudged(judgedResult);
@@ -102,7 +113,22 @@ export default function QuestionReader({
   });
 
   const shouldShowProgress = status === QuestionReaderStatus.Answering;
-  const currentResult = isCurrentQuestionJudged ? latestResult : undefined;
+
+  const handleJudgeResultChange = useCallback(() => {
+    if (questionResult === undefined) {
+      return;
+    }
+
+    const newIsCorrect = !questionResult.isCorrect;
+    onJudgeResultChange({
+      instanceID: questionInstance.instanceID,
+      isCorrect: newIsCorrect,
+    });
+    setQuestionResult(() => ({
+      ...questionResult,
+      isCorrect: newIsCorrect,
+    }));
+  }, [onJudgeResultChange, questionInstance.instanceID, questionResult]);
 
   return (
     <Flex direction="column" gap={4} maxW="container.md" overflow="auto" p={2}>
@@ -118,14 +144,18 @@ export default function QuestionReader({
         <QuestionReaderProgress key={promptCount} onFinish={handleClick} />
       )}
       <QuestionReaderInput
-        currentResult={currentResult}
+        currentResult={questionResult}
         inputRef={inputRef}
         onClick={handleClick}
+        onJudgeResultChangeClick={handleJudgeResultChange}
         setUserInput={setUserInput}
         status={status}
         userInput={userInput}
       />
-      <QuestionReaderScore currentResult={latestResult} score={score} />
+      <QuestionReaderScore
+        currentResult={isCurrentQuestionJudged ? latestResult : undefined}
+        score={score}
+      />
     </Flex>
   );
 }

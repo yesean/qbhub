@@ -124,9 +124,19 @@ const tossupReaderSlice = createSlice({
     submitResult: (state, action: PayloadAction<TossupResult>) => {
       state.results.unshift(action.payload);
     },
+    updateResult(state, { payload }: PayloadAction<TossupResult>) {
+      const index = state.results.findIndex(
+        ({ instanceID }) => instanceID === payload.instanceID,
+      );
+      if (index === -1) {
+        return;
+      }
+
+      state.results[index] = payload;
+    },
   },
 });
-export const { submitResult } = tossupReaderSlice.actions;
+export const { submitResult, updateResult } = tossupReaderSlice.actions;
 
 export const selectTossupReader = ({ tossupReader }: RootState) => {
   const score = tossupReader.results.reduce(

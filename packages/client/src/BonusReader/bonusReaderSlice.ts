@@ -124,9 +124,19 @@ const bonusReaderSlice = createSlice({
     submitResult(state, action: PayloadAction<BonusResult>) {
       state.results.unshift(action.payload);
     },
+    updateResult(state, { payload }: PayloadAction<BonusResult>) {
+      const index = state.results.findIndex(
+        ({ instanceID }) => instanceID === payload.instanceID,
+      );
+      if (index === -1) {
+        return;
+      }
+
+      state.results[index] = payload;
+    },
   },
 });
-export const { submitResult } = bonusReaderSlice.actions;
+export const { submitResult, updateResult } = bonusReaderSlice.actions;
 
 export const selectBonusReader = ({ bonusReader }: RootState) => {
   const score = bonusReader.results.reduce(

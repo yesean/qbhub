@@ -29,6 +29,18 @@ export function getTossupResult(
   };
 }
 
+export function updateTossupResult(
+  result: TossupResult,
+  isCorrect: boolean,
+): TossupResult {
+  const newScore = getTossupResultScore({ ...result, isCorrect });
+  return {
+    ...result,
+    isCorrect,
+    score: newScore,
+  };
+}
+
 type ToastTrigger =
   | {
       result: TossupResult;

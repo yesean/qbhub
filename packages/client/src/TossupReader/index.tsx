@@ -3,6 +3,7 @@ import { QuestionResult, TossupInstance, TossupResult } from '@qbhub/types';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import QuestionReader, {
+  JudgeResultChange,
   QuestionContentDisplayProps,
 } from '../components/QuestionReader';
 import QuestionReaderSkeleton from '../components/QuestionReader/QuestionReaderSkeleton';
@@ -11,10 +12,18 @@ import useActions from '../hooks/useActions';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useModalContext } from '../providers/ModalContext';
 import { useAppDispatch } from '../redux/utils';
-import { displayToast, getTossupResult } from '../utils/tossup';
+import {
+  displayToast,
+  getTossupResult,
+  updateTossupResult,
+} from '../utils/tossup';
 import EmptyTossupsNotice from './EmptyTossupsNotice';
 import TossupReaderContentDisplay from './TossupReaderContentDisplay';
-import { selectTossupReader, submitResult } from './tossupReaderSlice';
+import {
+  selectTossupReader,
+  submitResult,
+  updateResult,
+} from './tossupReaderSlice';
 
 type TossupReaderDisplayProps = {
   currentTossupInstance: TossupInstance;
@@ -46,6 +55,26 @@ function TossupReaderDisplay({
     [currentTossupInstance, dispatch, toast],
   );
 
+  const handleJudgeResultChange = useCallback(
+    ({ instanceID, isCorrect }: JudgeResultChange) => {
+      const isCurrentTossupJudged =
+        latestTossupResult?.instanceID === instanceID;
+      if (latestTossupResult === undefined || !isCurrentTossupJudged) {
+        return;
+      }
+
+      const newTossupResult = updateTossupResult(latestTossupResult, isCorrect);
+      dispatch(updateResult(newTossupResult));
+      toast({
+        status: isCorrect ? 'success' : 'error',
+        title: isCorrect
+          ? 'Changed answer to correct!'
+          : 'Changed answer to incorrect',
+      });
+    },
+    [dispatch, latestTossupResult, toast],
+  );
+
   const handlePrompt = useCallback(() => {
     displayToast(toast, { type: 'prompt' });
   }, [toast]);
@@ -69,6 +98,7 @@ function TossupReaderDisplay({
       key={currentTossupInstance.instanceID}
       latestResult={latestTossupResult}
       onJudged={handleQuestionResult}
+      onJudgeResultChange={handleJudgeResultChange}
       onNextQuestion={handleNextQuestion}
       onPrompt={handlePrompt}
       questionInstance={currentTossupInstance}
