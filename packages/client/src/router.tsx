@@ -16,10 +16,6 @@ import TossupReader from './TossupReader';
 
 const paths = [
   {
-    element: <RedirectToTossupReader />,
-    path: '/',
-  },
-  {
     element: <TossupReader />,
     path: ROUTES.tossupReader.path,
   },
@@ -42,6 +38,10 @@ const paths = [
   {
     element: <About />,
     path: ROUTES.about.path,
+  },
+  {
+    element: <RedirectToTossupReader />,
+    path: '*',
   },
 ];
 
