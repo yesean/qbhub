@@ -65,6 +65,7 @@ function TossupReaderDisplay({
 
       const newTossupResult = updateTossupResult(latestTossupResult, isCorrect);
       dispatch(updateResult(newTossupResult));
+      toast.closeAll();
       toast({
         status: isCorrect ? 'success' : 'error',
         title: isCorrect

@@ -15,7 +15,15 @@ const root = createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <StrictMode>
     <ReduxProvider store={store}>
-      <ChakraProvider theme={theme}>
+      <ChakraProvider
+        theme={theme}
+        toastOptions={{
+          defaultOptions: {
+            containerStyle: { width: 350 },
+            variant: 'left-accent',
+          },
+        }}
+      >
         <RouterProvider router={router} />
       </ChakraProvider>
     </ReduxProvider>
