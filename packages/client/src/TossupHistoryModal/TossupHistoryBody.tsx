@@ -8,7 +8,7 @@ export default function TossupHistoryBody() {
   const { results } = useSelector(selectTossupReader);
 
   return (
-    <Tabs display="flex" flexDirection="column" h="100%">
+    <Tabs display="flex" flexDirection="column" h="100%" isLazy>
       <TabList>
         <Tab>Tossups</Tab>
         <Tab>Chart</Tab>
