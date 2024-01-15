@@ -12,8 +12,8 @@ const { Client } = pg;
 
 // connect to postgresql database
 export const client = new Client();
-client.connect().catch(() => {
-  log.error('unable to connect postgresql');
+client.connect().catch((error) => {
+  log.error('Unable to connect postgresql:', error);
   process.exit(1);
 });
 
