@@ -72,7 +72,9 @@ export const ROUTES = {
   }),
   clueSearch: buildRoute({
     path: '/clue',
-    queryParams: { query: NeverNullOrUndefinedStringParam },
+    queryParams: {
+      query: NeverNullOrUndefinedStringParam,
+    },
   }),
   frequencyList: buildRoute({ path: '/frequency' }),
   tossupReader: buildRoute({ path: '/tossup' }),
