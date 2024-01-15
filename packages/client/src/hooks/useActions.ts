@@ -1,7 +1,10 @@
 import { useCallback, useMemo } from 'react';
 import { nextBonus } from '../BonusReader/bonusReaderSlice';
 import { fetchAnswers, fetchClues } from '../ClueGenerator/clueGeneratorSlice';
-import { fetchPages, nextPage } from '../FrequencyList/frequencyListSlice';
+import {
+  FetchPagesArgs,
+  fetchPages,
+} from '../FrequencyList/frequencyListSlice';
 import { nextTossup } from '../TossupReader/tossupReaderSlice';
 import { useAppDispatch } from '../redux/utils';
 import { useSettings } from './useSettings';
@@ -22,12 +25,8 @@ export default function useActions() {
   );
 
   const dispatchFetchPages = useCallback(
-    (offset: number) => dispatch(fetchPages({ offset, settings })),
-    [dispatch, settings],
-  );
-
-  const dispatchNextPage = useCallback(
-    () => dispatch(nextPage({ settings })),
+    ({ limit, offset }: Omit<FetchPagesArgs, 'settings'>) =>
+      dispatch(fetchPages({ limit, offset, settings })),
     [dispatch, settings],
   );
 
@@ -47,7 +46,6 @@ export default function useActions() {
       dispatchFetchClues,
       dispatchFetchPages,
       dispatchNextBonus,
-      dispatchNextPage,
       dispatchNextTossup,
     }),
     [
@@ -55,7 +53,6 @@ export default function useActions() {
       dispatchFetchClues,
       dispatchFetchPages,
       dispatchNextBonus,
-      dispatchNextPage,
       dispatchNextTossup,
     ],
   );
