@@ -172,6 +172,7 @@ function BonusReaderDisplay({
         bonusPartResult: newBonusPartResult,
         type: 'updateBonusPartResult',
       });
+      toast.closeAll();
       toast({
         status: judgeResultChange.isCorrect ? 'success' : 'error',
         title: judgeResultChange.isCorrect
