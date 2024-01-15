@@ -7,6 +7,7 @@ import {
 } from '@qbhub/types';
 import { QueryParamConfigMap, useQueryParams } from 'use-query-params';
 import {
+  NeverNullOrUndefinedNumberParam,
   NeverNullOrUndefinedStringParam,
   NeverNullStringParam,
   buildNeverNullRangedNumberParamWithSkip,
@@ -76,6 +77,11 @@ export const ROUTES = {
       query: NeverNullOrUndefinedStringParam,
     },
   }),
-  frequencyList: buildRoute({ path: '/frequency' }),
+  frequencyList: buildRoute({
+    path: '/frequency',
+    queryParams: {
+      offset: NeverNullOrUndefinedNumberParam,
+    },
+  }),
   tossupReader: buildRoute({ path: '/tossup' }),
 } as const;

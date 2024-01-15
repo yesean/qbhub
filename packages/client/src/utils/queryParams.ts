@@ -101,6 +101,18 @@ const buildNeverUndefinedStringParam = (
   },
 });
 
+const buildNeverUndefinedNumberParam = (
+  param: QueryParamConfig<number | undefined>,
+): QueryParamConfig<number> => ({
+  ...param,
+  decode(...args: Parameters<typeof param.decode>) {
+    const decodedValue = param.decode(...args);
+    if (decodedValue === undefined) return 0;
+
+    return decodedValue;
+  },
+});
+
 export const buildNeverNullRangedNumberParamWithSkip = (
   minimumValue: number,
   maximumValue: number,
@@ -116,5 +128,7 @@ export const buildNeverNullRangedNumberParamWithSkip = (
 
 export const NeverNullNumberParam = buildNeverNullParam(NumberParam);
 export const NeverNullStringParam = buildNeverNullParam(StringParam);
+export const NeverNullOrUndefinedNumberParam =
+  buildNeverUndefinedNumberParam(NeverNullNumberParam);
 export const NeverNullOrUndefinedStringParam =
   buildNeverUndefinedStringParam(NeverNullStringParam);

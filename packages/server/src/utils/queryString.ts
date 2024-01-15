@@ -17,7 +17,6 @@ import {
 import { QueryStringParsingError } from '../types/errors.js';
 import {
   DEFAULT_LIMIT,
-  MAX_LIMIT,
   MAX_TOURNAMENT_YEAR,
   MIN_LIMIT,
   MIN_TOURNAMENT_YEAR,
@@ -232,10 +231,8 @@ export const parseLimit = (q: qs.ParsedQs): number => {
 
   const castedLimit = stringToNumber(limit);
 
-  if (castedLimit < MIN_LIMIT || castedLimit > MAX_LIMIT)
-    throw new QueryStringParsingError(
-      rangeErrorMessage('limit', MIN_LIMIT, MAX_LIMIT),
-    );
+  if (castedLimit < MIN_LIMIT)
+    throw new QueryStringParsingError(rangeErrorMessage('limit', MIN_LIMIT));
 
   return castedLimit;
 };
