@@ -73,6 +73,7 @@ export default function QuestionReaderInput({
         >
           <IconButton
             aria-label="Change judge result"
+            flex="0 0 45px"
             icon={<Icon as={ArrowLeftRight} h="50%" w="50%" />}
             onClick={onJudgeResultChangeClick}
           />
