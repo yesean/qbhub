@@ -17,6 +17,6 @@
     "build": "yarn workspaces foreach -viA run build && yarn postbuild",
     "clean": "yarn workspaces foreach -tpviA run clean",
     "test": "yarn workspaces foreach -pviA run test",
-    "postbuild": "cp -r packages/client/dist packages/server/dist-client"
+    "postbuild": "rm -rf packages/server/dist-client && cp -r packages/client/dist packages/server/dist-client"
   }
 }
