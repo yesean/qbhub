@@ -3,17 +3,15 @@ WORKDIR /usr/src/app
 
 # install system dependencies
 RUN apt-get update && apt-get install -y \
-    --no-install-recommends \
-    wait-for-it \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+  --no-install-recommends \
+  wait-for-it \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 # install project dependencies
 RUN yarn set version stable
 COPY . .
-RUN yarn workspace @qbhub/types install \
-    && yarn workspace @qbhub/server install \
-    && yarn cache clean
+RUN yarn workspace @qbhub/server install \
+  && yarn cache clean
 
-EXPOSE 3001
 CMD ["wait-for-it", "--timeout=0", "postgres:5432", "--", "yarn", "start"]
