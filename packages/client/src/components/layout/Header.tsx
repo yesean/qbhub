@@ -1,7 +1,7 @@
 import { HamburgerIcon, SettingsIcon, TimeIcon } from '@chakra-ui/icons';
 import { Box, Flex, Heading, IconButton } from '@chakra-ui/react';
-import { useModalContext } from '../providers/ModalContext';
-import { ROUTES } from '../routes';
+import { useModalContext } from '../../providers/ModalContext';
+import { ROUTES } from '../../routes';
 
 const Header: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { isPage: isTossupReader } = ROUTES.tossupReader.useRouteContext();

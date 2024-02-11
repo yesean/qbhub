@@ -1,5 +1,5 @@
 import { Text } from '@chakra-ui/react';
-import { RouterLink } from '../components/RouterLink';
+import { RouterLink } from '../components/routing/RouterLink';
 import { ROUTES } from '../routes';
 
 type FrequencyListTableAnswerProps = {

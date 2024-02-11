@@ -1,5 +1,5 @@
 import { Center, Flex } from '@chakra-ui/react';
-import usePageHeight from '../hooks/usePageHeight';
+import usePageHeight from '../../hooks/usePageHeight';
 import Footer from './Footer';
 import Header from './Header';
 

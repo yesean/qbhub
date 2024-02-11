@@ -8,7 +8,7 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { useMemo } from 'react';
-import useTable, { UseTableProps } from '../hooks/useTable';
+import useTable, { UseTableProps } from './useTable';
 
 type TableProps<T> = React.ComponentProps<typeof TableContainer> &
   UseTableProps<T>;
