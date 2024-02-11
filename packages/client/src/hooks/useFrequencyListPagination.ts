@@ -26,7 +26,7 @@ export default function useFrequencyListPagination() {
     setFalse: setUserToNotWaiting,
     setTrue: setUserToWaiting,
     value: isUserWaiting,
-  } = useBoolean(true);
+  } = useBoolean(false);
 
   // initial fetch
   const latestInitialFetchID = useRef<string>();
