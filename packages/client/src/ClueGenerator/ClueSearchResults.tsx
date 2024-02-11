@@ -2,7 +2,7 @@ import { FrequencyListEntry } from '@qbhub/types';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import FrequencyListTable from '../FrequencyList/FrequencyListTable';
-import TableSkeleton from '../components/TableSkeleton';
+import TableSkeleton from '../components/table/TableSkeleton';
 import useActions from '../hooks/useActions';
 import { ROUTES } from '../routes';
 import ClueSearchEmptyResults from './ClueSearchEmptyResults';

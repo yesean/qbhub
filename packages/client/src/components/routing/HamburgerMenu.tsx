@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { ROUTES } from '../routes';
+import { ROUTES } from '../../routes';
 
 type HamburgerMenuProps = {
   closeModal: () => void;

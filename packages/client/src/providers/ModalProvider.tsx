@@ -4,7 +4,7 @@ import InfoModal from '../InfoModal';
 import SettingsModal from '../SettingsModal';
 import TossupHistoryModal from '../TossupHistoryModal';
 import UpdatesModal from '../UpdatesModal';
-import HamburgerMenu from '../components/HamburgerMenu';
+import HamburgerMenu from '../components/routing/HamburgerMenu';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { ModalContext } from './ModalContext';
 
