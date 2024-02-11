@@ -10,8 +10,8 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import TealButton from '../components/buttons/TealButton';
+import BonusHistoryBody from './BonusHistoryBody';
 import BonusHistorySummary from './BonusHistorySummary';
-import BonusResults from './BonusResults';
 
 type BonusHistoryModalProps = {
   closeModal: () => void;
@@ -38,7 +38,7 @@ export default function BonusHistoryModal({
             <Box flexShrink={0}>
               <BonusHistorySummary />
             </Box>
-            <BonusResults />
+            <BonusHistoryBody />
           </Flex>
         </ModalBody>
         <ModalFooter>
