@@ -1,16 +1,12 @@
-import { BonusResult } from '@qbhub/types';
 import { getRange } from '@qbhub/utils';
 import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { selectBonusReader } from '../BonusReader/bonusReaderSlice';
 import QuestionResultsLineChart from '../components/QuestionHistoryModal/QuestionResultsLineChart';
 import { getBonusResultsSummary } from '../utils/bonus';
 
-type BonusResultsLineChartProps = {
-  results: BonusResult[];
-};
-
-export default function BonusResultsLineChart({
-  results,
-}: BonusResultsLineChartProps) {
+export default function BonusResultsLineChart() {
+  const { results } = useSelector(selectBonusReader);
   const data = useMemo(
     () =>
       getRange(0, results.length).map((index) => ({

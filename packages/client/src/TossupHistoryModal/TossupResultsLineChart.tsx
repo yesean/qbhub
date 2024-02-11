@@ -1,16 +1,12 @@
-import { TossupResult } from '@qbhub/types';
 import { getRange } from '@qbhub/utils';
 import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { selectTossupReader } from '../TossupReader/tossupReaderSlice';
 import QuestionResultsLineChart from '../components/QuestionHistoryModal/QuestionResultsLineChart';
 import { getTossupResultsSummary } from '../utils/tossup';
 
-type TossupResultsLineChartProps = {
-  results: TossupResult[];
-};
-
-export default function TossupResultsLineChart({
-  results,
-}: TossupResultsLineChartProps) {
+export default function TossupResultsLineChart() {
+  const { results } = useSelector(selectTossupReader);
   const data = useMemo(
     () =>
       getRange(0, results.length).map((index) => ({
