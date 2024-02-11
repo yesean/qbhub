@@ -57,14 +57,21 @@ export default function useFrequencyListPagination() {
     setUserToWaiting,
   ]);
 
+  const isFirstPage = offset === 0;
+  const isLastPage = maximumOffset !== undefined && offset >= maximumOffset;
+
   const prevPage = useCallback(() => {
+    if (isFirstPage) {
+      return;
+    }
+
     const prevOffset = Math.max(offset - FREQUENCY_LIST_PAGE_SIZE, 0);
     getFrequencyListURL({ offset: prevOffset }).go();
-  }, [getFrequencyListURL, offset]);
+  }, [getFrequencyListURL, isFirstPage, offset]);
 
   const nextPage = useCallback(async () => {
-    if (results === undefined) {
-      return undefined;
+    if (results === undefined || isLastPage) {
+      return;
     }
 
     const nextOffset = offset + FREQUENCY_LIST_PAGE_SIZE;
@@ -123,6 +130,7 @@ export default function useFrequencyListPagination() {
     dispatchFetchPages,
     getFrequencyListURL,
     isFetching,
+    isLastPage,
     offset,
     results,
     setUserToNotWaiting,
@@ -137,10 +145,6 @@ export default function useFrequencyListPagination() {
 
     return results.slice(offset, offset + FREQUENCY_LIST_PAGE_SIZE);
   }, [offset, results]);
-
-  const isFirstPage = offset === 0;
-
-  const isLastPage = maximumOffset !== undefined && offset >= maximumOffset;
 
   return useMemo(
     () => ({
