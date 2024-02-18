@@ -11,7 +11,12 @@ module.exports = {
     project: './tsconfig.json',
     tsconfigRootDir: __dirname,
   },
-  plugins: ['react-refresh', 'sort-keys-fix', 'sort-destructure-keys'],
+  plugins: [
+    'react-refresh',
+    'sort-keys-fix',
+    'sort-destructure-keys',
+    'typescript-sort-keys',
+  ],
   rules: {
     '@typescript-eslint/lines-between-class-members': [
       'error',
@@ -66,6 +71,7 @@ module.exports = {
       'error',
       { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
     ],
+    'no-unused-vars': 'off', // base rule must be disabled: https://typescript-eslint.io/rules/no-unused-vars/
 
     '@typescript-eslint/no-use-before-define': ['error', { functions: false }],
     '@typescript-eslint/sort-type-constituents': 'error',
@@ -75,7 +81,6 @@ module.exports = {
     'default-case': 'off',
     'import/prefer-default-export': 'off',
     'no-param-reassign': 'off',
-    'no-unused-vars': 'off', // base rule must be disabled: https://typescript-eslint.io/rules/no-unused-vars/
     quotes: ['error', 'single', { avoidEscape: true }],
     'react-refresh/only-export-components': [
       'warn',
@@ -91,5 +96,7 @@ module.exports = {
       { caseSensitive: false },
     ],
     'sort-keys-fix/sort-keys-fix': ['error', 'asc', { caseSensitive: false }],
+    'typescript-sort-keys/interface': 'error',
+    'typescript-sort-keys/string-enum': 'error',
   },
 };
