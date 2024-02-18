@@ -68,6 +68,7 @@
     "eslint-plugin-react-refresh": "^0.4.4",
     "eslint-plugin-sort-destructure-keys": "^1.5.0",
     "eslint-plugin-sort-keys-fix": "^1.1.2",
+    "eslint-plugin-typescript-sort-keys": "^3.1.0",
     "prettier": "3.1.0",
     "prettier-plugin-organize-imports": "3.1.1",
     "rollup-plugin-visualizer": "^5.8.2",
