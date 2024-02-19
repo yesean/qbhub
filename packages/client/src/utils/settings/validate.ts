@@ -5,6 +5,7 @@ import {
   Subcategory,
 } from '@qbhub/types';
 import { isEmpty } from '@qbhub/utils';
+
 import { SUBCATEGORY_METADATA_BY_SUBCATEGORY } from '../constants';
 import { MAX_TOURNAMENT_YEAR, MIN_TOURNAMENT_YEAR } from './constants';
 import {

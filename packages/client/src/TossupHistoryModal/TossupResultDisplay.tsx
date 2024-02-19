@@ -1,7 +1,8 @@
 import { Box } from '@chakra-ui/react';
 import { TossupResult } from '@qbhub/types';
-import TossupReaderAnswerDisplay from '../TossupReader/TossupReaderAnswerDisplay';
+
 import FormattedQuestion from '../components/FormattedQuestion';
+import TossupReaderAnswerDisplay from '../TossupReader/TossupReaderAnswerDisplay';
 import TossupResultUserInput from './TossupResultUserInput';
 
 type TossupResultProps = {

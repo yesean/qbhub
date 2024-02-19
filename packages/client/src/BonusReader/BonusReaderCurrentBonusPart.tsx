@@ -1,4 +1,5 @@
 import { BonusPartResult } from '@qbhub/types';
+
 import { FormattedQuestionProps } from '../components/FormattedQuestion';
 import { QuestionReaderStatus } from '../utils/questionReader';
 import BonusReaderAnswer from './BonusReaderAnswer';

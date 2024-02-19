@@ -1,4 +1,4 @@
-import { HStack, Heading, Text, Tooltip } from '@chakra-ui/react';
+import { Heading, HStack, Text, Tooltip } from '@chakra-ui/react';
 import { SelectedClue } from '@qbhub/types';
 
 type ClueDisplayClueProps = {

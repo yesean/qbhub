@@ -1,5 +1,6 @@
 import { Flex } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
+
 import { selectBonusReader } from '../BonusReader/bonusReaderSlice';
 import BonusResultAccordion from './BonusResultAccordion';
 

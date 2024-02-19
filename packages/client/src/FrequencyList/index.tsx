@@ -1,5 +1,6 @@
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import { Box, HStack, IconButton, VStack } from '@chakra-ui/react';
+
 import TableSkeleton from '../components/table/TableSkeleton';
 import useFrequencyListPagination from '../hooks/useFrequencyListPagination';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';

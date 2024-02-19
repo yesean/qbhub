@@ -1,4 +1,5 @@
 import { Box, Link as ChakraLink, ThemingProps } from '@chakra-ui/react';
+
 import { PrimaryButton, SecondaryButton } from './base';
 
 export type Props<T extends React.ComponentType = typeof ChakraLink> =

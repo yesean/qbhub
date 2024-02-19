@@ -1,7 +1,8 @@
 import { Tossup, TossupInstance, TossupResult } from '@qbhub/types';
 import { isEmpty } from '@qbhub/utils';
-import { PayloadAction, createAction, createSlice } from '@reduxjs/toolkit';
+import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v4 } from 'uuid';
+
 import type { AppDispatch, RootState } from '../redux/store';
 import { createAppAsyncThunk } from '../redux/utils';
 import * as fetchUtils from '../utils/fetch';

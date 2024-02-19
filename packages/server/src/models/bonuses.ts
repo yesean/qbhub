@@ -1,12 +1,13 @@
 import { BonusPart, QuestionFilters, SortOption } from '@qbhub/types';
 import { log } from '@qbhub/utils';
+
 import {
   Bonus as DBBonus,
   BonusPart as DBBonusPart,
   Order,
 } from '../types/db.js';
 import { TABLES } from '../utils/constants.js';
-import { QueryBuilder, client } from '../utils/db.js';
+import { client, QueryBuilder } from '../utils/db.js';
 import { transformBonus, transformBonusPart } from '../utils/model.js';
 
 const bonusesColumns = [

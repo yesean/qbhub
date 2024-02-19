@@ -2,6 +2,7 @@ import { useToast } from '@chakra-ui/react';
 import { matchResult } from '@qbhub/utils';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
+
 import {
   FREQUENCY_LIST_PAGE_SIZE,
   selectFrequencyList,

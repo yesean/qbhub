@@ -1,5 +1,6 @@
 import { Bonus, BonusPartResult } from '@qbhub/types';
 import { useMemo } from 'react';
+
 import { combineBonusPartWithLeadin } from '../utils/bonus';
 import { getFormattedWords } from '../utils/reader';
 import BonusReaderAnswer from './BonusReaderAnswer';

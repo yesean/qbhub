@@ -1,8 +1,9 @@
 import { getRange } from '@qbhub/utils';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { selectTossupReader } from '../TossupReader/tossupReaderSlice';
+
 import QuestionResultsLineChart from '../components/QuestionHistoryModal/QuestionResultsLineChart';
+import { selectTossupReader } from '../TossupReader/tossupReaderSlice';
 import { getTossupResultsSummary } from '../utils/tossup';
 
 export default function TossupResultsLineChart() {

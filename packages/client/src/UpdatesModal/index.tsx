@@ -1,6 +1,7 @@
 import { Box, Heading, Link } from '@chakra-ui/react';
 import { MDXComponents } from 'mdx/types';
 import { useEffect } from 'react';
+
 import QBHubModal from '../components/QBHubModal';
 import { useModalContext } from '../providers/ModalContext';
 import Content from './updates.mdx';

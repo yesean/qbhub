@@ -1,5 +1,6 @@
 import { log } from '@qbhub/utils';
 import { Request, Response, Router } from 'express';
+
 import { getFreq } from '../models/freq.js';
 import { QueryStringParsingError } from '../types/errors.js';
 import { parseQueryString } from '../utils/controller.js';

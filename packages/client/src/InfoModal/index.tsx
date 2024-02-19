@@ -9,6 +9,7 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
+
 import QBHubModal from '../components/QBHubModal';
 import { ROUTES } from '../routes';
 

@@ -1,4 +1,5 @@
 import { Box, Center, Heading, Text } from '@chakra-ui/react';
+
 import { headers } from './constants';
 
 const About = () => {

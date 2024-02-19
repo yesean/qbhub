@@ -1,5 +1,6 @@
 import { FrequencyListEntry, SelectedClue } from '@qbhub/types';
 import { createSlice } from '@reduxjs/toolkit';
+
 import type { RootState } from '../redux/store';
 import { createAppAsyncThunk } from '../redux/utils';
 import * as fetchUtils from '../utils/fetch';

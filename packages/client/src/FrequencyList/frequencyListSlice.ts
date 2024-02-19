@@ -1,6 +1,7 @@
 import { FrequencyListEntry } from '@qbhub/types';
-import { Err, Result, makeErr, makeOk, matchResult } from '@qbhub/utils';
+import { Err, makeErr, makeOk, matchResult, Result } from '@qbhub/utils';
 import { createSlice } from '@reduxjs/toolkit';
+
 import type { RootState } from '../redux/store';
 import { createAppAsyncThunk } from '../redux/utils';
 import * as fetchUtils from '../utils/fetch';

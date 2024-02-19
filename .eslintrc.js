@@ -48,10 +48,6 @@ module.exports = {
           'protected-method',
           'private-method',
         ],
-        default: {
-          optionalityOrder: 'required-first',
-          order: 'natural-case-insensitive',
-        },
       },
     ],
 

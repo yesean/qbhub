@@ -1,6 +1,7 @@
 /// <reference types="vite-plugin-svgr/client" />
 import { InfoOutlineIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
 import { Flex, Heading, Icon, IconButton, Link } from '@chakra-ui/react';
+
 import { useModalContext } from '../../providers/ModalContext';
 import Discord from '../../static/discord.svg?react';
 import Github from '../../static/github.svg?react';

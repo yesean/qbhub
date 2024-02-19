@@ -2,8 +2,8 @@ import { Progress as ChakraProgress } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
 type Props = {
-  onFinish: () => void; // in milliseconds, default to 10 seconds
-  duration?: number;
+  duration?: number; // in milliseconds, default to 10 seconds
+  onFinish: () => void;
 };
 
 const PROGRESS_TOTAL_UPDATE_FRAMES = 1000; // number of progress updates between 100->0, i.e. controls progress smoothness

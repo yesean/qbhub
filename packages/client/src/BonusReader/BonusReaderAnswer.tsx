@@ -1,5 +1,6 @@
 import { Box, Text } from '@chakra-ui/react';
 import { BonusPartResult } from '@qbhub/types';
+
 import { parseHTMLString } from '../utils/reader';
 
 type BonusReaderAnswerProps = {

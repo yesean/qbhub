@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+
 import { useModalContext } from '../providers/ModalContext';
 
 type EventHandlingOptions = {

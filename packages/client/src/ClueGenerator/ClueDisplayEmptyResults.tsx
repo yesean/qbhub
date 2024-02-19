@@ -1,5 +1,6 @@
 import { SearchIcon } from '@chakra-ui/icons';
 import { Container, Flex, Text } from '@chakra-ui/react';
+
 import RouterLinkButton from '../components/buttons/RouterLinkButton';
 import { ROUTES } from '../routes';
 import ClueDisplayHeadline from './ClueDisplayHeadline';

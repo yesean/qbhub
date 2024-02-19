@@ -1,5 +1,6 @@
 import { Navigate, NavigateProps } from 'react-router-dom';
-import { RouteURL, isRouteURL } from '../../utils/routes';
+
+import { isRouteURL, RouteURL } from '../../utils/routes';
 
 type RouterRedirectProps = Omit<NavigateProps, 'to'> & {
   to: RouteURL | string;

@@ -1,6 +1,7 @@
 import { Center, Flex, Heading, Text } from '@chakra-ui/react';
 import { BonusScore } from '@qbhub/types';
 import { useSelector } from 'react-redux';
+
 import { selectBonusReader } from '../BonusReader/bonusReaderSlice';
 import { getBonusResultsSummary } from '../utils/bonus';
 

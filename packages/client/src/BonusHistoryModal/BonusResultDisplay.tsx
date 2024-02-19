@@ -1,6 +1,7 @@
 import { Divider, Flex } from '@chakra-ui/react';
 import { BonusResult } from '@qbhub/types';
 import { Fragment } from 'react';
+
 import BonusReaderPreviousBonusPart from '../BonusReader/BonusReaderPreviousBonusPart';
 
 type BonusResultDisplayProps = {

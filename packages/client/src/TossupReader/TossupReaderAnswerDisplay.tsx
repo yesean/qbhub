@@ -1,6 +1,7 @@
 import { Link, Text } from '@chakra-ui/react';
 import { Tossup } from '@qbhub/types';
 import { Link as RouterLink } from 'react-router-dom';
+
 import { ROUTES } from '../routes';
 import { parseHTMLString } from '../utils/reader';
 

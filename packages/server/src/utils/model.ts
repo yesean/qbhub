@@ -1,5 +1,6 @@
 import { Bonus, BonusPart, Tossup } from '@qbhub/types';
-import { QBString, cleanTossupText } from '@qbhub/utils';
+import { cleanTossupText, QBString } from '@qbhub/utils';
+
 import {
   Bonus as DBBonus,
   BonusPart as DBBonusPart,

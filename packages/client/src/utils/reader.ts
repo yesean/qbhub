@@ -1,6 +1,5 @@
 import { FormattedWord } from '@qbhub/types';
 import {
-  QBString,
   getAllCaptureGroups,
   getTextBetweenTag,
   getUniqueItems,
@@ -8,6 +7,7 @@ import {
   groupBy,
   lastIndexOfMultiple,
   objectMap,
+  QBString,
   removeFirstNames,
 } from '@qbhub/utils';
 import DOMPurify from 'isomorphic-dompurify';

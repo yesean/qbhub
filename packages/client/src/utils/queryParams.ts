@@ -1,10 +1,10 @@
 import { buildIsEnum, isNumber } from '@qbhub/types';
 import {
+  decodeDelimitedNumericArray,
+  encodeDelimitedNumericArray,
   NumberParam,
   QueryParamConfig,
   StringParam,
-  decodeDelimitedNumericArray,
-  encodeDelimitedNumericArray,
 } from 'use-query-params';
 
 type NumericEnum<T extends string, U extends number> = { [key in T]: U };

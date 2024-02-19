@@ -1,11 +1,12 @@
 import { QuestionInstance, QuestionResult } from '@qbhub/types';
 import { log } from '@qbhub/utils';
 import { useCallback, useMemo, useState } from 'react';
+
 import useKeyboardShortcut from '../../hooks/useKeyboardShortcut';
 import { JudgeResult } from '../../utils/judge';
 import {
-  QuestionReaderStatus,
   getNextStatus,
+  QuestionReaderStatus,
 } from '../../utils/questionReader';
 import { getFormattedWords } from '../../utils/reader';
 import useJudge from './useJudge';
@@ -23,9 +24,9 @@ type UseReaderProps = {
   onJudged: (result: QuestionResult) => void;
   onNext: () => void;
   onPrompt: (result: QuestionResult) => void;
+  onReveal?: (visibleIndex: number) => void;
   questionInstance: QuestionInstance;
   userInput: string;
-  onReveal?: (visibleIndex: number) => void;
 };
 
 /**

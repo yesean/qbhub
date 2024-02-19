@@ -1,5 +1,6 @@
 import { RepeatIcon } from '@chakra-ui/icons';
 import { Container, Flex, IconButton, Text } from '@chakra-ui/react';
+
 import useActions from '../hooks/useActions';
 
 export default function EmptyBonusesNotice() {

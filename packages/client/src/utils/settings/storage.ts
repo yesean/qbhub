@@ -5,6 +5,7 @@ import {
   isSubcategoryArray,
   isTournamentArray,
 } from '@qbhub/types';
+
 import { restore, save } from '../storage';
 import { FromYear, ReadingSpeed, Settings } from './types';
 import { isFromYearValid, isReadingSpeedValid } from './validate';

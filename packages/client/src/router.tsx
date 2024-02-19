@@ -1,6 +1,7 @@
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 import { QueryParamProvider } from 'use-query-params';
 import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
+
 import About from './About';
 import BonusReader from './BonusReader';
 import ClueDisplay from './ClueGenerator/ClueDisplay';

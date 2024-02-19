@@ -1,8 +1,9 @@
 import { FrequencyListEntry, QuestionFilters } from '@qbhub/types';
 import { log } from '@qbhub/utils';
+
 import { Order } from '../types/db.js';
 import { TABLES } from '../utils/constants.js';
-import { QueryBuilder, client } from '../utils/db.js';
+import { client, QueryBuilder } from '../utils/db.js';
 
 const columns = [
   { alias: 'answer', name: TABLES.tossups.columns.normalizedAnswer },

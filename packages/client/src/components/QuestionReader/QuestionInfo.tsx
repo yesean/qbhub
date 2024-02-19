@@ -1,10 +1,10 @@
 import { Heading } from '@chakra-ui/react';
 import {
-  QuestionMetadata,
   getCategoryName,
   getDifficultyName,
   getSubcategoryName,
   getTournamentName,
+  QuestionMetadata,
 } from '@qbhub/types';
 
 type QuestionInfoProps = {

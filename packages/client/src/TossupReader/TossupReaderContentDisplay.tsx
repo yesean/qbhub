@@ -1,6 +1,7 @@
 import { VStack } from '@chakra-ui/react';
 import { Tossup } from '@qbhub/types';
 import { useMemo } from 'react';
+
 import FormattedQuestion from '../components/FormattedQuestion';
 import { QuestionContentDisplayProps } from '../components/QuestionReader';
 import QuestionContentContainer from '../components/QuestionReader/QuestionContentContainer';
