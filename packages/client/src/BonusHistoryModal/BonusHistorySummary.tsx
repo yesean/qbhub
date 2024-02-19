@@ -3,38 +3,32 @@ import { BonusScore } from '@qbhub/types';
 import { useSelector } from 'react-redux';
 
 import { selectBonusReader } from '../BonusReader/bonusReaderSlice';
-import { getBonusResultsSummary } from '../utils/bonus';
 
 export default function BonusHistorySummary() {
-  const { results } = useSelector(selectBonusReader);
-  const bonusResultsSummary = getBonusResultsSummary(results);
+  const { score, scoreCounts } = useSelector(selectBonusReader);
 
   return (
     <Center overflow="auto">
       <Flex align="center" gap={[3, 6, 12]} overflow="auto" wrap="wrap">
         <ScoreBadge
           description="Thirties"
-          value={bonusResultsSummary.scoreCounts[BonusScore.thirty]}
+          value={scoreCounts[BonusScore.thirty]}
           variant={BonusScore.thirty}
         />
         <ScoreBadge
           description="Twenties"
-          value={bonusResultsSummary.scoreCounts[BonusScore.twenty]}
+          value={scoreCounts[BonusScore.twenty]}
           variant={BonusScore.twenty}
         />
-        <ScoreBadge
-          description="Score"
-          value={bonusResultsSummary.score}
-          variant="total"
-        />
+        <ScoreBadge description="Score" value={score} variant="total" />
         <ScoreBadge
           description="Tens"
-          value={bonusResultsSummary.scoreCounts[BonusScore.ten]}
+          value={scoreCounts[BonusScore.ten]}
           variant={BonusScore.ten}
         />
         <ScoreBadge
           description="Zeros"
-          value={bonusResultsSummary.scoreCounts[BonusScore.zero]}
+          value={scoreCounts[BonusScore.zero]}
           variant={BonusScore.zero}
         />
       </Flex>
