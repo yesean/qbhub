@@ -8,8 +8,13 @@ import { createAppAsyncThunk } from '../redux/utils';
 import * as fetchUtils from '../utils/fetch';
 import { Settings } from '../utils/settings/types';
 import { isQuestionValid } from '../utils/settings/validate';
+import {
+  getTossupResultsSummary,
+  INITIAL_TOSSUP_RESULTS_SUMMARY,
+  TossupResultsSummary,
+} from '../utils/tossup';
 
-type TossupReaderState = {
+type TossupReaderState = TossupResultsSummary & {
   currentTossupInstance: TossupInstance | undefined;
   isFetching: boolean;
   isUserWaiting: boolean;
@@ -23,6 +28,7 @@ const initialState: TossupReaderState = {
   isUserWaiting: false,
   results: [],
   tossupInstances: undefined,
+  ...INITIAL_TOSSUP_RESULTS_SUMMARY,
 };
 
 type FetchTossupsArgs = { settings: Settings };
@@ -140,16 +146,18 @@ const tossupReaderSlice = createSlice({
 export const { submitResult, updateResult } = tossupReaderSlice.actions;
 
 export const selectTossupReader = ({ tossupReader }: RootState) => {
-  const score = tossupReader.results.reduce(
-    (acc, tossupResult) => acc + tossupResult.score,
-    0,
-  );
   const isUninitialized =
     tossupReader.tossupInstances === undefined && !tossupReader.isFetching;
 
   const latestTossupResult = tossupReader.results.at(0);
+  const tossupResultsSummary = getTossupResultsSummary(tossupReader.results);
 
-  return { ...tossupReader, isUninitialized, latestTossupResult, score };
+  return {
+    ...tossupReader,
+    ...tossupResultsSummary,
+    isUninitialized,
+    latestTossupResult,
+  };
 };
 
 export default tossupReaderSlice.reducer;

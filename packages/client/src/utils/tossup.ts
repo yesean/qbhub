@@ -1,5 +1,10 @@
 import { useToast } from '@chakra-ui/react';
-import { QuestionResult, TossupResult, TossupScore } from '@qbhub/types';
+import {
+  QuestionResult,
+  Tossup,
+  TossupResult,
+  TossupScore,
+} from '@qbhub/types';
 
 import { getFormattedWords, getPowerIndex } from './reader';
 
@@ -80,11 +85,12 @@ export function displayToast(
   }
 }
 
-type TossupResultsSummary = {
+export type TossupResultsSummary = {
   score: number;
   scoreCounts: Record<TossupScore, number>;
 };
-const INITIAL_TOSSUP_RESULTS_SUMMARY = {
+
+export const INITIAL_TOSSUP_RESULTS_SUMMARY: TossupResultsSummary = {
   score: 0,
   scoreCounts: {
     [TossupScore.power]: 0,

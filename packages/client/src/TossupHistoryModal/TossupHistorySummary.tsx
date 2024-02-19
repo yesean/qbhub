@@ -3,38 +3,32 @@ import { TossupScore } from '@qbhub/types';
 import { useSelector } from 'react-redux';
 
 import { selectTossupReader } from '../TossupReader/tossupReaderSlice';
-import { getTossupResultsSummary } from '../utils/tossup';
 
 export default function TossupHistorySummary() {
-  const { results } = useSelector(selectTossupReader);
-  const tossupResultsSummary = getTossupResultsSummary(results);
+  const { score, scoreCounts } = useSelector(selectTossupReader);
 
   return (
     <Center overflow="auto">
       <Flex align="center" gap={[3, 6, 12]} overflow="auto" wrap="wrap">
         <ScoreBadge
           description="Powers"
-          value={tossupResultsSummary.scoreCounts[TossupScore.power]}
+          value={scoreCounts[TossupScore.power]}
           variant={TossupScore.power}
         />
         <ScoreBadge
           description="Tens"
-          value={tossupResultsSummary.scoreCounts[TossupScore.ten]}
+          value={scoreCounts[TossupScore.ten]}
           variant={TossupScore.ten}
         />
-        <ScoreBadge
-          description="Score"
-          value={tossupResultsSummary.score}
-          variant="total"
-        />
+        <ScoreBadge description="Score" value={score} variant="total" />
         <ScoreBadge
           description="Incorrect"
-          value={tossupResultsSummary.scoreCounts[TossupScore.incorrect]}
+          value={scoreCounts[TossupScore.incorrect]}
           variant={TossupScore.incorrect}
         />
         <ScoreBadge
           description="Negs"
-          value={tossupResultsSummary.scoreCounts[TossupScore.neg]}
+          value={scoreCounts[TossupScore.neg]}
           variant={TossupScore.neg}
         />
       </Flex>

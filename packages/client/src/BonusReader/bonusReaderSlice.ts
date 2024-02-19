@@ -5,26 +5,30 @@ import { v4 } from 'uuid';
 
 import type { AppDispatch, RootState } from '../redux/store';
 import { createAppAsyncThunk } from '../redux/utils';
+import {
+  BonusResultsSummary,
+  getBonusResultsSummary,
+  INITIAL_BONUS_RESULTS_SUMMARY,
+} from '../utils/bonus';
 import * as fetchUtils from '../utils/fetch';
 import { Settings } from '../utils/settings/types';
 import { isQuestionValid } from '../utils/settings/validate';
 
-type BonusReaderState = {
+type BonusReaderState = BonusResultsSummary & {
   bonusInstances: BonusInstance[] | undefined;
   currentBonusInstance: BonusInstance | undefined;
   isFetching: boolean;
   isUserWaiting: boolean;
   results: BonusResult[];
-  score: number;
 };
 
 const initialState: BonusReaderState = {
+  ...INITIAL_BONUS_RESULTS_SUMMARY,
   bonusInstances: undefined,
   currentBonusInstance: undefined,
   isFetching: false,
   isUserWaiting: false,
   results: [],
-  score: 0,
 };
 
 type FetchBonusesArgs = { settings: Settings };
@@ -140,22 +144,19 @@ const bonusReaderSlice = createSlice({
 export const { submitResult, updateResult } = bonusReaderSlice.actions;
 
 export const selectBonusReader = ({ bonusReader }: RootState) => {
-  const score = bonusReader.results.reduce(
-    (acc, result) => acc + result.score,
-    0,
-  );
   const isUninitialized =
     bonusReader.bonusInstances === undefined && !bonusReader.isFetching;
 
   const latestBonusResult = bonusReader.results.at(0);
   const latestBonusPartResult = latestBonusResult?.parts.at(-1);
+  const bonusResultsSummary = getBonusResultsSummary(bonusReader.results);
 
   return {
     ...bonusReader,
+    ...bonusResultsSummary,
     isUninitialized,
     latestBonusPartResult,
     latestBonusResult,
-    score,
   };
 };
 

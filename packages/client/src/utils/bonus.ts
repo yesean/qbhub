@@ -165,11 +165,12 @@ export function displayToast(
   }
 }
 
-type BonusResultsSummary = {
+export type BonusResultsSummary = {
   score: number;
   scoreCounts: Record<BonusScore, number>;
 };
-const INITIAL_BONUS_RESULTS_SUMMARY = {
+
+export const INITIAL_BONUS_RESULTS_SUMMARY: BonusResultsSummary = {
   score: 0,
   scoreCounts: {
     [BonusScore.thirty]: 0,
