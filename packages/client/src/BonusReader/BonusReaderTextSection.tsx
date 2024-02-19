@@ -1,4 +1,5 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
+
 import FormattedQuestion, {
   FormattedQuestionProps,
 } from '../components/FormattedQuestion';

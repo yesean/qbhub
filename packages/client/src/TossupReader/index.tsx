@@ -2,12 +2,13 @@ import { useToast } from '@chakra-ui/react';
 import { QuestionResult, TossupInstance, TossupResult } from '@qbhub/types';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
+
+import TealButton from '../components/buttons/TealButton';
 import QuestionReader, {
   JudgeResultChange,
   QuestionContentDisplayProps,
 } from '../components/QuestionReader';
 import QuestionReaderSkeleton from '../components/QuestionReader/QuestionReaderSkeleton';
-import TealButton from '../components/buttons/TealButton';
 import useActions from '../hooks/useActions';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useModalContext } from '../providers/ModalContext';

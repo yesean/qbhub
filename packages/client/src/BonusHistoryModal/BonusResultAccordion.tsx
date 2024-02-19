@@ -7,6 +7,7 @@ import {
   Box,
 } from '@chakra-ui/react';
 import { BonusResult } from '@qbhub/types';
+
 import QuestionInfo from '../components/QuestionReader/QuestionInfo';
 import BonusResultDisplay from './BonusResultDisplay';
 import BonusResultScoreBadge from './BonusResultScoreBadge';

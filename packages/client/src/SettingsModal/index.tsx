@@ -12,6 +12,7 @@ import {
 import { CSSObject } from '@emotion/react';
 import { Category, Difficulty, Subcategory, Tournament } from '@qbhub/types';
 import Select, { Options } from 'react-select';
+
 import QBHubModal from '../components/QBHubModal';
 import { useSettings } from '../hooks/useSettings';
 import {
@@ -21,8 +22,8 @@ import {
   DIFFICULTY_METADATA_BY_DIFFICULTY,
   SUBCATEGORIES,
   SUBCATEGORY_METADATA_BY_SUBCATEGORY,
-  TOURNAMENTS,
   TOURNAMENT_METADATA_BY_TOURNAMENT,
+  TOURNAMENTS,
 } from '../utils/constants';
 import {
   DEFAULT_READING_SPEED,

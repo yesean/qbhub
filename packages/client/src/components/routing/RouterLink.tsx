@@ -3,7 +3,8 @@ import {
   Link as ReactRouterLink,
   LinkProps as ReactRouterLinkProps,
 } from 'react-router-dom';
-import { RouteURL, isRouteURL } from '../../utils/routes';
+
+import { isRouteURL, RouteURL } from '../../utils/routes';
 
 type RouterLinkProps = Omit<ReactRouterLinkProps, 'to'> & {
   children: React.ReactNode;

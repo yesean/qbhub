@@ -1,6 +1,6 @@
 import {
-  Modal as ChakraModal,
   Heading,
+  Modal as ChakraModal,
   ModalBody,
   ModalContent,
   ModalFooter,
@@ -8,6 +8,7 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
+
 import usePageHeight from '../hooks/usePageHeight';
 import TealButton from './buttons/TealButton';
 

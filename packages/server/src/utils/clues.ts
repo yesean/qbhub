@@ -10,6 +10,7 @@ import {
 } from '@qbhub/utils';
 import stats from '@seanye/compromise-stats';
 import _nlp from 'compromise/three';
+
 import { PlainTossup } from '../types/db.js';
 
 const nlp = _nlp.plugin(stats);

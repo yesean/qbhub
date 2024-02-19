@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+
 import { useSettings } from '../hooks/useSettings';
 import { restoreSettings } from '../utils/settings/storage';
 import {

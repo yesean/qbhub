@@ -6,7 +6,7 @@ import {
   SelectedClue,
   Tossup,
 } from '@qbhub/types';
-import { Err, Result, log, makeErr, makeOk } from '@qbhub/utils';
+import { Err, log, makeErr, makeOk, Result } from '@qbhub/utils';
 import axios from 'axios';
 import qs from 'qs';
 

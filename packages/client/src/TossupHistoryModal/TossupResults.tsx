@@ -1,5 +1,6 @@
 import { Flex } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
+
 import { selectTossupReader } from '../TossupReader/tossupReaderSlice';
 import TossupResultAccordion from './TossupResultAccordion';
 

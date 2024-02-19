@@ -1,12 +1,13 @@
 import { FrequencyListEntry } from '@qbhub/types';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import FrequencyListTable from '../FrequencyList/FrequencyListTable';
+
 import TableSkeleton from '../components/table/TableSkeleton';
+import FrequencyListTable from '../FrequencyList/FrequencyListTable';
 import useActions from '../hooks/useActions';
 import { ROUTES } from '../routes';
-import ClueSearchEmptyResults from './ClueSearchEmptyResults';
 import { selectClueGenerator } from './clueGeneratorSlice';
+import ClueSearchEmptyResults from './ClueSearchEmptyResults';
 
 type ClueSearchResultsDisplayProps = {
   answers: FrequencyListEntry[];

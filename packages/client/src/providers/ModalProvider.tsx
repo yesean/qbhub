@@ -1,11 +1,12 @@
 import { useCallback, useMemo, useState } from 'react';
+
 import BonusHistoryModal from '../BonusHistoryModal';
+import HamburgerMenu from '../components/routing/HamburgerMenu';
+import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import InfoModal from '../InfoModal';
 import SettingsModal from '../SettingsModal';
 import TossupHistoryModal from '../TossupHistoryModal';
 import UpdatesModal from '../UpdatesModal';
-import HamburgerMenu from '../components/routing/HamburgerMenu';
-import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { ModalContext } from './ModalContext';
 
 enum ModalVariant {

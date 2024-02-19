@@ -1,5 +1,6 @@
 import { BonusInstance, BonusPartResult } from '@qbhub/types';
 import { useReducer } from 'react';
+
 import { isLastBonusPart, updateBonusPartResults } from '../utils/bonus';
 
 type BonusReaderState = {

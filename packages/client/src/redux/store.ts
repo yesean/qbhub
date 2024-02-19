@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+
 import bonusReaderReducer from '../BonusReader/bonusReaderSlice';
 import clueGeneratorReducer from '../ClueGenerator/clueGeneratorSlice';
 import frequencyListReducer from '../FrequencyList/frequencyListSlice';

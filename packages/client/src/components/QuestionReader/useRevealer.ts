@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+
 import { useSettings } from '../../hooks/useSettings';
 import { getReadingTimeoutDelay } from '../../utils/questionReader';
 import { DEFAULT_READING_SPEED } from '../../utils/settings/constants';
@@ -11,9 +12,9 @@ type UseRevealerType = {
 
 type UseRevealerProps = {
   isRevealed: boolean;
+  onChange?: (visibleIndex: number) => void;
   onFinish: () => void;
   words: unknown[];
-  onChange?: (visibleIndex: number) => void;
 };
 
 export default function useRevealer({

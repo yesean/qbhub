@@ -1,6 +1,7 @@
 import { Center, Flex, Heading, Text } from '@chakra-ui/react';
 import { TossupScore } from '@qbhub/types';
 import { useSelector } from 'react-redux';
+
 import { selectTossupReader } from '../TossupReader/tossupReaderSlice';
 import { getTossupResultsSummary } from '../utils/tossup';
 

@@ -1,15 +1,16 @@
 import { useCallback, useMemo } from 'react';
+
 import { filterBonusesWithRefetch } from '../BonusReader/bonusReaderSlice';
 import { reset } from '../FrequencyList/frequencyListSlice';
-import { filterTossupsWithRefetch } from '../TossupReader/tossupReaderSlice';
 import { useAppDispatch } from '../redux/utils';
 import { useGlobalQueryParams } from '../routes';
+import { filterTossupsWithRefetch } from '../TossupReader/tossupReaderSlice';
 import { restoreSettings, saveSettings } from '../utils/settings/storage';
 import { Settings } from '../utils/settings/types';
 import {
-  getURLQueryParamSettings,
   getUpdatedCategoriesFromSubcategories,
   getUpdatedSubcategoriesFromCategories,
+  getURLQueryParamSettings,
 } from '../utils/settings/validate';
 
 type SettingsHook = {

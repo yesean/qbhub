@@ -1,5 +1,6 @@
 import { useToast } from '@chakra-ui/react';
 import { QuestionResult, TossupResult, TossupScore } from '@qbhub/types';
+
 import { getFormattedWords, getPowerIndex } from './reader';
 
 function getTossupResultScore({

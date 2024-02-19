@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { isLogLevelValid, LogLevel } from '@qbhub/types';
+
 import * as env from './env.js';
 
 const log = (logLevel: LogLevel, ...params: unknown[]) => {

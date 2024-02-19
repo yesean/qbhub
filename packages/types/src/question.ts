@@ -9,9 +9,9 @@ export type QuestionMetadata = {
   category: Category;
   difficulty: Difficulty;
   id: number;
+  subcategory?: Subcategory;
   tournament: Tournament;
   year: number;
-  subcategory?: Subcategory;
 };
 
 export type QuestionContent = {

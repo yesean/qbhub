@@ -2,6 +2,7 @@ import { env, log } from '@qbhub/utils';
 import cors from 'cors';
 import express from 'express';
 import path from 'path';
+
 import bonusesRouter from './controllers/bonuses.js';
 import cluesRouter from './controllers/clues.js';
 import freqRouter from './controllers/freq.js';

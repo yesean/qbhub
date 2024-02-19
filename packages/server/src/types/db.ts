@@ -3,8 +3,8 @@ import { Tournament } from '@qbhub/types';
 export type Parameter = number | string;
 
 export type Column = {
-  name: string;
   alias?: string;
+  name: string;
 };
 
 export type Order = {

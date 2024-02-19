@@ -1,4 +1,5 @@
 import { Flex } from '@chakra-ui/react';
+
 import ClueSearchInput from './ClueSearchInput';
 import ClueSearchResults from './ClueSearchResults';
 

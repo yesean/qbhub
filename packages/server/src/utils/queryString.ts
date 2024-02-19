@@ -14,6 +14,7 @@ import {
   Subcategory,
   Tournament,
 } from '@qbhub/types';
+
 import { QueryStringParsingError } from '../types/errors.js';
 import {
   DEFAULT_LIMIT,

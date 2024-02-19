@@ -8,12 +8,13 @@ import {
 } from '@qbhub/types';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
+
+import TealButton from '../components/buttons/TealButton';
 import QuestionReader, {
   JudgeResultChange,
   QuestionContentDisplayProps,
 } from '../components/QuestionReader';
 import QuestionReaderSkeleton from '../components/QuestionReader/QuestionReaderSkeleton';
-import TealButton from '../components/buttons/TealButton';
 import useActions from '../hooks/useActions';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useModalContext } from '../providers/ModalContext';
@@ -29,12 +30,12 @@ import {
   updateBonusPartResults,
 } from '../utils/bonus';
 import BonusReaderContentDisplay from './BonusReaderContentDisplay';
-import EmptyBonusesNotice from './EmptyBonusesNotice';
 import {
   selectBonusReader,
   submitResult,
   updateResult,
 } from './bonusReaderSlice';
+import EmptyBonusesNotice from './EmptyBonusesNotice';
 import useBonusReaderReducer from './useBonusReaderReducer';
 
 type BonusReaderDisplayProps = {

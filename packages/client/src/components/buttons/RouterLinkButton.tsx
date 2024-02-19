@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
 import { Link as ReactRouterLink } from 'react-router-dom';
+
 import { isRouteURL, type RouteURL } from '../../utils/routes';
 import { LinkButton, Props as LinkButtonProps } from './LinkButton';
 

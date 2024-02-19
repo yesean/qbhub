@@ -1,5 +1,6 @@
 import { HamburgerIcon, SettingsIcon, TimeIcon } from '@chakra-ui/icons';
 import { Box, Flex, Heading, IconButton } from '@chakra-ui/react';
+
 import { useModalContext } from '../../providers/ModalContext';
 import { ROUTES } from '../../routes';
 

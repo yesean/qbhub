@@ -7,6 +7,7 @@ import {
   ScoredQuestionResult,
 } from '@qbhub/types';
 import { useCallback, useMemo, useState } from 'react';
+
 import useInput from '../../hooks/useInput';
 import { QuestionReaderStatus } from '../../utils/questionReader';
 import { getFormattedWords } from '../../utils/reader';
@@ -17,11 +18,11 @@ import QuestionReaderScore from './QuestionReaderScore';
 import useReader from './useReader';
 
 export type QuestionContentDisplayProps = {
+  buzzIndex?: number;
   question: Question;
   status: QuestionReaderStatus;
   visibleIndex: number;
   words: FormattedWord[];
-  buzzIndex?: number;
 };
 
 type QuestionContentDisplay = React.ComponentType<QuestionContentDisplayProps>;
@@ -33,8 +34,8 @@ export type JudgeResultChange = {
 
 type QuestionReaderProps = {
   latestResult: ScoredQuestionResult | undefined;
-  onJudged: (result: QuestionResult) => void;
   onJudgeResultChange: (judgeResultChange: JudgeResultChange) => void;
+  onJudged: (result: QuestionResult) => void;
   onNextQuestion: () => void;
   onPrompt: (result: QuestionResult) => void;
   questionInstance: QuestionInstance;

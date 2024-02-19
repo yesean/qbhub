@@ -3,10 +3,11 @@ import { useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   DecodedValueMap,
-  QueryParamConfigMap,
   encodeQueryParams,
+  QueryParamConfigMap,
   useQueryParams,
 } from 'use-query-params';
+
 import type { GlobalQueryParams } from '../routes';
 
 type WithGlobalParams<T extends QueryParamConfigMap> = GlobalQueryParams & T;

@@ -1,6 +1,7 @@
 import { Divider, VStack } from '@chakra-ui/react';
 import { Bonus, BonusPartResult } from '@qbhub/types';
 import { Fragment, useMemo } from 'react';
+
 import { QuestionContentDisplayProps } from '../components/QuestionReader';
 import QuestionContentContainer from '../components/QuestionReader/QuestionContentContainer';
 import useAutoScrollIntoView from '../hooks/useAutoScrollIntoView';

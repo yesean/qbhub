@@ -2,13 +2,14 @@ import { BellIcon } from '@chakra-ui/icons';
 import { Container, Text } from '@chakra-ui/react';
 import { FormattedWord } from '@qbhub/types';
 import React, { Fragment } from 'react';
+
 import { parseHTMLString } from '../utils/reader';
 
 export type FormattedQuestionProps = {
-  words: FormattedWord[];
   buzzIndex?: number;
   visibleIndex?: number;
   visibleRef?: React.RefObject<HTMLParagraphElement>;
+  words: FormattedWord[];
 };
 
 export default function FormattedQuestion({
