@@ -15,6 +15,7 @@ module.exports = {
     'react-refresh',
     'sort-keys-fix',
     'sort-destructure-keys',
+    'simple-import-sort',
     'typescript-sort-keys',
   ],
   rules: {
@@ -96,6 +97,7 @@ module.exports = {
       { caseSensitive: false },
     ],
     'sort-keys-fix/sort-keys-fix': ['error', 'asc', { caseSensitive: false }],
+    'simple-import-sort/imports': 'error',
     'typescript-sort-keys/interface': 'error',
     'typescript-sort-keys/string-enum': 'error',
   },

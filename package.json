@@ -18,5 +18,29 @@
     "clean": "yarn workspaces foreach -tpviA run clean",
     "test": "yarn workspaces foreach -pviA run test",
     "postbuild": "rm -rf packages/server/dist-client && cp -r packages/client/dist packages/server/dist-client"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8",
+    "eslint-plugin-simple-import-sort": "^12.0.0",
+    "eslint-plugin-typescript-sort-keys": "^3.1.0"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.0.1",
+    "@typescript-eslint/parser": "^7.0.1",
+    "compromise": "^14.12.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.56.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "eslint-plugin-sort-destructure-keys": "^1.5.0",
+    "eslint-plugin-sort-keys-fix": "^1.1.2",
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3"
   }
 }

@@ -12,8 +12,5 @@
   "proseWrap": "always",
   "htmlWhitespaceSensitivity": "css",
   "endOfLine": "lf",
-  "plugins": [
-    "prettier-plugin-organize-imports"
-  ],
   "organizeImportsSkipDestructiveCodeActions": true
 }
