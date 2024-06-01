@@ -1,10 +1,12 @@
 import { useToast } from '@chakra-ui/react';
 import {
+  Category,
   QuestionResult,
-  Tossup,
+  Subcategory,
   TossupResult,
   TossupScore,
 } from '@qbhub/types';
+import { mapGroupBy } from '@qbhub/utils';
 
 import { getFormattedWords, getPowerIndex } from './reader';
 
@@ -113,4 +115,26 @@ export function getTossupResultsSummary(
     }),
     INITIAL_TOSSUP_RESULTS_SUMMARY,
   );
+}
+
+export type TossupResultsSummaryByCategory = Map<Category, TossupResult[]>;
+export type TossupResultsSummaryBySubcategory = Map<
+  Subcategory | undefined,
+  TossupResult[]
+>;
+
+export function getTossupResultsSummaryByGroup(results: TossupResult[]): {
+  tossupResultsByCategory: TossupResultsSummaryByCategory;
+  tossupResultsBySubcategory: TossupResultsSummaryBySubcategory;
+} {
+  const tossupResultsByCategory = mapGroupBy(
+    results,
+    (result) => result.question.category,
+  );
+  const tossupResultsBySubcategory = mapGroupBy(
+    results,
+    (result) => result.question.subcategory,
+  );
+
+  return { tossupResultsByCategory, tossupResultsBySubcategory };
 }

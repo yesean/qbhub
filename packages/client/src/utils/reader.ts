@@ -4,8 +4,8 @@ import {
   getTextBetweenTag,
   getUniqueItems,
   getWordsBetweenTag,
-  groupBy,
   lastIndexOfMultiple,
+  objectGroupBy,
   objectMap,
   QBString,
   removeFirstNames,
@@ -31,7 +31,7 @@ export function getFormattedWords(text: string): FormattedWord[] {
 
   const boldWords = getWordsBetweenTag(text, 'strong');
   const boldWordCount = objectMap(
-    groupBy(boldWords, (word) => word),
+    objectGroupBy(boldWords, (word) => word),
     (group) => group.length,
   );
 

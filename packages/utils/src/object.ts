@@ -36,7 +36,7 @@ export function objectPullWithKey<TItem, TValue, TKey extends KeyType>(
 /**
  * Group elements from an array, using a callback for the key
  */
-export function groupBy<TItem, TKey extends KeyType>(
+export function objectGroupBy<TItem, TKey extends KeyType>(
   items: TItem[],
   keyMapping: (item: TItem) => TKey,
 ): Record<TKey, TItem[]> {

@@ -4,14 +4,14 @@ import TossupResultsLineChart from './TossupResultsLineChart';
 
 const TABS = [
   {
-    content: TossupResults,
+    content: <TossupResults />,
     label: 'Tossups',
     panelProps: {
       p: 0,
     },
   },
   {
-    content: TossupResultsLineChart,
+    content: <TossupResultsLineChart />,
     label: 'Line Chart',
   },
 ];
