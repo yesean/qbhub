@@ -4,14 +4,14 @@ import BonusResultsLineChart from './BonusResultsLineChart';
 
 const TABS = [
   {
-    content: BonusResults,
+    content: <BonusResults />,
     label: 'Bonuses',
     panelProps: {
       p: 0,
     },
   },
   {
-    content: BonusResultsLineChart,
+    content: <BonusResultsLineChart />,
     label: 'Line Chart',
   },
 ];

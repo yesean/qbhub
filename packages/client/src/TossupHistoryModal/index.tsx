@@ -13,6 +13,7 @@ export default function TossupHistoryModal(props: TossupHistoryModalProps) {
       {...props}
       body={<TossupHistoryBody />}
       summaryHeader={<TossupHistorySummary />}
+      title="Tossup History"
     />
   );
 }

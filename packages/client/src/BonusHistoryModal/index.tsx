@@ -13,6 +13,7 @@ export default function BonusHistoryModal(props: BonusHistoryModalProps) {
       {...props}
       body={<BonusHistoryBody />}
       summaryHeader={<BonusHistorySummary />}
+      title="Bonus History"
     />
   );
 }

@@ -2,7 +2,7 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { ComponentProps } from 'react';
 
 type QuestionHistoryBodyTab = {
-  content: () => JSX.Element;
+  content: React.ReactElement;
   label: string;
   panelProps?: ComponentProps<typeof TabPanel>;
 };
@@ -25,9 +25,9 @@ export default function QuestionHistoryBody({
         ))}
       </TabList>
       <TabPanels flexGrow={1} minH={0}>
-        {tabs.map(({ content: Content, label, panelProps }) => (
+        {tabs.map(({ content, label, panelProps }) => (
           <TabPanel key={label} h="100%" overflow="auto" {...panelProps}>
-            <Content />
+            {content}
           </TabPanel>
         ))}
       </TabPanels>

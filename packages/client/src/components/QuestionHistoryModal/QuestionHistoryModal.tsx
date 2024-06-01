@@ -16,6 +16,7 @@ type QuestionHistoryModalProps = {
   closeModal: () => void;
   isOpen: boolean;
   summaryHeader: React.ReactElement;
+  title: string;
 };
 
 export default function QuestionHistoryModal({
@@ -23,6 +24,7 @@ export default function QuestionHistoryModal({
   closeModal,
   isOpen,
   summaryHeader,
+  title,
 }: QuestionHistoryModalProps) {
   return (
     <Modal
@@ -34,7 +36,7 @@ export default function QuestionHistoryModal({
     >
       <ModalOverlay />
       <ModalContent h="max(75vh, 600px)" m={4} w="min(90vw, 1400px)">
-        <ModalHeader>Bonus History</ModalHeader>
+        <ModalHeader>{title}</ModalHeader>
         <ModalBody>
           <Flex direction="column" gap={4} h="100%">
             <Box flexShrink={0}>{summaryHeader}</Box>
