@@ -4,7 +4,7 @@ const KEYS = {
   LAST_SEEN_UPDATE: 'last_seen_update',
 };
 
-const LATEST_UPDATE = '11-08-2022';
+const LATEST_UPDATE = '06-01-2024';
 
 export const checkHasUserViewedLatestUpdate = () => {
   const lastSeenUpdate = restore<string>(KEYS.LAST_SEEN_UPDATE);
