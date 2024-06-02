@@ -42,7 +42,7 @@ export default function QBHubModal({
         }}
         m={4}
         maxH={`max(0.75 * ${pageHeight}px, 500px)`}
-        maxW="600px"
+        maxW="800px"
         w="min(90vw, 1400px)"
       >
         <ModalHeader color="black">

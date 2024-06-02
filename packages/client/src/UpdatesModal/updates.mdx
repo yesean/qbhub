@@ -1,16 +1,72 @@
 import {
   BellIcon,
   InfoOutlineIcon,
+  Icon,
+  TimeIcon,
   QuestionOutlineIcon,
 } from '@chakra-ui/icons';
-import { Box } from '@chakra-ui/react';
+import ArrowLeftRight from '../static/ArrowsRightLeft.svg?react';
+import { Box, IconButton } from '@chakra-ui/react';
 
 export const Bell = () => {
   return <BellIcon color="cyan.500" w={4} h={4} />;
 };
 
+export const OverrideIconButton = () => {
+  return (
+    <IconButton
+      size="sm"
+      icon={<Icon as={ArrowLeftRight} h="50%" w="50%" />}
+      ml={1}
+    />
+  );
+};
+
+export const HistoryIconButton = () => {
+  return (
+    <IconButton
+      icon={<TimeIcon boxSize={6} h="50%" w="50%" />}
+      size="sm"
+      ml={1}
+    />
+  );
+};
+
 <Box mb={4}>
-## November 8, 2022 ✨
+## June 1, 2024 ✨
+
+### Improved URLs
+
+Question settings (category, subcategory, difficulty, etc) are now stored in the
+URL, meaning URLs are now shareable and will restore the question settings from
+a previous session! Settings will still be saved locally in
+[local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+and restored if a URL without question settings, such as
+[qbhub.io/tossup](https://qbhub.io), is provided.
+
+### Revamped Question Reader
+
+The question reader (used for the tossup/bonus reader) has been rewritten from
+the ground up, bringing performance improvements and a snappier user experience.
+Overall, the reader should operate similarly as before, with some UX touchups
+here and there.
+
+### CPU Override <OverrideIconButton />
+
+You can now override the automated scoring system by clicking the button, after
+an answer has been judged.
+
+### Redesigned Question History <HistoryIconButton />
+
+The question history modal has been redesigned to be more responsive and
+pleasing to use, especially compared to the previous version. Additionally, you
+can view your score trends under the new **Line Chart** tab. More advanced
+visualizations and analytics are planned for the future.
+
+</Box>
+
+<Box mb={4}>
+## November 8, 2022
 
 ### Bug Fixes 🛠️
 
