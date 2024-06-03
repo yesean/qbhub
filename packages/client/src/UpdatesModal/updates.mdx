@@ -14,23 +14,25 @@ export const Bell = () => {
 
 export const OverrideIconButton = () => {
   return (
-    <IconButton
-      size="sm"
-      icon={<Icon as={ArrowLeftRight} h="50%" w="50%" />}
-      ml={1}
-      flexGrow={0}
-    />
+    <Box maxW="32px" display="inline">
+      <IconButton
+        icon={<Icon as={ArrowLeftRight} h="50%" w="50%" />}
+        ml={1}
+        size="sm"
+      />
+    </Box>
   );
 };
 
 export const HistoryIconButton = () => {
   return (
-    <IconButton
-      icon={<TimeIcon boxSize={6} h="50%" w="50%" />}
-      size="sm"
-      ml={1}
-      flexGrow={0}
-    />
+    <Box maxW="32px" display="inline">
+      <IconButton
+        icon={<TimeIcon boxSize={6} h="50%" w="50%" />}
+        ml={1}
+        size="sm"
+      />
+    </Box>
   );
 };
 
