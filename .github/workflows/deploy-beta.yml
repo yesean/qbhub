@@ -20,7 +20,7 @@ jobs:
           echo PGPASSWORD=${{ secrets.PGPASSWORD }} >> .env
           echo PGPORT=${{ secrets.PGPORT }} >> .env
 
-          echo NGINX_HOST=${{ secrets.NGINX_HOST }} >> .env
+          echo NGINX_HOST=${{ secrets.NGINX_BETA_HOST }} >> .env
           echo NODE_HOST=${{ secrets.NODE_HOST }} >> .env
           echo NODE_PORT=${{ secrets.NODE_PORT }} >> .env
 
